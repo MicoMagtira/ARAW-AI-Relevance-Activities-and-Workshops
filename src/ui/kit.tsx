@@ -14,6 +14,8 @@ interface PanelProps {
   class?: string;
   as?: 'section' | 'div' | 'article';
   'aria-labelledby'?: string;
+  /** For a panel that scrolls on its own, so keyboard users can reach and scroll it. */
+  tabIndex?: number;
 }
 export function Panel({ children, class: className, as: Tag = 'section', ...rest }: PanelProps) {
   return (

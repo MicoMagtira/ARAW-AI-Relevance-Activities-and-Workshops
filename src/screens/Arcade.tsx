@@ -39,7 +39,7 @@ function Featured({ game, status, stacked }: { game: GameInfo; status: Status; s
   const trial = status === 'locked' && game.playable;
   return (
     <Panel class="arcade-featured span-12" aria-labelledby="arcade-featured-h">
-      <AraSays mood="wink" scale={stacked ? 3 : 4} side={stacked ? 'top' : 'left'} class="arcade-featured__ara">
+      <AraSays mood="happy" scale={stacked ? 3 : 4} side={stacked ? 'top' : 'left'} class="arcade-featured__ara">
         <p class="panel-title">{t('arcade.featured')}</p>
         <h2 id="arcade-featured-h">{game.name}</h2>
         <p>{game.topic}</p>

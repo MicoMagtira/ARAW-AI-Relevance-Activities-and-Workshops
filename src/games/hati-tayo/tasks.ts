@@ -1,6 +1,7 @@
 // The task bank for Hati Tayo! (Module 6 and the arcade game): what lands on the desk, and who should do it.
 // Two workplaces, nine tasks each for AI and nine for people. All names are fictional. Health tasks are general:
 // no dosing, no diagnosis, and the people tasks always point back to a health worker.
+import type { ContentReview } from '../../content/review';
 
 export type Setting = 'bhw' | 'store';
 export type Lane = 'ai' | 'human';
@@ -416,3 +417,9 @@ export const TASKS: readonly Task[] = [
 export const tasksFor = (setting: Setting, needs?: Lane): Task[] => TASKS.filter((t) => t.setting === setting && (needs === undefined || t.needs === needs));
 
 export const taskById = (id: string): Task | undefined => TASKS.find((t) => t.id === id);
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'SPEC M6: AI as a tool at work with humans in the loop; health tasks stay general and point to a health worker',
+  review_status: 'unreviewed',
+};

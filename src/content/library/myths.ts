@@ -77,9 +77,9 @@ export const MYTHS: readonly Myth[] = [
   }),
   myth('fogging-is-enough', 'dengue', 'kwento_kim', 'm05', {
     myth: 'Fogging is all we need to stop dengue.',
-    fact: 'Fogging is only for outbreaks. Emptying standing water every week matters most.',
+    fact: 'Fogging helps only in hotspot areas. Emptying standing water every week matters most.',
     why: 'Fogging is loud and visible, so it feels like strong action. Cleaning containers is quiet work that nobody sees.',
-    check: 'Ask your barangay health worker about the 4S: search, secure, seek early, say yes to fogging only in outbreaks.',
+    check: 'Ask your barangay health worker about the 4S: search, secure, seek early, support fogging only in hotspot areas.',
     basis: 'DOH 4S strategy',
   }),
 

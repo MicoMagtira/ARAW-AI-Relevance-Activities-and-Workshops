@@ -2,6 +2,7 @@
 // Trust Meter judges a decision. Traffic is a pure function of the lane and the trip clock, so the same seed always plays
 // the same streets and the guide always knows exactly what it is (wrongly) saying.
 import { rngInt, rngPick, type Rng } from '../engine/rng';
+import type { ContentReview } from '../../content/review';
 
 export const COLS = 20;
 export const COL_W = 16;
@@ -240,3 +241,9 @@ export const multiplierFor = (trust: number): number => 1 + Math.floor(clampTrus
 
 export const LANE_POINTS = 10;
 export const TRIP_POINTS = 100;
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'CONTENT_GUIDE calibrated trust: check an AI guide against what you can see; road safety basics (look both ways)',
+  review_status: 'unreviewed',
+};

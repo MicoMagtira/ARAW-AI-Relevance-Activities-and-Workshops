@@ -292,7 +292,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
               {phase === 'intro' && (
                 <Overlay>
                   <Panel class="game-card" aria-labelledby="game-card-h">
-                    <Ara mood="wink" scale={5} decorative />
+                    <Ara mood="happy" scale={5} decorative />
                     <h2 id="game-card-h">{game.name}</h2>
                     {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
                     {best > 0 ? <p class="px-text-muted">{t('game.bestLine', { n: formatScore(best) })}</p> : <p class="px-text-muted">{t('game.noBest')}</p>}

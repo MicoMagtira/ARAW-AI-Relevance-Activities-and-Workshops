@@ -3,6 +3,7 @@
 // the sim can build any hearing from a seed. Text may use the slots {who}, {org}, {thing} and {bot}.
 // Facts are kept general and match the Data Privacy Act (RA 10173): the rights, the data protection officer, the National
 // Privacy Commission, breach notice within 72 hours, and that the organisation (not "the AI") is accountable.
+import type { ContentReview } from '../../content/review';
 
 export type TemplateId = 'leak' | 'claim' | 'chatbot';
 export type EvidenceKind = 'document' | 'screenshot' | 'right';
@@ -479,3 +480,9 @@ export const TEMPLATE_IDS: readonly TemplateId[] = ['leak', 'claim', 'chatbot'];
 /** The statements a hearing starts with, by case number (1-based): early cases are shorter and have fewer evidence cards. */
 export const statementCount = (caseNo: number): number => (caseNo <= 2 ? 4 : 5);
 export const evidenceCount = (caseNo: number): number => (caseNo <= 1 ? 4 : caseNo <= 3 ? 5 : 6);
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'Data Privacy Act of 2012 (RA 10173): data subject rights, data protection officers, NPC complaints; general information, not legal advice',
+  review_status: 'unreviewed',
+};

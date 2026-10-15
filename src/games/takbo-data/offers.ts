@@ -1,5 +1,6 @@
 // The offers on the road in Takbo, Data!: safe freebies (ask for nothing) and data traps (ask for something).
 // Sign text is two short lines (10 characters at most) so it stays readable on a phone-sized canvas.
+import type { ContentReview } from '../../content/review';
 
 export type SafeKind = 'water' | 'flyer' | 'badge';
 export type DataKind = 'name' | 'birthday' | 'contacts' | 'idphoto' | 'philhealth';
@@ -89,3 +90,9 @@ export const PRIVACY_TIPS: readonly string[] = [
   'Share the least you can. If an offer asks for more than it needs, skip it.',
   'Your health records are valuable. Give them only to your health worker or the official health center.',
 ];
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'CONTENT_GUIDE safe facts: free offers that ask for ID numbers, OTPs or health data are a data risk; Data Privacy Act (RA 10173) data minimisation',
+  review_status: 'unreviewed',
+};

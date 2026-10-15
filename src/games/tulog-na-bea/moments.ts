@@ -2,6 +2,7 @@
 // life moment) and the four boundaries the player can set. Pure data; the rules in sim.ts decide which moments appear.
 // All people and apps are fictional. "Lumi" is an invented AI companion app. Nothing here gives medical advice.
 import type { IconName } from '../../ui/icons';
+import type { ContentReview } from '../../content/review';
 
 export const METERS = ['sleep', 'mood', 'study', 'social'] as const;
 export type MeterId = (typeof METERS)[number];
@@ -292,3 +293,9 @@ export const BOUNDARIES: readonly Boundary[] = [
 ];
 
 export const boundaryById = (id: BoundaryId): Boundary => BOUNDARIES.find((b) => b.id === id) as Boundary;
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'SPEC M8 digital wellbeing; sleep needs (teens 8 to 10 hours) per WHO/AASM; DOH-NCMH crisis hotline 1553',
+  review_status: 'unreviewed',
+};

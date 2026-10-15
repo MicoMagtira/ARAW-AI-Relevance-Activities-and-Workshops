@@ -1,6 +1,7 @@
 // Sa Sapatos Nila content: the visitors to the health-center kiosk, the barriers that stop them, and the fixes that remove those
 // barriers. All people are fictional. Rules live in sim.ts; this file is plain data so it is easy to review.
 import type { IconName } from '../../ui/icons';
+import type { ContentReview } from '../../content/review';
 
 export type LangId = 'ilocano' | 'kapampangan' | 'cebuano' | 'waray' | 'hiligaynon' | 'bikol';
 export const LANGS: readonly LangId[] = ['ilocano', 'kapampangan', 'cebuano', 'waray', 'hiligaynon', 'bikol'];
@@ -293,3 +294,9 @@ export const SCREENS: readonly KioskScreen[] = [
   { title: 'Book a check-up', text: 'Choose Book a check-up, then pick a time that works for you.', button: 'Book a check-up, tomorrow 9 AM', sound: 'Please choose a time.' },
   { title: 'All set', text: 'All set! Listen for your queue number.', button: 'Take my queue number', sound: 'Your number is twelve. Please wait to be called.' },
 ];
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'SPEC M9 inclusive design: accessibility barriers (vision, hearing, language, literacy, connectivity) and common fixes',
+  review_status: 'unreviewed',
+};

@@ -316,6 +316,13 @@ test.describe('Library: Komiks', () => {
     await noHorizontalOverflow(page);
   });
 
+  test('a new player with every episode locked: the scrolling list is still keyboard reachable', async ({ page }) => {
+    await page.goto('/#/library/komiks');
+    await settled(page);
+    expect(await axeSerious(page)).toEqual([]);
+    await expect(page.locator('.komiks__list')).toHaveAttribute('tabindex', '0');
+  });
+
   test('has no serious accessibility problems in the list, the reader and a locked episode', async ({ page }) => {
     await seedModules(page, ['m01', 'm02']);
     for (const hash of ['#/library/komiks', '#/library/komiks/1', '#/library/komiks/5']) {

@@ -2,6 +2,7 @@
 // how precision and catch rate are worked out. Everything here is pure and seeded: a scan depends only on the seed and its
 // number, never on what the player did, so the Daily Challenge is the same for everyone.
 import { rngInt, rngPick, shuffle, type Rng } from '../engine/rng';
+import type { ContentReview } from '../../content/review';
 
 export type ContainerKind = 'drum' | 'tire' | 'pot' | 'can';
 export type ObjectKind = 'larva' | 'seed' | 'leaf' | 'raisin';
@@ -235,3 +236,9 @@ export function settle(scan: Scan, live: ReadonlySet<number>): Settlement {
   }
   return { escaped: boxedLarvae + missedLeft, boxedLarvae, falseLeft, missedLeft };
 }
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'DOH 4S dengue strategy and WHO dengue fact sheet: Aedes larvae live in clean standing water; cover, scrub and empty containers weekly',
+  review_status: 'unreviewed',
+};

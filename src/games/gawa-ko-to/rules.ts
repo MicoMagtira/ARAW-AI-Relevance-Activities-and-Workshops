@@ -2,6 +2,7 @@
 // goes on), how a published poster is checked (label, consent, credit, fact, brief), what it scores and when it is "Reported!".
 import { createRng, rngPick, shuffle, type Rng } from '../engine/rng';
 import { ARTIST, DOCTOR, NEIGHBOR, TOPICS, topicById, type Fact, type PictureId, type Slogan, type Topic } from './parts';
+import type { ContentReview } from '../../content/review';
 
 /** What the brief insists on. At most one picture requirement, plus maybe the AI slogan. */
 export type Requirement = 'ai-picture' | 'neighbor' | 'artist' | 'ai-slogan';
@@ -211,3 +212,9 @@ export function wrap(text: string, max: number): string[] {
   if (line) lines.push(line);
   return lines;
 }
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'SPEC M7: label AI-made pictures, ask consent, give credit; facts come from the curated pool in parts.ts',
+  review_status: 'unreviewed',
+};

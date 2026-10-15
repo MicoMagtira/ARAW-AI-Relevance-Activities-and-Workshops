@@ -4,6 +4,7 @@
 // general education: no dosing, no diagnosis. Calls depend only on the seed (never on the player's choices), so the Daily Challenge matches.
 import { rngInt, rngPick, shuffle, type Rng } from '../engine/rng';
 import type { Look } from '../feed-mo-to/users';
+import type { ContentReview } from '../../content/review';
 
 export const HEARTS = 3;
 
@@ -372,3 +373,9 @@ export function judge(call: Call, choice: Choice, used: readonly CheckId[], stre
   const multiplier = multiplierFor(streak);
   return { result, correct, verified, base: BASE_POINTS, bonus, multiplier, total: Math.round((BASE_POINTS + bonus) * multiplier), heartLost: false, streak: streak + 1 };
 }
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'CONTENT_GUIDE places to report: cybercrime hotline 1326; voice-clone scam advice: hang up and call back on a known number',
+  review_status: 'unreviewed',
+};

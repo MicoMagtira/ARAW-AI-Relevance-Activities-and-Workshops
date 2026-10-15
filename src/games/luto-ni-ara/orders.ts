@@ -4,6 +4,7 @@
 // All customers are fictional. Health tasks are general education only: no dosing, no diagnosis.
 import { rngInt, rngPick, shuffle, type Rng } from '../engine/rng';
 import type { Look } from '../feed-mo-to/users';
+import type { ContentReview } from '../../content/review';
 
 export type Ingredient = 'role' | 'audience' | 'language' | 'length' | 'format' | 'cite' | 'unsure';
 
@@ -278,3 +279,9 @@ export function payFor(dish: Dish, order: Order, timeFraction: number): Pay {
 }
 
 export const HEARTS = 3;
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'CONTENT_GUIDE: prompting basics; health questions ask the AI to cite sources and say when unsure; no dosing or diagnosis',
+  review_status: 'unreviewed',
+};

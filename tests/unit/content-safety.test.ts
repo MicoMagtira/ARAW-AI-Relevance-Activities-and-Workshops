@@ -96,3 +96,17 @@ describe('assessment forms stay out of the practice bundle', () => {
     expect(read('content/factOrFake/assessment.ts')).not.toMatch(/set: 'practice'/);
   });
 });
+
+describe('arcade game content files carry a review marker and no dosing', () => {
+  const GAME_CONTENT = ['takbo-data/offers', 'feed-mo-to/posts', 'luto-ni-ara/orders', 'sino-to/calls', 'lamok-lamay/scans',
+    'tawid-lola/lanes', 'hati-tayo/tasks', 'gawa-ko-to/rules', 'tulog-na-bea/moments', 'sa-sapatos-nila/data', 'objection/data'];
+  const files = import.meta.glob('../../src/games/*/*.ts', { eager: true }) as Record<string, { CONTENT_REVIEW?: { basis: string; review_status: string } }>;
+  for (const name of GAME_CONTENT) {
+    it(name, () => {
+      const mod = files[`../../src/games/${name}.ts`];
+      expect(mod?.CONTENT_REVIEW?.review_status).toBe('unreviewed');
+      expect(mod?.CONTENT_REVIEW?.basis.length).toBeGreaterThan(20);
+      expect(readFileSync(resolve(__dirname, `../../src/games/${name}.ts`), 'utf8')).not.toMatch(DOSING);
+    });
+  }
+});

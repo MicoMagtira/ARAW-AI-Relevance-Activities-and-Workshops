@@ -244,7 +244,8 @@ export function Komiks() {
 
   return (
     <div class={`komiks${reading ? ' komiks--reading' : ''}`}>
-      <Panel class="komiks__list" aria-labelledby="komiks-h">
+      {/* On desktop the list scrolls on its own, so it must be reachable by keyboard even when every episode is locked. */}
+      <Panel class="komiks__list" aria-labelledby="komiks-h" tabIndex={0}>
         <div class="stack">
           <div>
             <h2 id="komiks-h">{KOMIKS_SEASON_TITLE}</h2>

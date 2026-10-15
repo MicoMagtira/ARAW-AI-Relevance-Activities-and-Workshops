@@ -4,6 +4,7 @@
 import { rngPick, shuffle, type Rng } from '../engine/rng';
 import { LIKEABLE, type TopicId } from './rules';
 import type { Persona } from './users';
+import type { ContentReview } from '../../content/review';
 
 export interface Post {
   /** Template and slot choice, so the same post is not offered twice in a row. */
@@ -214,3 +215,9 @@ export function makeCandidates({ user, userIndex, rng, recent }: CandidateOption
   });
   return shuffle(posts, rng);
 }
+
+/** Every line in this file is unreviewed teaching content (CONTENT_GUIDE 7). */
+export const CONTENT_REVIEW: ContentReview = {
+  basis: 'CONTENT_GUIDE: fake posts are generated and stamped ARAW GAME · FAKE; health center tips come from the curated DOH/WHO-level pool',
+  review_status: 'unreviewed',
+};
