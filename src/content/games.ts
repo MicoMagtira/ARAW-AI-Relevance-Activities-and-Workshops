@@ -57,7 +57,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'lamok-lamay',
     name: 'Lamok Lamay',
     module: null,
-    playable: false,
+    playable: true,
     topic: 'How AI sees, and misses',
     how: 'The AI camera boxes mosquito larvae, but it makes mistakes. Whack the real ones and fix the AI.',
     icon: 'ai-scan',
