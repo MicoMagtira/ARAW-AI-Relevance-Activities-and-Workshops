@@ -3,8 +3,10 @@
 ARAW = **AI Relevance Activities and Workshops**: a fun, gamified, mobile-first web app that teaches NON-technical Filipinos
 (seniors, parents, students, health workers) AI literacy and how to resist health misinformation.
 Core idea: **calibrated trust**, not "trust less". Every module ends with "Kailan ako magtitiwala?" (When should I trust?).
-Sibling of TALA (dark, technical); ARAW is light, warm, playful. Product spec: `docs/SPEC.md`. Content rules: `docs/CONTENT_GUIDE.md`.
-Visual baseline: `design/mockup/*.dc.html` (clickable mockup v1: match its look; you may improve quality, not change direction).
+Sibling of TALA: same 8-bit retro spirit and desktop-first layout, but a light, warm daytime palette. Product spec: `docs/SPEC.md`.
+Content rules: `docs/CONTENT_GUIDE.md`. **Design system: `docs/DESIGN.md` (8-bit, desktop-first) is the visual authority.**
+`design/mockup/*.dc.html` is a CONTENT AND FLOW reference only (it was drawn phone-first and flat): reuse its screens, copy,
+colours and interactions, never its flat style or phone-first layout.
 
 ## You are working unattended
 - An overnight script runs you one task at a time in fresh sessions. **Never ask questions.** Make a sensible decision, then add
@@ -15,7 +17,7 @@ Visual baseline: `design/mockup/*.dc.html` (clickable mockup v1: match its look;
 
 ## Stack (fixed)
 - Vite + TypeScript (strict) + Preact (`preact`, `preact/hooks`, `@preact/signals` allowed). Hash router (static hosting).
-- Games: HTML Canvas 2D on a small shared engine in `src/games/engine/` (no Phaser). Icons: `lucide-preact` (MIT).
+- Games: HTML Canvas 2D on a small shared engine in `src/games/engine/` (no Phaser). Icons: pixel-art only (`pixelarticons`, MIT, or hand-made pixel SVGs); no smooth icon sets.
 - Fonts self-hosted via `@fontsource/baloo-2`, `@fontsource/nunito`, `@fontsource/press-start-2p` (OFL). No CDNs at runtime.
 - Tests: Vitest (+ @testing-library/preact) for logic/components; Playwright for e2e with three projects:
   `phone` 360x740 (touch), `tablet` 820x1180, `desktop` 1440x900. `@axe-core/playwright` for accessibility checks.
@@ -30,17 +32,23 @@ Visual baseline: `design/mockup/*.dc.html` (clickable mockup v1: match its look;
 (lesson content + module game) · `src/games/engine` + `src/games/<slug>` (arcade) · `src/content` (item banks, myths,
 glossary, komiks, typed + validated) · `src/styles` (tokens.css, base.css) · `tests/unit` · `tests/e2e`.
 
-## Design tokens (D33-D37; use CSS variables, never hard-code hexes in components)
+## 8-bit style everywhere (D45) + design tokens (use CSS variables, never hard-code hexes in components)
+- Press Start 2P for titles, buttons, navigation, HUDs, badges, chips and labels; Nunito 18px for lesson and body text (readability for seniors).
+- Pixel borders (stepped box-shadow or border-image, 3-4px), hard offset drop shadows (no blur), square or 2-4px corners, pixel-art icons,
+  sprites and backgrounds with `image-rendering: pixelated`, retro progress bars (TALA-style barber pole), step-based animations, 8-bit sunrise motifs.
+- Ara is a pixel-art sprite. Games are pixel art too unless smooth rendering clearly helps play.
 cream bg #FFF8EC · surface #FFFFFF · gold #F5D89E · deep gold #E8B84A · navy primary #35408E · ink text #1F2550 ·
 muted text #4A4F6A · coral accent #FF7A59 (fills only, never text) · fact green #1E7D50 (tint #E3F4EA) ·
 fake red #C4323A (tint #FDE7E8) · line #EADFC8 · soft #F3ECDD. Headings Baloo 2 (700/800), body Nunito 18px, splash only Press Start 2P.
-Radii 14/16/20/24/28. Cards: white, soft 3px floor shadow `0 3px 0 var(--line)`. Header bar gold with navy text.
+Panels: white with a 3-4px pixel border in ink/navy and a hard 4px offset shadow. Header banner gold with navy pixel text.
 Motion: lively but calm (bouncy transitions, confetti on badges, Ara reacts); honour `prefers-reduced-motion` AND the in-app toggle.
 
 ## Responsive (must be seamless)
 - Fluid layouts (flex/grid, `clamp()`, container queries). No horizontal page scroll at any width from 320px to 2560px.
-- <600px: bottom tab bar (Home, Learn, Arcade, Library, Me). 600-1023px: tablet layout (wider cards, 2-col grids, tabs).
-  >=1024px: side navigation, multi-column home, path shown wide. Same features at every size.
+- **Desktop landscape (>=1024px) is the PRIMARY design, like TALA:** left sidebar navigation + gold header banner + wide multi-column
+  content. Design every screen for 1366x768 and 1920x1080 first.
+- 600-1023px tablet: collapsible sidebar or top tabs. <600px phone adaptation: bottom tab bar (Home, Learn, Arcade, Library, Me),
+  single column. Same features at every size.
 - Games: canvas keeps a fixed aspect ratio, letterboxed and centered, scales with devicePixelRatio, handles resize and
   orientation change mid-game, supports touch, mouse and keyboard.
 - Every e2e test runs on all three Playwright projects; include a "no horizontal overflow" assertion on each screen.

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ARAW · Fact or Fake</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#35408E}a:hover{color:#1F2550}
+.big{transition:transform 120ms ease}
+.big:hover{transform:translateY(-2px)}
+.big:active{transform:translateY(2px)}
+button:focus-visible,a:focus-visible{outline:3px solid #FF7A59;outline-offset:3px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; display: flex; flex-direction: column; background: #FFF8EC; font-family: Nunito, sans-serif; color: #1F2550; overflow: hidden; position: relative;">
+<header style="height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 8px; background: #F5D89E;">
+<a href="Home.dc.html" aria-label="Quit game" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 22px; color: #35408E;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</a>
+<h1 style="margin: 0; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 22px; color: #35408E;">Fact or Fake</h1>
+<div style="display: flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 16px; background: #FFFFFF; font-weight: 800; font-size: 14px;">{{scoreLabel}}</div>
+</header>
+<sc-if value="{{playing}}" hint-placeholder-val="{{true}}">
+<div style="flex: 1; display: flex; flex-direction: column; padding: 14px 16px 20px; gap: 14px; overflow-y: auto;">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<span style="font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #6B7090;">ITEM {{num}} OF 3 · {{item.format}}</span>
+<a href="Report.dc.html" aria-label="Report this item" style="display: flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: 16px; color: #35408E; font-size: 13px; font-weight: 800; text-decoration: none; background: #FFFFFF;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg>Report</a>
+</div>
+<article style="background: #FFFFFF; border-radius: 24px; padding: 18px; box-shadow: 0 4px 0 #EADFC8; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<div style="width: 44px; height: 44px; border-radius: 22px; background: {{item.avatarBg}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;" aria-hidden="true">{{item.initials}}</div>
+<div style="display: flex; flex-direction: column;">
+<span style="font-weight: 800; font-size: 16px;">{{item.author}}</span>
+<span style="font-size: 13px; color: #6B7090;">{{item.meta}}</span>
+</div>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.45;">{{item.text}}</p>
+<sc-if value="{{item.hasImage}}" hint-placeholder-val="{{false}}">
+<div style="height: 150px; border-radius: 16px; background: #F3ECDD; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#9A9EB5" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+<span style="font-size: 13px; font-weight: 700; color: #6B7090;">[Synthetic "doctor" photo · sample]</span>
+<span style="padding: 4px 10px; border-radius: 10px; background: #FFFFFF; font-size: 12px; font-weight: 800; color: #1E7D50;">"FDA APPROVED"</span>
+</div>
+</sc-if>
+</article>
+<sc-if value="{{unanswered}}" hint-placeholder-val="{{true}}">
+<p style="margin: 0; text-align: center; font-size: 15px; color: #4A4F6A;">Is this post a fact, or is it fake?</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<button class="big" type="button" onClick="{{pickFact}}" style="height: 72px; border: 0; border-radius: 20px; background: #1E7D50; color: #FFFFFF; box-shadow: 0 5px 0 #145A39; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg>FACT</button>
+<button class="big" type="button" onClick="{{pickFake}}" style="height: 72px; border: 0; border-radius: 20px; background: #C4323A; color: #FFFFFF; box-shadow: 0 5px 0 #8E2229; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>FAKE</button>
+</div>
+</sc-if>
+<sc-if value="{{answered}}" hint-placeholder-val="{{false}}">
+<section style="border-radius: 24px; padding: 18px; background: {{fbBg}}; display: flex; flex-direction: column; gap: 10px;" aria-live="polite">
+<div style="display: flex; align-items: center; gap: 10px;">
+<dc-import name="Ara" size="{{56}}" mood="{{araMood}}" hint-size="56px,56px"></dc-import>
+<p style="margin: 0; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 21px; line-height: 1.15;">{{fbHead}}</p>
+</div>
+<sc-if value="{{item.hasTrick}}" hint-placeholder-val="{{true}}">
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 12px; background: #35408E; color: #FFFFFF; font-size: 13px; font-weight: 800;">Trick: {{item.trick}}</span>
+</sc-if>
+<p style="margin: 0; font-size: 15px; line-height: 1.5;"><strong>Why:</strong> {{item.why}}</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.5;"><strong>How to check:</strong> {{item.check}}</p>
+<button class="big" type="button" onClick="{{next}}" style="height: 52px; border: 0; border-radius: 16px; background: #35408E; color: #FFFFFF; font-family: Nunito, sans-serif; font-weight: 800; font-size: 17px; cursor: pointer;">{{nextLabel}}</button>
+</section>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{finished}}" hint-placeholder-val="{{false}}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 28px 20px; gap: 16px; overflow-y: auto;">
+<dc-import name="Ara" size="{{140}}" mood="wow" hint-size="140px,140px"></dc-import>
+<h2 style="margin: 0; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 30px; color: #35408E;">Uy, galing!</h2>
+<p style="margin: 0; padding: 6px 16px; border-radius: 16px; background: #FFE6DD; font-weight: 800; font-size: 16px;">+{{xp}} XP</p>
+<section style="align-self: stretch; background: #FFFFFF; border-radius: 24px; padding: 18px; box-shadow: 0 4px 0 #EADFC8; display: flex; flex-direction: column; gap: 14px;">
+<p style="margin: 0; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; color: #35408E;">Your Truth Radar</p>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 700;"><span>Telling real from fake</span><span>{{correct}} / 3</span></div>
+<div style="height: 14px; border-radius: 7px; background: #F3ECDD; overflow: hidden;"><div style="width: {{accPct}}; height: 100%; border-radius: 7px; background: #E8B84A;"></div></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 700;"><span>Too trusting</span><span>Too doubtful</span></div>
+<div style="position: relative; height: 14px; border-radius: 7px; background: #F3ECDD;">
+<div style="position: absolute; left: 40%; width: 20%; height: 100%; background: #E3F4EA;"></div>
+<div style="position: absolute; top: -5px; left: {{leanPos}}; width: 24px; height: 24px; margin-left: -12px; border-radius: 12px; background: #35408E; border: 3px solid #FFFFFF;"></div>
+</div>
+<p style="margin: 4px 0 0; font-size: 14px; color: #4A4F6A;">{{leanText}}</p>
+</div>
+</section>
+<div style="align-self: stretch; display: flex; gap: 10px;">
+<button class="big" type="button" onClick="{{again}}" style="flex: 1; height: 54px; border: 2px solid #35408E; border-radius: 16px; background: #FFFFFF; color: #35408E; font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; cursor: pointer;">Play again</button>
+<a class="big" href="Home.dc.html" style="flex: 1; height: 54px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: #35408E; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 16px;">Back home</a>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { idx: 0, choice: null, answers: [] }; }
+renderVals() {
+const items = [
+{ format: 'FACEBOOK POST', author: 'Healthy Pinoy Tips', meta: 'Page · 2h · 14K shares', initials: 'HP', avatarBg: '#2FA36B',
+text: 'Tawa-tawa tea CURES dengue in 3 days! Doctors don’t want you to know. SHARE before this gets deleted!!!',
+truth: 'fake', hasImage: false, hasTrick: true, trick: 'Miracle Mike + Fear Monger',
+why: 'No herbal tea is a proven cure for dengue, and DOH officials have said tawa-tawa does not cure it. "Share before it gets deleted" is pressure, not proof.',
+check: 'Look for a DOH advisory, or ask your barangay health worker.' },
+{ format: 'FAMILY GC MESSAGE', author: 'Kuya Jun (BHW)', meta: 'Pamilya Santos GC · 9:14 AM', initials: 'KJ', avatarBg: '#35408E',
+text: 'Reminder po: during dengue season, if someone has fever plus severe stomach pain, repeated vomiting, or bleeding gums, bring them to the health center right away.',
+truth: 'fact', hasImage: false, hasTrick: false, trick: '',
+why: 'These are dengue warning signs used by health authorities. Getting care early saves lives.',
+check: 'It matches DOH dengue guidance, and Kuya Jun is a health worker you know.' },
+{ format: 'SPONSORED AD', author: 'VitaHeart PH', meta: 'Sponsored', initials: 'VH', avatarBg: '#FF7A59',
+text: '"I’m a cardiologist. Stop your maintenance meds. This capsule cleans your arteries in 7 days!" — Dr. Reyes',
+truth: 'fake', hasImage: true, hasTrick: true, trick: 'Dr. Fake (deepfake endorsement)',
+why: 'Real doctors do not tell strangers to stop their medicines through ads. Ads like this often use AI-made faces and voices of doctors.',
+check: 'Search the product on the FDA Verification Portal, and ask your own doctor before changing any medicine.' }
+];
+const s = this.state;
+const finished = s.idx >= items.length;
+const item = items[Math.min(s.idx, items.length - 1)];
+const correct = s.answers.filter((a, i) => a === items[i].truth).length;
+const fakeCalls = s.answers.filter((a) => a === 'fake').length;
+const fakes = items.filter((it) => it.truth === 'fake').length;
+const lean = finished ? (fakeCalls - fakes) : 0;
+const right = s.choice !== null && s.choice === item.truth;
+const choose = (c) => { if (s.choice === null) this.setState({ choice: c, answers: s.answers.concat([c]) }); };
+return {
+item: item,
+num: Math.min(s.idx + 1, 3),
+playing: !finished, finished: finished,
+unanswered: s.choice === null, answered: s.choice !== null,
+pickFact: () => choose('fact'), pickFake: () => choose('fake'),
+fbHead: right ? 'Tama! It’s ' + item.truth.toUpperCase() + '.' : 'Muntik na! It’s actually ' + item.truth.toUpperCase() + '.',
+fbBg: right ? '#E3F4EA' : '#FFE6DD',
+araMood: right ? 'happy' : 'wow',
+nextLabel: s.idx < items.length - 1 ? 'Next item' : 'See my Truth Radar',
+next: () => this.setState({ idx: s.idx + 1, choice: null }),
+scoreLabel: 'Score ' + correct + '/' + s.answers.length,
+correct: correct, xp: correct * 10,
+accPct: Math.round(correct / 3 * 100) + '%',
+leanPos: (50 + lean * 25) + '%',
+leanText: lean === 0 ? 'Balanced! You trusted the real post and doubted the fakes.' : (lean > 0 ? 'You lean a bit doubtful. Remember: some posts are true!' : 'You lean a bit trusting. Pause and check before you believe.'),
+again: () => this.setState({ idx: 0, choice: null, answers: [] })
+};
+}
+}
+</script>
+</body>
+</html>

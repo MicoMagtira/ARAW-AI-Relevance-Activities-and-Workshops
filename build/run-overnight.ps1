@@ -1,6 +1,6 @@
 <#
   ARAW overnight build runner (self-healing). Run once; it resumes by itself after crashes, a closed window or a reboot+login.
-    powershell -ExecutionPolicy Bypass -File "C:\Users\mjmag\OneDrive\Desktop\ARAW\app\build\run-overnight.ps1"
+    powershell -ExecutionPolicy Bypass -File "C:\Users\mjmag\Desktop\ARAW\app\build\run-overnight.ps1"
   Options: -BudgetUsd 150 (total cap across runs)  -AttemptMinutes 120  -Only T07 (run one task)
   -Unattended is used by the watchdog scheduled task; you never need to pass it.
 #>
@@ -313,7 +313,8 @@ try {
   }
   Clear-GitLock
 
-  $od = Get-Process OneDrive -ErrorAction SilentlyContinue | Select-Object -First 1
+  $underOneDrive = $env:OneDrive -and $App.StartsWith($env:OneDrive, [StringComparison]::OrdinalIgnoreCase)
+  $od = if ($underOneDrive) { Get-Process OneDrive -ErrorAction SilentlyContinue | Select-Object -First 1 } else { $null }
   if ($od) {
     $state.oneDriveWasRunning = if ($od.Path) { $od.Path } else { $true }; Save-State
     Stop-Process -Name OneDrive -Force -ErrorAction SilentlyContinue
