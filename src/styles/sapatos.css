@@ -1,0 +1,477 @@
+/* Sa Sapatos Nila (Module 9 game and Arcade): the visitor beside the kiosk and the fix panel. Loaded with the game's chunk.
+   The simulation filters (blur and so on) live ONLY on .kiosk__fx text inside .kiosk; nothing here filters a game control. */
+.sapatos {
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.sapatos h3,
+.sapatos h4,
+.sapatos p,
+.sapatos ul {
+  margin: 0;
+}
+
+.sapatos p {
+  overflow-wrap: anywhere;
+}
+
+.sapatos-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.sapatos-hud .px-progress-wrap {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.sapatos-stat {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.sapatos-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 760px) {
+  .sapatos-grid {
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  }
+
+  .sapatos-side {
+    position: sticky;
+    top: var(--sp-4);
+  }
+}
+
+.sapatos-side {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: start;
+}
+
+.sapatos-side > .sapatos-meters,
+.sapatos-side > .sapatos-installed {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 760px) {
+  .sapatos-side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sapatos-person {
+    max-width: 220px;
+  }
+}
+
+.sapatos-person {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--px) solid var(--px-line);
+  box-shadow: var(--px) var(--px) 0 0 var(--px-shadow);
+  image-rendering: pixelated;
+}
+
+.sapatos-who {
+  display: grid;
+  gap: var(--sp-1);
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+}
+
+.sapatos-name {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.sapatos-meters {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.sapatos-installed {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  gap: var(--sp-2);
+  font: 600 var(--fs-14) / 1.4 var(--font-body);
+}
+
+.sapatos-installed h4 {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.sapatos-installed .px-chip {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.sapatos-installed ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  padding: 0;
+  list-style: none;
+}
+
+.sapatos-main {
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.sapatos-card {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.sapatos-title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.sapatos-title:focus {
+  outline: none;
+}
+
+.sapatos-when,
+.sapatos-lesson-title {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.sapatos-how,
+.sapatos-stats,
+.sapatos-lessons,
+.sapatos-points {
+  display: grid;
+  gap: var(--sp-2);
+  padding-left: var(--sp-5);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.sapatos-update {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  background: var(--gold);
+  border: var(--px-chip) solid var(--ink);
+  color: var(--ink);
+  font: 700 var(--fs-16) / 1.4 var(--font-body);
+}
+
+.sapatos-tries,
+.sapatos-gain {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.sapatos-reveal--good {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.sapatos-reveal--bad {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+  box-shadow: var(--px) var(--px) 0 0 var(--fake);
+  color: var(--ink);
+}
+
+.sapatos-reveal--good .sapatos-lesson-title,
+.sapatos-reveal--good .sapatos-tries {
+  color: var(--fact-ink);
+}
+
+.sapatos-stars {
+  display: inline-flex;
+  gap: var(--sp-1);
+}
+
+.sapatos-stars .is-on {
+  color: var(--gold-deep);
+}
+
+.sapatos-stars .is-off {
+  color: var(--line);
+}
+
+.sapatos-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* ---------- the fixes ---------- */
+.sapatos-fixes {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.sapatos-fixgroup {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.sapatos-fixlist {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  padding: 0;
+  list-style: none;
+}
+
+.sapatos-fix {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--sp-1);
+  width: 100%;
+  height: 100%;
+  min-height: var(--tap);
+  padding: var(--sp-3);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  font: 600 var(--fs-14) / 1.4 var(--font-body);
+}
+
+.sapatos-fix:hover:not([aria-disabled='true']) {
+  background: var(--gold);
+}
+
+.sapatos-fix:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 2px;
+}
+
+.sapatos-fix[aria-disabled='true'] {
+  cursor: default;
+}
+
+.sapatos-fix.is-useful {
+  border-color: var(--navy);
+}
+
+.sapatos-fix.is-on {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  color: var(--fact-ink);
+}
+
+.sapatos-fix__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.sapatos-fix__name {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+}
+
+.sapatos-fix__helps {
+  color: var(--muted);
+}
+
+.sapatos-fix.is-on .sapatos-fix__helps {
+  color: var(--fact-ink);
+}
+
+.sapatos-fix__status {
+  font-weight: 800;
+}
+
+/* ---------- the kiosk (the simulation) ---------- */
+.kiosk {
+  --kiosk-blur: 3px;
+  display: grid;
+  gap: 0;
+  background: var(--navy);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--px-shadow);
+  color: var(--ink);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+  image-rendering: pixelated;
+}
+
+.kiosk__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--gold);
+  border-bottom: var(--px) solid var(--ink);
+}
+
+.kiosk__brand {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+}
+
+.kiosk__lang {
+  margin-left: auto;
+  font: 800 var(--fs-14) / 1.2 var(--font-body);
+}
+
+.kiosk__screen {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: var(--sp-3);
+  min-height: 330px;
+  padding: var(--sp-3);
+  background: var(--surface);
+}
+
+.kiosk__step {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.kiosk__zone {
+  display: flex;
+  min-height: 0;
+}
+
+.kiosk__zone--high {
+  justify-content: center;
+}
+
+.kiosk__zone--low {
+  justify-content: center;
+}
+
+.kiosk__body {
+  display: grid;
+  gap: var(--sp-2);
+  align-content: start;
+  justify-items: start;
+}
+
+.kiosk__title {
+  font: 800 var(--fs-20) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.kiosk__text {
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.kiosk__qr {
+  width: 84px;
+  height: 84px;
+  border: var(--px-chip) solid var(--ink);
+  image-rendering: pixelated;
+}
+
+.kiosk__btn {
+  min-height: var(--tap);
+  width: 100%;
+  max-width: 420px;
+}
+
+/* the reach line: buttons above it cannot be reached from a seat */
+.kiosk__reach {
+  border-top: var(--px-chip) dashed var(--fake);
+  padding-top: var(--sp-1);
+  color: var(--fake);
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+}
+
+.kiosk__feed {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--soft);
+  border-top: var(--px) solid var(--ink);
+}
+
+.kiosk__sound {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  font: 600 var(--fs-14) / 1.4 var(--font-body);
+}
+
+.kiosk__sound .px-icon {
+  flex: none;
+  margin-top: 2px;
+}
+
+.kiosk__counter {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--navy-tint);
+  border-top: var(--px) solid var(--ink);
+}
+
+/* Large text: bigger and bolder, and it clears most of the blur. */
+.kiosk--large .kiosk__title {
+  font-size: var(--fs-28);
+}
+
+.kiosk--large .kiosk__text,
+.kiosk--large .kiosk__btn,
+.kiosk--large .kiosk__sound {
+  font-size: var(--fs-22);
+  font-weight: 800;
+}
+
+/* Simulation filters. Only the kiosk's own text is filtered; the buttons keep their frame, focus ring and size. */
+.kiosk--blur .kiosk__fx {
+  filter: blur(var(--kiosk-blur));
+}
+
+.kiosk--blur.kiosk--large .kiosk__fx {
+  filter: blur(1px);
+}
+
+.kiosk--dark .kiosk__fx {
+  filter: blur(9px);
+}
+
+.sapatos-feel {
+  display: grid;
+  gap: var(--sp-2);
+  padding: 0;
+  list-style: none;
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.sapatos-feel li {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--fake-tint);
+  border-left: var(--px) solid var(--fake);
+  color: var(--ink);
+}
+
+.sapatos-feel li.is-fixed {
+  background: var(--fact-tint);
+  border-left-color: var(--fact);
+  color: var(--fact-ink);
+}
+
+.sapatos-feel__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+}

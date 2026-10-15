@@ -102,7 +102,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'sa-sapatos-nila',
     name: 'Sa Sapatos Nila',
     module: 'm09',
-    playable: false,
+    playable: true,
     topic: 'Fairness and accessibility',
     how: 'Use the health kiosk as different people, then fix it so it works for everyone.',
     icon: 'eye',

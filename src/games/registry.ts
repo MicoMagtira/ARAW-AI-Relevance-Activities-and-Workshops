@@ -28,6 +28,7 @@ export interface DomGameProps {
 export const DOM_GAME_LOADERS: Readonly<Record<string, () => Promise<{ default: ComponentType<DomGameProps> }>>> = {
   'gawa-ko-to': () => import('./gawa-ko-to/GawaArcade'),
   'tulog-na-bea': () => import('./tulog-na-bea/TulogArcade'),
+  'sa-sapatos-nila': () => import('./sa-sapatos-nila/SapatosArcade'),
 };
 
 export const hasGame = (slug: string): boolean => Object.hasOwn(GAME_LOADERS, slug) || Object.hasOwn(DOM_GAME_LOADERS, slug);

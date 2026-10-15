@@ -218,12 +218,14 @@ describe('module 1 content', () => {
     expect(hasContent('m06')).toBe(true);
     expect(hasContent('m07')).toBe(true);
     expect(hasContent('m08')).toBe(true);
-    expect(hasContent('m09')).toBe(false);
+    expect(hasContent('m09')).toBe(true);
+    expect(hasContent('m10')).toBe(false);
     expect((await loadContent('m01'))?.id).toBe('m01');
     expect((await loadContent('m06'))?.id).toBe('m06');
     expect((await loadContent('m07'))?.id).toBe('m07');
     expect((await loadContent('m08'))?.id).toBe('m08');
-    expect(await loadContent('m09')).toBeNull();
+    expect((await loadContent('m09'))?.id).toBe('m09');
+    expect(await loadContent('m10')).toBeNull();
     expect((await content.game.load()).default).toBeTypeOf('function');
   });
 });

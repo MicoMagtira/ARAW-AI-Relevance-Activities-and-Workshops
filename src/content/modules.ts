@@ -75,7 +75,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Name the groups often left out by health tech.',
     'Explain that biased data makes unfair AI and suggest fixes.',
     'Insist on a human option.',
-  ]),
+  ], 8),
   mod(10, 'Karapatan Mo', 'Karapatan Mo', 'Your data rights in plain words and who is accountable.', 'OBJECTION!', [
     'List your data rights in plain words.',
     'Describe the complaint path, from the organisation to the National Privacy Commission.',
