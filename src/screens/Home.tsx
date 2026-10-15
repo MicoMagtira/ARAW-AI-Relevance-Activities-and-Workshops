@@ -141,7 +141,7 @@ function Myth({ now }: { now: Date }) {
         <span class="px-text-muted">{t('home.mythFlip')}</span>
       </button>
       <SrHint id="sr-myth">{t('sr.mythCard')}</SrHint>
-      <a class="text-link" href={hrefFor('/library')}>
+      <a class="text-link" href={hrefFor('/library/myths', { myth: myth.id })}>
         {t('home.mythMore')}
       </a>
     </section>

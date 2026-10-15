@@ -37,6 +37,8 @@ export const ROUTES: readonly RouteDef[] = [
   { name: 'arcade', pattern: '/arcade', titleKey: 'title.arcade', tab: 'arcade' },
   { name: 'game', pattern: '/arcade/:slug', titleKey: 'title.game', tab: 'arcade' },
   { name: 'library', pattern: '/library', titleKey: 'title.library', tab: 'library' },
+  { name: 'library', pattern: '/library/:tab', titleKey: 'title.library', tab: 'library' },
+  { name: 'library', pattern: '/library/komiks/:n', titleKey: 'title.library', tab: 'library' },
   { name: 'me', pattern: '/me', titleKey: 'title.me', tab: 'me' },
   { name: 'report', pattern: '/report', titleKey: 'title.report' },
   { name: 'about', pattern: '/about', titleKey: 'title.about' },

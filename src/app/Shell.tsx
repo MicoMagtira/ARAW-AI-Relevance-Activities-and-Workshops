@@ -35,6 +35,8 @@ export function Shell() {
   const lessonId = match.def.name === 'lesson' ? match.params.id : undefined;
   const focusName = match.def.name;
   const title = t(match.def.titleKey);
+  // The Library's tabs and episodes are routes too, but moving between them keeps the screen (and the focus on the tab) in place.
+  const screenKey = match.def.name === 'library' ? '/library' : match.location.path;
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
 
@@ -47,7 +49,7 @@ export function Shell() {
     }
     window.scrollTo(0, 0);
     (mainRef.current ?? document.getElementById('main'))?.focus({ preventScroll: true });
-  }, [match.def.name, match.location.path]);
+  }, [match.def.name, screenKey]);
 
   // Focus mode: the module runner and Fact or Fake replace the sidebar, banner and tab bar with its own top bar.
   if (lessonId !== undefined || focusName === 'fof' || focusName === 'assess' || focusName === 'game') {
@@ -162,7 +164,7 @@ export function Shell() {
       </div>
 
       <main class="main" id="main" tabIndex={-1} ref={mainRef}>
-        <div class="content screen" key={match.location.path}>
+        <div class="content screen" key={screenKey}>
           <Screen />
         </div>
         <footer class="beta-note">{t('app.betaNote')}</footer>

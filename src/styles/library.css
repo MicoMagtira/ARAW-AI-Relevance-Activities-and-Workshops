@@ -1,0 +1,623 @@
+/* Library: Myths, Diksyunaryo and Komiks (docs/DESIGN.md section 11.9). Tokens only; step-based motion. */
+
+.library {
+  display: grid;
+  gap: var(--gap);
+  align-content: start;
+  padding-right: var(--px);
+  padding-bottom: var(--px);
+}
+
+/* the segmented tabs stretch across, and shrink their labels on small phones */
+.library .px-tabs {
+  display: flex;
+}
+
+.library .px-tab {
+  flex: 1 1 auto;
+  padding-inline: var(--sp-2);
+}
+
+@media (width < 520px) {
+  .library .px-tab {
+    font-size: var(--fs-10);
+    padding-inline: var(--sp-1);
+  }
+}
+
+.library__body {
+  min-width: 0;
+}
+
+/* ---------- Filters + results ---------- */
+.lib-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+@media (width >= 1024px) {
+  .lib-split {
+    grid-template-columns: minmax(280px, 3fr) minmax(0, 9fr);
+  }
+
+  .lib-filters {
+    position: sticky;
+    top: calc(var(--banner-h) + var(--gap));
+    max-height: calc(100dvh - var(--banner-h) - var(--gap) * 2);
+    overflow-y: auto;
+  }
+}
+
+.lib-search {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.lib-choice {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.lib-choice__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.lib-chip {
+  min-height: var(--tap);
+  padding: var(--sp-2) var(--sp-3);
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--px-chip) solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.lib-chip:hover {
+  background: var(--soft);
+}
+
+.lib-chip[aria-pressed='true'] {
+  background: var(--navy);
+  color: var(--on-color);
+  box-shadow: inset 0 0 0 var(--px-chip) var(--gold);
+}
+
+.lib-chip--clear {
+  color: var(--fake);
+  border-color: var(--fake);
+}
+
+.lib-filters__toggle {
+  display: none;
+}
+
+.lib-filters__body {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+@media (width < 600px) {
+  .lib-filters__toggle {
+    display: inline-flex;
+  }
+
+  .lib-filters__body {
+    display: none;
+  }
+
+  .lib-filters__body--open {
+    display: grid;
+  }
+}
+
+.lib-results {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+  align-content: start;
+}
+
+.lib-count {
+  margin: 0;
+}
+
+.lib-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--px) var(--px) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+.lib-grid > li {
+  min-width: 0;
+}
+
+.lib-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-3);
+  text-align: center;
+}
+
+/* ---------- Myth flip cards ---------- */
+.myth-flip {
+  display: grid;
+  background: var(--surface);
+}
+
+.myth-flip--back {
+  background: var(--fact-tint);
+  border-color: var(--fact-ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact-ink);
+}
+
+.myth-flip__front {
+  display: grid;
+  justify-items: start;
+  gap: var(--sp-3);
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--sp-4);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.myth-flip__front:hover .card-title {
+  text-decoration: underline;
+  text-decoration-thickness: var(--px-chip);
+}
+
+.myth-flip__back[hidden] {
+  display: none;
+}
+
+.myth-flip__flip {
+  padding: 0 var(--sp-4) var(--sp-4);
+  animation: myth-flip var(--step-slow) steps(2);
+}
+
+.myth-flip__fact {
+  font: 700 var(--fs-18) / 1.5 var(--font-body);
+  color: var(--fact-ink);
+}
+
+.myth-flip__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-4);
+}
+
+.myth-flip__basis {
+  font-size: var(--fs-14);
+}
+
+/* ---------- Diksyunaryo ---------- */
+@media (width >= 1024px) {
+  .lib-split--glossary {
+    grid-template-columns: minmax(280px, 3fr) minmax(0, 9fr);
+  }
+}
+
+.az {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--tap), 1fr));
+  gap: var(--sp-1);
+}
+
+.az__btn {
+  width: 100%;
+  min-height: var(--tap);
+  font: var(--fs-12) / 1 var(--font-pixel);
+  color: var(--ink);
+  background: var(--gold);
+  border: var(--px-chip) solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.az__btn:hover:not(:disabled) {
+  background: var(--gold-deep);
+}
+
+.az__btn:disabled {
+  color: var(--muted);
+  background: var(--soft);
+  border-color: var(--line);
+  cursor: not-allowed;
+}
+
+/* phone: the index is one horizontal scroller */
+@media (width < 600px) {
+  .az {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: var(--sp-2);
+  }
+
+  .az li {
+    flex: 0 0 var(--tap);
+  }
+}
+
+.gl-group {
+  display: grid;
+  gap: var(--sp-3);
+  scroll-margin-top: calc(var(--banner-h) + var(--gap));
+}
+
+.gl-letter {
+  scroll-margin-top: calc(var(--banner-h) + var(--gap));
+  justify-self: start;
+  min-width: 48px;
+  padding: var(--sp-1) var(--sp-3);
+  font: var(--fs-18) / 1.5 var(--font-pixel);
+  text-align: center;
+  background: var(--gold);
+}
+
+.gl-card {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+}
+
+.gl-card__term {
+  margin: 0;
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.gl-card__example {
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ---------- Komiks: list + reader ---------- */
+.komiks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+@media (width >= 1024px) {
+  .komiks {
+    grid-template-columns: minmax(300px, 4fr) minmax(0, 8fr);
+  }
+
+  .komiks__list {
+    position: sticky;
+    top: calc(var(--banner-h) + var(--gap));
+    max-height: calc(100dvh - var(--banner-h) - var(--gap) * 2);
+    overflow-y: auto;
+  }
+}
+
+/* phone and tablet: opening an episode replaces the list, and "All episodes" brings it back */
+@media (width < 1024px) {
+  .komiks--reading .komiks__list {
+    display: none;
+  }
+}
+
+@media (width >= 1024px) {
+  .reader__back {
+    display: none;
+  }
+}
+
+.ep-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--px) var(--px) 0;
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.ep-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--sp-3);
+  min-height: calc(var(--tap) + var(--sp-4));
+  padding: var(--sp-3);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a.ep-card:hover {
+  background: var(--soft);
+}
+
+.ep-card--selected {
+  background: var(--gold);
+}
+
+.ep-card--locked {
+  color: var(--muted);
+  background: var(--soft);
+  border-color: var(--line);
+  box-shadow: var(--px) var(--px) 0 0 var(--line);
+}
+
+.ep-card__tile {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  font: var(--fs-18) / 1 var(--font-pixel);
+  color: var(--on-color);
+  background: var(--navy);
+  border: var(--px-chip) solid var(--ink);
+}
+
+.ep-card--locked .ep-card__tile {
+  color: var(--muted);
+  background: var(--line);
+}
+
+.ep-card__text {
+  display: grid;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+
+.ep-card__title {
+  font: 800 var(--fs-20) / 1.2 var(--font-head);
+}
+
+.ep-card__chip {
+  display: flex;
+  margin-top: var(--sp-1);
+}
+
+.komiks__reader {
+  min-width: 0;
+}
+
+.komiks__note {
+  max-width: 640px;
+}
+
+.reader__head {
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.reader__stage {
+  container-type: inline-size;
+  touch-action: pan-y;
+  min-width: 0;
+}
+
+/* phone: Back and Next stay in reach above the tab bar while the panel is read */
+@media (width < 600px) {
+  .reader__nav {
+    position: sticky;
+    bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+    z-index: 5;
+    padding: var(--sp-2) 0;
+    background: var(--surface);
+    border-top: var(--px-chip) solid var(--line);
+  }
+}
+
+.reader__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.reader__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-1);
+  order: 3;
+  width: 100%;
+}
+
+@media (width >= 720px) {
+  .reader__steps {
+    order: 0;
+    width: auto;
+  }
+}
+
+.reader__step {
+  min-width: var(--tap);
+  min-height: var(--tap);
+  font: var(--fs-12) / 1 var(--font-pixel);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--px-chip) solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.reader__step:hover {
+  background: var(--soft);
+}
+
+.reader__step[aria-current='step'] {
+  color: var(--on-color);
+  background: var(--navy);
+  box-shadow: inset 0 0 0 var(--px-chip) var(--gold);
+}
+
+.reader__hint {
+  font-size: var(--fs-14);
+}
+
+.reader__end {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--fact-tint);
+}
+
+.reader__transcript {
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--cream);
+  border: var(--px-chip) solid var(--line);
+}
+
+.reader__transcript summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  font: 800 var(--fs-16) / 1.3 var(--font-body);
+  cursor: pointer;
+}
+
+.reader__transcript ol {
+  display: grid;
+  gap: var(--sp-4);
+  margin: var(--sp-3) 0 0;
+  padding-left: var(--sp-5);
+}
+
+.reader__transcript li > p {
+  margin: var(--sp-1) 0 0;
+}
+
+/* ---------- One comic panel ---------- */
+.kpanel {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--sp-3);
+  margin: 0;
+  min-width: 0;
+}
+
+.kpanel > * {
+  min-width: 0;
+}
+
+.kpanel__caption {
+  padding: var(--sp-2) var(--sp-3);
+  font: 700 var(--fs-16) / 1.4 var(--font-body);
+  color: var(--navy);
+  background: var(--gold);
+  border: var(--px-chip) solid var(--ink);
+}
+
+.kpanel__art {
+  max-width: 560px;
+  margin: 0 var(--px) var(--px) 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.komiks-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 8 / 5;
+  image-rendering: pixelated;
+}
+
+.kpanel__words {
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+}
+
+@container (width >= 700px) {
+  .kpanel {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: start;
+  }
+
+  .kpanel__caption {
+    grid-column: 1 / -1;
+  }
+
+  .kpanel__art {
+    max-width: none;
+  }
+}
+
+.kscreen {
+  position: relative;
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--cream);
+}
+
+.kscreen__author {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.kscreen__text {
+  font: 700 var(--fs-18) / 1.4 var(--font-body);
+}
+
+.kscreen .px-stamp {
+  position: static;
+  justify-self: start;
+  animation: none;
+}
+
+.kbubbles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.kbubble {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+}
+
+.kbubble--think {
+  background: var(--navy-tint);
+  border-style: dashed;
+}
+
+.kbubble__who {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.kbubble__text {
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.kbubble--think .kbubble__text {
+  font-style: italic;
+}

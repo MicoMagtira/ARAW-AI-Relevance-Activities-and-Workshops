@@ -111,3 +111,11 @@ export function collectVillain(id: string, badgeId: string): boolean {
   earnBadge(badgeId);
   return true;
 }
+
+/** Ids of Komiks episodes the player has read to the last panel ("ep01"). */
+export const komiksRead = persisted<string[]>('komiksRead', [], isStringArray);
+
+/** Mark an episode as read (once). */
+export function markKomiksRead(id: string): void {
+  if (!komiksRead.value.includes(id)) komiksRead.value = [...komiksRead.value, id];
+}
