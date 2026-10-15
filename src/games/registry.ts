@@ -5,6 +5,7 @@ import type { GameDef } from './engine/types';
 type Loader = () => Promise<{ default: GameDef }>;
 
 export const GAME_LOADERS: Readonly<Record<string, Loader>> = {
+  'takbo-data': () => import('./takbo-data/takbo'),
   // test-only demo game: reachable by URL, never listed in the Arcade
   demo: () => import('./demo/demo'),
 };

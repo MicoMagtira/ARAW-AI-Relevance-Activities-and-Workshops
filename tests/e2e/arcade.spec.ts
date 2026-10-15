@@ -34,9 +34,9 @@ test.describe('Arcade screen', () => {
     await expect(page.getByRole('heading', { level: 2, name: 'Endless games' })).toBeVisible();
     const tiles = page.locator('.arcade-tile');
     await expect(tiles).toHaveCount(11);
-    await expect(page.getByText('0 of 11 ready')).toBeVisible();
+    await expect(page.getByText('1 of 11 ready')).toBeVisible();
     // six open from the start, five behind modules 6 to 10
-    await expect(page.locator('.arcade-tile[aria-label$="Coming soon"]')).toHaveCount(6);
+    await expect(page.locator('.arcade-tile[aria-label$="Coming soon"]')).toHaveCount(5);
     for (const n of [6, 7, 8, 9, 10]) await expect(page.locator(`.arcade-tile[aria-label$="After Module ${n}"]`)).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 2, name: 'Practice' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Play Fact or Fake' })).toHaveAttribute('href', '#/play/fact-or-fake');
@@ -79,8 +79,8 @@ test.describe('Arcade screen', () => {
   test('unknown, unfinished and locked games open a kind notice, never a broken screen', async ({ page }) => {
     await page.goto('/#/arcade/nope');
     await expect(page.getByRole('heading', { level: 2, name: 'Game not found' })).toBeVisible();
-    await page.goto('/#/arcade/takbo-data');
-    await expect(page.getByRole('heading', { level: 2, name: 'Takbo, Data!' })).toBeVisible();
+    await page.goto('/#/arcade/feed-mo-to');
+    await expect(page.getByRole('heading', { level: 2, name: "Feed Mo 'To" })).toBeVisible();
     await expect(page.getByText('still being built')).toBeVisible();
     await page.goto('/#/arcade/hati-tayo');
     await expect(page.getByText('Finish Module 6 to unlock this game.')).toBeVisible();

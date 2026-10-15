@@ -135,7 +135,7 @@ describe('Arcade tiles', () => {
     expect(tiles).toHaveLength(11);
     const locked = tiles.filter((b) => /After Module \d+/.test(b.getAttribute('aria-label') ?? ''));
     expect(locked).toHaveLength(5);
-    expect(tiles[0]?.getAttribute('aria-label')).toBe('Takbo, Data!, Data privacy, Coming soon');
+    expect(tiles[0]?.getAttribute('aria-label')).toBe('Takbo, Data!, Data privacy, New');
     expect(screen.getByRole('link', { name: 'Play Fact or Fake' }).getAttribute('href')).toBe('#/play/fact-or-fake');
   });
 

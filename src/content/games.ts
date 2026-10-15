@@ -21,7 +21,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'takbo-data',
     name: 'Takbo, Data!',
     module: null,
-    playable: false,
+    playable: true,
     topic: 'Data privacy',
     how: 'Run through the barangay and grab freebies, but some of them cost your data. Keep your Privacy Shield up.',
     icon: 'shield',
