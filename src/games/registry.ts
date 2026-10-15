@@ -8,6 +8,7 @@ export const GAME_LOADERS: Readonly<Record<string, Loader>> = {
   'takbo-data': () => import('./takbo-data/takbo'),
   'feed-mo-to': () => import('./feed-mo-to/feed'),
   'luto-ni-ara': () => import('./luto-ni-ara/luto'),
+  'sino-to': () => import('./sino-to/sino'),
   // test-only demo game: reachable by URL, never listed in the Arcade
   demo: () => import('./demo/demo'),
 };

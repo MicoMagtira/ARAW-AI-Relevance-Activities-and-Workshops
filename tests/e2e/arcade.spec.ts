@@ -34,9 +34,9 @@ test.describe('Arcade screen', () => {
     await expect(page.getByRole('heading', { level: 2, name: 'Endless games' })).toBeVisible();
     const tiles = page.locator('.arcade-tile');
     await expect(tiles).toHaveCount(11);
-    await expect(page.getByText('3 of 11 ready')).toBeVisible();
+    await expect(page.getByText('4 of 11 ready')).toBeVisible();
     // six open from the start, five behind modules 6 to 10
-    await expect(page.locator('.arcade-tile[aria-label$="Coming soon"]')).toHaveCount(3);
+    await expect(page.locator('.arcade-tile[aria-label$="Coming soon"]')).toHaveCount(2);
     for (const n of [6, 7, 8, 9, 10]) await expect(page.locator(`.arcade-tile[aria-label$="After Module ${n}"]`)).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 2, name: 'Practice' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Play Fact or Fake' })).toHaveAttribute('href', '#/play/fact-or-fake');
@@ -47,9 +47,9 @@ test.describe('Arcade screen', () => {
 
   test('picking a tile shows its details (side panel on desktop, a sheet below)', async ({ page }) => {
     await page.goto('/#/arcade');
-    await page.getByRole('button', { name: /^Sino 'To\?/ }).click();
-    await expect(page.getByRole('heading', { level: 3, name: "Sino 'To?" })).toBeVisible();
-    await expect(page.getByText('Voice-clone scams').first()).toBeVisible();
+    await page.getByRole('button', { name: /^Lamok Lamay/ }).click();
+    await expect(page.getByRole('heading', { level: 3, name: 'Lamok Lamay' })).toBeVisible();
+    await expect(page.getByText('How AI sees, and misses').first()).toBeVisible();
     await expect(page.getByText('This game is still being built')).toBeVisible();
     if (wide(page)) {
       await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -79,8 +79,8 @@ test.describe('Arcade screen', () => {
   test('unknown, unfinished and locked games open a kind notice, never a broken screen', async ({ page }) => {
     await page.goto('/#/arcade/nope');
     await expect(page.getByRole('heading', { level: 2, name: 'Game not found' })).toBeVisible();
-    await page.goto('/#/arcade/sino-to');
-    await expect(page.getByRole('heading', { level: 2, name: "Sino 'To?" })).toBeVisible();
+    await page.goto('/#/arcade/lamok-lamay');
+    await expect(page.getByRole('heading', { level: 2, name: 'Lamok Lamay' })).toBeVisible();
     await expect(page.getByText('still being built')).toBeVisible();
     await page.goto('/#/arcade/hati-tayo');
     await expect(page.getByText('Finish Module 6 to unlock this game.')).toBeVisible();

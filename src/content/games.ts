@@ -48,7 +48,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'sino-to',
     name: "Sino 'To?",
     module: null,
-    playable: false,
+    playable: true,
     topic: 'Voice-clone scams',
     how: 'Calls keep coming in. Verify the caller before you send anything, and help the real ones fast.',
     icon: 'phone-call',

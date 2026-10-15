@@ -138,6 +138,7 @@ describe('Arcade tiles', () => {
     expect(tiles[0]?.getAttribute('aria-label')).toBe('Takbo, Data!, Data privacy, New');
     expect(tiles[1]?.getAttribute('aria-label')).toBe("Feed Mo 'To, Algorithms and filter bubbles, New");
     expect(tiles[2]?.getAttribute('aria-label')).toBe('Luto ni Ara, Prompting AI well, New');
+    expect(tiles[3]?.getAttribute('aria-label')).toBe("Sino 'To?, Voice-clone scams, New");
     expect(screen.getByRole('link', { name: 'Play Fact or Fake' }).getAttribute('href')).toBe('#/play/fact-or-fake');
   });
 
