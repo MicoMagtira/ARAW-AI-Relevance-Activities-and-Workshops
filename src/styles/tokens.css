@@ -1,0 +1,99 @@
+/* ARAW design tokens (docs/DESIGN.md section 2). Components use variables only, never raw hexes. */
+@import '@fontsource/press-start-2p/latin-400.css';
+@import '@fontsource/baloo-2/latin-700.css';
+@import '@fontsource/baloo-2/latin-800.css';
+@import '@fontsource/nunito/latin-400.css';
+@import '@fontsource/nunito/latin-600.css';
+@import '@fontsource/nunito/latin-700.css';
+
+:root {
+  /* palette */
+  --cream: #fff8ec;
+  --surface: #ffffff;
+  --gold: #f5d89e;
+  --gold-deep: #e8b84a;
+  --navy: #35408e;
+  --navy-dark: #283276;
+  --navy-tint: #e3e6f5;
+  --ink: #1f2550;
+  --muted: #4a4f6a;
+  --coral: #ff7a59; /* fills only, never text */
+  --fact: #1e7d50;
+  --fact-tint: #e3f4ea;
+  --fact-ink: #17623f; /* text on fact-tint (--fact alone is 4.48:1) */
+  --fake: #c4323a;
+  --fake-tint: #fde7e8;
+  --line: #eadfc8;
+  --soft: #f3ecdd;
+  --on-color: #ffffff; /* the one literal: white text on navy / fact / fake */
+
+  /* pixel geometry */
+  --px: 4px;
+  --px-chip: 2px;
+  --px-line: var(--ink);
+  --px-shadow: var(--ink);
+  --focus: var(--ink);
+  --focus-w: 3px;
+
+  /* type */
+  --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+  --font-head: 'Baloo 2', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --text-scale: 1;
+  --fs-10: calc(10px * var(--text-scale));
+  --fs-12: calc(12px * var(--text-scale));
+  --fs-13: calc(13px * var(--text-scale));
+  --fs-14: calc(14px * var(--text-scale));
+  --fs-16: calc(16px * var(--text-scale));
+  --fs-18: calc(18px * var(--text-scale));
+  --fs-20: calc(20px * var(--text-scale));
+  --fs-22: calc(22px * var(--text-scale));
+  --fs-24: calc(24px * var(--text-scale));
+  --fs-28: calc(28px * var(--text-scale));
+
+  /* spacing (4px grid) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* targets */
+  --tap: 44px;
+
+  /* motion */
+  --step-fast: 120ms;
+  --step: 160ms;
+  --step-slow: 240ms;
+
+  /* shell geometry (overridden per breakpoint in shell.css) */
+  --sidebar-w: clamp(240px, 18.75vw, 288px);
+  --banner-h: 72px;
+  --tabbar-h: 56px;
+  --gutter: 32px;
+  --gap: 24px;
+}
+
+/* ---------- App-wide setting classes (on <html>) ---------- */
+:root.a11y-large-text {
+  --text-scale: 1.2;
+}
+
+:root.a11y-xl-buttons {
+  --tap: 56px;
+}
+
+:root.a11y-high-contrast {
+  --cream: #ffffff;
+  --soft: #ffffff;
+  --line: var(--ink);
+  --muted: var(--ink);
+  --navy: #1f2550;
+  --gold: #ffe08a;
+  --px: 4px;
+  --px-chip: 4px;
+  --focus-w: 4px;
+}
