@@ -1,11 +1,13 @@
 import { useState } from 'preact/hooks';
+import { manilaDate } from '../app/daily';
 import { t, type StringKey } from '../app/i18n';
 import { badgesEarned, bestRadar, modulesDone } from '../app/progress';
 import { hrefFor } from '../app/router';
 import { SETTING_KEYS, setSetting, settings, type SettingKey } from '../app/settings';
 import { NICKNAME_MAX, profile, setAvatar, setNickname, streak, xp, DEFAULT_NICKNAME } from '../app/state';
 import { resetAll, storage } from '../app/store';
-import { BADGES, BADGE_TOTAL } from '../content/badges';
+import { activeStreak } from '../app/streak';
+import { BADGES, BADGE_TOTAL, type BadgeGroup } from '../content/badges';
 import { MODULE_COUNT } from '../content/modules';
 import { radarFor } from '../games/fact-or-fake/scoring';
 import { Avatar } from '../ui/Avatar';
@@ -87,7 +89,7 @@ function Stats() {
   const radar = best ? radarFor(best) : null;
   const rows: Array<[string, string]> = [
     [t('me.statXp'), String(xp.value)],
-    [t('me.statStreak'), String(streak.value.current)],
+    [t('me.statStreak'), String(activeStreak(streak.value, manilaDate()))],
     [t('me.statBest'), String(streak.value.best)],
     [t('me.statModules'), `${modulesDone.value.length} / ${MODULE_COUNT}`],
     [t('me.statBadges'), `${badgesEarned.value.length} / ${BADGE_TOTAL}`],
@@ -108,6 +110,14 @@ function Stats() {
   );
 }
 
+const BADGE_GROUPS: ReadonlyArray<readonly [BadgeGroup, StringKey]> = [
+  ['module', 'badges.group.module'],
+  ['villain', 'badges.group.villain'],
+  ['radar', 'badges.group.radar'],
+  ['streak', 'badges.group.streak'],
+  ['finale', 'badges.group.finale'],
+];
+
 function CabinetPanel() {
   const earned = badgesEarned.value;
   const [picked, setPicked] = useState(BADGES[0]?.id ?? '');
@@ -120,24 +130,23 @@ function CabinetPanel() {
           {t('me.cabinet')}
         </h2>
         <p class="px-text-muted">{t('me.cabinetHint')}</p>
-        <div class="badge-grid">
-          {BADGES.map((b) => {
-            const got = earned.includes(b.id);
-            return (
-              <button
-                key={b.id}
-                type="button"
-                class="badge-pick"
-                aria-pressed={b.id === picked}
-                onClick={() => setPicked(b.id)}
-              >
-                <Medal earned={got} size={56} />
-                <span class="badge-pick__name">{b.name}</span>
-                <span class="sr-only">{got ? t('me.badgeEarned') : t('me.badgeLocked')}</span>
-              </button>
-            );
-          })}
-        </div>
+        {BADGE_GROUPS.map(([group, labelKey]) => (
+          <div class="stack badge-group" role="group" aria-label={t(labelKey)} key={group}>
+            <h3 class="badge-group__title">{t(labelKey)}</h3>
+            <div class="badge-grid">
+              {BADGES.filter((b) => b.group === group).map((b) => {
+                const got = earned.includes(b.id);
+                return (
+                  <button key={b.id} type="button" class="badge-pick" aria-pressed={b.id === picked} onClick={() => setPicked(b.id)}>
+                    <Medal earned={got} size={56} />
+                    <span class="badge-pick__name">{b.name}</span>
+                    <span class="sr-only">{got ? t('me.badgeEarned') : t('me.badgeLocked')}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
         {badge && (
           <div class="badge-info px-box" aria-live="polite">
             <p class="badge-info__name">
@@ -148,6 +157,33 @@ function CabinetPanel() {
         )}
       </div>
     </Panel>
+  );
+}
+
+function CertificatePanel() {
+  const done = modulesDone.value.length;
+  const open = done >= MODULE_COUNT;
+  return (
+    <div class="stack me-cert">
+      <h2 class="panel-title">{t('me.certTitle')}</h2>
+      <p class="px-text-muted">{t('me.certText')}</p>
+      {open ? (
+        <div>
+          <Button variant="gold" href={hrefFor('/certificate')}>
+            <Icon name="trophy" />
+            {t('me.certOpen')}
+          </Button>
+        </div>
+      ) : (
+        <div>
+          <Button variant="secondary" aria-disabled="true" disabled>
+            <Icon name="lock" />
+            {t('me.certTitle')}
+          </Button>
+          <p class="px-text-muted me-cert__locked">{t('me.certLocked', { n: done })}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -176,6 +212,7 @@ function SettingsPanel({ onReset }: { onReset: () => void }) {
             />
           ))}
         </div>
+        <CertificatePanel />
         <h2 class="panel-title">{t('me.more')}</h2>
         <ul class="menu-list">
           <li class="menu-row">

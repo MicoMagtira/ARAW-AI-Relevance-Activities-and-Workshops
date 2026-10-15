@@ -1,6 +1,6 @@
 // What a finished Fact or Fake round changes: XP, the best Truth Radar and the Timbang na Radar badge.
 import { addXp } from '../../app/state';
-import { bestRadar, earnBadge } from '../../app/progress';
+import { bestRadar, earnBadge, recordActivity } from '../../app/progress';
 import type { RoundAnswer } from './FofRound';
 import { MIN_ITEMS_FOR_RADAR, radarFor, scoreRound, type RoundScore } from './scoring';
 
@@ -21,6 +21,7 @@ export interface RoundOutcome {
 
 /** Save the radar of a finished free-play (or Module 4) round. Short rounds are a rough read and are not saved. */
 export function recordRound(score: RoundScore): RoundOutcome {
+  recordActivity();
   if (score.total < MIN_ITEMS_FOR_RADAR) return { counted: false, newBest: false, badge: false };
   const best = bestRadar.value;
   const newBest = !best || score.dPrime > best.dPrime;
@@ -31,6 +32,7 @@ export function recordRound(score: RoundScore): RoundOutcome {
 
 /** Pay a free-play correct answer straight away (replays pay every time). */
 export function payCorrect(): number {
+  recordActivity();
   addXp(XP_PER_CORRECT);
   return XP_PER_CORRECT;
 }

@@ -2,7 +2,7 @@ import type { StringKey } from './i18n';
 import type { IconName } from '../ui/icons';
 
 export type TabId = 'home' | 'learn' | 'arcade' | 'library' | 'me';
-export type RouteName = 'home' | 'learn' | 'arcade' | 'library' | 'me' | 'lesson' | 'fof' | 'assess' | 'game' | 'report' | 'about' | 'notFound';
+export type RouteName = 'home' | 'learn' | 'arcade' | 'library' | 'me' | 'lesson' | 'fof' | 'assess' | 'game' | 'daily' | 'certificate' | 'report' | 'about' | 'notFound';
 
 export interface TabDef {
   id: TabId;
@@ -36,10 +36,12 @@ export const ROUTES: readonly RouteDef[] = [
   { name: 'assess', pattern: '/assess/:form', titleKey: 'title.assess' },
   { name: 'arcade', pattern: '/arcade', titleKey: 'title.arcade', tab: 'arcade' },
   { name: 'game', pattern: '/arcade/:slug', titleKey: 'title.game', tab: 'arcade' },
+  { name: 'daily', pattern: '/daily', titleKey: 'title.daily', tab: 'arcade' },
   { name: 'library', pattern: '/library', titleKey: 'title.library', tab: 'library' },
   { name: 'library', pattern: '/library/:tab', titleKey: 'title.library', tab: 'library' },
   { name: 'library', pattern: '/library/komiks/:n', titleKey: 'title.library', tab: 'library' },
   { name: 'me', pattern: '/me', titleKey: 'title.me', tab: 'me' },
+  { name: 'certificate', pattern: '/certificate', titleKey: 'title.certificate', tab: 'me' },
   { name: 'report', pattern: '/report', titleKey: 'title.report' },
   { name: 'about', pattern: '/about', titleKey: 'title.about' },
 ];

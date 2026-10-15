@@ -1,9 +1,11 @@
 import { useState } from 'preact/hooks';
+import { bandBlocks, dailyRecord, fofBlocks, isComplete, recordFor } from '../app/dailyChallenge';
 import { dailyGame, greetingKey, manilaDate, manilaDayLabel, mythOfTheDay } from '../app/daily';
 import { t, type StringKey } from '../app/i18n';
 import { arcadeReady, badgesEarned, cardsDone, modulesDone, nextModule, nodeState, type NodeState } from '../app/progress';
 import { hrefFor } from '../app/router';
 import { displayName, streak, xp } from '../app/state';
+import { activeStreak } from '../app/streak';
 import { BADGES, BADGE_TOTAL } from '../content/badges';
 import { ARCADE_GAMES } from '../content/games';
 import { MODULES, MODULE_COUNT } from '../content/modules';
@@ -72,7 +74,7 @@ function Stats() {
           </div>
           <div>
             <dt>{t('home.streak')}</dt>
-            <dd>{streak.value.current}</dd>
+            <dd>{activeStreak(streak.value, manilaDate())}</dd>
           </div>
           <div>
             <dt>{t('home.streakBest')}</dt>
@@ -90,7 +92,11 @@ function Stats() {
 }
 
 function Daily({ now }: { now: Date }) {
-  const game = dailyGame(manilaDate(now));
+  const date = manilaDate(now);
+  const game = dailyGame(date);
+  const record = recordFor(date, dailyRecord.value);
+  const complete = isComplete(record);
+  const started = record.game !== null || record.fof !== null;
   return (
     <Panel class="home-daily" aria-labelledby="daily-h">
       <div class="card-band px-sunrise" aria-hidden="true" />
@@ -99,9 +105,20 @@ function Daily({ now }: { now: Date }) {
           {t('home.daily', { date: manilaDayLabel(now) })}
         </h3>
         <p class="card-title">{t('home.dailyGame', { game: game.name })}</p>
-        <p class="px-text-muted">{t('home.dailySoon')}</p>
+        <p class="px-text-muted">
+          {complete ? t('home.dailyDoneText') : started ? t('home.dailyPart') : t('daily.intro')}
+        </p>
+        {complete && record.game && record.fof && (
+          <p class="daily-blocks" aria-label={t('home.dailyDone', { blocks: `${record.game.bands} / 5, ${record.fof.filter(Boolean).length} / 3` })}>
+            <span aria-hidden="true">
+              {bandBlocks(record.game.bands)} {fofBlocks(record.fof)}
+            </span>
+          </p>
+        )}
         <div>
-          <span class="px-chip px-notch daily-soon">{t('home.dailySoonChip')}</span>
+          <Button href={hrefFor('/daily')} variant={complete ? 'secondary' : 'gold'}>
+            {complete ? t('home.dailyOpen') : t('home.dailyPlay')}
+          </Button>
         </div>
       </div>
     </Panel>

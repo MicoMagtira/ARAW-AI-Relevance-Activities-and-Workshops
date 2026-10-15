@@ -38,8 +38,7 @@ test.describe('Home', () => {
 
     // Daily challenge, myth of the day, arcade shortcut, path and badges
     await expect(page.getByRole('heading', { level: 3, name: /Daily challenge · OCT 15/i })).toBeVisible();
-    await expect(page.locator('.home-daily').getByText('Coming soon', { exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: "Play today's challenge" })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Play today’s challenge' })).toHaveAttribute('href', '#/daily');
     await expect(page.getByRole('link', { name: 'Open the Arcade' })).toHaveAttribute('href', '#/arcade');
     await expect(page.getByText('6 of 11 ready')).toBeVisible();
     await expect(page.getByRole('list').filter({ has: page.locator('.path-node') }).getByRole('listitem')).toHaveCount(10);

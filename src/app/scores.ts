@@ -1,4 +1,6 @@
 // Arcade results: personal bests, first-run briefings seen, and the XP a finished run pays (docs/SPEC.md section 5).
+import { recordDailyGame } from './dailyChallenge';
+import { recordActivity } from './progress';
 import { addXp } from './state';
 import { persisted } from './store';
 
@@ -39,13 +41,15 @@ export interface RunResult {
   xp: number;
 }
 
-/** Save a finished run: update the personal best and pay the run XP. */
-export function recordRun(slug: string, score: number, goodRun: number): RunResult {
+/** Save a finished run: update the personal best and pay the run XP. A daily run also counts for the Daily Challenge (once a day). */
+export function recordRun(slug: string, score: number, goodRun: number, daily = false): RunResult {
+  recordActivity();
   const safe = Number.isFinite(score) ? Math.max(0, Math.floor(score)) : 0;
   const previousBest = bestScores.value[slug] ?? 0;
   const newBest = safe > previousBest;
   if (newBest) bestScores.value = { ...bestScores.value, [slug]: safe };
   const xp = runXp(safe, goodRun, newBest);
   addXp(xp);
+  if (daily) recordDailyGame(slug, safe, goodRun);
   return { score: safe, previousBest, best: Math.max(previousBest, safe), newBest, goodRun: safe >= goodRun, xp };
 }

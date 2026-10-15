@@ -1,7 +1,7 @@
 // Building Fact or Fake rounds: balanced, seeded, no repeats. Practice rounds never contain form_A / form_B items.
 import { FOF_PRACTICE } from '../../content/factOrFake/practice';
 import type { FofItem, Truth } from '../../content/factOrFake/schema';
-import { createRng, shuffle, type Rng } from '../engine/rng';
+import { createRng, dailySeed, shuffle, type Rng } from '../engine/rng';
 
 export const FREE_PLAY_SIZE = 10;
 
@@ -49,6 +49,9 @@ export function buildRound({ size, seed, module, items }: RoundOptions): FofItem
   const picked = [...take(pool, 'fake', nFake, module, rng), ...take(pool, 'fact', nFact, module, rng)];
   return shuffle(picked, rng);
 }
+
+/** Today's Daily Challenge items: 3 practice items drawn by the date seed, so everyone gets the same (at least one fact, one fake). */
+export const dailyItems = (date: string, items?: readonly FofItem[]): FofItem[] => buildRound({ size: 3, seed: dailySeed(date), items });
 
 /** Which Fact or Fake modes exist. Assessment is reachable by route only. */
 export type FofMode = 'module' | 'free' | 'assess';

@@ -2,11 +2,15 @@ import type { ComponentType } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { Avatar } from '../ui/Avatar';
 import { Icon } from '../ui/Icon';
-import { Button, Chip, SrHint, ToastHost, srDescribedBy } from '../ui/kit';
+import { Button, Chip, SrHint, ToastHost, pushToast, srDescribedBy } from '../ui/kit';
 import { t } from './i18n';
 import { hrefFor, location$, matchRoute } from './router';
 import { TABS, type RouteName } from './routes';
+import { BADGES } from '../content/badges';
+import { manilaDate } from './daily';
+import { streakNotice } from './progress';
 import { displayName, profile, streak, xp } from './state';
+import { activeStreak } from './streak';
 import { Home } from '../screens/Home';
 import { Learn } from '../screens/Learn';
 import { Lesson } from '../screens/Lesson';
@@ -14,23 +18,42 @@ import { LazyFactOrFake } from '../games/fact-or-fake/LazyFactOrFake';
 import { LazyGame } from '../games/LazyGame';
 import { Arcade } from '../screens/Arcade';
 import { Library } from '../screens/Library';
+import { Daily } from '../screens/Daily';
+import { Certificate } from '../screens/Certificate';
 import { Me } from '../screens/Me';
 import { Report } from '../screens/Report';
 import { About } from '../screens/About';
 import { NotFound } from '../screens/NotFound';
 
-const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game'>, ComponentType> = {
+const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game' | 'certificate'>, ComponentType> = {
   home: Home,
   learn: Learn,
   arcade: Arcade,
   library: Library,
+  daily: Daily,
   me: Me,
   report: Report,
   about: About,
   notFound: NotFound,
 };
 
+/** Tell the player about a streak freeze, a fresh start or a new streak badge (set by recordActivity). */
+function useStreakToasts() {
+  const notice = streakNotice.value;
+  useEffect(() => {
+    if (!notice) return;
+    streakNotice.value = null;
+    if (notice.event === 'freeze') pushToast({ kind: 'success', title: t('streak.freeze.title'), text: t('streak.freeze.text', { n: notice.current }) });
+    else if (notice.event === 'restart') pushToast({ kind: 'success', title: t('streak.restart.title'), text: t('streak.restart.text') });
+    for (const id of notice.badges) {
+      const badge = BADGES.find((b) => b.id === id);
+      if (badge) pushToast({ kind: 'badge', title: t('streak.badge.title', { name: badge.name }), text: badge.english });
+    }
+  }, [notice]);
+}
+
 export function Shell() {
+  useStreakToasts();
   const match = matchRoute(location$.value);
   const lessonId = match.def.name === 'lesson' ? match.params.id : undefined;
   const focusName = match.def.name;
@@ -52,11 +75,13 @@ export function Shell() {
   }, [match.def.name, screenKey]);
 
   // Focus mode: the module runner and Fact or Fake replace the sidebar, banner and tab bar with its own top bar.
-  if (lessonId !== undefined || focusName === 'fof' || focusName === 'assess' || focusName === 'game') {
+  if (lessonId !== undefined || focusName === 'fof' || focusName === 'assess' || focusName === 'game' || focusName === 'certificate') {
     return (
       <div class="shell shell--focus">
         {lessonId !== undefined ? (
           <Lesson id={lessonId} key={lessonId} />
+        ) : focusName === 'certificate' ? (
+          <Certificate />
         ) : focusName === 'game' ? (
           <LazyGame slug={match.params.slug ?? ''} seed={match.location.query.seed} breakSeconds={match.location.query.break} key={match.location.path + (match.location.query.seed ?? '')} />
         ) : focusName === 'fof' ? (
@@ -68,10 +93,11 @@ export function Shell() {
       </div>
     );
   }
-  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game'>];
+  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game' | 'certificate'>];
 
   const reportHref = hrefFor('/report', { screen: match.def.name === 'report' ? undefined : match.def.name });
   const activeTab = match.def.tab;
+  const shownStreak = activeStreak(streak.value, manilaDate());
 
   return (
     <div class="shell">
@@ -104,10 +130,10 @@ export function Shell() {
           <Chip kind="streak">
             <Icon name="flame" size={16} />
             <span aria-hidden="true">
-              {streak.value.current}
+              {shownStreak}
               <span class="chip-long"> {t('hud.days')}</span>
             </span>
-            <span class="sr-only">{t('hud.streakLabel', { n: streak.value.current })}</span>
+            <span class="sr-only">{t('hud.streakLabel', { n: shownStreak })}</span>
             <SrHint>{t('sr.streak')}</SrHint>
           </Chip>
           <a class="avatar-link" href={hrefFor('/me')} aria-label={t('hud.avatar')}>

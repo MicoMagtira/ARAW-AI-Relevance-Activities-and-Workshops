@@ -197,7 +197,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
         const stats = refresh(false);
         if (stats?.over) {
           loop.stop();
-          const run = recordRun(game.slug, stats.score, game.goodRun);
+          const run = recordRun(game.slug, stats.score, game.goodRun, !!daily);
           refresh(true);
           setResult(run);
           setStatus(t('game.announce.over', { score: formatScore(run.score) }));
@@ -215,7 +215,8 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
 
   const breakMinutes = Math.max(1, sessionClock.minutes);
   const best = bestScores.value[game.slug] ?? 0;
-  const closeHref = hrefFor('/arcade');
+  const closeHref = hrefFor(daily ? '/daily' : '/arcade');
+  const quitLabel = daily ? t('game.quitDaily') : t('game.quit');
   const playing = phase === 'playing';
   const overlay = phase !== 'playing';
 
@@ -323,7 +324,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                         {t('game.restart')}
                       </Button>
                       <Button variant="secondary" href={closeHref}>
-                        {t('game.quit')}
+                        {quitLabel}
                       </Button>
                     </div>
                   </Panel>
@@ -377,7 +378,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                         {t('game.again')}
                       </Button>
                       <Button variant="secondary" href={closeHref}>
-                        {t('game.quit')}
+                        {quitLabel}
                       </Button>
                     </div>
                   </Panel>
@@ -450,7 +451,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
               {t('game.keepPlaying')}
             </Button>
             <Button variant="gold" href={closeHref}>
-              {t('game.quit')}
+              {quitLabel}
             </Button>
           </>
         }

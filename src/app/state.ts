@@ -44,16 +44,19 @@ export interface Streak {
   best: number;
   /** Asia/Manila date (YYYY-MM-DD) of the last active day, or null. */
   lastDay: string | null;
+  /** Monday (YYYY-MM-DD) of the week whose one streak freeze has been used. */
+  freezeWeek?: string | null;
 }
 
 export const streak = persisted<Streak>(
   'streak',
-  { current: 0, best: 0, lastDay: null },
+  { current: 0, best: 0, lastDay: null, freezeWeek: null },
   (v): v is Streak =>
     isObject(v) &&
     typeof v.current === 'number' &&
     typeof v.best === 'number' &&
-    (v.lastDay === null || typeof v.lastDay === 'string'),
+    (v.lastDay === null || typeof v.lastDay === 'string') &&
+    (v.freezeWeek === undefined || v.freezeWeek === null || typeof v.freezeWeek === 'string'),
 );
 
 export function addXp(amount: number): void {

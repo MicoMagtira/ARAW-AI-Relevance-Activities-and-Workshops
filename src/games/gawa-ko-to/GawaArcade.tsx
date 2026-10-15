@@ -10,9 +10,9 @@ import { Studio, type StudioResult } from './Studio';
 import { GOOD_RUN } from './rules';
 import type { DomGameProps } from '../registry';
 
-function ArcadeEnd({ result, onAgain }: { result: StudioResult; onAgain: () => void }) {
+function ArcadeEnd({ result, daily, onAgain }: { result: StudioResult; daily?: boolean; onAgain: () => void }) {
   // saved once, when the end screen first shows
-  const [run] = useState(() => recordRun('gawa-ko-to', result.score, GOOD_RUN));
+  const [run] = useState(() => recordRun('gawa-ko-to', result.score, GOOD_RUN, daily));
   return (
     <>
       <p>
@@ -21,8 +21,8 @@ function ArcadeEnd({ result, onAgain }: { result: StudioResult; onAgain: () => v
       <Button variant="gold" large onClick={onAgain}>
         {t('game.again')}
       </Button>
-      <Button variant="secondary" href={hrefFor('/arcade')}>
-        {t('game.quit')}
+      <Button variant="secondary" href={hrefFor(daily ? '/daily' : '/arcade')}>
+        {daily ? t('game.quitDaily') : t('game.quit')}
       </Button>
     </>
   );
@@ -31,5 +31,5 @@ function ArcadeEnd({ result, onAgain }: { result: StudioResult; onAgain: () => v
 export default function GawaArcade({ seed, daily }: DomGameProps) {
   const [run, setRun] = useState({ key: 0, seed: seed || randomSeed() });
   const again = () => setRun({ key: run.key + 1, seed: seed || randomSeed() });
-  return <Studio key={run.key} mode="arcade" seed={run.seed} daily={daily} endActions={(r) => <ArcadeEnd result={r} onAgain={again} />} />;
+  return <Studio key={run.key} mode="arcade" seed={run.seed} daily={daily} endActions={(r) => <ArcadeEnd result={r} daily={daily} onAgain={again} />} />;
 }

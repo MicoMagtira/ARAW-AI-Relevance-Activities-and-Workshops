@@ -1,8 +1,11 @@
 // Learning progress: modules, lesson cards and badges. Modules, games and streaks write to these in later tasks.
 import { MODULES, type ModuleInfo } from '../content/modules';
 import { ARCADE_GAMES, type GameInfo } from '../content/games';
-import { addXp } from './state';
+import { signal } from '@preact/signals';
+import { manilaDate } from './daily';
+import { addXp, streak } from './state';
 import { persisted } from './store';
+import { advanceStreak, type StreakEvent } from './streak';
 
 const isStringArray = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === 'string');
 
@@ -55,6 +58,7 @@ export const xpClaims = persisted<string[]>('xpClaims', [], isStringArray);
 
 /** Pay `amount` XP once per key. Returns the XP given (0 when the key was already claimed). */
 export function claimXp(key: string, amount: number): number {
+  recordActivity();
   if (xpClaims.value.includes(key) || !(amount > 0)) return 0;
   xpClaims.value = [...xpClaims.value, key];
   addXp(amount);
@@ -63,6 +67,7 @@ export function claimXp(key: string, amount: number): number {
 
 /** Remember how far a module got: `completed` card steps (never goes backwards). */
 export function saveCardProgress(m: ModuleInfo, completed: number): void {
+  recordActivity();
   const next = Math.max(0, Math.min(m.cards, Math.floor(completed)));
   if (next > (cardsDone.value[m.id] ?? 0)) cardsDone.value = { ...cardsDone.value, [m.id]: next };
 }
@@ -118,4 +123,32 @@ export const komiksRead = persisted<string[]>('komiksRead', [], isStringArray);
 /** Mark an episode as read (once). */
 export function markKomiksRead(id: string): void {
   if (!komiksRead.value.includes(id)) komiksRead.value = [...komiksRead.value, id];
+}
+
+/** What the last streak change was, so the shell can tell the player (a toast). Cleared once it has been shown. */
+export interface StreakNotice {
+  event: StreakEvent;
+  /** The streak ended and a new one started (not the very first day). */
+  badges: string[];
+  /** Streak length after the change. */
+  current: number;
+}
+
+export const streakNotice = signal<StreakNotice | null>(null);
+
+/**
+ * Count today (Asia/Manila) as an active day: a lesson card, a game run, a Fact or Fake round or the Daily Challenge.
+ * Streak badges are earned here. The first call each day does the work; later ones return at once.
+ */
+export function recordActivity(now: Date = new Date()): StreakEvent {
+  const today = manilaDate(now);
+  if (streak.value.lastDay === today) return 'same';
+  const step = advanceStreak(streak.value, today);
+  if (step.event === 'same') return 'same';
+  streak.value = step.streak;
+  const badges = step.badges.filter((id) => earnBadge(id));
+  if (step.event === 'freeze' || step.event === 'restart' || badges.length > 0) {
+    streakNotice.value = { event: step.event, badges, current: step.streak.current };
+  }
+  return step.event;
 }

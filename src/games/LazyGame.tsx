@@ -23,11 +23,11 @@ interface Props {
   breakSeconds?: string;
 }
 
-function Frame({ title, children }: { title: string; children: ComponentChildren }) {
+function Frame({ title, daily, children }: { title: string; daily?: boolean; children: ComponentChildren }) {
   return (
     <div class="lesson game-frame">
       <header class="lesson-bar">
-        <Button href={hrefFor('/arcade')} icon variant="secondary" aria-label={t('game.close')}>
+        <Button href={hrefFor(daily ? '/daily' : '/arcade')} icon variant="secondary" aria-label={daily ? t('game.closeDaily') : t('game.close')}>
           <Icon name="close" />
         </Button>
         <p class="lesson-bar__title" title={title}>
@@ -107,7 +107,7 @@ export function LazyGame({ slug, seed, breakSeconds }: Props) {
 
   if (dom && dom.slug === slug) {
     return (
-      <Frame title={info?.name ?? slug}>
+      <Frame title={info?.name ?? slug} daily={daily}>
         <dom.View seed={daily ? dailySeed(manilaDate()) : seed || undefined} daily={daily} />
       </Frame>
     );
@@ -119,7 +119,7 @@ export function LazyGame({ slug, seed, breakSeconds }: Props) {
   }
   const title = info?.name ?? slug;
   return (
-    <Frame title={title}>
+    <Frame title={title} daily={daily}>
       {failed ? (
         <div class="stack">
           <p>{t('lesson.gameError')}</p>

@@ -23,6 +23,12 @@ export function manilaDayLabel(now: Date = new Date()): string {
   return `${p.month} ${p.day}`.toUpperCase();
 }
 
+/** Long label such as "16 October 2026" for the Manila day (used on the certificate). */
+export function manilaLongDate(now: Date = new Date()): string {
+  const p = manilaParts(now, { day: 'numeric', month: 'long', year: 'numeric' });
+  return `${p.day} ${p.month} ${p.year}`;
+}
+
 /** Whole days from 2026-01-01 to a YYYY-MM-DD date (negative before the epoch). */
 export function daysSinceEpoch(date: string): number {
   const [y, m, d] = date.split('-').map(Number);
