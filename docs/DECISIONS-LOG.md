@@ -125,3 +125,4 @@ Product decisions live in `docs/SPEC.md`, `docs/CONTENT_GUIDE.md` and `docs/DESI
 - 2026-10-15 · T13 · Lesson card ids are no longer shown on screen; they stay in the Report flag's label and link · jargon for seniors; SPEC only needs the id in the report.
 - 2026-10-15 · T13 · Ara's wink is only for hints and reactions; greetings use happy/idle · keeps DESIGN 7 meaning.
 - 2026-10-15 · T13 · Content wording aligned with DOH/WHO (fogging in hotspot areas, one minute of rolling boil, "at least 20 seconds", gentler tawa-tawa line). Fictional-name search skipped (no web access in this run) and left on REVIEW-1.md · `docs/RELEASE-CHECKLIST.md` added for the screenshot smoke run.
+- 2026-10-15 · T13 · Fixed a flaky e2e (Spot the Tactic "a miss gives a villain its hearts back"): the loop read the post text right after Next, before the next post rendered; it now waits for "Post i of 12" first · race in the test, not the app.

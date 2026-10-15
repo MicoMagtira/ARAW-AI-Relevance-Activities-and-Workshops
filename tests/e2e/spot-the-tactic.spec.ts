@@ -155,6 +155,7 @@ test.describe('Spot the Tactic', () => {
     await openGame(page, { tacticStreaks: { dr_fake: 2 } });
     await start(page);
     for (let i = 1; i <= 12; i++) {
+      await expect(page.getByText(`Post ${i} of 12`)).toBeVisible(); // wait for the next post, so currentPost never reads the old one
       const post = await currentPost(page);
       if (post.trick === 'dr_fake') {
         await pickButton(page, 'kwento_kim').click();
