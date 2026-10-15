@@ -151,20 +151,25 @@ test.describe('Module runner', () => {
     await expect(page.locator('.bullets li')).toHaveCount(3);
     await next(page, /^Next: quick Fact or Fake round/);
 
-    // mini Fact or Fake: five practice items (fake, fact, fake, fact, fake)
-    const truths = ['Fake', 'Fact', 'Fake', 'Fact', 'Fake'] as const;
-    for (const [i, truth] of truths.entries()) {
+    // mini Fact or Fake: five balanced practice items in random order; answer Fake every time.
+    // A right answer (the item was a fake) shows Tama! and the FAKE stamp; otherwise Muntik na!.
+    let right = 0;
+    for (let i = 0; i < 5; i++) {
       await expect(page.getByText(`Fact or Fake · ${i + 1} of 5`)).toBeVisible();
-      await page.getByRole('button', { name: truth, exact: true }).click();
-      await expect(page.getByRole('status').filter({ hasText: 'Tama!' })).toBeVisible();
-      if (truth === 'Fake') await expect(page.getByText('ARAW GAME · FAKE')).toBeVisible();
+      await page.getByRole('button', { name: 'Fake', exact: true }).click();
+      const feedback = page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ });
+      await expect(feedback).toBeVisible();
+      const correct = /Tama!/.test((await feedback.textContent()) ?? '');
+      if (correct) right++;
+      await expect(page.getByText('ARAW GAME · FAKE')).toHaveCount(correct ? 1 : 0);
       await page.getByRole('button', { name: i === 4 ? 'See my reward' : 'Next' }).click();
     }
+    expect(right).toBeGreaterThanOrEqual(2); // 2 or 3 of the five are fakes
 
     // reward
     await expect(page.getByRole('heading', { level: 2, name: 'Galing! You finished the module.' })).toBeVisible();
     await expect(page.locator('.reward-badge__name')).toHaveText('Unang Sinag');
-    await expect(page.getByText('+235 XP')).toBeVisible();
+    await expect(page.getByText(`+${185 + right * 10} XP`)).toBeVisible();
     await expect(page.getByText('Module 2 · How AI Learns and Makes Mistakes')).toBeVisible();
     await expect(page.getByText('Komiks Episode 1')).toBeVisible();
     await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 10 / 10');
@@ -178,7 +183,7 @@ test.describe('Module runner', () => {
     await expect(page.locator('.road-node--done')).toHaveCount(1);
     await expect(page.locator('.road-node--current')).toContainText('How AI Learns');
     await page.goto('/#/');
-    await expect(page.getByText('235', { exact: false }).first()).toBeVisible();
+    await expect(page.getByText(String(185 + right * 10), { exact: false }).first()).toBeVisible();
 
     // finished modules can be replayed without new XP
     await page.goto('/#/learn/m01');
@@ -228,8 +233,8 @@ test.describe('Module runner', () => {
     await page.getByRole('button', { name: 'Finish the game' }).click();
     await next(page);
     await next(page, /^Next: quick Fact or Fake round/);
-    for (const [i, truth] of (['Fake', 'Fact', 'Fake', 'Fact', 'Fake'] as const).entries()) {
-      await page.getByRole('button', { name: truth, exact: true }).click();
+    for (let i = 0; i < 5; i++) {
+      await page.getByRole('button', { name: 'Fake', exact: true }).click();
       await page.getByRole('button', { name: i === 4 ? 'See my reward' : 'Next' }).click();
     }
     await expect(page.getByRole('heading', { level: 2, name: 'Galing! You finished the module.' })).toBeVisible();

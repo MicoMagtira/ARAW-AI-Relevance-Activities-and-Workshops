@@ -579,8 +579,7 @@ button {
   bottom: 8px;
   right: 8px;
   font: 10px / 1 var(--font-pixel);
-  color: var(--muted);
-  opacity: 0.6;
+  color: var(--muted); /* full opacity: faded text fails the 4.5:1 contrast check */
   pointer-events: none;
 }
 

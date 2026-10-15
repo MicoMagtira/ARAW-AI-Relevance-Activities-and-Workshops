@@ -5,6 +5,7 @@ import './styles/shell.css';
 import './styles/screens.css';
 import './styles/learn.css';
 import './styles/lesson.css';
+import './styles/fof.css';
 import './styles/ara.css';
 import './styles/splash.css';
 import { App } from './app/App';

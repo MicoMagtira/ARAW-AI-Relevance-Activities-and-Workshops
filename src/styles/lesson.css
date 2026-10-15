@@ -473,34 +473,6 @@
   border: var(--px) solid var(--ink);
 }
 
-/* Mini Fact or Fake stub */
-.post {
-  position: relative;
-  padding: var(--sp-5) var(--sp-5) var(--sp-6);
-  background: var(--cream);
-}
-
-.post__text {
-  font-size: var(--fs-20);
-  font-weight: 600;
-}
-
-.post .px-stamp {
-  position: static;
-  display: inline-block;
-  margin-top: var(--sp-3);
-}
-
-.practice-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-4);
-}
-
-.practice-buttons .px-btn {
-  flex: 1 1 140px;
-}
-
 /* ---------- Game and reward ---------- */
 .stars {
   display: inline-flex;

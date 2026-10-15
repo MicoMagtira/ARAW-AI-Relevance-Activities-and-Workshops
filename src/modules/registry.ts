@@ -18,8 +18,5 @@ export async function loadContent(id: string): Promise<ModuleContent | null> {
   return loader ? (await loader()).default : null;
 }
 
-/**
- * The mini Fact or Fake slot. T05 swaps this loader for the real round (practice items from the item bank,
- * Truth Radar in Module 4). Until then a small stub round runs.
- */
-export const loadPracticeRound = (): Promise<{ default: ComponentType<PracticeRoundProps> }> => import('./practice/StubPracticeRound');
+/** The mini Fact or Fake slot: practice items tagged for the module, with the Truth Radar in Module 4. */
+export const loadPracticeRound = (): Promise<{ default: ComponentType<PracticeRoundProps> }> => import('../games/fact-or-fake/PracticeRound');

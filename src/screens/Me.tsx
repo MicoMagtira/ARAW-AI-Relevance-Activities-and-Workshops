@@ -1,12 +1,13 @@
 import { useState } from 'preact/hooks';
 import { t, type StringKey } from '../app/i18n';
-import { badgesEarned, modulesDone } from '../app/progress';
+import { badgesEarned, bestRadar, modulesDone } from '../app/progress';
 import { hrefFor } from '../app/router';
 import { SETTING_KEYS, setSetting, settings, type SettingKey } from '../app/settings';
 import { NICKNAME_MAX, profile, setAvatar, setNickname, streak, xp, DEFAULT_NICKNAME } from '../app/state';
 import { resetAll, storage } from '../app/store';
 import { BADGES, BADGE_TOTAL } from '../content/badges';
 import { MODULE_COUNT } from '../content/modules';
+import { radarFor } from '../games/fact-or-fake/scoring';
 import { Avatar } from '../ui/Avatar';
 import { AVATARS, safeAvatarIndex } from '../ui/avatars';
 import { Medal } from '../ui/Badge';
@@ -82,13 +83,15 @@ function ProfilePanel() {
 }
 
 function Stats() {
+  const best = bestRadar.value;
+  const radar = best ? radarFor(best) : null;
   const rows: Array<[string, string]> = [
     [t('me.statXp'), String(xp.value)],
     [t('me.statStreak'), String(streak.value.current)],
     [t('me.statBest'), String(streak.value.best)],
     [t('me.statModules'), `${modulesDone.value.length} / ${MODULE_COUNT}`],
     [t('me.statBadges'), `${badgesEarned.value.length} / ${BADGE_TOTAL}`],
-    [t('me.statRadar'), t('me.statRadarNone')],
+    [t('me.statRadar'), radar ? t('me.statRadarValue', { label: t(`radar.acc.${radar.accuracyLabel}` as const), pct: radar.accuracy }) : t('me.statRadarNone')],
   ];
   return (
     <div class="stack">

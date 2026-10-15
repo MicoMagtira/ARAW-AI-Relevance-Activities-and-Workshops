@@ -10,6 +10,7 @@ import { displayName, profile, streak, xp } from './state';
 import { Home } from '../screens/Home';
 import { Learn } from '../screens/Learn';
 import { Lesson } from '../screens/Lesson';
+import { LazyFactOrFake } from '../games/fact-or-fake/LazyFactOrFake';
 import { Arcade } from '../screens/Arcade';
 import { Library } from '../screens/Library';
 import { Me } from '../screens/Me';
@@ -17,7 +18,7 @@ import { Report } from '../screens/Report';
 import { About } from '../screens/About';
 import { NotFound } from '../screens/NotFound';
 
-const SCREENS: Record<Exclude<RouteName, 'lesson'>, ComponentType> = {
+const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess'>, ComponentType> = {
   home: Home,
   learn: Learn,
   arcade: Arcade,
@@ -31,6 +32,7 @@ const SCREENS: Record<Exclude<RouteName, 'lesson'>, ComponentType> = {
 export function Shell() {
   const match = matchRoute(location$.value);
   const lessonId = match.def.name === 'lesson' ? match.params.id : undefined;
+  const focusName = match.def.name;
   const title = t(match.def.titleKey);
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
@@ -46,16 +48,22 @@ export function Shell() {
     (mainRef.current ?? document.getElementById('main'))?.focus({ preventScroll: true });
   }, [match.def.name, match.location.path]);
 
-  // Focus mode: the module runner replaces the sidebar, banner and tab bar with its own top bar.
-  if (lessonId !== undefined) {
+  // Focus mode: the module runner and Fact or Fake replace the sidebar, banner and tab bar with its own top bar.
+  if (lessonId !== undefined || focusName === 'fof' || focusName === 'assess') {
     return (
       <div class="shell shell--focus">
-        <Lesson id={lessonId} key={lessonId} />
+        {lessonId !== undefined ? (
+          <Lesson id={lessonId} key={lessonId} />
+        ) : focusName === 'fof' ? (
+          <LazyFactOrFake mode="free" seed={match.location.query.seed} key={match.location.path} />
+        ) : (
+          <LazyFactOrFake mode="assess" form={match.params.form} key={match.location.path} />
+        )}
         <ToastHost />
       </div>
     );
   }
-  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson'>];
+  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson' | 'fof' | 'assess'>];
 
   const reportHref = hrefFor('/report', { screen: match.def.name === 'report' ? undefined : match.def.name });
   const activeTab = match.def.tab;

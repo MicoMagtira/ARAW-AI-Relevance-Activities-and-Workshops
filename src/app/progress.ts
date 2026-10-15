@@ -73,3 +73,22 @@ export function earnBadge(id: string): boolean {
   badgesEarned.value = [...badgesEarned.value, id];
   return true;
 }
+
+/** The best Truth Radar read from a full round (10+ items), kept by discernment (d-prime). */
+export interface BestRadar {
+  dPrime: number;
+  c: number;
+  total: number;
+}
+
+export const bestRadar = persisted<BestRadar | null>(
+  'bestRadar',
+  null,
+  (v): v is BestRadar | null =>
+    v === null ||
+    (typeof v === 'object' &&
+      !Array.isArray(v) &&
+      Number.isFinite((v as BestRadar).dPrime) &&
+      Number.isFinite((v as BestRadar).c) &&
+      Number.isFinite((v as BestRadar).total)),
+);
