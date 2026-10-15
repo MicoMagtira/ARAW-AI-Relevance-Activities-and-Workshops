@@ -93,7 +93,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'tulog-na-bea',
     name: 'Tulog na, Bea!',
     module: 'm08',
-    playable: false,
+    playable: true,
     topic: 'Digital wellbeing',
     how: "Keep Bea's sleep, mood, study and friends balanced while her phone keeps calling.",
     icon: 'moon',

@@ -1,0 +1,254 @@
+/* Tulog na, Bea! (Module 8 game and Arcade): Bea's scene and meters beside one moment at a time. Loaded with the game's chunk. */
+.tulog {
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.tulog h3,
+.tulog p,
+.tulog ul {
+  margin: 0;
+}
+
+.tulog p {
+  overflow-wrap: anywhere;
+}
+
+.tulog-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.tulog-hud .px-progress-wrap {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.tulog-stat {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+/* Wide screens: Bea and her meters stay in view on the left while the moment changes on the right. */
+.tulog-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 760px) {
+  .tulog-grid {
+    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  }
+
+  .tulog-side {
+    position: sticky;
+    top: var(--sp-4);
+  }
+}
+
+.tulog-side {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+.bea-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--px) solid var(--px-line);
+  box-shadow: var(--px) var(--px) 0 0 var(--px-shadow);
+  image-rendering: pixelated;
+}
+
+.bea-zzz {
+  font: 10px var(--font-pixel);
+  fill: var(--ink);
+}
+
+.tulog-meters {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tulog-main {
+  min-width: 0;
+}
+
+.tulog-card {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.tulog-title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.tulog-title:focus {
+  outline: none;
+}
+
+.tulog-when {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.tulog-how {
+  display: grid;
+  gap: var(--sp-2);
+  padding-left: var(--sp-5);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.tulog-quiet {
+  font-size: var(--fs-16);
+}
+
+.tulog-options,
+.tulog-bounds {
+  display: grid;
+  gap: var(--sp-3);
+  padding: 0;
+  list-style: none;
+}
+
+.tulog-bounds {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+
+.tulog-opt,
+.tulog-bound {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--sp-2);
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  font: 700 var(--fs-18) / 1.4 var(--font-body);
+}
+
+.tulog-opt:hover,
+.tulog-bound:hover {
+  background: var(--gold);
+}
+
+.tulog-opt:focus-visible,
+.tulog-bound:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 2px;
+}
+
+.tulog-bound {
+  height: 100%;
+  font-size: var(--fs-16);
+  font-weight: 600;
+}
+
+.tulog-bound.is-on {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.tulog-bound__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: 800;
+}
+
+.tulog-bound__name {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+}
+
+.tulog-bound__cost {
+  color: var(--muted);
+  font-size: var(--fs-14);
+}
+
+.tulog-bound.is-on .tulog-bound__cost {
+  color: var(--fact-ink);
+}
+
+.tulog-reveal--good {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.tulog-reveal--bad {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+  box-shadow: var(--px) var(--px) 0 0 var(--fake);
+  color: var(--ink);
+}
+
+.tulog-chosen {
+  font-weight: 800;
+}
+
+.tulog-fx {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.tulog-trick {
+  padding: var(--sp-3);
+  background: var(--surface);
+  border: var(--px-chip) solid var(--line);
+  color: var(--ink);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.tulog-points {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.tulog-reveal--good .tulog-points {
+  color: var(--fact-ink);
+}
+
+.tulog-stats {
+  display: grid;
+  gap: var(--sp-2);
+  padding-left: var(--sp-5);
+  font: 700 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.tulog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* The phone buzzes while it is calling Bea; reduced motion (the OS setting and the in-app toggle) keeps it still. */
+@media (prefers-reduced-motion: no-preference) {
+  .bea-phone.is-buzzing {
+    animation: bea-buzz 0.4s steps(2, end) infinite;
+  }
+
+  @keyframes bea-buzz {
+    50% {
+      transform: translate(114px, 56px);
+    }
+  }
+}

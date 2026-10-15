@@ -70,7 +70,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Name the design tricks that keep people scrolling.',
     'Explain why sleep matters and see AI companions as products, not friends.',
     'Set simple boundaries and know when to talk to a real person.',
-  ]),
+  ], 8),
   mod(9, 'Para sa Lahat', 'Para sa Lahat', 'Who gets left out of health AI, bias from data, and inclusive design.', 'Sa Sapatos Nila', [
     'Name the groups often left out by health tech.',
     'Explain that biased data makes unfair AI and suggest fixes.',

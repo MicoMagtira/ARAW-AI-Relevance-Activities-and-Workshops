@@ -27,6 +27,7 @@ export interface DomGameProps {
 /** Arcade games built from real page elements (an SVG poster, buttons), shown in the plain game frame. */
 export const DOM_GAME_LOADERS: Readonly<Record<string, () => Promise<{ default: ComponentType<DomGameProps> }>>> = {
   'gawa-ko-to': () => import('./gawa-ko-to/GawaArcade'),
+  'tulog-na-bea': () => import('./tulog-na-bea/TulogArcade'),
 };
 
 export const hasGame = (slug: string): boolean => Object.hasOwn(GAME_LOADERS, slug) || Object.hasOwn(DOM_GAME_LOADERS, slug);
