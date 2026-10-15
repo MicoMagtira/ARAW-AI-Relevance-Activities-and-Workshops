@@ -34,33 +34,33 @@ never scolds across modules, games, myths and Komiks.
 ### P1: before public launch
 - [ ] **Human health and legal review.** Everything is still `review_status: 'unreviewed'`. Priority files: `src/content/chatbot.ts`
   (red-flag rounds), `src/content/library/myths.ts` (herbal cures are culturally sensitive), `src/modules/m08` (sleep hours,
-  1553), `src/modules/m10` and `src/games/objection/data.ts` (Data Privacy Act statements, breach notification).
+  1553), `src/modules/m10` and `src/games/objection/data.ts` (Data Privacy Act statements, breach notification). **T31, not done:** needs a human reviewer, nothing to change in code.
 - [ ] **Fictional-name check** carried over from REVIEW-1 ("Dr. Reyes", "Pamilya Garcia GC", "Jessa Malonzo", "Ronnie Abesamis",
-  "Banko Liwanag", "PisoPay", "Lumi"): needs a web search, which this run may not use.
-- [ ] **Native-speaker pass** on Taglish lines (DECISIONS-LOG T08) across the newer modules 6 to 10 and the Komiks.
+  "Banko Liwanag", "PisoPay", "Lumi"): needs a web search, which this run may not use. **T31, not done:** needs a web search, which the unattended run may not use.
+- [ ] **Native-speaker pass** on Taglish lines (DECISIONS-LOG T08) across the newer modules 6 to 10 and the Komiks. **T31, not done:** needs a native speaker.
 
 ### P2: polish
 - [ ] **Phone canvas games are small in portrait** (e.g. Takbo, Data! is about 320x170 on a 360x740 phone, with half the screen
-  empty below the HUD). Consider a taller logical size for portrait, or moving the HUD beside/inside the canvas on phones.
-- [ ] **Phone "Keys: arrow keys or WASD..." hint** shows on touch devices; show the touch hint only under `(pointer: coarse)`.
-- [ ] **Duplicate heading on module game steps:** "MODULE GAME / Tulog na, Bea!" panel title and the game's own intro title
-  repeat the same name (m06 to m10). Drop one, it costs a phone screen of scrolling with Larger text.
-- [ ] **Programmatic focus ring on Komiks headings:** opening a locked episode moves focus to its `h2` and Chromium draws the full
-  focus box around the heading. Keep focus, but style `h2[tabindex="-1"]:focus:not(:focus-visible)` without the ring.
-- [ ] **Locked Komiks episode cards** show a small empty lock button under the text that does nothing visible; use a "Locked" chip.
-- [ ] **Hati Tayo! canvas text:** the two-line hint ("Tap a task, then a lane...") has its lines nearly touching at desktop
-  scale; add 2 to 3 logical pixels of line height.
-- [ ] **Home "Your stats" panel** on desktop is taller than its content (empty lower half); fill with the streak calendar or
-  shorten so the hero and stats rows line up.
+  empty below the HUD). Consider a taller logical size for portrait, or moving the HUD beside/inside the canvas on phones. **T31, not done:** deferred; a taller portrait logical size touches every game's layout, physics and tests, too risky for a polish pass.
+- [x] **Phone "Keys: arrow keys or WASD..." hint** shows on touch devices; show the touch hint only under `(pointer: coarse)`. **T31:** keyboard line by default, touch line only under `(pointer: coarse)`.
+- [x] **Duplicate heading on module game steps:** "MODULE GAME / Tulog na, Bea!" panel title and the game's own intro title
+  repeat the same name (m06 to m10). Drop one, it costs a phone screen of scrolling with Larger text. **T31:** the panel title is now a screen-reader-only h2; the game's own intro title is the visible one.
+- [x] **Programmatic focus ring on Komiks headings:** opening a locked episode moves focus to its `h2` and Chromium draws the full
+  focus box around the heading. Keep focus, but style `h2[tabindex="-1"]:focus:not(:focus-visible)` without the ring. **T31:** headings with `tabindex="-1"` no longer draw a focus ring (base.css).
+- [x] **Locked Komiks episode cards** show a small empty lock button under the text that does nothing visible; use a "Locked" chip. **T31:** locked cards show a visible "Locked" chip.
+- [x] **Hati Tayo! canvas text:** the two-line hint ("Tap a task, then a lane...") has its lines nearly touching at desktop
+  scale; add 2 to 3 logical pixels of line height. **T31:** hint line step 8 to 10 logical px.
+- [x] **Home "Your stats" panel** on desktop is taller than its content (empty lower half); fill with the streak calendar or
+  shorten so the hero and stats rows line up. **T31:** added a Monday to Sunday streak calendar (`weekDays` in streak.ts, tested).
 
 ### P3: nice to have
 - [ ] **Story-hook art** for modules 6 to 10 is a single pixel icon on a gold square (e.g. M10 shield). DESIGN asks for small pixel
-  scenes; add a 2 to 3 sprite vignette per module when there is time.
-- [ ] **Certificate preview:** the subtitle "AI Relevance Activities and Workshops" renders around 8px at 1440px; scale it with the
-  certificate or drop it from the on-screen preview (keep it in the PNG).
-- [ ] **Arcade locked tiles** read "AFTER MODULE 6" in pixel font; seniors may not know which module that is. Add the module's
-  short name ("After Katuwang si AI").
+  scenes; add a 2 to 3 sprite vignette per module when there is time. **T31, not done:** deferred, needs new sprite art; not a defect.
+- [x] **Certificate preview:** the subtitle "AI Relevance Activities and Workshops" renders around 8px at 1440px; scale it with the
+  certificate or drop it from the on-screen preview (keep it in the PNG). **T31:** subtitle drawn at 30px instead of 22px so it scales to about 13px on screen.
+- [x] **Arcade locked tiles** read "AFTER MODULE 6" in pixel font; seniors may not know which module that is. Add the module's
+  short name ("After Katuwang si AI"). **T31:** tiles read "After Module 6: Katuwang si AI".
 
 ### Test coverage notes
-- [ ] The shots sweep (`build/shots/shots2.spec.ts`) runs axe on every screen at 3 sizes; fold its "every route + every arcade intro"
-  axe loop into `tests/e2e/responsive.spec.ts` so regressions like the Komiks one fail `verify`.
+- [x] The shots sweep (`build/shots/shots2.spec.ts`) runs axe on every screen at 3 sizes; fold its "every route + every arcade intro"
+  axe loop into `tests/e2e/responsive.spec.ts` so regressions like the Komiks one fail `verify`. **T31:** `tests/e2e/responsive.spec.ts` now runs axe over every route, module hook and arcade intro at phone, tablet and desktop.
