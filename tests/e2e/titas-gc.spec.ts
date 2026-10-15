@@ -37,6 +37,8 @@ async function openGame(page: Page) {
     window.localStorage.setItem('araw:v1:cardsDone', JSON.stringify({ m01: 9, m02: 8, m03: 8, m04: 8, m05: 8 }));
   });
   await page.goto('/#/');
+  // wait for Home to render: two hash changes in a row can coalesce, and a replay would then keep the finished game
+  await expect(page.getByRole('heading', { level: 1, name: 'Home' })).toBeVisible();
   await page.goto(`/#/learn/m05?seed=${SEED}`);
   await expect(page.getByRole('heading', { level: 2, name: "Tita's GC" })).toBeVisible();
   await expect(page.getByRole('heading', { level: 3, name: "Tita's GC" })).toBeVisible();
