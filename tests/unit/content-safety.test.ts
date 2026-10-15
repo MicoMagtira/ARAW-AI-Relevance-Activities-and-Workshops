@@ -10,6 +10,8 @@ import { FOF_ITEMS } from '../../src/content/factOrFake/items';
 import { GC_SCENARIOS } from '../../src/content/gc';
 import { MODULES } from '../../src/content/modules';
 import { MYTH_SEEDS } from '../../src/content/myths';
+import { GLOSSARY } from '../../src/content/library/glossary';
+import { KOMIKS } from '../../src/content/library/komiks';
 import { LEGIT_POSTS, TACTIC_POSTS, VILLAINS } from '../../src/content/tactics';
 import { LOCAL_POSTS, TEST_POSTS, TRAIN_POSTS } from '../../src/content/turuan';
 
@@ -55,6 +57,7 @@ describe('no content string gives dosing', () => {
     aon: AON_POOL,
     turuan: [TRAIN_POSTS, TEST_POSTS, LOCAL_POSTS],
     myths: MYTH_SEEDS,
+    library: [GLOSSARY, KOMIKS],
     badges: BADGES,
     modules: MODULES,
     lessons: Object.values(lessonModules).map((m) => m.default),
