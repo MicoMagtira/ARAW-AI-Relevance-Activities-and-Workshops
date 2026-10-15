@@ -54,7 +54,7 @@ Save-Text $LockPath "$PID"
 if (Test-Path $StatePath) { $state = Get-Content $StatePath -Raw | ConvertFrom-Json } else {
   $state = [pscustomobject]@{ spent = 0.0; started = (Get-Date).ToString('s'); tasks = [pscustomobject]@{} }
 }
-foreach ($k in 'nodeDir','claudePath','finished','finishReason','current','oneDriveWasRunning','restarts') {
+foreach ($k in 'nodeDir','claudePath','finished','finishReason','current','oneDriveWasRunning','restarts','childPid') {
   if (-not ($state.PSObject.Properties.Name -contains $k)) { $state | Add-Member -NotePropertyName $k -NotePropertyValue $null }
 }
 function Save-State { Save-Text $StatePath ($state | ConvertTo-Json -Depth 8) }
@@ -216,8 +216,10 @@ function Invoke-Claude([string[]]$cliArgs, [string]$inFile, [string]$outFile, [s
   if (Test-Path $outFile) { Remove-Item $outFile -Force }
   $p = Start-Process -FilePath $script:claude -ArgumentList $cliArgs -WorkingDirectory $App -NoNewWindow -PassThru `
          -RedirectStandardInput $inFile -RedirectStandardOutput $outFile -RedirectStandardError $errFile
+  $state.childPid = $p.Id; Save-State
   $finished = $p.WaitForExit($minutes * 60 * 1000)
   if (-not $finished) { Kill-Tree $p.Id; Start-Sleep -Seconds 3 }
+  $state.childPid = $null; Save-State
   Free-Ports    # clean up any dev/preview server the session left behind
   return $finished
 }
@@ -249,7 +251,7 @@ function Read-ClaudeResult([string]$outFile, [string]$errFile) {
 # ---------------------------------------------------------------- watchdog (scheduled task)
 function Register-Watchdog {
   try {
-    $argLine = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File `"$PSCommandPath`" -Unattended -BudgetUsd $BudgetUsd -AttemptMinutes $AttemptMinutes"
+    $argLine = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File `"$PSCommandPath`" -Unattended -BudgetUsd $BudgetUsd -AttemptMinutes $AttemptMinutes -TasksFile $TasksFile"
     $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $argLine -WorkingDirectory $App
     $every = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(20) -RepetitionInterval (New-TimeSpan -Minutes 20) -RepetitionDuration (New-TimeSpan -Days 4)
     $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Days 4)
@@ -274,6 +276,8 @@ try {
   }
 
   [Win32.Power]::SetThreadExecutionState([uint32]2147483649) | Out-Null   # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+  if ($state.childPid -and (Get-Process -Id ([int]$state.childPid) -ErrorAction SilentlyContinue)) { Kill-Tree ([int]$state.childPid); Log '  stopped an orphaned Claude process from the previous run'; Start-Sleep -Seconds 3 }
+  $state.childPid = $null; Save-State
 
   # ---------- preflight ----------
   Log '=== Preflight ==='
@@ -449,6 +453,7 @@ catch {
   }
 }
 finally {
+  if ($state.childPid -and (Get-Process -Id ([int]$state.childPid) -ErrorAction SilentlyContinue)) { Kill-Tree ([int]$state.childPid); $state.childPid = $null }
   [Win32.Power]::SetThreadExecutionState([uint32]2147483648) | Out-Null
   if ($state.finished -and $state.oneDriveWasRunning) {
     $candidates = @([string]$state.oneDriveWasRunning, $oneDriveExe, 'C:\Program Files\Microsoft OneDrive\OneDrive.exe', 'C:\Program Files (x86)\Microsoft OneDrive\OneDrive.exe')
