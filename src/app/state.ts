@@ -1,10 +1,11 @@
+import { AVATAR_COUNT } from '../ui/avatars';
 import { persisted } from './store';
 
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 
 export interface Profile {
   nickname: string;
-  /** Index into the avatar set (picker comes later). */
+  /** Index into the avatar set (src/ui/avatars.ts). */
   avatar: number;
 }
 
@@ -13,8 +14,28 @@ export const DEFAULT_NICKNAME = 'Kaibigan';
 export const profile = persisted<Profile>(
   'profile',
   { nickname: DEFAULT_NICKNAME, avatar: 0 },
-  (v): v is Profile => isObject(v) && typeof v.nickname === 'string' && v.nickname.length <= 20 && typeof v.avatar === 'number',
+  (v): v is Profile =>
+    isObject(v) &&
+    typeof v.nickname === 'string' &&
+    v.nickname.length <= 20 &&
+    typeof v.avatar === 'number' &&
+    Number.isInteger(v.avatar) &&
+    v.avatar >= 0 &&
+    v.avatar < AVATAR_COUNT,
 );
+
+export const NICKNAME_MAX = 20;
+
+/** What to show for the player: the nickname, or the default when it is empty. */
+export const displayName = (p: Profile = profile.value): string => p.nickname.trim() || DEFAULT_NICKNAME;
+
+export function setNickname(nickname: string): void {
+  profile.value = { ...profile.value, nickname: nickname.slice(0, NICKNAME_MAX) };
+}
+
+export function setAvatar(avatar: number): void {
+  if (Number.isInteger(avatar) && avatar >= 0 && avatar < AVATAR_COUNT) profile.value = { ...profile.value, avatar };
+}
 
 export const xp = persisted<number>('xp', 0, (v): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0);
 

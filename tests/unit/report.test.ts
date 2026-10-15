@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { REPORT_EMAIL, buildMailto, describeDevice } from '../../src/app/report';
+import { MAX_MAILTO_LENGTH, REPORT_EMAIL, buildMailto, cleanField, describeDevice } from '../../src/app/report';
 import { t } from '../../src/app/i18n';
 
 describe('describeDevice', () => {
@@ -29,9 +29,37 @@ describe('buildMailto', () => {
   });
 });
 
+describe('buildMailto: safety and encoding', () => {
+  const parts = (href: string) => new URLSearchParams(href.slice(href.indexOf('?') + 1));
+
+  it('strips control characters and caps URL-supplied fields', () => {
+    expect(cleanField('m03\nBcc: x@y.z')).toBe('m03 Bcc: x@y.z');
+    expect(cleanField('x'.repeat(200))).toHaveLength(60);
+    expect(cleanField(undefined)).toBe('');
+    const href = buildMailto({ category: 'bug', screen: 'home\r\nBcc: a@b.c', item: 'i'.repeat(200), details: '', device: 'x' });
+    const lines = (parts(href).get('body') ?? '').split('\n');
+    expect(lines[0]).toBe('Screen: home Bcc: a@b.c');
+    expect(lines[1]).toHaveLength('Item: '.length + 60);
+  });
+
+  it('percent-encodes everything so the link stays one clean URL', () => {
+    const href = buildMailto({ category: 'suggestion', screen: 'me', details: 'Salamat! & more=1 #tag?', device: 'x' });
+    expect(href).not.toMatch(/[ \n#]/);
+    expect(parts(href).get('body')).toContain('Salamat! & more=1 #tag?');
+  });
+
+  it('trims long details so the link fits, keeping the context lines', () => {
+    const href = buildMailto({ category: 'content', screen: 'learn', item: 'm03-c2', details: 'Ang ganda! '.repeat(400), device: 'Android, Chrome' });
+    expect(href.length).toBeLessThanOrEqual(MAX_MAILTO_LENGTH);
+    const body = parts(href).get('body') ?? '';
+    expect(body).toContain('Item: m03-c2');
+    expect(body.endsWith('...')).toBe(true);
+  });
+});
+
 describe('t()', () => {
   it('replaces placeholders and keeps unknown ones', () => {
-    expect(t('home.greeting', { name: 'Bea' })).toBe('Magandang araw, Bea!');
-    expect(t('home.greeting')).toBe('Magandang araw, {name}!');
+    expect(t('home.greeting.morning', { name: 'Bea' })).toBe('Magandang umaga, Bea!');
+    expect(t('home.greeting.morning')).toBe('Magandang umaga, {name}!');
   });
 });

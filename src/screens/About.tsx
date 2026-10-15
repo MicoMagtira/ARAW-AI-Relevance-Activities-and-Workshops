@@ -10,7 +10,14 @@ export function About() {
           <h2 id="about-h">{t('about.title')}</h2>
           <p>{t('app.tagline')}</p>
           <p>{t('about.text')}</p>
-          <p>{t('about.licences')}</p>
+          <h3 id="licences-h">{t('about.licences')}</h3>
+          <ul class="licence-list" aria-labelledby="licences-h">
+            <li>{t('about.licenceCode')}</li>
+            <li>{t('about.licenceContent')}</li>
+            <li>{t('about.licenceFonts')}</li>
+            <li>{t('about.licenceIcons')}</li>
+          </ul>
+          <p>{t('about.fictional')}</p>
           <p class="px-text-muted">{t('app.credit')}</p>
           <p class="px-text-muted">{t('app.betaNote')}</p>
           <p class="px-text-muted">ARAW {APP_VERSION}</p>

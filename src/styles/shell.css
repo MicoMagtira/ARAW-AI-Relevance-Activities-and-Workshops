@@ -278,6 +278,7 @@
 }
 
 .stack {
+  grid-template-columns: minmax(0, 1fr); /* long words wrap instead of widening the panel */
   display: grid;
   gap: var(--sp-4);
   align-content: start;

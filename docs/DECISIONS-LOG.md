@@ -45,3 +45,17 @@ Product decisions live in `docs/SPEC.md`, `docs/CONTENT_GUIDE.md` and `docs/DESI
 - 2026-10-15 · T02 · Splash Ara is sized by CSS (--s, integer steps per breakpoint, !important over the inline size) · lets one component scale with viewport and landscape without JS.
 - 2026-10-15 · T02 · Added a hand-made `play` pixel icon for SIMULAN (pixelarticons has none that fits) · matches the mockup's play triangle.
 - 2026-10-15 · T02 · e2e specs other than the splash use `tests/e2e/fixtures.ts`, which presets the boot flag · keeps shell tests independent of the splash.
+
+- 2026-10-15 · T03 · Added `src/app/progress.ts` (modules done, cards done, badges earned as persisted signals) and starter content banks (`modules`, `badges` x20, `myths` x5, `games` x11) · Home and Me need real state to read; later tasks write to it.
+- 2026-10-15 · T03 · Continue card points at Learn (`#/learn`) and says START at 0 cards, CONTINUE after; module cards are assumed to be 7 per module · module routes do not exist yet.
+- 2026-10-15 · T03 · Daily Challenge card shows the real featured game (days since 2026-01-01 Manila mod 11) but links to the Arcade with a "coming soon" line · placeholder link as the task asks.
+- 2026-10-15 · T03 · Greeting uses the device clock (umaga <12, tanghali 12-13, hapon 13-18, gabi otherwise); Daily and Myth use the Manila date · greeting should match the player's day, challenges are the same for everyone.
+- 2026-10-15 · T03 · Myth of the day is a flip card button (`aria-pressed`, both faces in the DOM, one `hidden`) with five starter myths; the Library task extends the bank · matches DESIGN 5.4.
+- 2026-10-15 · T03 · Home uses its own grid-areas layout: 12 cols at 1280+, 3-column merge at 1700+, two columns below 1280 (so large text fits at 1024), one column under 420 · three-up cards were too narrow at 1024 with Larger text on.
+- 2026-10-15 · T03 · Path strip scrolls inside its panel below 1280px (96px nodes) and `.path-node` is `position: relative` · sr-only text inside a scroller otherwise widens the document.
+- 2026-10-15 · T03 · Avatars are 16x16 pixel sprites drawn from specs (8 avatars: young woman, young man, lola, hijab, lolo, wheelchair user, tita, tatay); `profile.avatar` stays an index and out-of-range values fall back to 0 · inclusive set in Ara's pixel style, colours are sprite data.
+- 2026-10-15 · T03 · Nickname saves on every keystroke (max 20); an empty one shows "Kaibigan" and is restored on blur · never a blank name in the header or greeting.
+- 2026-10-15 · T03 · Me gets a badge cabinet (20 medallions, tap one to read how to earn it) and a stats list with "Best Truth Radar: Not yet" · DESIGN 11.10 / SPEC section 10; the Radar score arrives with Fact or Fake.
+- 2026-10-15 · T03 · Screen-reader hints now also add `aria-describedby` hints to nav tabs, XP/streak chips, avatar picker, report categories, Continue and the myth card via `SrHint` + `srDescribedBy` · "extra aria descriptions" app-wide, nothing rendered while off.
+- 2026-10-15 · T03 · `.stack` uses `minmax(0, 1fr)` and buttons inside panels are capped at the panel width · all five settings on overflowed at 1024px.
+- 2026-10-15 · T03 · mailto builder strips control characters from URL-supplied screen/item (60 chars max) and trims the player's text so the link stays under 1900 characters; Report shows the inbox address as a fallback when no mail app exists · header-injection safety and mail-client link limits.

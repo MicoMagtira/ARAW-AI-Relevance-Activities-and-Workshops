@@ -52,18 +52,38 @@ export interface ReportInput {
   version?: string;
 }
 
+/** Longest mailto: link we build; some mail clients and browsers drop longer ones. */
+export const MAX_MAILTO_LENGTH = 1900;
+const MAX_FIELD = 60;
+
+/** Query values come from the URL, so keep them short and free of control characters. */
+export function cleanField(value: string | undefined): string {
+  return (value ?? '').replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, MAX_FIELD);
+}
+
 /** Build the mailto: link. Nothing is sent until the player presses Send in their email app. */
 export function buildMailto(input: ReportInput): string {
   const cat = REPORT_CATEGORIES.find((c) => c.id === input.category) ?? REPORT_CATEGORIES[3];
   const subject = `[ARAW] Report: ${t(cat.labelKey)}`;
-  const body = [
-    `Screen: ${input.screen}`,
-    `Item: ${input.item || 'none'}`,
-    `App: ARAW ${input.version ?? APP_VERSION}`,
-    `Device: ${input.device}`,
-    '',
-    'What happened:',
-    input.details.trim(),
-  ].join('\n');
-  return `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const make = (details: string): string => {
+    const body = [
+      `Screen: ${cleanField(input.screen) || 'unknown'}`,
+      `Item: ${cleanField(input.item) || 'none'}`,
+      `App: ARAW ${input.version ?? APP_VERSION}`,
+      `Device: ${cleanField(input.device) || 'unknown'}`,
+      '',
+      'What happened:',
+      details,
+    ].join('\n');
+    return `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  let details = input.details.trim();
+  let href = make(details);
+  // Trim the player's text (never the context lines) until the link fits.
+  while (href.length > MAX_MAILTO_LENGTH && details.length > 0) {
+    details = details.slice(0, Math.max(0, details.length - Math.max(10, Math.ceil((href.length - MAX_MAILTO_LENGTH) / 3))));
+    href = make(`${details.trimEnd()}...`);
+  }
+  return href;
 }

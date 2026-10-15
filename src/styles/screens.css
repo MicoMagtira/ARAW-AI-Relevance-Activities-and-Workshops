@@ -1,0 +1,621 @@
+/* Home, Me and Report screens (docs/DESIGN.md sections 5.4, 11.2, 11.10, 11.11). */
+
+.px-panel .px-btn {
+  max-width: calc(100% - var(--px) * 4); /* never wider than the card, even with large text */
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  font: 800 var(--fs-16) / 1.2 var(--font-body);
+}
+
+.card-title {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.card-band {
+  height: 32px;
+  margin: calc(var(--sp-5) * -1) calc(var(--sp-5) * -1) var(--sp-4);
+  border-bottom: var(--px) solid var(--ink);
+}
+
+/* ---------- Home grid ---------- */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-areas:
+    'hero hero hero hero hero hero hero hero stats stats stats stats'
+    'daily daily daily daily daily daily myth myth myth arcade arcade arcade'
+    'path path path path path path path path path path path path'
+    'badges badges badges badges badges badges badges badges badges badges badges badges';
+  gap: var(--gap);
+  padding-right: var(--px);
+  padding-bottom: var(--px);
+}
+
+.home-hero {
+  grid-area: hero;
+  --s: 4;
+  display: grid;
+  gap: var(--sp-5);
+  align-content: start;
+}
+.home-stats {
+  grid-area: stats;
+}
+.home-daily {
+  grid-area: daily;
+}
+.home-myth {
+  grid-area: myth;
+}
+.home-arcade {
+  grid-area: arcade;
+}
+.home-path {
+  grid-area: path;
+}
+.home-badges {
+  grid-area: badges;
+}
+
+/* Ara scales in whole steps through --s; !important beats the inline size the component sets. */
+.home-hero .ara,
+.home-hero .ara .ara__svg {
+  width: calc(32px * var(--s)) !important;
+  height: calc(32px * var(--s)) !important;
+}
+
+.home-hero h2 {
+  font-size: var(--fs-24);
+}
+
+.home-hero .ara-says__bubble {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.continue {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--cream);
+  border: var(--px) solid var(--ink);
+}
+
+.continue__title {
+  font: 800 var(--fs-28) / 1.1 var(--font-head);
+  color: var(--navy);
+}
+
+.continue .px-progress-wrap {
+  max-width: 420px;
+}
+
+/* ---------- Myth of the day (flip card) ---------- */
+.home-myth {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--sp-1);
+  padding-right: var(--px);
+  padding-bottom: var(--px);
+}
+
+.myth-card {
+  display: grid;
+  align-content: start;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-5);
+  text-align: left;
+  cursor: pointer;
+  background: var(--cream);
+  transition:
+    transform var(--step-fast) steps(2),
+    box-shadow var(--step-fast) steps(2);
+}
+
+.myth-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--ink);
+}
+
+.myth-card:active {
+  transform: translate(var(--px), var(--px));
+  box-shadow: none;
+}
+
+.myth-card--back {
+  background: var(--surface);
+}
+
+.myth-card__faces {
+  display: grid;
+}
+
+.myth-card__faces--flip {
+  animation: myth-flip var(--step-slow) steps(2);
+}
+
+.myth-card__face {
+  display: grid;
+  justify-items: start;
+  gap: var(--sp-2);
+}
+
+.myth-card__face[hidden] {
+  display: none;
+}
+
+.myth-card__fact {
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+@keyframes myth-flip {
+  50% {
+    transform: scaleX(0.1);
+  }
+}
+
+/* ---------- Path strip ---------- */
+.home-path__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+.path {
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-2) var(--sp-2) var(--sp-3);
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: var(--sp-2);
+}
+
+.path-node {
+  position: relative; /* keeps the sr-only state text inside the scrolling strip */
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  padding: var(--sp-1);
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+}
+
+.path-node:hover .path-node__tile {
+  transform: translate(-2px, -2px);
+}
+
+.path-node__tile {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  font: var(--fs-14) / 1 var(--font-pixel);
+  background: var(--soft);
+  color: var(--muted);
+  border: var(--px) solid var(--ink);
+  transition: transform var(--step-fast) steps(2);
+}
+
+.path-node--done .path-node__tile {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.path-node--current .path-node__tile {
+  background: var(--navy);
+  color: var(--on-color);
+  box-shadow: 0 0 0 var(--px) var(--coral);
+  animation: path-pulse 1600ms steps(1) infinite;
+}
+
+@keyframes path-pulse {
+  50% {
+    box-shadow: none;
+  }
+}
+
+.path-node__label {
+  font: 700 var(--fs-14) / 1.2 var(--font-head);
+  overflow-wrap: anywhere;
+}
+
+:root.a11y-high-contrast .path-node--locked .path-node__tile {
+  border-style: dashed;
+}
+
+/* ---------- Badge medallion + strip ---------- */
+.badge-medal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--medal, 72px);
+  height: var(--medal, 72px);
+}
+
+.badge-medal__ring,
+.badge-medal__face {
+  position: absolute;
+}
+
+.badge-medal__ring {
+  inset: 0;
+  background: var(--ink);
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    calc(100% - 8px) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 8px,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 8px) calc(100% - 4px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    8px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - 8px),
+    0 calc(100% - 8px),
+    0 8px,
+    4px 8px,
+    4px 4px,
+    8px 4px
+  );
+}
+
+.badge-medal__face {
+  inset: 4px;
+  display: grid;
+  place-items: center;
+  background: var(--soft);
+  color: var(--muted);
+  clip-path: polygon(
+    4px 0,
+    calc(100% - 4px) 0,
+    calc(100% - 4px) 4px,
+    100% 4px,
+    100% calc(100% - 4px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 4px) 100%,
+    4px 100%,
+    4px calc(100% - 4px),
+    0 calc(100% - 4px),
+    0 4px,
+    4px 4px
+  );
+}
+
+.badge-medal--earned .badge-medal__face {
+  background: var(--gold-deep);
+  color: var(--ink);
+}
+
+.badge-strip {
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-1) 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-5);
+}
+
+.badge-strip__item {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  width: 104px;
+  text-align: center;
+}
+
+.badge-strip__name {
+  font: 700 var(--fs-14) / 1.2 var(--font-head);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Me ---------- */
+.me-grid > .me-profile,
+.me-grid > .me-cabinet,
+.me-grid > .me-settings {
+  grid-column: span 4;
+}
+
+.me-id {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: var(--sp-4);
+}
+
+.me-id__tile {
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 80px;
+  background: var(--gold);
+  border: var(--px) solid var(--ink);
+}
+
+.px-avatar {
+  display: block;
+  max-width: none;
+  image-rendering: pixelated;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: var(--sp-3);
+  padding: 0 var(--px) var(--px) 0;
+}
+
+.avatar-pick {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: var(--tap);
+  min-height: 64px;
+  padding: 0;
+  cursor: pointer;
+  background: var(--cream);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+}
+
+.avatar-pick:hover {
+  background: var(--soft);
+}
+
+.avatar-pick[aria-pressed='true'] {
+  transform: translate(var(--px), var(--px));
+  box-shadow: none;
+  background: var(--navy-tint);
+  border-color: var(--navy);
+}
+
+.avatar-pick__check {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  background: var(--navy);
+  color: var(--on-color);
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: var(--sp-2);
+}
+
+.badge-pick {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--sp-1);
+  min-height: var(--tap);
+  padding: var(--sp-2) var(--sp-1);
+  cursor: pointer;
+  text-align: center;
+  background: transparent;
+  border: var(--px) solid transparent;
+}
+
+.badge-pick:hover {
+  background: var(--soft);
+}
+
+.badge-pick[aria-pressed='true'] {
+  background: var(--navy-tint);
+  border-color: var(--ink);
+}
+
+.badge-pick__name {
+  font: 700 var(--fs-13) / 1.2 var(--font-head);
+  overflow-wrap: anywhere;
+}
+
+.badge-info {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--cream);
+  box-shadow: none;
+}
+
+.badge-info__name {
+  font: 800 var(--fs-18) / 1.3 var(--font-head);
+}
+
+.menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--line);
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: max(56px, var(--tap));
+  padding: var(--sp-2) 0;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--line);
+  font: 800 var(--fs-18) / 1.3 var(--font-head);
+}
+
+li.menu-row {
+  min-height: max(56px, var(--tap));
+}
+
+a.menu-row:hover {
+  background: var(--soft);
+}
+
+.menu-row__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-row__value {
+  font: 600 var(--fs-14) / 1.3 var(--font-body);
+  color: var(--muted);
+  text-align: right;
+}
+
+.licence-list {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+/* ---------- Report ---------- */
+.report-grid {
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.report-grid > .stack {
+  align-content: start;
+}
+
+/* ---------- Responsive ---------- */
+/* Wide desktop: greeting+continue | daily + arcade | stats + myth all above the fold */
+@media (width >= 1700px) {
+  .home-grid {
+    grid-template-areas:
+      'hero hero hero hero hero hero daily daily daily stats stats stats'
+      'hero hero hero hero hero hero arcade arcade arcade myth myth myth'
+      'path path path path path path path path path path path path'
+      'badges badges badges badges badges badges badges badges badges badges badges badges';
+  }
+
+  .home-hero {
+    --s: 6;
+  }
+}
+
+@media (1280px <= width < 1700px) {
+  .home-hero {
+    --s: 6;
+  }
+}
+
+/* Below 1280 the ten module nodes scroll inside their panel instead of squeezing */
+@media (width < 1280px) {
+  .path {
+    grid-template-columns: repeat(10, 96px);
+    overflow-x: auto;
+  }
+}
+
+/* Narrow desktop and tablet: two columns, so cards keep room for large text */
+@media (width < 1280px) {
+  .home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'hero hero'
+      'daily stats'
+      'myth arcade'
+      'path path'
+      'badges badges';
+  }
+}
+
+/* Tablet */
+@media (width < 1024px) {
+
+  .me-grid > .me-profile,
+  .me-grid > .me-cabinet {
+    grid-column: auto;
+  }
+
+  .me-grid > .me-settings {
+    grid-column: 1 / -1;
+  }
+
+  .card-band {
+    margin-inline: calc(var(--sp-5) * -1);
+  }
+}
+
+/* Phone */
+@media (width < 600px) {
+  .home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'hero hero'
+      'daily daily'
+      'stats stats'
+      'myth arcade'
+      'path path'
+      'badges badges';
+  }
+
+  .home-hero {
+    --s: 3;
+  }
+
+  .continue {
+    padding: var(--sp-3) var(--sp-4);
+  }
+
+  .card-band {
+    margin: calc(var(--sp-4) * -1) calc(var(--sp-4) * -1) var(--sp-3);
+  }
+
+  .myth-card {
+    padding: var(--sp-4);
+  }
+
+  .me-grid > .me-profile,
+  .me-grid > .me-cabinet,
+  .me-grid > .me-settings {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Narrow phones: one column, smaller Ara */
+@media (width < 420px) {
+  .home-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'hero'
+      'daily'
+      'stats'
+      'myth'
+      'arcade'
+      'path'
+      'badges';
+  }
+
+  .home-hero {
+    --s: 2;
+  }
+
+  .home-hero .ara-says {
+    gap: var(--sp-4);
+  }
+
+  .home-hero h2 {
+    font-size: var(--fs-22);
+  }
+}

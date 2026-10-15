@@ -330,6 +330,13 @@ export function Watermark() {
 }
 
 /** Extra description that is only exposed when "Screen-reader hints" is on. */
-export function SrHint({ children }: { children: ComponentChildren }) {
-  return settings.value.srHints ? <span class="sr-hint">{children}</span> : null;
+export function SrHint({ children, id }: { children: ComponentChildren; id?: string }) {
+  return settings.value.srHints ? (
+    <span class="sr-hint" id={id}>
+      {children}
+    </span>
+  ) : null;
 }
+
+/** `aria-describedby` value for an <SrHint id>: only set while Screen-reader hints is on. */
+export const srDescribedBy = (id: string): string | undefined => (settings.value.srHints ? id : undefined);

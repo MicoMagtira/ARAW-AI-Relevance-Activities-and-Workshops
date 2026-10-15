@@ -1,11 +1,12 @@
 import type { ComponentType } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
+import { Avatar } from '../ui/Avatar';
 import { Icon } from '../ui/Icon';
-import { Button, Chip, ToastHost } from '../ui/kit';
+import { Button, Chip, SrHint, ToastHost, srDescribedBy } from '../ui/kit';
 import { t } from './i18n';
 import { hrefFor, location$, matchRoute } from './router';
 import { TABS, type RouteName } from './routes';
-import { profile, streak, xp } from './state';
+import { displayName, profile, streak, xp } from './state';
 import { Home } from '../screens/Home';
 import { Learn } from '../screens/Learn';
 import { Arcade } from '../screens/Arcade';
@@ -73,6 +74,7 @@ export function Shell() {
               <span class="chip-long"> {t('hud.xp')}</span>
             </span>
             <span class="sr-only">{t('hud.xpLabel', { n: xp.value })}</span>
+            <SrHint>{t('sr.xp')}</SrHint>
           </Chip>
           <Chip kind="streak">
             <Icon name="flame" size={16} />
@@ -81,12 +83,13 @@ export function Shell() {
               <span class="chip-long"> {t('hud.days')}</span>
             </span>
             <span class="sr-only">{t('hud.streakLabel', { n: streak.value.current })}</span>
+            <SrHint>{t('sr.streak')}</SrHint>
           </Chip>
           <a class="avatar-link" href={hrefFor('/me')} aria-label={t('hud.avatar')}>
             <span class="avatar-link__tile">
-              <Icon name="me" size={24} />
+              <Avatar index={profile.value.avatar} size={32} />
             </span>
-            <span class="avatar-link__name">{profile.value.nickname}</span>
+            <span class="avatar-link__name">{displayName()}</span>
           </a>
           <Button href={reportHref} icon variant="secondary" class="report-flag" aria-label={t('report.flag')}>
             <Icon name="flag" />
@@ -106,11 +109,17 @@ export function Shell() {
           <ul>
             {TABS.map((tab) => (
               <li key={tab.id}>
-                <a class="nav-item" href={hrefFor(tab.path)} aria-current={activeTab === tab.id ? 'page' : undefined}>
+                <a
+                  class="nav-item"
+                  href={hrefFor(tab.path)}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
+                  aria-describedby={srDescribedBy(`sr-nav-${tab.id}`)}
+                >
                   <span class="nav-item__icon">
                     <Icon name={tab.icon} />
                   </span>
                   <span class="nav-item__label">{t(tab.labelKey)}</span>
+                  <SrHint id={`sr-nav-${tab.id}`}>{t(`sr.nav.${tab.id}`)}</SrHint>
                 </a>
               </li>
             ))}
