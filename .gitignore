@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dev-dist/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.vite/
+*.log
+build/logs/
+build/failed/
+build/state.json
+build/MORNING_REPORT.md
+build/screens-*/
+.DS_Store
+Thumbs.db
