@@ -111,7 +111,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'objection',
     name: 'OBJECTION!',
     module: 'm10',
-    playable: false,
+    playable: true,
     topic: 'Your rights with AI',
     how: 'Spot the false statement at the barangay hearing and present the right evidence.',
     icon: 'scale',

@@ -152,7 +152,6 @@ describe('Arcade tiles', () => {
     expect(screen.getByRole('button', { name: /^Gawa Ko 'To!/ }).getAttribute('aria-label')).toBe("Gawa Ko 'To!, Generative AI and consent, New");
     expect(screen.getByRole('button', { name: /^Tulog na, Bea!/ }).getAttribute('aria-label')).toBe('Tulog na, Bea!, Digital wellbeing, New');
     expect(screen.getByRole('button', { name: /^Sa Sapatos Nila/ }).getAttribute('aria-label')).toBe('Sa Sapatos Nila, Fairness and accessibility, New');
-    // module 10's game is still being built
-    expect(screen.getByRole('button', { name: /^OBJECTION!/ }).getAttribute('aria-label')).toBe('OBJECTION!, Your rights with AI, Coming soon');
+    expect(screen.getByRole('button', { name: /^OBJECTION!/ }).getAttribute('aria-label')).toBe('OBJECTION!, Your rights with AI, New');
   });
 });

@@ -166,13 +166,9 @@ describe('Lesson screen', () => {
     expect(screen.getByText('Finish Module 2 first. Modules open one after another.')).toBeTruthy();
   });
 
-  it('shows a notice for an unknown module and for an open module without content', async () => {
-    const view = render(<Lesson id="m99" />);
+  it('shows a notice for an unknown module', () => {
+    render(<Lesson id="m99" />);
     expect(screen.getByRole('heading', { name: 'We could not find that module' })).toBeTruthy();
-    view.unmount();
-    modulesDone.value = ['m01', 'm02', 'm03', 'm04', 'm05', 'm06', 'm07', 'm08', 'm09'];
-    render(<Lesson id="m10" />);
-    expect(await screen.findByRole('heading', { name: 'Coming soon' })).toBeTruthy();
   });
 
   it('runs a card, saves progress, pays XP and resumes at the same card', async () => {

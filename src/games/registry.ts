@@ -29,6 +29,7 @@ export const DOM_GAME_LOADERS: Readonly<Record<string, () => Promise<{ default: 
   'gawa-ko-to': () => import('./gawa-ko-to/GawaArcade'),
   'tulog-na-bea': () => import('./tulog-na-bea/TulogArcade'),
   'sa-sapatos-nila': () => import('./sa-sapatos-nila/SapatosArcade'),
+  objection: () => import('./objection/ObjectionArcade'),
 };
 
 export const hasGame = (slug: string): boolean => Object.hasOwn(GAME_LOADERS, slug) || Object.hasOwn(DOM_GAME_LOADERS, slug);

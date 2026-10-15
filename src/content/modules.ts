@@ -80,7 +80,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'List your data rights in plain words.',
     'Describe the complaint path, from the organisation to the National Privacy Commission.',
     'Know that the organisation using AI is responsible, not "the AI".',
-  ]),
+  ], 8),
 ];
 
 export const MODULE_COUNT = MODULES.length;
