@@ -24,7 +24,7 @@ const not = (id: string, name: string, detail: string, why: string): AonItem => 
 const hype = (id: string, name: string, sticker: string, detail: string, why: string): AonItem => ({ id, name, detail, kind: 'hype', why, sticker, review_status: 'unreviewed' });
 
 export const AON_POOL: readonly AonItem[] = [
-  ai('aon-feed', 'Facebook-style feed', 'Picks which posts to show you first.', 'It learned from what millions of people liked and watched, then guesses what you will tap.'),
+  ai('aon-feed', 'Social media feed', 'Picks which posts to show you first.', 'It learned from what millions of people liked and watched, then guesses what you will tap.'),
   ai('aon-filter', 'Face filter', 'Puts puppy ears on your selfie.', 'It learned from many face photos where eyes and noses are, even when you move.'),
   ai('aon-symptom', 'Symptom-checker app', 'You type how you feel and it suggests what it might be.', 'It guesses from patterns in past cases. It is only a guess, so a health worker decides.'),
   ai('aon-maps', 'Maps traffic guess', 'Says your trip will take 20 minutes.', 'It guesses from patterns in past traffic. A guess, not a promise.'),

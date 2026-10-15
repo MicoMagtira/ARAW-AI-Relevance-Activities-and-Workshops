@@ -74,6 +74,10 @@ test.describe('Learn path', () => {
     await page.goto('/#/learn/m03');
     await expect(page.getByRole('heading', { level: 2, name: 'This module is locked' })).toBeVisible();
     await expect(page.getByText('Finish Module 2 first.')).toBeVisible();
+    // without a progress bar the Report flag still sits at the far end of the top bar
+    const flag = await page.locator('.lesson-bar > :last-child').boundingBox();
+    const viewport = page.viewportSize();
+    expect((flag?.x ?? 0) + (flag?.width ?? 0)).toBeGreaterThan((viewport?.width ?? 0) - 48);
     await page.getByRole('link', { name: 'Back to the path' }).click();
     await expect(page).toHaveURL(/#\/learn$/);
   });

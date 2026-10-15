@@ -1514,7 +1514,7 @@ export const FOF_ITEMS: readonly FofItem[] = [
     module: 'm02',
     author: 'Rico Valderama',
     meta: 'Friends · 4h',
-    text: 'Reminder from the barangay nurse: get your free flu shot if you are a senior or have a heart condition, especially before the rainy months. Libre po sa health center.',
+    text: 'Reminder from the barangay nurse: seniors can get a free flu shot here at the health center, especially before the rainy months. May sakit sa puso? Ask us about the flu shot too.',
     explanation: 'Seniors and people with some conditions are advised to get vaccinated against flu because flu can be more serious for them.',
     how_to_check: 'Ask your barangay health center which vaccines are available for you.',
     basis: 'WHO influenza vaccination guidance; DOH immunization programmes',

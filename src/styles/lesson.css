@@ -31,8 +31,14 @@
   margin-block: var(--px) 0;
 }
 
+/* Report flag always sits at the far end, also when there is no progress bar (notices, results). */
+.lesson-bar > :last-child {
+  margin-inline-start: auto;
+}
+
 .lesson-bar__title {
-  flex: 0 1 28ch;
+  flex: 0 1 auto;
+  max-width: 40ch;
   min-width: 0;
   font: var(--fs-12) / 1.5 var(--font-pixel);
   text-transform: uppercase;
