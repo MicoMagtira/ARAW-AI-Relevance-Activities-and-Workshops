@@ -1,0 +1,367 @@
+/* "Turuan si AI" (Module 2 game). Loaded with the game's own chunk. Desktop: post left, label buttons or feedback right; test: summary left, results right. */
+.tu {
+  container: tu / inline-size;
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.tu h3,
+.tu h4,
+.tu h5,
+.tu p {
+  margin: 0;
+}
+
+.tu p {
+  overflow-wrap: anywhere;
+}
+
+.tu-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.tu-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* Four-step tracker */
+.tu-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tu-step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font: var(--fs-12) / 1.4 var(--font-pixel);
+  color: var(--muted);
+}
+
+.tu-step__n {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  color: var(--ink);
+  background: var(--soft);
+  border: 2px solid var(--ink);
+}
+
+.tu-step--now {
+  color: var(--ink);
+}
+
+.tu-step--now .tu-step__n {
+  background: var(--gold);
+  box-shadow: 3px 3px 0 0 var(--ink);
+}
+
+.tu-step--done .tu-step__n {
+  color: var(--on-color);
+  background: var(--fact);
+}
+
+/* On a phone only the current step keeps its label */
+@container tu (max-width: 520px) {
+  .tu-step:not(.tu-step--now) .tu-step__label {
+    display: none;
+  }
+}
+
+.tu-intro,
+.tu-summary {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.tu-title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.tu-title:focus {
+  outline: none;
+}
+
+.tu-title:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 4px;
+}
+
+/* Labelling step */
+.tu-label {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.tu-label__post,
+.tu-label__side {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+.tu-question {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.tu-question:focus {
+  outline: none;
+}
+
+.tu-question:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 4px;
+}
+
+.tu-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.tu-hint {
+  font-size: var(--fs-16);
+}
+
+.tu-feedback {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  font: 600 var(--fs-18) / 1.45 var(--font-body);
+}
+
+.tu-feedback--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.tu-feedback--wrong {
+  background: var(--gold);
+}
+
+.tu-feedback__head {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.tu-feedback__points {
+  font: var(--fs-12) / 1.8 var(--font-pixel);
+}
+
+/* A post card */
+.tu-post {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font-size: var(--fs-18);
+}
+
+.tu-post.tu-post--fake {
+  padding-top: calc(var(--sp-7) + var(--sp-4));
+}
+
+.tu-post__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.tu-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  color: var(--on-color);
+  background: var(--navy);
+  border: 3px solid var(--ink);
+  font: var(--fs-12) / 1 var(--font-pixel);
+}
+
+.tu-post__who {
+  display: grid;
+  min-width: 0;
+}
+
+.tu-post__author {
+  font: 800 var(--fs-18) / 1.2 var(--font-head);
+  overflow-wrap: anywhere;
+}
+
+.tu-post__meta {
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+
+.tu-post__text {
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+/* Words the detector relied on (explainability) */
+.tu-mark {
+  padding: 0 2px;
+  color: var(--ink);
+  border-bottom: 4px solid;
+}
+
+.tu-mark--fake {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+}
+
+.tu-mark--real {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+}
+
+.tu-unknown {
+  text-decoration: underline dotted var(--muted) 3px;
+  text-underline-offset: 4px;
+}
+
+/* Test step */
+.tu-test {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+@container tu (min-width: 860px) {
+  .tu-test {
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  }
+
+  .tu-summary {
+    position: sticky;
+    top: var(--sp-4);
+  }
+}
+
+.tu-bars {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.tu-summary__count {
+  font: var(--fs-12) / 1.8 var(--font-pixel);
+}
+
+.tu-missed {
+  padding: var(--sp-3);
+  background: var(--fake-tint);
+  color: var(--ink);
+  border: 2px solid var(--fake);
+}
+
+.tu-final {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.tu-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tu-result {
+  display: grid;
+  min-width: 0;
+}
+
+.tu-verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+  border: 2px solid;
+}
+
+.tu-verdict .px-icon,
+.tu-verdict svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.tu-verdict--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  color: var(--fact-ink);
+}
+
+.tu-verdict--wrong {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+  color: var(--ink);
+}
+
+.tu-truth {
+  font-size: var(--fs-16);
+  color: var(--muted);
+}
+
+.tu-why {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  background: var(--soft);
+  border: 2px dashed var(--ink);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.tu-why[hidden] {
+  display: none;
+}
+
+.tu-why__title {
+  font: 800 var(--fs-18) / 1.2 var(--font-head);
+}
+
+.tu-why__legend {
+  font-size: var(--fs-14);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tu-feedback,
+  .tu-why:not([hidden]) {
+    animation: tu-pop var(--step) steps(3);
+  }
+}
+
+@keyframes tu-pop {
+  from {
+    transform: translateY(6px);
+    opacity: 0.4;
+  }
+}

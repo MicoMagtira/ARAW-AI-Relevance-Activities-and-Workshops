@@ -212,9 +212,9 @@ describe('module 1 content', () => {
 
   it('loads through the registry; modules without content report so', async () => {
     expect(hasContent('m01')).toBe(true);
-    expect(hasContent('m02')).toBe(false);
+    expect(hasContent('m03')).toBe(false);
     expect((await loadContent('m01'))?.id).toBe('m01');
-    expect(await loadContent('m02')).toBeNull();
+    expect(await loadContent('m03')).toBeNull();
     expect((await content.game.load()).default).toBeTypeOf('function');
   });
 });

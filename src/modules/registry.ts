@@ -7,6 +7,7 @@ type ContentLoader = () => Promise<{ default: ModuleContent }>;
 /** Add `mNN: () => import('./mNN')` as each module's content lands (T07 and on). */
 const CONTENT: Readonly<Record<string, ContentLoader>> = {
   m01: () => import('./m01'),
+  m02: () => import('./m02'),
 };
 
 /** True when the module has lesson content (sync: used by the details sheet). */

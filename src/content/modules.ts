@@ -40,7 +40,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Explain that AI learns only from the examples it is given.',
     'Recognise that lopsided examples make biased AI.',
     'Know that AI can be confidently wrong, and that asking "why?" is fair.',
-  ]),
+  ], 8),
   mod(3, 'AI and Your Health', 'AI and Your Health', 'Chatbot answers, red flags, health data privacy, AI that assists doctors.', 'Tanong kay Chatbot', [
     'Judge whether a chatbot answer is usable, wrong, or a "see a health worker now" case.',
     'Know the red-flag symptoms that always go to a professional.',
