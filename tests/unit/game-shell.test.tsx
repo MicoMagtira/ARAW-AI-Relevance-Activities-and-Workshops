@@ -145,9 +145,11 @@ describe('Arcade tiles', () => {
   });
 
   it('unlocks a module game tile when its module is done', () => {
-    modulesDone.value = ['m06'];
+    modulesDone.value = ['m06', 'm07'];
     render(<Arcade />);
     const hati = screen.getByRole('button', { name: /^Hati Tayo!/ });
-    expect(hati.getAttribute('aria-label')).toBe('Hati Tayo!, AI and jobs, Coming soon');
+    expect(hati.getAttribute('aria-label')).toBe('Hati Tayo!, AI and jobs, New');
+    // module 7's game is still being built
+    expect(screen.getByRole('button', { name: /^Gawa Ko 'To!/ }).getAttribute('aria-label')).toBe("Gawa Ko 'To!, Generative AI and consent, Coming soon");
   });
 });

@@ -60,7 +60,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Name tasks AI does well and tasks that need people.',
     'Explain "human in the loop".',
     'Say who is responsible when AI is used at work.',
-  ]),
+  ], 8),
   mod(7, 'Gawa ni AI?', 'Gawa ni AI?', 'Generative AI, labels, consent and credit.', "Gawa Ko 'To!", [
     'Explain that generative AI makes new content from patterns.',
     'Label AI-made content, ask consent and credit artists.',

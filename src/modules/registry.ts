@@ -11,6 +11,7 @@ const CONTENT: Readonly<Record<string, ContentLoader>> = {
   m03: () => import('./m03'),
   m04: () => import('./m04'),
   m05: () => import('./m05'),
+  m06: () => import('./m06'),
 };
 
 /** True when the module has lesson content (sync: used by the details sheet). */

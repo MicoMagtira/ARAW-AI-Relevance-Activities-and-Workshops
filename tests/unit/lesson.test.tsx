@@ -170,8 +170,8 @@ describe('Lesson screen', () => {
     const view = render(<Lesson id="m99" />);
     expect(screen.getByRole('heading', { name: 'We could not find that module' })).toBeTruthy();
     view.unmount();
-    modulesDone.value = ['m01', 'm02', 'm03', 'm04', 'm05'];
-    render(<Lesson id="m06" />);
+    modulesDone.value = ['m01', 'm02', 'm03', 'm04', 'm05', 'm06'];
+    render(<Lesson id="m07" />);
     expect(await screen.findByRole('heading', { name: 'Coming soon' })).toBeTruthy();
   });
 

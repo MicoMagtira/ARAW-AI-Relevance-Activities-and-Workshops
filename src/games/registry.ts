@@ -11,6 +11,7 @@ export const GAME_LOADERS: Readonly<Record<string, Loader>> = {
   'sino-to': () => import('./sino-to/sino'),
   'lamok-lamay': () => import('./lamok-lamay/lamok'),
   'tawid-lola': () => import('./tawid-lola/tawid'),
+  'hati-tayo': () => import('./hati-tayo/hati'),
   // test-only demo game: reachable by URL, never listed in the Arcade
   demo: () => import('./demo/demo'),
 };

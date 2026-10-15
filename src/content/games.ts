@@ -75,7 +75,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'hati-tayo',
     name: 'Hati Tayo!',
     module: 'm06',
-    playable: false,
+    playable: true,
     topic: 'AI and jobs',
     how: "Split each task between AI and a person in Kuya Jun's busy day.",
     icon: 'briefcase',

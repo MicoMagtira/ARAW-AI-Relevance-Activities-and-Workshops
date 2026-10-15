@@ -1,0 +1,156 @@
+/* Hati Tayo! (Module 6 game): one task at a time, two big lane buttons. Loaded with the game's own chunk. */
+.hati {
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.hati h3,
+.hati h4,
+.hati p,
+.hati ul {
+  margin: 0;
+}
+
+.hati p {
+  overflow-wrap: anywhere;
+}
+
+.hati-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.hati-hud .px-progress-wrap,
+.hati-hud .px-meter-wrap {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.hati-intro,
+.hati-result {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.hati-title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.hati-title:focus {
+  outline: none;
+}
+
+.hati-how {
+  display: grid;
+  gap: var(--sp-2);
+  padding-left: var(--sp-5);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+/* Wide screens: the task on the left, the choice or the feedback on the right. Narrow ones stack them. */
+.hati-round {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  align-items: start;
+}
+
+.hati-task {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+}
+
+.hati-task__label {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.hati-task__text {
+  font: 700 var(--fs-20) / 1.4 var(--font-body);
+}
+
+.hati-ask {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.hati-ask__title {
+  font: 800 var(--fs-20) / 1.3 var(--font-head);
+  color: var(--navy);
+}
+
+.hati-lanes {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hati-lane.px-btn {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-1);
+  min-height: calc(var(--tap) + var(--sp-6));
+  padding: var(--sp-3);
+  text-align: center;
+}
+
+.hati-lane__hint {
+  font: 600 var(--fs-14) / 1.3 var(--font-body);
+  text-transform: none;
+}
+
+.hati-feedback {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.hati-feedback--good {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.hati-feedback--slow {
+  background: var(--gold);
+}
+
+.hati-feedback--fail {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+  box-shadow: var(--px) var(--px) 0 0 var(--fake);
+}
+
+.hati-feedback__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+}
+
+.hati-results {
+  display: grid;
+  gap: var(--sp-2);
+  padding: 0;
+  list-style: none;
+}
+
+.hati-results__item {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3);
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+}
