@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { badgesEarned, recordActivity, streakNotice } from '../../src/app/progress';
 import { streak } from '../../src/app/state';
 import { resetAll } from '../../src/app/store';
-import { EMPTY_STREAK, activeStreak, addDays, advanceStreak, badgesForStreak, freezeAvailable, weekStart } from '../../src/app/streak';
+import { EMPTY_STREAK, activeStreak, addDays, advanceStreak, badgesForStreak, freezeAvailable, weekDays, weekStart } from '../../src/app/streak';
 
 afterEach(() => {
   resetAll();
@@ -119,5 +119,24 @@ describe('recording activity', () => {
     streakNotice.value = null;
     recordActivity(new Date('2026-10-25T04:00:00Z'));
     expect(streakNotice.value).toMatchObject({ event: 'restart', current: 1 });
+  });
+});
+
+describe('weekDays', () => {
+  it('marks the days of the running streak inside this Monday to Sunday week', () => {
+    const days = weekDays({ ...EMPTY_STREAK, current: 2, best: 2, lastDay: '2026-10-14' }, '2026-10-14');
+    expect(days.map((d) => d.date)[0]).toBe('2026-10-12');
+    expect(days.map((d) => d.on)).toEqual([false, true, true, false, false, false, false]);
+    expect(days.filter((d) => d.today).map((d) => d.index)).toEqual([2]);
+  });
+
+  it('marks nothing once the streak has lapsed or never started', () => {
+    expect(weekDays(EMPTY_STREAK, '2026-10-14').some((d) => d.on)).toBe(false);
+    expect(weekDays({ ...EMPTY_STREAK, current: 5, best: 5, lastDay: '2026-10-08' }, '2026-10-14').some((d) => d.on)).toBe(false);
+  });
+
+  it('shows the part of a long streak that falls in the week', () => {
+    const days = weekDays({ ...EMPTY_STREAK, current: 9, best: 9, lastDay: '2026-10-13' }, '2026-10-13');
+    expect(days.map((d) => d.on)).toEqual([true, true, false, false, false, false, false]);
   });
 });

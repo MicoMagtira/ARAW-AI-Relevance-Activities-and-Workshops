@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { expect, noHorizontalOverflow, test } from './fixtures';
 
@@ -75,6 +76,57 @@ test.describe('Responsive sweep', () => {
           return out;
         }, TARGETS);
         for (const f of found) problems.push(`${path}: ${f}`);
+      }
+      expect(problems, problems.join('\n')).toEqual([]);
+    });
+  }
+});
+
+// Accessibility sweep (WCAG 2.2 AA tags): every route, every module hook and every arcade intro at phone, tablet and desktop sizes.
+// A new player is the hardest state (everything locked), which is where an unfocusable scrolling list once slipped through.
+const GAME_SLUGS = ['takbo-data', 'feed-mo-to', 'luto-ni-ara', 'sino-to', 'lamok-lamay', 'tawid-lola', 'hati-tayo', 'gawa-ko-to', 'tulog-na-bea', 'sa-sapatos-nila', 'objection'];
+const AXE_SCREENS = [
+  '/',
+  '/learn',
+  '/arcade',
+  '/daily',
+  '/play/fact-or-fake',
+  '/assess/a',
+  '/library',
+  '/library/myths',
+  '/library/glossary',
+  '/library/komiks',
+  '/library/komiks/1',
+  '/me',
+  '/certificate',
+  '/report',
+  '/about',
+  '/no-such-page',
+  ...Array.from({ length: 10 }, (_, i) => `/learn/m${String(i + 1).padStart(2, '0')}`),
+  ...GAME_SLUGS.map((slug) => `/arcade/${slug}`),
+];
+const AXE_SIZES = [
+  { name: 'phone', width: 360, height: 740 },
+  { name: 'tablet', width: 820, height: 1180 },
+  { name: 'desktop', width: 1440, height: 900 },
+] as const;
+
+test.describe('Accessibility sweep', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'sets its own viewports');
+  });
+  test.setTimeout(240_000);
+
+  for (const size of AXE_SIZES) {
+    test(`axe finds nothing on any screen at ${size.name}`, async ({ page }) => {
+      await page.setViewportSize({ width: size.width, height: size.height });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const problems: string[] = [];
+      for (const path of AXE_SCREENS) {
+        await page.goto(`/#${path}`);
+        await settle(page);
+        const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+        for (const v of result.violations) problems.push(`${path}: ${v.impact} ${v.id} ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`);
       }
       expect(problems, problems.join('\n')).toEqual([]);
     });

@@ -116,6 +116,14 @@ describe('Home', () => {
     expect(screen.getAllByRole('listitem').length).toBeGreaterThanOrEqual(14); // 10 path nodes + badge strip
   });
 
+  it('shows the Monday to Sunday streak calendar in the stats panel', () => {
+    render(<Home />);
+    const week = document.querySelector('.week__days') as HTMLElement;
+    expect(within(week).getAllByRole('listitem')).toHaveLength(7);
+    expect(within(week).getByLabelText(/^Monday/)).toBeTruthy();
+    expect(within(week).getByLabelText(/^Sunday/)).toBeTruthy();
+  });
+
   it('moves Continue along when modules are done', () => {
     modulesDone.value = ['m01', 'm02'];
     render(<Home />);

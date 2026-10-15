@@ -82,3 +82,23 @@ export function activeStreak(s: Streak, today: string): number {
   if (gap <= 1) return s.current;
   return freezeAvailable(s, today) ? s.current : 0;
 }
+
+export interface WeekDay {
+  date: string;
+  /** Monday is 0. */
+  index: number;
+  /** The day counts toward the running streak. */
+  on: boolean;
+  today: boolean;
+}
+
+/** The Monday to Sunday week of `today`, with the days of the running streak marked (a bridged freeze day counts as kept). */
+export function weekDays(s: Streak, today: string): WeekDay[] {
+  const run = activeStreak(s, today);
+  const first = s.lastDay === null || run === 0 ? null : addDays(s.lastDay, -(run - 1));
+  const start = weekStart(today);
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = addDays(start, index);
+    return { date, index, on: first !== null && s.lastDay !== null && date >= first && date <= s.lastDay, today: date === today };
+  });
+}

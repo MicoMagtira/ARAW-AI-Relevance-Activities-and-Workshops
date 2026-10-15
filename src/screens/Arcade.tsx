@@ -18,6 +18,7 @@ import '../styles/arcade.css';
 type Status = 'ready' | 'locked' | 'soon';
 
 const moduleNumber = (id: string | null): number => MODULES.find((m) => m.id === id)?.n ?? 0;
+const moduleShort = (id: string | null): string => MODULES.find((m) => m.id === id)?.short ?? '';
 
 function statusOf(g: GameInfo, done: readonly string[]): Status {
   if (g.module && !done.includes(g.module)) return 'locked';
@@ -28,7 +29,7 @@ const score = (n: number): string => n.toLocaleString('en-US');
 
 /** Short status shown on a tile: best score, "New", the unlocking module, or "Coming soon". */
 function statusText(g: GameInfo, status: Status): string {
-  if (status === 'locked') return t('arcade.after', { n: moduleNumber(g.module) });
+  if (status === 'locked') return t('arcade.afterNamed', { n: moduleNumber(g.module), name: moduleShort(g.module) });
   if (status === 'soon') return t('arcade.soon');
   const best = bestScores.value[g.slug] ?? 0;
   return best > 0 ? t('arcade.best', { n: score(best) }) : t('arcade.new');

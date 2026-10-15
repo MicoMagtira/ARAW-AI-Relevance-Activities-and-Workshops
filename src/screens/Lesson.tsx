@@ -305,7 +305,7 @@ function GameStage({ game, moduleId, onComplete }: { game: ModuleGameDef; module
   return (
     <div class="card card--game stack">
       <p class="panel-title">{t('lesson.gameKicker')}</p>
-      <h2 class="card__title">{game.name}</h2>
+      <h2 class="sr-only">{game.name}</h2>
       {error && (
         <div class="stack">
           <p>{t('lesson.gameError')}</p>

@@ -5,7 +5,7 @@ import { t, type StringKey } from '../app/i18n';
 import { arcadeReady, badgesEarned, cardsDone, modulesDone, nextModule, nodeState, type NodeState } from '../app/progress';
 import { hrefFor } from '../app/router';
 import { displayName, streak, xp } from '../app/state';
-import { activeStreak } from '../app/streak';
+import { activeStreak, weekDays } from '../app/streak';
 import { BADGES, BADGE_TOTAL } from '../content/badges';
 import { ARCADE_GAMES } from '../content/games';
 import { MODULES, MODULE_COUNT } from '../content/modules';
@@ -59,6 +59,32 @@ function Hero() {
   );
 }
 
+/** Mon to Sun streak calendar: one pixel block per day, filled for streak days. */
+function WeekStrip() {
+  const days = weekDays(streak.value, manilaDate());
+  return (
+    <div class="week">
+      <p class="panel-title">{t('home.week')}</p>
+      <ol class="week__days">
+        {days.map((d) => {
+          const day = t(`home.weekDay.${d.index}` as StringKey);
+          const label = d.on ? t('home.weekOn', { day }) : d.today ? t('home.weekToday', { day }) : t('home.weekOff', { day });
+          return (
+            <li key={d.date} class={`week__day${d.on ? ' is-on' : ''}${d.today ? ' is-today' : ''}`} aria-label={label}>
+              <span class="week__dot" aria-hidden="true">
+                {d.on && <Icon name="check" size={16} />}
+              </span>
+              <span class="week__name" aria-hidden="true">
+                {day.slice(0, 1)}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
+
 function Stats() {
   const done = modulesDone.value.length;
   return (
@@ -86,6 +112,7 @@ function Stats() {
           </div>
         </dl>
         <ProgressBar value={done} max={MODULE_COUNT} label={t('home.modules')} text={t('home.modulesText', { done, total: MODULE_COUNT })} />
+        <WeekStrip />
       </div>
     </Panel>
   );

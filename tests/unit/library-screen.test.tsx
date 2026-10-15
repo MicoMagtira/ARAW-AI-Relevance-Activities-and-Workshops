@@ -158,6 +158,7 @@ describe('Komiks list', () => {
     expect(screen.getByText('0 of 10 episodes unlocked')).toBeTruthy();
     expect(screen.getAllByText('Finish Module 1 to unlock').length).toBeGreaterThan(0);
     expect(document.querySelectorAll('.ep-card--locked')).toHaveLength(KOMIKS.length);
+    expect(within(document.querySelector('.ep-card--locked') as HTMLElement).getByText('Locked')).toBeTruthy();
     expect(screen.queryAllByRole('link', { name: /Episode \d/ })).toHaveLength(0);
     expect(screen.getByText('Finish Module 1 to unlock the first episode.')).toBeTruthy();
   });

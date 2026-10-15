@@ -103,7 +103,7 @@ export function drawCertificate(ctx: CanvasRenderingContext2D, data: Certificate
   for (const [color, i] of stripes) box(ctx, color, sunX - 4 * P, (11 + 12 + i) * P, 16 * sunCell + 8 * P, P);
 
   line(ctx, t('app.name'), { font: `40px ${FONT_PIXEL}`, color: PALETTE.navy, y: 35 * P });
-  line(ctx, t('app.tagline'), { font: `700 22px ${FONT_BODY}`, color: PALETTE.muted, y: 43 * P });
+  line(ctx, t('app.tagline'), { font: `700 30px ${FONT_BODY}`, color: PALETTE.muted, y: 43 * P });
   line(ctx, t('cert.c.title'), { font: `48px ${FONT_PIXEL}`, color: PALETTE.ink, y: 51 * P });
   line(ctx, t('cert.c.sub'), { font: `24px ${FONT_PIXEL}`, color: PALETTE.navy, y: 60 * P });
   line(ctx, t('cert.c.certifies'), { font: `600 28px ${FONT_BODY}`, color: PALETTE.muted, y: 69 * P });

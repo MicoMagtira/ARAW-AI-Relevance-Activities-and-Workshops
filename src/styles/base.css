@@ -59,6 +59,11 @@ button {
   outline-offset: 2px;
 }
 
+/* Headings that take focus from code (to announce a new view) are not controls, so they get no ring. */
+:is(h1, h2, h3, h4)[tabindex='-1']:focus {
+  outline: none;
+}
+
 .sr-only,
 .sr-hint {
   position: absolute;

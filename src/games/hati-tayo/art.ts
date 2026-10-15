@@ -106,7 +106,7 @@ export function drawStrip(ctx: CanvasRenderingContext2D, flash: Flash | null, hi
   if (!flash) {
     wrapText(hint, STRIP_CHARS)
       .slice(0, 3)
-      .forEach((line, i) => text(ctx, line, STRIP.x + 8, STRIP.y + 4 + i * 8, { size: 8, color: PALETTE.muted }));
+      .forEach((line, i) => text(ctx, line, STRIP.x + 8, STRIP.y + 4 + i * 10, { size: 8, color: PALETTE.muted }));
     return;
   }
   text(ctx, flash.head, STRIP.x + 8, STRIP.y + 4, { size: 8, color: c.ink });

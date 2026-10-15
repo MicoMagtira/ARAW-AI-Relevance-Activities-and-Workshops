@@ -271,6 +271,21 @@
   font-size: var(--fs-14);
 }
 
+/* Keyboard hint for mouse and keyboard users, touch hint only when the main pointer is a finger. */
+.game-keys--touch {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .game-keys--kb {
+    display: none;
+  }
+
+  .game-keys--touch {
+    display: inline;
+  }
+}
+
 .game-state {
   display: grid;
   gap: var(--sp-2);

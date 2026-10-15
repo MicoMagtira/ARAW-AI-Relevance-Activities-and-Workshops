@@ -399,7 +399,10 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                 {t('game.howTo')}
               </Button>
             </div>
-            <p class="px-text-muted game-side__keys">{t('game.keys')}</p>
+            <p class="px-text-muted game-side__keys">
+              <span class="game-keys--kb">{t('game.keys')}</span>
+              <span class="game-keys--touch">{t('game.touch')}</span>
+            </p>
             <section class="game-state" aria-labelledby="game-state-h">
               <h2 id="game-state-h" class="px-label">
                 {t('game.state')}
@@ -437,7 +440,10 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
             <li key={line}>{line}</li>
           ))}
         </ul>
-        <p class="px-text-muted">{t('game.keys')}</p>
+        <p class="px-text-muted">
+          <span class="game-keys--kb">{t('game.keys')}</span>
+          <span class="game-keys--touch">{t('game.touch')}</span>
+        </p>
         {settings.value.srHints && <p class="sr-hint">{t('game.srHint')}</p>}
       </Dialog>
 

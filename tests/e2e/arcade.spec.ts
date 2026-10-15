@@ -37,7 +37,7 @@ test.describe('Arcade screen', () => {
     await expect(page.getByText('6 of 11 ready')).toBeVisible();
     // six open from the start, five behind modules 6 to 10
     await expect(page.locator('.arcade-tile[aria-label$="Coming soon"]')).toHaveCount(0);
-    for (const n of [6, 7, 8, 9, 10]) await expect(page.locator(`.arcade-tile[aria-label$="After Module ${n}"]`)).toHaveCount(1);
+    for (const n of [6, 7, 8, 9, 10]) await expect(page.locator(`.arcade-tile[aria-label*="After Module ${n}:"]`)).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 2, name: 'Practice' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Play Fact or Fake' })).toHaveAttribute('href', '#/play/fact-or-fake');
     await settled(page);

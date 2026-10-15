@@ -210,7 +210,7 @@ function EpisodeCard({ ep, unlocked, read, selected }: { ep: KomiksEpisode; unlo
           ) : (
             <Chip>
               <Icon name="lock" size={16} />
-              <span class="sr-only">{t('komiks.locked', { n: mod?.n ?? ep.n })}</span>
+              {t('komiks.lockedChip')}
             </Chip>
           )}
         </span>
