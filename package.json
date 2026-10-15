@@ -11,7 +11,9 @@
     "preview": "vite preview --port 4173 --strictPort",
     "test": "vitest run --reporter=dot",
     "e2e": "playwright test --reporter=line",
-    "verify": "npm run build && npm run test && npm run e2e"
+    "budget": "node scripts/check-budget.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "verify": "npm run build && npm run budget && npm run test && npm run e2e"
   },
   "dependencies": {
     "@fontsource/baloo-2": "^5.3.0",

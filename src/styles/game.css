@@ -20,6 +20,17 @@
   }
 }
 
+/* Big desktop screens: give the stage the room (the canvas snaps to whole-number pixel scales inside it). */
+@media (width >= 1600px) {
+  .game-main {
+    max-width: 1560px;
+  }
+
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+}
+
 /* ---------- Stage: a box with the game's aspect ratio; the canvas is fitted and letterboxed inside by script ---------- */
 .game-stage {
   position: relative;

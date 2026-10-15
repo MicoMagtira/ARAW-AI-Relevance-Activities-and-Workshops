@@ -11,6 +11,7 @@ import './styles/ara.css';
 import './styles/splash.css';
 import { App } from './app/App';
 import { initBoot } from './app/boot';
+import { registerServiceWorker } from './app/pwa';
 import { location$, startRouter } from './app/router';
 import { initSettings } from './app/settings';
 
@@ -20,3 +21,4 @@ initBoot(location$.value.path);
 
 const root = document.getElementById('app');
 if (root) render(<App />, root);
+registerServiceWorker();
