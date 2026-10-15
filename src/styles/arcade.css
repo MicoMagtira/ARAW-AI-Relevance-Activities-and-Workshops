@@ -1,0 +1,190 @@
+/* Arcade screen (docs/DESIGN.md section 11): featured game, tile grid, details panel, practice row. */
+
+.arcade-featured {
+  background: var(--gold);
+}
+
+.arcade-featured h2 {
+  font: 800 var(--fs-28) / 1.2 var(--font-head);
+}
+
+.arcade-featured .ara-says__bubble {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+}
+
+.arcade-featured .px-text-muted {
+  color: var(--ink);
+}
+
+.arcade__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  align-content: start;
+  min-width: 0;
+}
+
+.arcade__details {
+  position: sticky;
+  top: calc(var(--banner-h) + var(--gap));
+  align-self: start;
+}
+
+.arcade-games__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.arcade-games__head .stack {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.arcade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--sp-4) var(--sp-5);
+  margin: 0;
+  padding: 0 var(--px) var(--px) 0;
+  list-style: none;
+}
+
+.arcade-grid > li {
+  display: flex;
+  min-width: 0;
+}
+
+/* ---------- Tile ---------- */
+.arcade-tile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'icon text'
+    'icon status';
+  align-items: center;
+  gap: var(--sp-1) var(--sp-3);
+  width: 100%;
+  min-height: 104px;
+  padding: var(--sp-3);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.arcade-tile:hover {
+  background: var(--navy-tint);
+}
+
+.arcade-tile.is-quiet {
+  background: var(--soft);
+}
+
+.arcade-tile.is-selected {
+  background: var(--gold);
+}
+
+.arcade-tile__icon {
+  grid-area: icon;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  background: var(--gold);
+  border: var(--px) solid var(--ink);
+  color: var(--navy);
+}
+
+.is-quiet .arcade-tile__icon {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.arcade-tile__text {
+  grid-area: text;
+  display: grid;
+  min-width: 0;
+}
+
+.arcade-tile__name {
+  font: 800 var(--fs-20) / 1.2 var(--font-head);
+  overflow-wrap: anywhere;
+}
+
+.arcade-tile__topic {
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+  color: var(--muted);
+}
+
+.arcade-tile__status {
+  grid-area: status;
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--muted);
+}
+
+.arcade-tile__status.is-ready {
+  color: var(--fact-ink);
+}
+
+/* ---------- Details ---------- */
+.arcade-details__best {
+  font: var(--fs-14) / 1.5 var(--font-pixel);
+  color: var(--fact-ink);
+}
+
+.arcade-details__ara .ara-says {
+  align-items: center;
+}
+
+/* ---------- Practice ---------- */
+.arcade-fof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--soft);
+  border: var(--px) solid var(--ink);
+}
+
+.arcade-fof .stack {
+  flex: 1 1 280px;
+  min-width: 0;
+  gap: var(--sp-2);
+}
+
+.arcade-replays {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.arcade-replay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-4);
+  min-height: var(--tap);
+  padding: var(--sp-2) 0;
+  border-bottom: 2px solid var(--line);
+}
+
+.arcade-replay__name {
+  font: 800 var(--fs-18) / 1.2 var(--font-head);
+}
+
+.arcade-replay__lock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}

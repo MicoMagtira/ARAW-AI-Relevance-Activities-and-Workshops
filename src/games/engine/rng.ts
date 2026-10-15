@@ -27,6 +27,15 @@ export function createRng(seed: string | number): Rng {
 /** A new, non-deterministic seed string for rounds that should differ every time. */
 export const randomSeed = (): string => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
+/** The Daily Challenge seed for a Manila date ("2026-10-15" gives "ARAW-2026-10-15"). Same for everyone that day. */
+export const dailySeed = (date: string): string => `ARAW-${date}`;
+
+/** Whole number in [min, max). */
+export const rngInt = (rng: Rng, min: number, max: number): number => min + Math.floor(rng() * (max - min));
+
+/** One random item of a non-empty list. */
+export const rngPick = <T,>(items: readonly T[], rng: Rng): T => items[Math.floor(rng() * items.length)] as T;
+
 /** Fisher-Yates shuffle; returns a new array. */
 export function shuffle<T>(items: readonly T[], rng: Rng): T[] {
   const out = items.slice();

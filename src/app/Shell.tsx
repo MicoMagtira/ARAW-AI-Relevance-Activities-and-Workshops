@@ -11,6 +11,7 @@ import { Home } from '../screens/Home';
 import { Learn } from '../screens/Learn';
 import { Lesson } from '../screens/Lesson';
 import { LazyFactOrFake } from '../games/fact-or-fake/LazyFactOrFake';
+import { LazyGame } from '../games/LazyGame';
 import { Arcade } from '../screens/Arcade';
 import { Library } from '../screens/Library';
 import { Me } from '../screens/Me';
@@ -18,7 +19,7 @@ import { Report } from '../screens/Report';
 import { About } from '../screens/About';
 import { NotFound } from '../screens/NotFound';
 
-const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess'>, ComponentType> = {
+const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game'>, ComponentType> = {
   home: Home,
   learn: Learn,
   arcade: Arcade,
@@ -49,11 +50,13 @@ export function Shell() {
   }, [match.def.name, match.location.path]);
 
   // Focus mode: the module runner and Fact or Fake replace the sidebar, banner and tab bar with its own top bar.
-  if (lessonId !== undefined || focusName === 'fof' || focusName === 'assess') {
+  if (lessonId !== undefined || focusName === 'fof' || focusName === 'assess' || focusName === 'game') {
     return (
       <div class="shell shell--focus">
         {lessonId !== undefined ? (
           <Lesson id={lessonId} key={lessonId} />
+        ) : focusName === 'game' ? (
+          <LazyGame slug={match.params.slug ?? ''} seed={match.location.query.seed} breakSeconds={match.location.query.break} key={match.location.path + (match.location.query.seed ?? '')} />
         ) : focusName === 'fof' ? (
           <LazyFactOrFake mode="free" seed={match.location.query.seed} key={match.location.path} />
         ) : (
@@ -63,7 +66,7 @@ export function Shell() {
       </div>
     );
   }
-  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson' | 'fof' | 'assess'>];
+  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game'>];
 
   const reportHref = hrefFor('/report', { screen: match.def.name === 'report' ? undefined : match.def.name });
   const activeTab = match.def.tab;

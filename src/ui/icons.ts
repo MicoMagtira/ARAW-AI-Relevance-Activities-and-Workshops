@@ -23,11 +23,22 @@ import arrowLeft from 'pixelarticons/svg/arrow-left.svg?raw';
 import arrowRight from 'pixelarticons/svg/arrow-right.svg?raw';
 import chevronLeft from 'pixelarticons/svg/chevron-left.svg?raw';
 import chevronRight from 'pixelarticons/svg/chevron-right.svg?raw';
+import shield from 'pixelarticons/svg/shield.svg?raw';
+import article from 'pixelarticons/svg/article.svg?raw';
+import cake from 'pixelarticons/svg/cake.svg?raw';
+import phoneCall from 'pixelarticons/svg/phone-call.svg?raw';
+import aiScan from 'pixelarticons/svg/ai-scan.svg?raw';
+import bus from 'pixelarticons/svg/bus.svg?raw';
+import briefcase from 'pixelarticons/svg/briefcase.svg?raw';
+import brush from 'pixelarticons/svg/brush.svg?raw';
+import moon from 'pixelarticons/svg/moon.svg?raw';
+import eye from 'pixelarticons/svg/eye.svg?raw';
+import scale from 'pixelarticons/svg/scale.svg?raw';
 
 /** Extract the path data from a pixelarticons SVG file. */
 const paths = (svg: string): string[] => [...svg.matchAll(/\sd="([^"]+)"/g)].map((m) => m[1] as string);
 
-const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, clock, search, forward, reply: messageReply, 'thumbs-up': thumbsUp, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight };
+const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, clock, search, forward, reply: messageReply, 'thumbs-up': thumbsUp, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight, shield, article, cake, 'phone-call': phoneCall, 'ai-scan': aiScan, bus, briefcase, brush, moon, eye, scale };
 
 /** Hand-made 24-cell icons (single colour, crisp edges). */
 const handMade = {

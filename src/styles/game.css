@@ -1,0 +1,290 @@
+/* GameShell (docs/SPEC.md section 5): canvas stage, overlays, HUD side panel, briefing. Loaded with the shell chunk. */
+
+.game-main {
+  max-width: 1280px;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+  padding-right: var(--px);
+  padding-bottom: var(--px);
+}
+
+@media (width >= 1024px) {
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: var(--gap);
+  }
+}
+
+/* ---------- Stage: a box with the game's aspect ratio; the canvas is fitted and letterboxed inside by script ---------- */
+.game-stage {
+  position: relative;
+  display: grid; /* an open panel sits in the one cell and makes the stage taller when it needs room */
+  width: 100%;
+  aspect-ratio: var(--ar, 16 / 9);
+  min-height: 180px;
+  max-height: calc(100dvh - 64px - var(--gutter) * 2 - 56px);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+/* A panel over the stage can be taller than the game screen (phones): the stage then takes the panel's height,
+   but never less than the game screen's own height (the wrapper is a size container, so cqw is the stage width). */
+.game-stage-wrap {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.game-stage[data-overlay] {
+  aspect-ratio: auto;
+  max-height: none;
+  min-height: calc(100cqw * var(--arh, 9) / var(--arw, 16));
+}
+
+.game-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  margin: auto;
+  background: var(--cream);
+  image-rendering: pixelated;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.game-overlay {
+  grid-area: 1 / 1;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-3);
+  background-color: rgb(31 37 80 / 60%);
+  background-image: conic-gradient(rgb(31 37 80 / 25%) 25%, transparent 0 50%, rgb(31 37 80 / 25%) 0 75%, transparent 0);
+  background-size: 4px 4px;
+}
+
+:root.a11y-high-contrast .game-overlay {
+  background-image: none;
+}
+
+.game-overlay > .px-panel {
+  margin: auto;
+}
+
+.game-card {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-3);
+  width: min(100%, 460px);
+  padding: var(--sp-4) var(--sp-5);
+  text-align: center;
+}
+
+.game-card h2 {
+  font: var(--fs-16) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.game-card h2:focus {
+  outline: none;
+}
+
+.game-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3);
+}
+
+.game-card__actions--col {
+  flex-direction: column;
+  align-items: stretch;
+  width: min(100%, 280px);
+}
+
+.game-card__score {
+  font: var(--fs-22) / 1.4 var(--font-pixel);
+}
+
+.game-card__score .px-label {
+  display: block;
+  font-size: var(--fs-12);
+}
+
+.game-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+
+.game-recap {
+  width: 100%;
+  text-align: left;
+}
+
+.game-recap h3 {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.game-recap ul {
+  margin: var(--sp-2) 0;
+  padding-left: var(--sp-5);
+  font-size: var(--fs-16);
+}
+
+.game-trust {
+  font: 800 var(--fs-16) / 1.4 var(--font-body);
+  color: var(--navy);
+}
+
+/* ---------- Briefing ---------- */
+.briefing {
+  width: min(100%, 640px);
+  margin: auto;
+}
+
+.briefing h2:focus {
+  outline: none;
+}
+
+.briefing__body {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.briefing .ara-says {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.briefing .ara-says__bubble {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.briefing__dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+
+.briefing__dots i {
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+}
+
+.briefing__dots i.seen {
+  background: var(--gold-deep);
+}
+
+.briefing__dots i.on {
+  background: var(--navy);
+}
+
+.briefing__page {
+  text-align: center;
+}
+
+.briefing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+.briefing__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* ---------- Side panel: HUD, buttons, text description ---------- */
+.game-side {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+  min-width: 0;
+}
+
+.game-hud {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--sp-3);
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  list-style: none;
+}
+
+.game-hud__item {
+  display: grid;
+  gap: var(--sp-1);
+  align-content: start;
+  min-width: 0;
+}
+
+.game-hud__value {
+  font: var(--fs-18) / 1.4 var(--font-pixel);
+  overflow-wrap: anywhere;
+}
+
+.game-hud__hearts {
+  display: inline-flex;
+  gap: var(--sp-1);
+  color: var(--coral);
+}
+
+.game-hud__hearts .is-lost {
+  color: var(--muted);
+}
+
+.game-side__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.game-side__keys {
+  font-size: var(--fs-14);
+}
+
+.game-state {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--soft);
+  border: var(--px) solid var(--ink);
+}
+
+.game-state p {
+  font-size: var(--fs-16);
+  line-height: 1.5;
+}
+
+.game-howto {
+  margin: 0 0 var(--sp-3);
+  padding-left: var(--sp-5);
+}
+
+@media (width < 600px) {
+  .game-card {
+    padding: var(--sp-3);
+  }
+
+  .game-side__buttons .px-btn {
+    flex: 1 1 140px;
+  }
+}
