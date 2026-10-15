@@ -39,7 +39,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'luto-ni-ara',
     name: 'Luto ni Ara',
     module: null,
-    playable: false,
+    playable: true,
     topic: 'Prompting AI well',
     how: 'Mix the right prompt ingredients before the order runs out. Bad prompts serve funny dishes.',
     icon: 'cake',
