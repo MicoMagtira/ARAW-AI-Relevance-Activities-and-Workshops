@@ -92,3 +92,22 @@ export const bestRadar = persisted<BestRadar | null>(
       Number.isFinite((v as BestRadar).c) &&
       Number.isFinite((v as BestRadar).total)),
 );
+
+/** Spot the Tactic: correct picks in a row per villain id (a miss on that trick resets it). Three beat the villain. */
+export const tacticStreaks = persisted<Record<string, number>>(
+  'tacticStreaks',
+  {},
+  (v): v is Record<string, number> =>
+    typeof v === 'object' && v !== null && !Array.isArray(v) && Object.values(v).every((n) => typeof n === 'number' && Number.isInteger(n) && n >= 0),
+);
+
+/** Villain ids whose card is collected (beaten in Spot the Tactic). */
+export const villainCards = persisted<string[]>('villainCards', [], isStringArray);
+
+/** Collect a villain's card and its badge once. Returns true when the card was new. */
+export function collectVillain(id: string, badgeId: string): boolean {
+  if (villainCards.value.includes(id)) return false;
+  villainCards.value = [...villainCards.value, id];
+  earnBadge(badgeId);
+  return true;
+}

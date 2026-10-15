@@ -1,0 +1,396 @@
+/* "Spot the Tactic" (Module 4 game) and the villain card collection. Loaded with the game's own chunk. Desktop: post left, picks or feedback right. */
+.tt {
+  container: tt / inline-size;
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.tt h3,
+.tt h4,
+.tt p,
+.tt ul {
+  margin: 0;
+}
+
+.tt p {
+  overflow-wrap: anywhere;
+}
+
+.tt-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.tt-hud .px-progress-wrap {
+  flex: 1 1 220px;
+}
+
+.tt-intro {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.tt-title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.tt-title:focus,
+.tt-question:focus {
+  outline: none;
+}
+
+.tt-title:focus-visible,
+.tt-question:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 4px;
+}
+
+.tt-question {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.tt-hint {
+  font-size: var(--fs-16);
+}
+
+.tt-final {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+/* A round: the post beside the picks */
+.tt-round {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.tt-round__post,
+.tt-round__side {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+/* The post, drawn like a social post */
+.tt-post {
+  position: relative;
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+}
+
+.tt-post__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.tt-post__avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--ink);
+  background: var(--gold);
+  border: 3px solid var(--ink);
+}
+
+.tt-post__author {
+  font: 800 var(--fs-18) / 1.2 var(--font-head);
+  color: var(--ink);
+}
+
+.tt-post__meta {
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+
+.tt-post__text {
+  font: 600 var(--fs-20) / 1.5 var(--font-body);
+  color: var(--ink);
+}
+
+.tt-post .px-chip {
+  justify-self: start;
+}
+
+.tt-post .px-stamp {
+  position: static;
+  justify-self: start;
+  margin-top: var(--sp-1);
+  transform: rotate(-3deg);
+}
+
+.tt-mark {
+  padding: 0 2px;
+  color: var(--ink);
+  background: var(--gold);
+  border-bottom: 3px solid var(--fake);
+}
+
+.tt-mark--good {
+  background: var(--fact-tint);
+  border-bottom-color: var(--fact);
+}
+
+/* The six picks */
+.tt-picks {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.tt-pick.px-btn {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--sp-2) var(--sp-3);
+  text-align: left;
+  text-transform: none;
+}
+
+.tt-pick--none.px-btn {
+  grid-template-columns: auto 1fr;
+}
+
+.tt-pick__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tt-pick__name {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+}
+
+.tt-pick__trick {
+  font: 700 var(--fs-14) / 1.3 var(--font-body);
+}
+
+/* Pixel hearts */
+.tt-hearts {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.tt-heart {
+  color: var(--muted);
+}
+
+.tt-heart--full {
+  color: var(--fake);
+}
+
+/* Feedback */
+.tt-feedback {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  font: 600 var(--fs-18) / 1.45 var(--font-body);
+}
+
+.tt-feedback--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.tt-feedback--wrong {
+  background: var(--gold);
+}
+
+.tt-feedback__head {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.tt-feedback__points {
+  font: var(--fs-12) / 1.8 var(--font-pixel);
+}
+
+.tt-foe {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.tt-foe__text {
+  display: grid;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+
+.villain-art {
+  flex: none;
+  image-rendering: pixelated;
+}
+
+/* The new-card panel */
+.tt-new {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.45 var(--font-body);
+}
+
+.tt-new__title {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+/* Card collection */
+.tt-collection {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.tt-collection__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.tt-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: var(--sp-4);
+  padding: 0;
+  list-style: none;
+}
+
+.tt-card {
+  display: grid;
+  align-content: start;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-16) / 1.45 var(--font-body);
+}
+
+.tt-card--locked {
+  background: var(--soft);
+}
+
+.tt-card--won {
+  background: var(--surface);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+}
+
+.tt-card--fresh {
+  outline: 4px dashed var(--gold-deep);
+  outline-offset: 4px;
+}
+
+.tt-card__top {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.tt-card__head {
+  display: grid;
+  gap: var(--sp-1);
+  justify-items: start;
+  min-width: 0;
+}
+
+.tt-card__name {
+  font: 800 var(--fs-20) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.tt-card__trick {
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+
+.tt-card__tagline {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.tt-card__body {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.tt-card__body ul {
+  display: grid;
+  gap: 2px;
+  padding-left: var(--sp-4);
+}
+
+.tt-card__label,
+.tt-card__badge {
+  font: var(--fs-10) / 1.8 var(--font-pixel);
+  color: var(--navy);
+}
+
+.tt-card__locked {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+
+.tt-card__locked svg {
+  flex: none;
+}
+
+/* Step-based hit and wince: the villain shakes when hit, droops back when it recovers. */
+@media (prefers-reduced-motion: no-preference) {
+  .tt-hit {
+    animation: tt-shake 400ms steps(5);
+  }
+
+  .tt-wince {
+    animation: tt-nod 400ms steps(4);
+  }
+}
+
+@keyframes tt-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes tt-nod {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}

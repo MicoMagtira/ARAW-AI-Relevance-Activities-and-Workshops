@@ -50,7 +50,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Name the five misinformation tricks.',
     'Spot them in local-style posts, including AI-deepfaked doctor endorsements.',
     'Rate true posts as true.',
-  ]),
+  ], 8),
   mod(5, 'Check Before You Share', 'Check Before Sharing', 'A three-step checking habit, replying kindly, and where to report.', "Tita's GC", [
     'Pause, check who said it, and look for another source.',
     'Reply to family kindly without shaming.',

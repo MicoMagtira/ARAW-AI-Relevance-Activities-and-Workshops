@@ -34,6 +34,8 @@ const handMade = {
   'xp-star': ['M11 1h2v4h-2zM11 19h2v4h-2zM1 11h4v2H1zM19 11h4v2h-4zM9 5h6v2H9zM9 17h6v2H9zM5 9h2v6H5zM17 9h2v6h-2zM7 7h10v10H7z'],
   // flame with a hollow core (even-odd)
   flame: ['M11 1h2v3h2v4h2v2h2v8h-2v2h-2v2H9v-2H7v-2H5v-8h2V8h2V4h2zM10 14h4v6h-4z'],
+  // solid pixel heart (pixelarticons only has the outline), for hit points
+  'heart-solid': ['M5 4h4v2H5zM15 4h4v2h-4zM3 6h8v2H3zM13 6h8v2h-8zM3 8h18v4H3zM5 12h14v2H5zM7 14h10v2H7zM9 16h6v2H9zM11 18h2v2h-2z'],
   // book stack (pixelarticons has no "bookmarks")
   library: ['M4 3h16v5H4zM2 10h16v5H2zM5 17h17v5H5z'],
 } satisfies Record<string, string[]>;
