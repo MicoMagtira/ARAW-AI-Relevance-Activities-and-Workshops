@@ -116,13 +116,17 @@ test.describe('Library: Myths', () => {
 
   test('myth cards sit in a grid that fits the width', async ({ page }) => {
     await page.goto('/#/library/myths');
-    const grid = page.locator('.lib-grid');
-    const first = await box(grid.locator('li').first());
-    const second = await box(grid.locator('li').nth(1));
+    const items = page.locator('.lib-grid > li');
+    await expect(items.nth(1)).toBeVisible();
+    await settled(page); // the screen's enter animation moves every box a little
     const width = page.viewportSize()!.width;
-    const perRow = Math.abs(first.y - second.y) < 4 ? 'side-by-side' : 'stacked';
-    if (width >= 1024) expect(perRow).toBe('side-by-side');
-    if (width < 600) expect(perRow).toBe('stacked');
+    const sideBySide = async () => {
+      const first = await box(items.first());
+      const second = await box(items.nth(1));
+      return Math.abs(first.y - second.y) < 4;
+    };
+    if (width >= 1024) await expect.poll(sideBySide).toBe(true);
+    if (width < 600) await expect.poll(sideBySide).toBe(false);
   });
 
   test('Myth of the day on Home links to that myth, already flipped', async ({ page }) => {
