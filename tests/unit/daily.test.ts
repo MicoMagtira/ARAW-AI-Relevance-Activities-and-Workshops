@@ -59,9 +59,18 @@ describe('module path', () => {
   });
 
   it('opens module games in the arcade as their module is finished', () => {
-    expect(arcadeReady([])).toBe(6);
-    expect(arcadeReady(['m06', 'm10'])).toBe(8);
-    expect(arcadeReady(MODULES.map((m) => m.id))).toBe(11);
+    const live = ARCADE_GAMES.map((g) => ({ ...g, playable: true }));
+    expect(arcadeReady([], live)).toBe(6);
+    expect(arcadeReady(['m06', 'm10'], live)).toBe(8);
+    expect(arcadeReady(MODULES.map((m) => m.id), live)).toBe(11);
+  });
+
+  it('counts only games that really ship', () => {
+    const shipped = ARCADE_GAMES.filter((g) => g.playable).length;
+    expect(arcadeReady(MODULES.map((m) => m.id))).toBe(shipped);
+    const one = ARCADE_GAMES.map((g, i) => ({ ...g, playable: i === 0 || i === 6 }));
+    expect(arcadeReady([], one)).toBe(1);
+    expect(arcadeReady(['m06'], one)).toBe(2);
   });
 });
 

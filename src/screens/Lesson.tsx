@@ -132,11 +132,11 @@ const INTRO_KEY = {
 function introLine(step: Step): Reaction {
   switch (step.kind) {
     case 'card':
-      return { mood: step.card.type === 'story-hook' ? 'wink' : 'idle', line: step.card.ara?.intro ?? t(INTRO_KEY[step.card.type]) };
+      return { mood: step.card.type === 'story-hook' ? 'happy' : 'idle', line: step.card.ara?.intro ?? t(INTRO_KEY[step.card.type]) };
     case 'takeaway':
       return { mood: 'happy', line: t(INTRO_KEY.takeaway) };
     case 'game':
-      return { mood: 'wink', line: t('lesson.ara.game') };
+      return { mood: 'happy', line: t('lesson.ara.game') };
     case 'practice':
       return { mood: 'think', line: t('lesson.ara.practice') };
     case 'reward':
@@ -255,9 +255,6 @@ function Runner({ info, content }: { info: ModuleInfo; content: ModuleContent })
           {body}
         </div>
         <div class={`lesson-actions${hasNext ? '' : ' lesson-actions--bare'}`}>
-          <span class="lesson-id" aria-hidden="true">
-            {step.id}
-          </span>
           <span class="lesson-gain" role="status">
             {gain}
           </span>

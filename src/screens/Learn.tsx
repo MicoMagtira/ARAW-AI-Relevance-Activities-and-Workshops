@@ -70,7 +70,7 @@ function Node({ m, state, selected, onPick }: NodeProps) {
         aria-label={t('learn.node', { n: m.n, title: m.title, state: t(STATE_KEY[state]) })}
         onClick={() => onPick(m.id)}
       >
-        {state === 'current' && <Ara mood="wink" scale={2} decorative class="road-node__ara" />}
+        {state === 'current' && <Ara mood="idle" scale={2} decorative class="road-node__ara" />}
         <span class="road-node__tile" aria-hidden="true">
           {state === 'done' ? <Icon name="check" size={32} /> : state === 'locked' ? <Icon name="lock" size={32} /> : m.n}
         </span>

@@ -309,17 +309,20 @@ function Intro({ onStart }: { onStart: () => void }) {
           {t('gc.introTitle')}
         </h3>
         <p>{t('gc.introText')}</p>
-        <ul class="gc-how">
-          <li>{t('gc.how.accuracy')}</li>
-          <li>{t('gc.how.kindness')}</li>
-          <li>{t('gc.how.ripple')}</li>
-        </ul>
         <div>
           <Button variant="gold" large onClick={onStart}>
             {t('gc.start')}
             <Icon name="arrow-right" />
           </Button>
         </div>
+        <details class="gc-how__details">
+          <summary>{t('gc.how.title')}</summary>
+          <ul class="gc-how">
+            <li>{t('gc.how.accuracy')}</li>
+            <li>{t('gc.how.kindness')}</li>
+            <li>{t('gc.how.ripple')}</li>
+          </ul>
+        </details>
       </section>
       <section class="gc-cast" aria-labelledby="gc-cast-title">
         <h4 class="gc-ripple__title" id="gc-cast-title">

@@ -222,6 +222,17 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
         </p>
       </section>
 
+      {!feedback && !assess && !compact && (
+        <aside class="fof-placeholder px-box" aria-label={t('fof.placeholder.title')}>
+          <p class="panel-title">{t('fof.placeholder.title')}</p>
+          <p>{t('fof.placeholder.text')}</p>
+          <ol class="fof-placeholder__checks">
+            <li>{t('fof.placeholder.c1')}</li>
+            <li>{t('fof.placeholder.c2')}</li>
+            <li>{t('fof.placeholder.c3')}</li>
+          </ol>
+        </aside>
+      )}
       <div class="fof-feedback-slot" ref={slotRef} role="status" aria-live="polite">
         {feedback && (
           <section class={`fof-feedback px-box ${right ? 'fof-feedback--right' : 'fof-feedback--wrong'}`} aria-label={t('fof.feedback')}>

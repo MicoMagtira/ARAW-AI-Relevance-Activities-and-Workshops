@@ -139,13 +139,8 @@
   gap: var(--sp-3);
 }
 
-.lesson-id {
-  margin-right: auto;
-  font: var(--fs-12) / 1.5 var(--font-pixel);
-  color: var(--muted);
-}
-
 .lesson-gain {
+  margin-left: auto; /* the card id lives only in the Report flag's label, not on screen */
   min-width: 0;
   font: var(--fs-14) / 1.5 var(--font-pixel);
   color: var(--fact-ink);
@@ -176,6 +171,18 @@
   .lesson-card {
     padding: var(--sp-6);
     min-height: 320px;
+  }
+}
+
+/* Short desktop screens (1366x768): game steps tighten their padding so the runner's Next stays closer to the fold */
+@media (width >= 1024px) and (height < 800px) {
+  .lesson-stage--game .lesson-card {
+    padding: var(--sp-4) var(--sp-5);
+    min-height: 0;
+  }
+
+  .lesson-stage--game {
+    row-gap: var(--sp-3);
   }
 }
 

@@ -26,44 +26,60 @@ red-flag symptoms always point to a health worker or hospital, and hotlines (155
 ## Remaining, prioritized (for T13)
 
 ### P1: should fix soon
-- [ ] **Home promises what the app cannot do yet.** The Arcade card says "6 of 11 ready" and "Play today's challenge" is an
+- [x] **Home promises what the app cannot do yet.** The Arcade card says "6 of 11 ready" and "Play today's challenge" is an
+  Done in T13: `playable` flag on `ARCADE_GAMES` (all false until T14); Home shows "Coming soon: 11 games" and a disabled "Coming soon" chip.
   active gold button, but the Arcade and the daily challenge both say "Coming soon". Until T14 lands, count only games that
   can really be played (add a `playable` flag to `ARCADE_GAMES`) and show the daily button as a disabled "Coming soon" chip.
   Update the Home e2e assertion ("6 of 11 ready").
-- [ ] **Practice bundle carries the test forms.** `TruthRadar` chunk (25.7 KB gzip) contains the whole FoF bank, including
+- [x] **Practice bundle carries the test forms.** `TruthRadar` chunk (25.7 KB gzip) contains the whole FoF bank, including
+  Done in T13: items split into `practice.ts` and `assessment.ts`; only the `#/assess/` route loads the `assessRound` chunk. Unit test guards the import paths.
   form_A and form_B. Split the assessment items into their own module imported only by the `#/assess/` route, so practice
   players never download the test sets (CLAUDE.md: forms never appear outside the assessment).
-- [ ] **Module 5 game intro is very long on phones**, especially with Larger text (about two screens of rules before
+- [x] **Module 5 game intro is very long on phones**, especially with Larger text (about two screens of rules before
+  Done in T13: CTA first, scoring rules in a "How scoring works" `<details>`.
   "Open the chat"). Put the CTA above the rules, or fold the three scoring bullets into a `<details>` "How scoring works".
-- [ ] **Path strip on tablet/phone** scrolls sideways inside its panel with no hint that there is more (the 7th node is
+- [x] **Path strip on tablet/phone** scrolls sideways inside its panel with no hint that there is more (the 7th node is
+  Done in T13: wraps into two rows of five below 1280px, no sideways scroll.
   cut at the edge). Add an edge fade plus "scroll" hint, or wrap into two rows of five like the Learn road.
 
 ### P2: polish
-- [ ] **Fact or Fake desktop** leaves the right third empty until the first answer. Show a quiet placeholder card there
+- [x] **Fact or Fake desktop** leaves the right third empty until the first answer. Show a quiet placeholder card there
+  Done in T13: quiet placeholder card (desktop, free play only).
   ("Your feedback appears here" plus the 3 quick checks) so the 3-column layout from DESIGN 11.5 reads from the start.
-- [ ] **Ara is winking by default** on the Home hero, the Learn current node and most lesson story lines. DESIGN 7 reserves
+- [x] **Ara is winking by default** on the Home hero, the Learn current node and most lesson story lines. DESIGN 7 reserves
+  Done in T13: Home, Learn node, story-hook and game intro use `happy`/`idle`; wink stays on reactions.
   `wink` for hints ("Sure ka na diyan?"); use `idle` or `happy` for greetings so the wink keeps its meaning.
-- [ ] **Card ids like `m01-c1`** show in pixel font under every lesson card. SPEC only needs the id carried by the Report flag;
+- [x] **Card ids like `m01-c1`** show in pixel font under every lesson card. SPEC only needs the id carried by the Report flag;
+  Done in T13: the id is no longer shown on cards; it stays in the Report flag's label and link.
   for seniors it reads as jargon. Keep it in the Report link and the flag's label, and show it visually only in muted small text
   (or drop it).
-- [ ] **High contrast:** the Daily challenge card's sunrise stripe disappears and leaves an empty band; hide the band too or
+- [x] **High contrast:** the Daily challenge card's sunrise stripe disappears and leaves an empty band; hide the band too or
+  Done in T13: the band is drawn with ink/gold stripes.
   draw it with ink/gold stripes.
-- [ ] **1366x768:** on module-game intro steps the runner's NEXT sits below the fold (the main CTA is visible, so this is
+- [x] **1366x768:** on module-game intro steps the runner's NEXT sits below the fold (the main CTA is visible, so this is
+  Done in T13: tighter game step padding under 800px height (desktop).
   minor); consider tightening the game intro panel padding at heights under 800px.
 
 ### P3: content review notes (for the human health reviewer; all items stay `unreviewed`)
-- [ ] "No proven herbal cure for dengue, not even tawa-tawa or papaya leaf" (FoF facts and a myth card): correct per DOH, but
+- [x] "No proven herbal cure for dengue, not even tawa-tawa or papaya leaf" (FoF facts and a myth card): correct per DOH, but
+  Done in T13: myth card post now opens with "tawa-tawa and papaya leaf are loved home remedies, pero...". Still for the human reviewer.
   culturally sensitive; confirm the wording is gentle enough.
-- [ ] Dengue 4S fact says "Say yes to fogging only during outbreaks"; current DOH wording is "Support fogging/spraying only in
+- [x] Dengue 4S fact says "Say yes to fogging only during outbreaks"; current DOH wording is "Support fogging/spraying only in
+  Done in T13: now "Support fogging or spraying only in hotspot areas".
   hotspot areas". Align the phrasing.
-- [ ] "Boil until it bubbles hard": WHO says bring to a rolling boil for about one minute; consider adding "for one minute".
-- [ ] Handwashing "about 20 seconds": fine for the scrub, WHO counts 40 to 60 seconds for the whole routine; keep as is or
+- [x] "Boil until it bubbles hard": WHO says bring to a rolling boil for about one minute; consider adding "for one minute".
+  Done in T13: "then keep it boiling for one minute".
+- [x] Handwashing "about 20 seconds": fine for the scrub, WHO counts 40 to 60 seconds for the whole routine; keep as is or
+  Done in T13: "at least 20 seconds" everywhere (the chatbot and tactic texts already said so).
   say "at least 20 seconds".
 - [ ] Fictional names to double-check against public figures before launch: "Dr. Reyes" (Tita's GC), "Pamilya Garcia GC",
+  Not done: needs a web search, which this run may not use. Left for the human reviewer.
   "Jessa Malonzo", "Ronnie Abesamis". All look fictional and generic; a quick search is still worth it.
 
 ### Test coverage notes
-- [ ] Add a unit test that every ARAW GAME item has a `basis` and that no content string matches a dosing pattern
+- [x] Add a unit test that every ARAW GAME item has a `basis` and that no content string matches a dosing pattern
+  Done in T13: `tests/unit/content-safety.test.ts`.
   (`/\b\d+\s?(mg|ml|tablets?|capsules?)\b/i`) across all content files, not just Fact or Fake.
-- [ ] Add a screenshot smoke run (the `build/shots` harness) to a manual pre-release checklist; it is intentionally not part
+- [x] Add a screenshot smoke run (the `build/shots` harness) to a manual pre-release checklist; it is intentionally not part
+  Done in T13: `docs/RELEASE-CHECKLIST.md`.
   of `npm run verify`.

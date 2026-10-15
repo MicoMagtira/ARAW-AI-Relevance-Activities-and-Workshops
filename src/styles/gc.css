@@ -73,6 +73,15 @@
   outline-offset: 4px;
 }
 
+.gc-how__details summary {
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  color: var(--navy);
+  cursor: pointer;
+}
+
 .gc-how {
   display: grid;
   gap: var(--sp-2);

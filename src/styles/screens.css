@@ -21,6 +21,15 @@
   border-bottom: var(--px) solid var(--ink);
 }
 
+/* High contrast: keep the band, drawn with hard ink and gold stripes instead of the sunrise colours */
+:root.a11y-high-contrast .card-band.px-sunrise {
+  background: repeating-linear-gradient(to right, var(--gold) 0 16px, var(--ink) 16px 32px);
+}
+
+.daily-soon {
+  background: var(--soft);
+}
+
 /* ---------- Home grid ---------- */
 .home-grid {
   display: grid;
@@ -519,11 +528,11 @@ a.menu-row:hover {
   }
 }
 
-/* Below 1280 the ten module nodes scroll inside their panel instead of squeezing */
+/* Below 1280 the ten module nodes wrap into two rows of five (no hidden sideways scrolling) */
 @media (width < 1280px) {
   .path {
-    grid-template-columns: repeat(10, 96px);
-    overflow-x: auto;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    row-gap: var(--sp-4);
   }
 }
 
@@ -572,6 +581,23 @@ a.menu-row:hover {
 
   .home-hero {
     --s: 3;
+  }
+
+  .path {
+    gap: var(--sp-1);
+  }
+
+  .path-node {
+    padding: 0;
+  }
+
+  .path-node__tile {
+    width: 44px;
+    height: 44px;
+  }
+
+  .path-node__label {
+    font-size: var(--fs-12);
   }
 
   .continue {

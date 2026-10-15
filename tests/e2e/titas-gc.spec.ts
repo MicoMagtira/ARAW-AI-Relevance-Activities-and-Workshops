@@ -76,6 +76,14 @@ test.describe("Tita's GC", () => {
   test('the intro shows the cast and how scoring works, fits the screen and is accessible', async ({ page }) => {
     await openGame(page);
     for (const name of ['Lola Nena', 'Tita Baby', 'Kuya Jun', 'Bea']) await expect(page.getByText(name, { exact: true })).toBeVisible();
+    // the start button comes first; the scoring rules are folded into a details block
+    const open = page.getByRole('button', { name: 'Open the chat' });
+    const rules = page.getByText('How scoring works');
+    await expect(open).toBeInViewport();
+    const [openBox, rulesBox] = [await open.boundingBox(), await rules.boundingBox()];
+    expect(openBox && rulesBox && openBox.y < rulesBox.y).toBe(true);
+    await expect(page.getByText(/Accuracy: Did you check/)).toBeHidden();
+    await rules.click();
     await expect(page.getByText(/Accuracy: Did you check/)).toBeVisible();
     await expect(page.getByText(/Kindness: Does your reply/)).toBeVisible();
     await checkScreen(page);

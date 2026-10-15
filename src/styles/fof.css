@@ -51,6 +51,11 @@
   max-width: none;
 }
 
+/* Quiet placeholder for the feedback column: desktop only, so the 3-column layout reads before the first answer. */
+.fof-placeholder {
+  display: none;
+}
+
 /* Ara and her long line live in the side column on desktop only; the feedback card carries the message elsewhere. */
 .fof .fof-side__ara {
   display: none;
@@ -76,6 +81,26 @@
 
   .fof:not(.fof--compact) .fof-side__ara {
     display: flex;
+  }
+
+  .fof-placeholder {
+    grid-area: feedback;
+    display: grid;
+    align-content: start;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--soft);
+    color: var(--muted);
+    --px-line: var(--line);
+    --px-shadow: var(--line);
+    position: sticky;
+    top: calc(64px + var(--gap));
+  }
+
+  .fof-placeholder__checks {
+    display: grid;
+    gap: var(--sp-2);
+    padding-left: var(--sp-5);
   }
 
   .fof:not(.fof--compact) .fof-feedback-slot {

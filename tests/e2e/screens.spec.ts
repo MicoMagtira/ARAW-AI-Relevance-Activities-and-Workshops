@@ -38,15 +38,21 @@ test.describe('Home', () => {
 
     // Daily challenge, myth of the day, arcade shortcut, path and badges
     await expect(page.getByRole('heading', { level: 3, name: /Daily challenge · OCT 15/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: "Play today's challenge" })).toHaveAttribute('href', '#/arcade');
+    await expect(page.locator('.home-daily').getByText('Coming soon', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: "Play today's challenge" })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Open the Arcade' })).toHaveAttribute('href', '#/arcade');
-    await expect(page.getByText('6 of 11 ready')).toBeVisible();
+    await expect(page.getByText('Coming soon: 11 games')).toBeVisible();
     await expect(page.getByRole('list').filter({ has: page.locator('.path-node') }).getByRole('listitem')).toHaveCount(10);
     await expect(page.locator('.path-node--current')).toHaveCount(1);
     await expect(page.locator('.path-node--locked')).toHaveCount(9);
     await expect(page.getByRole('heading', { level: 3, name: 'Your badges' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'See all badges' })).toHaveAttribute('href', '#/me');
     await noHorizontalOverflow(page);
+
+    // the path strip never hides nodes behind sideways scrolling, and the card id is not shown on lesson cards
+    const strip = await page.locator('.home-path .path').evaluate((el) => el.scrollWidth - el.clientWidth);
+    expect(strip).toBeLessThanOrEqual(0);
+    await expect(page.locator('.lesson-id')).toHaveCount(0);
   });
 
   test('greeting follows the clock and the nickname', async ({ page }) => {

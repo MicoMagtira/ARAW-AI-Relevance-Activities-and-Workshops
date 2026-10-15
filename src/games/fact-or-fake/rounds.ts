@@ -1,12 +1,12 @@
 // Building Fact or Fake rounds: balanced, seeded, no repeats. Practice rounds never contain form_A / form_B items.
-import { FOF_ITEMS } from '../../content/factOrFake/items';
-import type { FofItem, ItemSet, Truth } from '../../content/factOrFake/schema';
+import { FOF_PRACTICE } from '../../content/factOrFake/practice';
+import type { FofItem, Truth } from '../../content/factOrFake/schema';
 import { createRng, shuffle, type Rng } from '../engine/rng';
 
 export const FREE_PLAY_SIZE = 10;
 
 /** The practice pool: the only items mini rounds, free play and the daily challenge may use. */
-export const practicePool = (items: readonly FofItem[] = FOF_ITEMS): FofItem[] => items.filter((i) => i.set === 'practice');
+export const practicePool = (items: readonly FofItem[] = FOF_PRACTICE): FofItem[] => items.filter((i) => i.set === 'practice');
 
 export interface RoundOptions {
   size: number;
@@ -50,15 +50,5 @@ export function buildRound({ size, seed, module, items }: RoundOptions): FofItem
   return shuffle(picked, rng);
 }
 
-/** All items of one assessment form in a fixed order (the same for every player). Never mixes with practice. */
-export function formRound(form: Extract<ItemSet, 'form_A' | 'form_B'>, items: readonly FofItem[] = FOF_ITEMS): FofItem[] {
-  return shuffle(
-    items.filter((i) => i.set === form),
-    createRng(`ARAW-${form}`),
-  );
-}
-
 /** Which Fact or Fake modes exist. Assessment is reachable by route only. */
 export type FofMode = 'module' | 'free' | 'assess';
-
-export const isFormId = (v: string): v is 'form_A' | 'form_B' => v === 'form_A' || v === 'form_B';

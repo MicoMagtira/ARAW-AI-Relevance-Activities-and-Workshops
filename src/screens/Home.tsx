@@ -24,7 +24,7 @@ function Hero() {
 
   return (
     <Panel class="home-hero" aria-labelledby="home-h">
-      <AraSays mood="wink" scale={6} class="home-hero__ara">
+      <AraSays mood="happy" scale={6} class="home-hero__ara">
         <h2 id="home-h">{t(greetingKey(now.getHours()), { name: displayName() })}</h2>
         <p>{intro}</p>
       </AraSays>
@@ -101,9 +101,7 @@ function Daily({ now }: { now: Date }) {
         <p class="card-title">{t('home.dailyGame', { game: game.name })}</p>
         <p class="px-text-muted">{t('home.dailySoon')}</p>
         <div>
-          <Button href={hrefFor('/arcade')} variant="gold">
-            {t('home.dailyPlay')}
-          </Button>
+          <span class="px-chip px-notch daily-soon">{t('home.dailySoonChip')}</span>
         </div>
       </div>
     </Panel>
@@ -151,13 +149,14 @@ function Myth({ now }: { now: Date }) {
 }
 
 function ArcadeCard() {
+  const ready = arcadeReady(modulesDone.value);
   return (
     <Panel class="home-arcade" aria-labelledby="arcade-h">
       <div class="stack">
         <h3 class="panel-title" id="arcade-h">
           {t('home.arcade')}
         </h3>
-        <p class="card-title">{t('home.arcadeReady', { ready: arcadeReady(modulesDone.value), total: ARCADE_GAMES.length })}</p>
+        <p class="card-title">{ready > 0 ? t('home.arcadeReady', { ready, total: ARCADE_GAMES.length }) : t('home.arcadeSoon', { total: ARCADE_GAMES.length })}</p>
         <p class="px-text-muted">{t('home.arcadeText')}</p>
         <div>
           <Button href={hrefFor('/arcade')} variant="secondary">

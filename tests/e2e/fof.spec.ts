@@ -36,6 +36,10 @@ test.describe('Fact or Fake free play', () => {
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
+    // the quiet feedback placeholder shows on desktop only, and goes away with the first answer
+    const placeholder = page.getByText('Your feedback appears here');
+    if ((page.viewportSize()?.width ?? 0) >= 1024) await expect(placeholder).toBeVisible();
+    else await expect(placeholder).toBeHidden();
 
     let right = 0;
     for (let i = 0; i < 10; i++) {

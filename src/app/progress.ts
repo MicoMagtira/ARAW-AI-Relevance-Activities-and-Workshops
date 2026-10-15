@@ -1,6 +1,6 @@
 // Learning progress: modules, lesson cards and badges. Modules, games and streaks write to these in later tasks.
 import { MODULES, type ModuleInfo } from '../content/modules';
-import { ARCADE_GAMES } from '../content/games';
+import { ARCADE_GAMES, type GameInfo } from '../content/games';
 import { addXp } from './state';
 import { persisted } from './store';
 
@@ -32,9 +32,9 @@ export function nodeState(m: ModuleInfo, done: readonly string[]): NodeState {
   return nextModule(done)?.id === m.id ? 'current' : 'locked';
 }
 
-/** Arcade games that are playable: the open ones plus those whose module is finished. */
-export function arcadeReady(done: readonly string[]): number {
-  return ARCADE_GAMES.filter((g) => g.module === null || done.includes(g.module)).length;
+/** Arcade games that can really be played: shipped, and open from the start or unlocked by a finished module. */
+export function arcadeReady(done: readonly string[], games: readonly GameInfo[] = ARCADE_GAMES): number {
+  return games.filter((g) => g.playable && (g.module === null || done.includes(g.module))).length;
 }
 
 /** Unlock rule: modules open one after another. A module is open when it is done or is the next one. */

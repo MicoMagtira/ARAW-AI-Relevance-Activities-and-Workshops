@@ -2,7 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import { FOF_ITEMS } from '../../src/content/factOrFake/items';
 import { FORMATS, MODULE_TAGS, TRICKS, validateBank, validateItem, type FofItem } from '../../src/content/factOrFake/schema';
-import { FREE_PLAY_SIZE, buildRound, formRound, practicePool } from '../../src/games/fact-or-fake/rounds';
+import { formRound } from '../../src/games/fact-or-fake/assessRound';
+import { FREE_PLAY_SIZE, buildRound, practicePool } from '../../src/games/fact-or-fake/rounds';
 
 const ofSet = (set: FofItem['set']) => FOF_ITEMS.filter((i) => i.set === set);
 const facts = (items: readonly FofItem[]) => items.filter((i) => i.truth === 'fact').length;

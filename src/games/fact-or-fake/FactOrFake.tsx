@@ -4,13 +4,14 @@ import type { ComponentChildren } from 'preact';
 import { useMemo, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { hrefFor, navigate } from '../../app/router';
+import type { FofItem } from '../../content/factOrFake/schema';
 import { Ara } from '../../ui/Ara';
 import { Confetti } from '../../ui/Confetti';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, Dialog, Panel, pushToast } from '../../ui/kit';
 import { randomSeed } from '../engine/rng';
 import { FofRound, type RoundAnswer } from './FofRound';
-import { FREE_PLAY_SIZE, buildRound, formRound, isFormId, type FofMode } from './rounds';
+import { FREE_PLAY_SIZE, buildRound, type FofMode } from './rounds';
 import { payCorrect, recordRound, scoreAnswers, xpForRound, type RoundOutcome } from './results';
 import type { RoundScore } from './scoring';
 import { TruthRadar } from './TruthRadar';
@@ -138,9 +139,11 @@ interface FactOrFakeProps {
   form?: string;
   /** Optional fixed seed (`?seed=` in the URL) so a round can be replayed. */
   seed?: string;
+  /** The loaded items of the assessment form (supplied by LazyFactOrFake, which fetches them only on the assess route). */
+  assessItems?: readonly FofItem[];
 }
 
-export function FactOrFake({ mode, form, seed }: FactOrFakeProps) {
+export function FactOrFake({ mode, form, seed, assessItems }: FactOrFakeProps) {
   const assess = mode === 'assess';
   const closeHref = hrefFor(assess ? '/' : '/arcade');
   const [round, setRound] = useState(0);
@@ -149,9 +152,9 @@ export function FactOrFake({ mode, form, seed }: FactOrFakeProps) {
   const [finished, setFinished] = useState<{ answers: RoundAnswer[]; score: RoundScore; outcome: RoundOutcome | null } | null>(null);
 
   const items = useMemo(() => {
-    if (assess) return isFormId(form ?? '') ? formRound(form as 'form_A' | 'form_B') : [];
+    if (assess) return assessItems ? [...assessItems] : [];
     return buildRound({ size: FREE_PLAY_SIZE, seed: round === 0 && seed ? seed : randomSeed() });
-  }, [assess, form, seed, round]);
+  }, [assess, assessItems, seed, round]);
 
   if (items.length === 0) {
     return <Notice title={assess ? t('assess.unknown') : t('fof.emptyTitle')} text={assess ? t('assess.unknownText') : t('fof.empty')} closeHref={closeHref} />;
