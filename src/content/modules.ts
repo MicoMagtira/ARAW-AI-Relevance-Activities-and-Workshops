@@ -55,7 +55,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Pause, check who said it, and look for another source.',
     'Reply to family kindly without shaming.',
     'Know where to report misinformation.',
-  ]),
+  ], 8),
   mod(6, 'Katuwang si AI', 'Katuwang si AI', 'AI as a tool at work, humans in the loop, and who is responsible.', 'Hati Tayo!', [
     'Name tasks AI does well and tasks that need people.',
     'Explain "human in the loop".',

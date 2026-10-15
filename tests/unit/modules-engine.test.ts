@@ -214,9 +214,10 @@ describe('module 1 content', () => {
     expect(hasContent('m01')).toBe(true);
     expect(hasContent('m03')).toBe(true);
     expect(hasContent('m04')).toBe(true);
-    expect(hasContent('m05')).toBe(false);
+    expect(hasContent('m05')).toBe(true);
+    expect(hasContent('m06')).toBe(false);
     expect((await loadContent('m01'))?.id).toBe('m01');
-    expect(await loadContent('m05')).toBeNull();
+    expect(await loadContent('m06')).toBeNull();
     expect((await content.game.load()).default).toBeTypeOf('function');
   });
 });
