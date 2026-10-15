@@ -1,0 +1,310 @@
+/* "Tanong kay Chatbot" (Module 3 game). Loaded with the game's own chunk. Desktop: chat left, ruling buttons or feedback right. */
+.cb {
+  container: cb / inline-size;
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.cb h3,
+.cb h4,
+.cb p,
+.cb ul {
+  margin: 0;
+}
+
+.cb p {
+  overflow-wrap: anywhere;
+}
+
+.cb-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.cb-hud .px-progress-wrap {
+  flex: 1 1 220px;
+}
+
+.cb-intro,
+.cb-app,
+.cb-sandbox {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.cb-title,
+.cb-app__title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.cb-title:focus,
+.cb-question:focus {
+  outline: none;
+}
+
+.cb-title:focus-visible,
+.cb-question:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 4px;
+}
+
+.cb-legend {
+  display: grid;
+  gap: var(--sp-2);
+  padding: 0;
+  list-style: none;
+}
+
+.cb-legend li {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--soft);
+  border-left: 4px solid var(--ink);
+}
+
+.cb-final {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+/* Disabled "coming soon" card */
+.cb-sandbox {
+  background: var(--soft);
+  border-style: dashed;
+}
+
+.cb-sandbox__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.cb-sandbox__title {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+  color: var(--ink);
+}
+
+.cb-sandbox .px-btn {
+  justify-self: start;
+}
+
+/* A round: chat (or app) beside the ruling */
+.cb-round {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.cb-round__chat,
+.cb-round__side {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+.cb-question {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.cb-hint {
+  font-size: var(--fs-16);
+}
+
+/* Chat bubbles */
+.cb-chat {
+  position: relative;
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--surface);
+}
+
+.cb-msg {
+  display: grid;
+  gap: var(--sp-1);
+  max-width: 92%;
+}
+
+.cb-msg--bea {
+  justify-self: end;
+}
+
+.cb-msg--bot {
+  justify-self: start;
+}
+
+.cb-msg__who {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font: var(--fs-10) / 1.6 var(--font-pixel);
+  color: var(--muted);
+}
+
+.cb-msg--bea .cb-msg__who {
+  justify-self: end;
+}
+
+.cb-bubble {
+  padding: var(--sp-3) var(--sp-4);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+  border: 3px solid var(--ink);
+}
+
+.cb-bubble--bea {
+  color: var(--on-color);
+  background: var(--navy);
+}
+
+.cb-bubble--bot {
+  color: var(--ink);
+  background: var(--soft);
+}
+
+.cb-msg--bot .px-stamp {
+  justify-self: start;
+}
+
+.cb-scripted {
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+
+/* The three ruling buttons */
+.cb-rulings {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.cb-rule.px-btn {
+  display: grid;
+  gap: var(--sp-1);
+  justify-items: center;
+  width: 100%;
+  min-height: 64px;
+  text-align: center;
+}
+
+.cb-rule__hint {
+  font: 700 var(--fs-14) / 1.3 var(--font-body);
+  text-transform: none;
+}
+
+@container cb (min-width: 760px) {
+  .cb-rulings {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Feedback */
+.cb-feedback {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  font: 600 var(--fs-18) / 1.45 var(--font-body);
+}
+
+.cb-feedback--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.cb-feedback--wrong {
+  background: var(--gold);
+}
+
+.cb-feedback__head {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.cb-feedback__points {
+  font: var(--fs-12) / 1.8 var(--font-pixel);
+}
+
+.cb-warn {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  color: var(--ink);
+  background: var(--fake-tint);
+  border: 2px solid var(--fake);
+}
+
+.cb-warn svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* Privacy round */
+.cb-perms {
+  display: grid;
+  gap: var(--sp-3);
+  padding: 0;
+  list-style: none;
+}
+
+.cb-perm {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--soft);
+  border: 3px solid var(--ink);
+}
+
+.cb-perm--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+}
+
+.cb-perm--wrong {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+}
+
+.cb-perm__static {
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.cb-perm__you {
+  font: var(--fs-10) / 1.8 var(--font-pixel);
+  color: var(--ink);
+}
+
+.cb-perm__why {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  font-size: var(--fs-16);
+  color: var(--ink);
+}
+
+.cb-perm__why svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cb-feedback {
+    animation: cb-pop var(--step) steps(3);
+  }
+}
+
+@keyframes cb-pop {
+  from {
+    transform: translateY(6px);
+    opacity: 0.4;
+  }
+}

@@ -45,7 +45,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Judge whether a chatbot answer is usable, wrong, or a "see a health worker now" case.',
     'Know the red-flag symptoms that always go to a professional.',
     'Protect your health data and know that AI assists doctors, it does not replace them.',
-  ]),
+  ], 8),
   mod(4, 'Tricks of Health Misinformation', 'Misinfo Tricks', 'Five misinformation tricks, deepfaked doctors, and trusting true posts.', 'Spot the Tactic', [
     'Name the five misinformation tricks.',
     'Spot them in local-style posts, including AI-deepfaked doctor endorsements.',

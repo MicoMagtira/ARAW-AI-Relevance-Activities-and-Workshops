@@ -12,6 +12,8 @@ import trophy from 'pixelarticons/svg/trophy.svg?raw';
 import calendar from 'pixelarticons/svg/calendar.svg?raw';
 import mail from 'pixelarticons/svg/mail.svg?raw';
 import info from 'pixelarticons/svg/info-box.svg?raw';
+import chat from 'pixelarticons/svg/message-text.svg?raw';
+import warning from 'pixelarticons/svg/warning-diamond.svg?raw';
 import arrowLeft from 'pixelarticons/svg/arrow-left.svg?raw';
 import arrowRight from 'pixelarticons/svg/arrow-right.svg?raw';
 import chevronLeft from 'pixelarticons/svg/chevron-left.svg?raw';
@@ -20,7 +22,7 @@ import chevronRight from 'pixelarticons/svg/chevron-right.svg?raw';
 /** Extract the path data from a pixelarticons SVG file. */
 const paths = (svg: string): string[] => [...svg.matchAll(/\sd="([^"]+)"/g)].map((m) => m[1] as string);
 
-const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight };
+const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight };
 
 /** Hand-made 24-cell icons (single colour, crisp edges). */
 const handMade = {
