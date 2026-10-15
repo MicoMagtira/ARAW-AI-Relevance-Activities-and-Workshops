@@ -1,0 +1,334 @@
+/* Gawa Ko 'To! (Module 7 game and Arcade): the brief, the poster preview and the step pickers. Loaded with the game's chunk. */
+.gawa {
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.gawa h3,
+.gawa h4,
+.gawa p,
+.gawa ul {
+  margin: 0;
+}
+
+.gawa p {
+  overflow-wrap: anywhere;
+}
+
+.gawa-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.gawa-hud .px-progress-wrap {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.gawa-stat {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.gawa-time.is-low {
+  color: var(--fake);
+}
+
+.gawa-hearts {
+  display: inline-flex;
+  gap: var(--sp-1);
+}
+
+.gawa-heart {
+  color: var(--fake);
+}
+
+.gawa-heart--lost {
+  color: var(--muted);
+}
+
+.gawa-card,
+.gawa-brief,
+.gawa-reveal {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  font: 600 var(--fs-18) / 1.5 var(--font-body);
+}
+
+.gawa-title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.gawa-title:focus {
+  outline: none;
+}
+
+.gawa-how,
+.gawa-reqs {
+  display: grid;
+  gap: var(--sp-2);
+  padding-left: var(--sp-5);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+}
+
+.gawa-reqs {
+  font-weight: 800;
+  color: var(--navy);
+}
+
+/* Wide screens: the poster stays in view on the left while the steps scroll on the right. */
+.gawa-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .gawa-grid {
+    grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  }
+
+  .gawa-preview {
+    position: sticky;
+    top: var(--sp-4);
+  }
+}
+
+.gawa-preview {
+  justify-self: center;
+  width: min(100%, 380px);
+}
+
+.gawa-poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--px) solid var(--px-line);
+  box-shadow: var(--px) var(--px) 0 0 var(--px-shadow);
+  background: var(--surface);
+  image-rendering: pixelated;
+}
+
+.poster-head,
+.poster-title,
+.poster-slogan,
+.poster-label,
+.poster-stamp,
+.poster-stamp-s,
+.poster-foot {
+  font-family: var(--font-pixel);
+}
+
+.poster-head {
+  font-size: 8px;
+  fill: var(--navy);
+}
+
+.poster-title {
+  font-size: 8px;
+  fill: var(--ink);
+}
+
+.poster-slogan {
+  font-size: 8px;
+  fill: var(--navy);
+}
+
+.poster-fact {
+  font: 700 10px var(--font-body);
+  fill: var(--ink);
+}
+
+.poster-foot {
+  font-size: 6px;
+  fill: var(--muted);
+}
+
+.poster-label {
+  font-size: 7px;
+  fill: var(--fact-ink);
+}
+
+.poster-ph {
+  font: 700 10px var(--font-body);
+  fill: var(--muted);
+}
+
+.poster-script {
+  font: 800 12px var(--font-head);
+  fill: var(--ink);
+}
+
+.poster-q {
+  font: 800 24px var(--font-head);
+  fill: var(--ink);
+}
+
+.poster-stamp {
+  font-size: 16px;
+  fill: var(--fake);
+}
+
+.poster-stamp-s {
+  font-size: 8px;
+  fill: var(--fake);
+}
+
+.gawa-steps {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+.gawa-group {
+  display: grid;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gawa-legend {
+  padding: 0;
+  margin-bottom: var(--sp-2);
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.gawa-options {
+  display: grid;
+  gap: var(--sp-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+
+.gawa-opt {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--sp-1);
+  min-height: var(--tap);
+  padding: var(--sp-3);
+  cursor: pointer;
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+}
+
+.gawa-opt.is-on {
+  background: var(--gold);
+  border-color: var(--navy);
+  box-shadow: var(--px) var(--px) 0 0 var(--navy);
+}
+
+.gawa-opt:focus-within {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 2px;
+}
+
+.gawa-opt__title {
+  font-weight: 800;
+}
+
+.gawa-opt__sub {
+  color: var(--muted);
+  font-size: var(--fs-14);
+}
+
+.gawa-opt.is-on .gawa-opt__sub {
+  color: var(--ink);
+}
+
+.gawa-honest {
+  display: grid;
+  gap: var(--sp-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+
+.gawa-honest .px-btn[aria-pressed='true'] {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  color: var(--fact-ink);
+}
+
+.gawa-hint {
+  font-size: var(--fs-14);
+}
+
+.gawa-reply {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  background: var(--soft);
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+}
+
+.gawa-publish {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+}
+
+.gawa-reveal--good {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.gawa-reveal--bad {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+  box-shadow: var(--px) var(--px) 0 0 var(--fake);
+}
+
+.gawa-checks,
+.gawa-list {
+  display: grid;
+  gap: var(--sp-2);
+  padding: 0;
+  list-style: none;
+}
+
+.gawa-check {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface);
+  border: var(--px-chip) solid var(--line);
+  color: var(--ink);
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+}
+
+.gawa-check__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.gawa-points {
+  font: var(--fs-12) / 1.6 var(--font-pixel);
+  color: var(--navy);
+}
+
+.gawa-list__item {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3);
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+}
+
+.gawa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}

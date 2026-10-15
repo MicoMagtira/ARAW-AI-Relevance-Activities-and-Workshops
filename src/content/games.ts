@@ -84,7 +84,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'gawa-ko-to',
     name: "Gawa Ko 'To!",
     module: 'm07',
-    playable: false,
+    playable: true,
     topic: 'Generative AI and consent',
     how: 'Make health posters with AI tools the honest way: label, ask consent, credit.',
     icon: 'brush',

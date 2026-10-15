@@ -65,7 +65,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Explain that generative AI makes new content from patterns.',
     'Label AI-made content, ask consent and credit artists.',
     'Explain why deepfaked doctor ads cause harm.',
-  ]),
+  ], 8),
   mod(8, 'Pahinga Muna', 'Pahinga Muna', 'Attention-grabbing design, sleep, AI companions and healthy boundaries.', 'Tulog na, Bea!', [
     'Name the design tricks that keep people scrolling.',
     'Explain why sleep matters and see AI companions as products, not friends.',

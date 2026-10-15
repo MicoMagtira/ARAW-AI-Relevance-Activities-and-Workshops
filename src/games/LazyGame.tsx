@@ -1,5 +1,5 @@
 // Route entry for an arcade game (`#/arcade/<slug>`): the shell and the game only download when the player opens it.
-import type { ComponentChildren } from 'preact';
+import type { ComponentChildren, ComponentType } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { manilaDate } from '../app/daily';
 import { t } from '../app/i18n';
@@ -11,7 +11,7 @@ import { Icon } from '../ui/Icon';
 import { Button, Panel } from '../ui/kit';
 import { dailySeed } from './engine/rng';
 import type { GameDef } from './engine/types';
-import { GAME_LOADERS, hasGame } from './registry';
+import { DOM_GAME_LOADERS, GAME_LOADERS, hasGame, type DomGameProps } from './registry';
 
 type Shell = typeof import('./engine/GameShell').GameShell;
 
@@ -69,6 +69,7 @@ export function LazyGame({ slug, seed, breakSeconds }: Props) {
   const locked = !!info?.module && !modulesDone.value.includes(info.module) && !daily;
   const runnable = hasGame(slug) && (info === undefined || info.playable) && !locked;
   const [loaded, setLoaded] = useState<{ Shell: Shell; game: GameDef } | null>(null);
+  const [dom, setDom] = useState<{ slug: string; View: ComponentType<DomGameProps> } | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
@@ -76,6 +77,16 @@ export function LazyGame({ slug, seed, breakSeconds }: Props) {
     if (!runnable) return;
     let live = true;
     setFailed(false);
+    const domLoader = DOM_GAME_LOADERS[slug];
+    if (domLoader) {
+      domLoader().then(
+        (mod) => live && setDom({ slug, View: mod.default }),
+        () => live && setFailed(true),
+      );
+      return () => {
+        live = false;
+      };
+    }
     const loader = GAME_LOADERS[slug];
     if (!loader) return;
     Promise.all([import('./engine/GameShell'), loader()]).then(
@@ -94,6 +105,13 @@ export function LazyGame({ slug, seed, breakSeconds }: Props) {
   }
   if (!runnable) return <Notice title={info?.name ?? t('game.unknown')} text={t('game.soonText')} />;
 
+  if (dom && dom.slug === slug) {
+    return (
+      <Frame title={info?.name ?? slug}>
+        <dom.View seed={daily ? dailySeed(manilaDate()) : seed || undefined} daily={daily} />
+      </Frame>
+    );
+  }
   if (loaded && loaded.game.slug === slug) {
     const fixedSeed = daily ? dailySeed(manilaDate()) : seed || undefined;
     const breakAfterMs = slug === 'demo' && breakSeconds && Number(breakSeconds) > 0 ? Number(breakSeconds) * 1000 : undefined;

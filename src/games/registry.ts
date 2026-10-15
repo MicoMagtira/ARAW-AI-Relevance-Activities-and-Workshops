@@ -1,5 +1,6 @@
 // Lazy loaders for the arcade games, by slug. Each game is its own chunk and only downloads when it is opened.
 // A game task adds its loader here and flips `playable` in src/content/games.ts.
+import type { ComponentType } from 'preact';
 import type { GameDef } from './engine/types';
 
 type Loader = () => Promise<{ default: GameDef }>;
@@ -16,4 +17,16 @@ export const GAME_LOADERS: Readonly<Record<string, Loader>> = {
   demo: () => import('./demo/demo'),
 };
 
-export const hasGame = (slug: string): boolean => Object.hasOwn(GAME_LOADERS, slug);
+/** What a DOM game (no canvas, so no GameShell) gets from the route. */
+export interface DomGameProps {
+  seed?: string;
+  /** Today's daily-challenge run. */
+  daily?: boolean;
+}
+
+/** Arcade games built from real page elements (an SVG poster, buttons), shown in the plain game frame. */
+export const DOM_GAME_LOADERS: Readonly<Record<string, () => Promise<{ default: ComponentType<DomGameProps> }>>> = {
+  'gawa-ko-to': () => import('./gawa-ko-to/GawaArcade'),
+};
+
+export const hasGame = (slug: string): boolean => Object.hasOwn(GAME_LOADERS, slug) || Object.hasOwn(DOM_GAME_LOADERS, slug);
