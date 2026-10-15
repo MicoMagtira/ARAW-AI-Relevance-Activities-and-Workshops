@@ -29,23 +29,12 @@ function bank(facts: number, fakes: number): FofItem[] {
   return out;
 }
 
-describe('seed items', () => {
-  it('has 12 valid items and a clean bank', () => {
-    expect(FOF_ITEMS).toHaveLength(12);
+describe('item bank basics', () => {
+  it('is a clean bank with every format, both truths and the three sets (full checks live in fof-bank.test.ts)', () => {
     expect(validateBank(FOF_ITEMS)).toEqual([]);
-  });
-
-  it('covers every format, both truths and the three sets', () => {
     for (const f of FORMATS) expect(FOF_ITEMS.some((i) => i.format === f)).toBe(true);
     expect(new Set(FOF_ITEMS.map((i) => i.set))).toEqual(new Set(['practice', 'form_A', 'form_B']));
     expect(practicePool().filter((i) => i.truth === 'fact').length).toBe(practicePool().filter((i) => i.truth === 'fake').length);
-  });
-
-  it('is all unreviewed and never gives dosing', () => {
-    for (const i of FOF_ITEMS) {
-      expect(i.review_status).toBe('unreviewed');
-      expect(`${i.text} ${i.explanation}`).not.toMatch(/\b\d+\s?(mg|ml|tablets?)\b/i);
-    }
   });
 });
 
@@ -92,7 +81,9 @@ describe('validator', () => {
   });
 
   it('can require complete 20-item forms', () => {
-    expect(validateBank(FOF_ITEMS, { requireCompleteForms: true }).join()).toMatch(/needs 20 items/);
+    expect(validateBank(FOF_ITEMS, { requireCompleteForms: true })).toEqual([]);
+    const short = FOF_ITEMS.filter((i) => i.id !== 'fof-a-03' && i.id !== 'fof-b-03' && i.id !== 'fof-a-04' && i.id !== 'fof-b-04');
+    expect(validateBank(short, { requireCompleteForms: true }).join()).toMatch(/needs 20 items/);
   });
 });
 
@@ -177,7 +168,7 @@ describe('round building', () => {
   it('returns a form in a fixed order and nothing else', () => {
     const a = formRound('form_A');
     expect(a.every((i) => i.set === 'form_A')).toBe(true);
-    expect(a).toHaveLength(2);
+    expect(a).toHaveLength(20);
     expect(formRound('form_A').map((i) => i.id)).toEqual(a.map((i) => i.id));
     expect(formRound('form_B').every((i) => i.set === 'form_B')).toBe(true);
     expect(isFormId('form_A')).toBe(true);

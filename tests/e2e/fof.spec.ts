@@ -24,13 +24,13 @@ async function answerFake(page: Page): Promise<boolean> {
   return /Tama!/.test((await feedback.textContent()) ?? '');
 }
 
-const SEED = '#/play/fact-or-fake?seed=e2e-seed';
+const SEED = '#/play/fact-or-fake?seed=e2e-seed-2'; // its first round holds all four formats
 
 test.describe('Fact or Fake free play', () => {
   test('plays a round: feedback card, stamp, report link, then Truth Radar results with XP', async ({ page }) => {
     await page.goto(SEED);
     await expect(page.getByRole('heading', { level: 1, name: 'Fact or Fake' })).toBeAttached();
-    await expect(page.getByText(/Fact or Fake · 1 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 1 of 10/)).toBeVisible();
     await expect(page.getByText('ARAW GAME', { exact: true })).toBeVisible(); // watermark before reveal
     await expect(page.getByText('ARAW GAME · FAKE')).toHaveCount(0);
     await settled(page);
@@ -38,8 +38,8 @@ test.describe('Fact or Fake free play', () => {
     expect(await axeSerious(page)).toEqual([]);
 
     let right = 0;
-    for (let i = 0; i < 8; i++) {
-      await expect(page.getByText(new RegExp(`Fact or Fake · ${i + 1} of 8`))).toBeVisible();
+    for (let i = 0; i < 10; i++) {
+      await expect(page.getByText(new RegExp(`Fact or Fake · ${i + 1} of 10`))).toBeVisible();
       const correct = await answerFake(page);
       if (correct) right++;
       await expect(page.getByText('ARAW GAME · FAKE')).toHaveCount(correct ? 1 : 0);
@@ -51,16 +51,16 @@ test.describe('Fact or Fake free play', () => {
         await noHorizontalOverflow(page);
         expect(await axeSerious(page)).toEqual([]);
       }
-      await page.getByRole('button', { name: i === 7 ? 'See my Truth Radar' : 'Next' }).click();
+      await page.getByRole('button', { name: i === 9 ? 'See my Truth Radar' : 'Next' }).click();
     }
-    expect(right).toBe(4); // a balanced round: four fakes among eight
+    expect(right).toBe(5); // a balanced round: five fakes among ten
 
     await expect(page.getByRole('heading', { level: 2, name: 'Your Truth Radar' })).toBeVisible();
-    await expect(page.getByText('4 of 8 right')).toBeVisible();
-    await expect(page.getByText('+40 XP')).toBeVisible();
+    await expect(page.getByText('5 of 10 right')).toBeVisible();
+    await expect(page.getByText('+50 XP')).toBeVisible();
     await expect(page.getByRole('meter', { name: 'How well you tell them apart' })).toBeVisible();
     await expect(page.getByText('Leans doubtful')).toBeVisible(); // always answering Fake
-    await expect(page.getByText(/Rough read/)).toBeVisible(); // 8 items is under 10
+    await expect(page.getByText(/Rough read/)).toHaveCount(0); // a full 10-item round
     await page.getByText('Show the numbers').click();
     await expect(page.getByText('Discernment (d-prime)')).toBeVisible();
     await settled(page);
@@ -69,14 +69,14 @@ test.describe('Fact or Fake free play', () => {
 
     // XP is on the profile, and a new round starts with a fresh seed
     await page.getByRole('button', { name: 'Play again' }).click();
-    await expect(page.getByText(/Fact or Fake · 1 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 1 of 10/)).toBeVisible();
     await page.goto('/#/me');
-    await expect(page.getByRole('definition').filter({ hasText: /^40$/ })).toBeVisible();
+    await expect(page.getByRole('definition').filter({ hasText: /^50$/ })).toBeVisible();
   });
 
   test('keyboard: arrows answer, Enter moves on', async ({ page }) => {
     await page.goto(SEED);
-    await expect(page.getByText(/Fact or Fake · 1 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 1 of 10/)).toBeVisible();
     // the key listener is added a moment after the first paint, so retry the first press
     await expect(async () => {
       await page.keyboard.press('ArrowLeft');
@@ -84,14 +84,14 @@ test.describe('Fact or Fake free play', () => {
     }).toPass();
     await expect(page.getByRole('button', { name: 'Next' })).toBeFocused();
     await page.keyboard.press('Enter');
-    await expect(page.getByText(/Fact or Fake · 2 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 2 of 10/)).toBeVisible();
     await page.keyboard.press('l');
     await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toBeVisible();
   });
 
   test('touch swipe answers: right is Fact, left is Fake', async ({ page }) => {
     await page.goto(SEED);
-    await expect(page.getByText(/Fact or Fake · 1 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 1 of 10/)).toBeVisible();
     const swipe = (dx: number) =>
       page.evaluate((delta) => {
         const el = document.querySelector('.fof-swipe') as HTMLElement;
@@ -107,7 +107,7 @@ test.describe('Fact or Fake free play', () => {
     await page.getByRole('button', { name: 'Next' }).click();
     await swipe(-160);
     await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toBeVisible();
-    await expect(page.getByText(/Fact or Fake · 2 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 2 of 10/)).toBeVisible();
     // a short drag does nothing
     await page.getByRole('button', { name: 'Next' }).click();
     await swipe(20);
@@ -125,7 +125,7 @@ test.describe('Fact or Fake free play', () => {
   test('every item format renders and fits, with alt text on pictures', async ({ page }) => {
     await page.goto(SEED);
     const formats = new Set<string>();
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 10; i++) {
       const card = page.locator('.fof-card');
       formats.add(((await card.getAttribute('class')) ?? '').match(/fof-card--(\w+)/)?.[1] ?? '');
       if ((await page.locator('.fof-scene__svg').count()) > 0) {
@@ -134,7 +134,7 @@ test.describe('Fact or Fake free play', () => {
       await noHorizontalOverflow(page);
       await page.getByRole('button', { name: 'Fake', exact: true }).click();
       await noHorizontalOverflow(page);
-      await page.getByRole('button', { name: i === 7 ? 'See my Truth Radar' : 'Next' }).click();
+      await page.getByRole('button', { name: i === 9 ? 'See my Truth Radar' : 'Next' }).click();
     }
     expect([...formats].sort()).toEqual(['chatbot_answer', 'gc_screenshot', 'image', 'text']);
   });
@@ -149,7 +149,7 @@ test.describe('Fact or Fake free play', () => {
     const dialog = page.getByRole('dialog', { name: 'Quit this round?' });
     await expect(dialog).toBeVisible();
     await dialog.getByRole('button', { name: 'Keep playing' }).click();
-    await expect(page.getByText(/Fact or Fake · 1 of 8/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 1 of 10/)).toBeVisible();
     await page.getByRole('button', { name: 'Quit round' }).first().click();
     await page.getByRole('dialog').getByRole('link', { name: 'Quit round' }).click();
     await expect(page).toHaveURL(/#\/arcade$/);
@@ -192,7 +192,7 @@ test.describe('Hidden assessment forms', () => {
   test('form A plays without feedback and ends with the Radar and no XP', async ({ page }) => {
     await page.goto('/#/assess/form_A');
     await expect(page.getByRole('heading', { level: 1, name: 'Assessment · Form A' })).toBeAttached();
-    await expect(page.getByText(/Fact or Fake · 1 of 2/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 1 of 20/)).toBeVisible();
     await expect(page.getByText('No feedback until the end.')).toBeVisible();
     await expect(page.getByRole('link', { name: /Report/ })).toHaveCount(0);
     await settled(page);
@@ -200,13 +200,16 @@ test.describe('Hidden assessment forms', () => {
     expect(await axeSerious(page)).toEqual([]);
 
     await page.getByRole('button', { name: 'Fact', exact: true }).click();
-    await expect(page.getByText(/Fact or Fake · 2 of 2/)).toBeVisible();
+    await expect(page.getByText(/Fact or Fake · 2 of 20/)).toBeVisible();
     await expect(page.getByText(/Tama!|Muntik na!/)).toHaveCount(0);
     await expect(page.getByText('ARAW GAME · FAKE')).toHaveCount(0);
-    await page.getByRole('button', { name: 'Fake', exact: true }).click();
+    for (let i = 2; i <= 20; i++) {
+      await expect(page.getByText(new RegExp(`Fact or Fake · ${i} of 20`))).toBeVisible();
+      await page.getByRole('button', { name: 'Fake', exact: true }).click();
+    }
 
     await expect(page.getByRole('heading', { level: 2, name: 'Assessment complete' })).toBeVisible();
-    await expect(page.getByText(/^\d of 2 right$/)).toBeVisible();
+    await expect(page.getByText(/^\d+ of 20 right$/)).toBeVisible();
     await expect(page.getByText(/^\+\d+ XP$/)).toHaveCount(0);
     await expect(page.getByRole('heading', { level: 2, name: 'Your Truth Radar' })).toBeVisible();
     await settled(page);
