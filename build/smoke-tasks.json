@@ -1,0 +1,1 @@
+[{"id":"SMOKE","title":"Smoke test of the runner","model":"claude-haiku-5-5","effort":"low","budget":0.3,"deps":[],"prompt":"Create the file docs/smoke.txt containing the single line: runner smoke test ok. Then run: git add -A and git commit -m \"SMOKE: Smoke test of the runner\". Do nothing else."}]

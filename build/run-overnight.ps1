@@ -8,6 +8,7 @@ param(
   [double]$BudgetUsd = 150,
   [int]$AttemptMinutes = 120,
   [string]$Only = '',
+  [string]$TasksFile = 'tasks.json',
   [switch]$Unattended
 )
 $ErrorActionPreference = 'Stop'
@@ -67,7 +68,7 @@ function Task-State($id) {
 }
 
 function Write-Report([string]$headline) {
-  $tasks = Get-Content (Join-Path $BuildDir 'tasks.json') -Raw | ConvertFrom-Json
+  $tasks = Get-Content (Join-Path $BuildDir $TasksFile) -Raw | ConvertFrom-Json
   $rows = foreach ($t in $tasks) { $s = Task-State $t.id; "| $($t.id) | $($t.title) | $($s.status) | $($s.attempts) | `$$([math]::Round([double]$s.cost,2)) | $([math]::Round([double]$s.minutes)) | $($s.note) |" }
   $done = @($tasks | Where-Object { (Task-State $_.id).status -eq 'done' }).Count
   $md = @"
@@ -308,8 +309,9 @@ try {
   }
   Clear-GitLock
 
-  if (Get-Process OneDrive -ErrorAction SilentlyContinue) {
-    $state.oneDriveWasRunning = $true; Save-State
+  $od = Get-Process OneDrive -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($od) {
+    $state.oneDriveWasRunning = if ($od.Path) { $od.Path } else { $true }; Save-State
     Stop-Process -Name OneDrive -Force -ErrorAction SilentlyContinue
     Log 'Closed OneDrive for the run.'
   }
@@ -321,7 +323,7 @@ try {
   Write-Report 'Run in progress...'
 
   # ---------- build loop ----------
-  $tasks = Get-Content (Join-Path $BuildDir 'tasks.json') -Raw | ConvertFrom-Json
+  $tasks = Get-Content (Join-Path $BuildDir $TasksFile) -Raw | ConvertFrom-Json
   if ($Only) { $tasks = @($tasks | Where-Object { $_.id -eq $Only }) }
 
   foreach ($t in $tasks) {
@@ -448,8 +450,11 @@ catch {
 }
 finally {
   [Win32.Power]::SetThreadExecutionState([uint32]2147483648) | Out-Null
-  if ($state.finished -and $state.oneDriveWasRunning -and (Test-Path $oneDriveExe)) {
-    Start-Process $oneDriveExe -ArgumentList '/background'; $state.oneDriveWasRunning = $null; Log 'OneDrive restarted.'
+  if ($state.finished -and $state.oneDriveWasRunning) {
+    $candidates = @([string]$state.oneDriveWasRunning, $oneDriveExe, 'C:\Program Files\Microsoft OneDrive\OneDrive.exe', 'C:\Program Files (x86)\Microsoft OneDrive\OneDrive.exe')
+    $exe = $candidates | Where-Object { $_ -and $_ -like '*.exe' -and (Test-Path $_) } | Select-Object -First 1
+    if ($exe) { Start-Process $exe -ArgumentList '/background'; $state.oneDriveWasRunning = $null; Log "OneDrive restarted ($exe)." }
+    else { Log 'WARNING: could not find OneDrive.exe to restart it; start OneDrive from the Start menu.' }
   }
   Save-State
   if (Test-Path $LockPath) { if ((Get-Content $LockPath -Raw).Trim() -eq "$PID") { Remove-Item $LockPath -Force } }
