@@ -18,6 +18,23 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
+// The M1 lesson has no swipe-sort card (its game is the swipe sort), so the card component is tested with its own fixture.
+const sortCard: SwipeSortCard = {
+  id: 'test-sort',
+  type: 'swipe-sort',
+  title: 'Which of these use AI?',
+  bins: [
+    { id: 'not-ai', label: 'Not AI' },
+    { id: 'ai', label: 'AI' },
+  ],
+  items: [
+    { id: 'calculator', text: 'Pocket calculator', bin: 'not-ai', why: 'It follows fixed rules.' },
+    { id: 'spam', text: 'Spam filter in your email', bin: 'ai', why: 'It learned from many junk messages.' },
+    { id: 'switch', text: 'Light switch', bin: 'not-ai', why: 'On and off. Nothing is guessed.' },
+    { id: 'maps', text: 'Maps traffic guess', bin: 'ai', why: 'It guesses from past traffic.' },
+  ],
+};
+
 const find = <T extends Card>(type: T['type']) => content.cards.find((c) => c.type === type) as T;
 
 function setup(card: Card) {
@@ -85,7 +102,7 @@ describe('card types', () => {
   });
 
   it('swipe-sort: buttons place cards, arrow keys work, and it is ready after the last card', () => {
-    const card = find<SwipeSortCard>('swipe-sort');
+    const card = sortCard;
     const { onReady } = setup(card);
     const [left, right] = card.bins;
     const placeFor = (i: number) => (card.items[i]!.bin === left.id ? 'ArrowLeft' : 'ArrowRight');
@@ -107,7 +124,7 @@ describe('card types', () => {
   });
 
   it('swipe-sort: dragging past the threshold places the card', () => {
-    const card = find<SwipeSortCard>('swipe-sort');
+    const card = sortCard;
     const { onReady } = setup(card);
     const el = screen.getByText(card.items[0]!.text).closest('.sort-card') as HTMLElement;
     fireEvent.pointerDown(el, { clientX: 200, pointerId: 1 });
@@ -161,7 +178,7 @@ describe('Lesson screen', () => {
   it('runs a card, saves progress, pays XP and resumes at the same card', async () => {
     const view = render(<Lesson id="m01" />);
     expect(await screen.findByText(/phone listening/)).toBeTruthy();
-    expect(screen.getByRole('progressbar', { name: 'Lesson progress' }).getAttribute('aria-valuetext')).toBe('Step 1 / 10');
+    expect(screen.getByRole('progressbar', { name: 'Lesson progress' }).getAttribute('aria-valuetext')).toBe('Step 1 / 12');
     expect(screen.getByRole('link', { name: /Report this card \(m01-c1\)/ }).getAttribute('href')).toContain('item=m01-c1');
     fireEvent.click(await waitFor(() => {
       const next = screen.getByRole('button', { name: /^Next/ });
@@ -175,7 +192,7 @@ describe('Lesson screen', () => {
 
     render(<Lesson id="m01" />);
     expect(await screen.findByText(/learns patterns/i)).toBeTruthy();
-    expect(screen.getByRole('progressbar', { name: 'Lesson progress' }).getAttribute('aria-valuetext')).toBe('Step 2 / 10');
+    expect(screen.getByRole('progressbar', { name: 'Lesson progress' }).getAttribute('aria-valuetext')).toBe('Step 2 / 12');
   });
 });
 

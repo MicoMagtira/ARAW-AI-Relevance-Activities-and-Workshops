@@ -17,7 +17,7 @@ export interface ModuleInfo {
   review_status: 'unreviewed';
 }
 
-const mod = (n: number, title: string, short: string, topic: string, game: string, objectives: readonly string[]): ModuleInfo => ({
+const mod = (n: number, title: string, short: string, topic: string, game: string, objectives: readonly string[], cards = 7): ModuleInfo => ({
   id: `m${String(n).padStart(2, '0')}`,
   n,
   title,
@@ -26,7 +26,7 @@ const mod = (n: number, title: string, short: string, topic: string, game: strin
   topic,
   game,
   objectives,
-  cards: 7,
+  cards,
   review_status: 'unreviewed',
 });
 
@@ -35,7 +35,7 @@ export const MODULES: readonly ModuleInfo[] = [
     'Describe AI as learning patterns from many examples to make guesses.',
     'Spot the AI you already use every day.',
     'Tell real AI from "AI-powered" hype.',
-  ]),
+  ], 9),
   mod(2, 'How AI Learns and Makes Mistakes', 'How AI Learns', 'Training data, bias, confident errors and explanations.', 'Turuan si AI', [
     'Explain that AI learns only from the examples it is given.',
     'Recognise that lopsided examples make biased AI.',

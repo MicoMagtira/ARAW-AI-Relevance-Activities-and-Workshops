@@ -52,9 +52,9 @@ describe('unlock rule (sequential)', () => {
 describe('steps and resume', () => {
   it('runs hook, cards, game, takeaway, mini Fact or Fake, reward in that order', () => {
     const steps = buildSteps(content);
-    expect(steps.map((s) => s.kind)).toEqual([...Array(7).fill('card'), 'game', 'takeaway', 'practice', 'reward']);
+    expect(steps.map((s) => s.kind)).toEqual([...Array(9).fill('card'), 'game', 'takeaway', 'practice', 'reward']);
     expect(steps[0]).toMatchObject({ id: 'm01-c1', kind: 'card' });
-    expect(countedSteps(steps)).toBe(10);
+    expect(countedSteps(steps)).toBe(12);
     expect(new Set(steps.map((s) => s.id)).size).toBe(steps.length);
   });
 
@@ -149,8 +149,20 @@ describe('XP and progress', () => {
 });
 
 describe('card logic', () => {
+  const sort: SwipeSortCard = {
+    id: 'test-sort',
+    type: 'swipe-sort',
+    title: 'Which of these use AI?',
+    bins: [
+      { id: 'not-ai', label: 'Not AI' },
+      { id: 'ai', label: 'AI' },
+    ],
+    items: [
+      { id: 'calculator', text: 'Pocket calculator', bin: 'not-ai', why: 'It follows fixed rules.' },
+      { id: 'spam', text: 'Spam filter', bin: 'ai', why: 'It learned from many junk messages.' },
+    ],
+  };
   const choice = content.cards.find((c): c is ChoiceCard => c.type === 'choice')!;
-  const sort = content.cards.find((c): c is SwipeSortCard => c.type === 'swipe-sort')!;
 
   it('choice: marks the one correct option and returns feedback for every option', () => {
     expect(checkChoice(choice, choice.correct)).toMatchObject({ correct: true });
@@ -172,7 +184,7 @@ describe('card logic', () => {
   });
 });
 
-describe('stub module 1 content', () => {
+describe('module 1 content', () => {
   it('fits the module info and is well formed', () => {
     expect(1 + content.cards.length).toBe(m01.cards);
     const ids = [content.hook.id, ...content.cards.map((c) => c.id), content.takeaway.id];
@@ -192,9 +204,10 @@ describe('stub module 1 content', () => {
         expect(c.items.every((i) => c.bins.some((b) => b.id === i.bin))).toBe(true);
       }
     }
-    // every card type is used by the stub so the engine is exercised
-    const types = new Set([content.hook.type, ...content.cards.map((c) => c.type), content.takeaway.type]);
-    expect([...types].sort()).toEqual(['choice', 'info', 'poll', 'reveal', 'story-hook', 'swipe-sort', 'takeaway']);
+    // SPEC section 4: hook, info, 3 reveals, 3 choices, poll (the swipe sort is the module game)
+    const types = [content.hook.type, ...content.cards.map((c) => c.type)];
+    expect(types).toEqual(['story-hook', 'info', 'reveal', 'choice', 'reveal', 'choice', 'reveal', 'choice', 'poll']);
+    expect(content.game.slug).toBe('ai-or-not');
   });
 
   it('loads through the registry; modules without content report so', async () => {

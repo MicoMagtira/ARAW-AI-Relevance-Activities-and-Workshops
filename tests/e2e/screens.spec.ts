@@ -33,7 +33,7 @@ test.describe('Home', () => {
     // Continue card: next module + progress
     await expect(page.getByText('Continue · Module 1 of 10')).toBeVisible();
     await expect(page.getByRole('heading', { level: 3, name: 'What Is AI, Really?' })).toBeVisible();
-    await expect(page.getByRole('progressbar', { name: 'Lesson cards' })).toHaveAttribute('aria-valuetext', '0 / 7 cards');
+    await expect(page.getByRole('progressbar', { name: 'Lesson cards' })).toHaveAttribute('aria-valuetext', '0 / 9 cards');
     await expect(page.getByRole('link', { name: 'Start', exact: true })).toBeVisible();
 
     // Daily challenge, myth of the day, arcade shortcut, path and badges

@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
+import { playAiOrNot } from './aon';
 import { expect, noHorizontalOverflow, test } from './fixtures';
 
 const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
@@ -79,12 +80,12 @@ test.describe('Learn path', () => {
 });
 
 test.describe('Module runner', () => {
-  test('completes the stub module: cards, game, takeaway, mini round, reward, unlocks', async ({ page }) => {
+  test('completes module 1: cards, game, takeaway, mini round, reward, unlocks', async ({ page }) => {
     await page.goto('/#/learn/m01');
     // focus mode: no sidebar, banner or tab bar, but a top bar with Close, progress and Report
     await expect(page.locator('.sidebar')).toHaveCount(0);
     await expect(page.getByRole('link', { name: /^Close lesson/ })).toBeVisible();
-    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 1 / 10');
+    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 1 / 12');
     await expect(page.getByRole('link', { name: 'Report this card (m01-c1)' })).toHaveAttribute('href', /item=m01-c1/);
     await expect(page.getByText('Beta: educational, not medical advice')).toBeVisible();
 
@@ -119,30 +120,46 @@ test.describe('Module runner', () => {
     expect(await axeSerious(page)).toEqual([]);
     await next(page);
 
-    // 5 swipe-sort with the bin buttons: calculator and switch are Not AI, spam filter and Maps are AI
-    await expect(page.getByText('Pocket calculator')).toBeVisible();
+    // 5 reveal: six AI examples
+    await expect(page.getByRole('heading', { level: 2, name: 'AI you already use' })).toBeVisible();
+    for (const label of ['Social media feed', 'Face filter', 'Maps traffic', 'Spam filter', 'Voice assistant', 'Symptom checker']) {
+      await page.getByRole('button', { name: new RegExp(label) }).click();
+    }
+    await expect(page.getByText('6 of 6 revealed')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
-    for (const bin of ['Not AI', 'AI', 'Not AI', 'AI']) await page.getByRole('button', { name: bin, exact: true }).click();
-    await expect(page.getByText('All sorted! 4 of 4 in the right bin.')).toBeVisible();
     await next(page);
 
-    // 6 poll
+    // 6 choice: Maps says 20 minutes
+    await page.getByRole('button', { name: /A promise: the app knows the future/ }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Muntik na!' })).toContainText('Nobody knows the future');
+    await page.getByRole('button', { name: /A guess from patterns in past traffic/ }).click();
+    await next(page);
+
+    // 7 reveal: AI in health, people decide
+    await expect(page.getByRole('heading', { level: 2, name: /AI in health/ })).toBeVisible();
+    for (const label of ['X-ray helpers', 'Health chatbots', 'Appointment systems', 'Claims-fraud flags']) {
+      await page.getByRole('button', { name: new RegExp(label) }).click();
+    }
+    await next(page);
+
+    // 8 choice: the "AI-powered" sticker
+    await page.getByRole('button', { name: /No\. Check if it is registered with the FDA/ }).click();
+    await next(page);
+
+    // 9 poll
     await page.getByRole('button', { name: /In a camera filter/ }).click();
     await expect(page.getByText(/There is no wrong answer/)).toBeVisible();
     await next(page);
 
-    // 7 choice
-    await page.getByRole('button', { name: /No\. Check if it is registered with the FDA/ }).click();
-    await next(page);
-
-    // module game (lazy loaded stub)
+    // module game (lazy loaded AI or Not?)
     await expect(page.getByRole('heading', { level: 2, name: 'AI or Not?' })).toBeVisible();
-    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 8 / 10');
-    await page.getByRole('button', { name: 'Finish the game' }).click();
+    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 10 / 12');
+    await playAiOrNot(page);
+    await page.getByRole('button', { name: /Finish game/ }).click();
     await expect(page.getByText('Game complete!')).toBeVisible();
-    await expect(page.getByRole('img', { name: '2 of 3 stars' })).toBeVisible();
+    await expect(page.getByRole('img', { name: '3 of 3 stars' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Play again' })).toBeVisible();
     await next(page);
 
@@ -169,10 +186,10 @@ test.describe('Module runner', () => {
     // reward
     await expect(page.getByRole('heading', { level: 2, name: 'Galing! You finished the module.' })).toBeVisible();
     await expect(page.locator('.reward-badge__name')).toHaveText('Unang Sinag');
-    await expect(page.getByText(`+${185 + right * 10} XP`)).toBeVisible();
+    await expect(page.getByText(`+${195 + right * 10} XP`)).toBeVisible();
     await expect(page.getByText('Module 2 · How AI Learns and Makes Mistakes')).toBeVisible();
     await expect(page.getByText('Komiks Episode 1')).toBeVisible();
-    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 10 / 10');
+    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 12 / 12');
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -183,11 +200,11 @@ test.describe('Module runner', () => {
     await expect(page.locator('.road-node--done')).toHaveCount(1);
     await expect(page.locator('.road-node--current')).toContainText('How AI Learns');
     await page.goto('/#/');
-    await expect(page.getByText(String(185 + right * 10), { exact: false }).first()).toBeVisible();
+    await expect(page.getByText(String(195 + right * 10), { exact: false }).first()).toBeVisible();
 
     // finished modules can be replayed without new XP
     await page.goto('/#/learn/m01');
-    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 1 / 10');
+    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 1 / 12');
   });
 
   test('progress is saved after every card and resumes at the same card', async ({ page }) => {
@@ -202,35 +219,17 @@ test.describe('Module runner', () => {
     await page.reload();
     await page.goto('/#/learn/m01');
     await expect(page.getByRole('heading', { level: 2, name: 'Three parts of every AI guess' })).toBeVisible();
-    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 3 / 10');
-  });
-
-  test('swipe-sort accepts a drag and the arrow keys', async ({ page }) => {
-    await page.addInitScript(() => window.localStorage.setItem('araw:v1:cardsDone', JSON.stringify({ m01: 4 })));
-    await page.goto('/#/learn/m01');
-    await expect(page.getByText('Pocket calculator')).toBeVisible();
-    await settled(page);
-    const box = await page.locator('.sort-card').boundingBox();
-    if (!box) throw new Error('sort card not visible');
-    const y = box.y + box.height / 2;
-    await page.mouse.move(box.x + box.width / 2, y);
-    await page.mouse.down();
-    await page.mouse.move(box.x + box.width / 2 + 160, y, { steps: 6 });
-    await page.mouse.up();
-    // the calculator is Not AI, so dragging it right is the wrong bin; the card moved on either way
-    await expect(page.getByRole('status').filter({ hasText: 'Muntik na!' })).toContainText('Pocket calculator');
-    await expect(page.getByText('Spam filter in your email')).toBeVisible();
-    await page.keyboard.press('ArrowRight');
-    await expect(page.getByRole('status').filter({ hasText: 'Tama!' })).toBeVisible();
+    await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 3 / 12');
   });
 
   test('reduced motion shows a sparkle instead of confetti', async ({ page }) => {
     await page.addInitScript(() => {
-      window.localStorage.setItem('araw:v1:cardsDone', JSON.stringify({ m01: 7 }));
+      window.localStorage.setItem('araw:v1:cardsDone', JSON.stringify({ m01: 9 }));
       window.localStorage.setItem('araw:v1:settings', JSON.stringify({ largeText: false, highContrast: false, xlButtons: false, srHints: false, reduceMotion: true }));
     });
     await page.goto('/#/learn/m01');
-    await page.getByRole('button', { name: 'Finish the game' }).click();
+    await playAiOrNot(page);
+    await page.getByRole('button', { name: /Finish game/ }).click();
     await next(page);
     await next(page, /^Next: quick Fact or Fake round/);
     for (let i = 0; i < 5; i++) {

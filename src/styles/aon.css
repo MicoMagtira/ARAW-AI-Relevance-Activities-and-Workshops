@@ -1,0 +1,334 @@
+/* "AI or Not?" (Module 1 game). Loaded with the game's own chunk. Desktop: card and buttons left, feedback right. Narrow: one column. */
+.aon {
+  container: aon / inline-size;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+  min-width: 0;
+}
+
+.aon h3,
+.aon h4,
+.aon p {
+  margin: 0;
+}
+
+.aon-hud {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.aon-hud .aon-dots {
+  flex: 1 0 100%;
+  order: 3;
+}
+
+.aon-score {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.aon-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aon-dots {
+  gap: 3px;
+}
+
+.aon-dot {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--on-color);
+  background: var(--soft);
+  border: 2px solid var(--ink);
+}
+
+.aon-dot--now {
+  background: var(--gold);
+  box-shadow: 3px 3px 0 0 var(--ink);
+}
+
+.aon-dot--right {
+  background: var(--fact);
+}
+
+.aon-dot--wrong {
+  background: var(--fake);
+}
+
+.aon-stage {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+/* Swipe stage: the dashed bin area, with the AI / Not AI tags showing the drag direction */
+.aon-swipe {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(150px, 28vh, 200px);
+  padding: var(--sp-4);
+  background: var(--soft);
+  border: var(--px) dashed var(--ink);
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.aon-swipe:focus {
+  outline: none;
+}
+
+.aon-swipe:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 4px;
+}
+
+.aon-swipe__tag {
+  position: absolute;
+  top: var(--sp-3);
+  z-index: 2;
+  padding: var(--sp-1) var(--sp-3);
+  font: var(--fs-12) / 1.4 var(--font-pixel);
+  text-transform: uppercase;
+  border: var(--px) solid;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.aon-swipe__tag--not {
+  left: var(--sp-3);
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.aon-swipe__tag--ai {
+  right: var(--sp-3);
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.aon-swipe[data-dir='not-ai'] .aon-swipe__tag--not,
+.aon-swipe[data-dir='ai'] .aon-swipe__tag--ai {
+  opacity: 1;
+}
+
+.aon-card {
+  position: relative;
+  display: grid;
+  gap: var(--sp-2);
+  width: min(100%, 380px);
+  padding: var(--sp-5) var(--sp-4);
+  text-align: center;
+  transform: translateX(var(--dx, 0px)) rotate(var(--rot, 0deg));
+  animation: aon-in var(--step-slow) steps(4) both;
+}
+
+.aon-card__name {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+
+.aon-card__detail {
+  font: 600 var(--fs-18) / 1.4 var(--font-body);
+  color: var(--ink);
+}
+
+.aon-card__sticker {
+  justify-self: center;
+  padding: var(--sp-1) var(--sp-3);
+  font: var(--fs-12) / 1.4 var(--font-pixel);
+  background: var(--coral); /* fill only; the text is ink */
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  transform: rotate(-3deg);
+}
+
+@keyframes aon-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+
+.aon-question {
+  text-align: center;
+  font: 800 var(--fs-20) / 1.25 var(--font-head);
+}
+
+.aon-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-4);
+}
+
+.aon-buttons .px-btn {
+  min-height: 72px;
+  padding-inline: var(--sp-3);
+  font-size: var(--fs-14);
+}
+
+.aon-buttons .px-btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.aon-buttons .px-btn.is-chosen {
+  opacity: 1;
+}
+
+.aon-hint {
+  text-align: center;
+  font: 600 var(--fs-14) / 1.4 var(--font-body);
+  color: var(--muted);
+}
+
+.aon-hint__touch {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .aon-hint__touch {
+    display: inline;
+  }
+
+  .aon-hint__keys {
+    display: none;
+  }
+}
+
+/* Feedback: always reserves its space so the card never jumps */
+.aon-feedback-slot {
+  min-width: 0;
+  scroll-margin-bottom: 120px; /* clear the sticky Next bar on phone and tablet */
+  min-height: 180px;
+}
+
+.aon-feedback-empty {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  padding: var(--sp-4);
+  text-align: center;
+  border: var(--px) dashed var(--line);
+}
+
+.aon-feedback {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  font: 600 var(--fs-18) / 1.45 var(--font-body);
+}
+
+.aon-feedback--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  box-shadow: var(--px) var(--px) 0 0 var(--fact);
+  color: var(--fact-ink);
+}
+
+.aon-feedback--wrong {
+  background: var(--gold);
+}
+
+.aon-feedback__head {
+  font: 800 var(--fs-22) / 1.2 var(--font-head);
+}
+
+.aon-feedback__points {
+  font: var(--fs-12) / 1.8 var(--font-pixel);
+}
+
+.aon-hype {
+  display: inline-block;
+  padding: 0 var(--sp-2);
+  background: var(--coral);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+/* Narrow: once answered, the feedback replaces the buttons (like Fact or Fake) */
+@container aon (max-width: 703px) {
+  .aon--answered .aon-buttons,
+  .aon--answered .aon-hint {
+    display: none;
+  }
+
+  .aon-feedback-slot,
+  .aon-feedback-empty {
+    min-height: 0;
+  }
+
+  .aon-feedback-empty {
+    display: none;
+  }
+}
+
+/* Results */
+.aon--done {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.aon-done__title {
+  font: 800 var(--fs-28) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.aon-done__grid {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+}
+
+.aon-done__score {
+  font: var(--fs-16) / 1.6 var(--font-pixel);
+}
+
+.aon-misses__title {
+  font: 800 var(--fs-20) / 1.25 var(--font-head);
+}
+
+.aon-misses {
+  display: grid;
+  gap: var(--sp-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aon-miss {
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--soft);
+  border: 3px solid var(--ink);
+}
+
+.aon-perfect {
+  font: 800 var(--fs-20) / 1.3 var(--font-head);
+  color: var(--fact-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aon-card {
+    animation: none;
+    transform: translateX(var(--dx, 0px));
+  }
+}
