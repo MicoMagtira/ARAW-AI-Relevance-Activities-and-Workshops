@@ -30,7 +30,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'feed-mo-to',
     name: "Feed Mo 'To",
     module: null,
-    playable: false,
+    playable: true,
     topic: 'Algorithms and filter bubbles',
     how: 'You are the algorithm. Keep Tita scrolling, but do not trap her in a bubble of scary posts.',
     icon: 'article',
