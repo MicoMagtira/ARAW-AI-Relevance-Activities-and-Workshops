@@ -66,7 +66,7 @@ export const ARCADE_GAMES: readonly GameInfo[] = [
     slug: 'tawid-lola',
     name: 'Tawid, Lola!',
     module: null,
-    playable: false,
+    playable: true,
     topic: 'When to trust the AI guide',
     how: 'Help Lola cross to the health center. Follow the AI voice, unless your own eyes say otherwise.',
     icon: 'bus',

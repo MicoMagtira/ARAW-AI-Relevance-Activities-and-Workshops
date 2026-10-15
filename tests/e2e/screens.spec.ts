@@ -41,7 +41,7 @@ test.describe('Home', () => {
     await expect(page.locator('.home-daily').getByText('Coming soon', { exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: "Play today's challenge" })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Open the Arcade' })).toHaveAttribute('href', '#/arcade');
-    await expect(page.getByText('5 of 11 ready')).toBeVisible();
+    await expect(page.getByText('6 of 11 ready')).toBeVisible();
     await expect(page.getByRole('list').filter({ has: page.locator('.path-node') }).getByRole('listitem')).toHaveCount(10);
     await expect(page.locator('.path-node--current')).toHaveCount(1);
     await expect(page.locator('.path-node--locked')).toHaveCount(9);
