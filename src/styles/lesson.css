@@ -1,0 +1,603 @@
+/* Module runner, focus mode (docs/DESIGN.md section 11.4): top bar, Ara column, card, action bar, reward. */
+
+.shell--focus {
+  display: block;
+  min-height: 100dvh;
+  background: var(--cream);
+}
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.lesson-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 64px;
+  padding: var(--sp-2) var(--gutter);
+  background: var(--gold);
+  border-bottom: var(--px) solid var(--ink);
+  box-shadow: 0 var(--px) 0 0 var(--gold-deep);
+}
+
+.lesson-bar .px-btn {
+  min-height: var(--tap);
+  margin-block: var(--px) 0;
+}
+
+.lesson-bar__title {
+  flex: 0 1 28ch;
+  min-width: 0;
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--navy);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lesson-bar .px-progress-wrap {
+  flex: 1 1 120px;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.lesson-bar .px-progress {
+  height: 20px;
+}
+
+.lesson-bar .px-progress__text {
+  font-size: var(--fs-14);
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.lesson-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: var(--gutter);
+}
+
+.lesson-main:focus {
+  outline: none;
+}
+
+.lesson-loading {
+  text-align: center;
+  padding: var(--sp-7) 0;
+}
+
+.lesson-notice {
+  max-width: 560px;
+  margin: var(--sp-6) auto;
+}
+
+/* ---------- Stage: Ara column + card ---------- */
+.lesson-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'ara'
+    'card'
+    'actions';
+  gap: var(--sp-4);
+  align-content: start;
+  padding-right: var(--px);
+  padding-bottom: var(--px);
+}
+
+.lesson-ara {
+  grid-area: ara;
+  min-width: 0;
+}
+
+.lesson-ara .ara-says {
+  align-items: flex-start;
+  gap: var(--sp-4);
+}
+
+.lesson-card {
+  grid-area: card;
+  min-width: 0;
+  padding: var(--sp-5);
+  animation: px-enter var(--step) steps(4);
+}
+
+.lesson-card:focus {
+  outline: none;
+}
+
+.lesson-card:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 4px;
+}
+
+.lesson-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.lesson-id {
+  margin-right: auto;
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  color: var(--muted);
+}
+
+.lesson-gain {
+  min-width: 0;
+  font: var(--fs-14) / 1.5 var(--font-pixel);
+  color: var(--fact-ink);
+}
+
+.lesson-beta {
+  margin-top: var(--sp-5);
+  text-align: center;
+  font: 600 var(--fs-16) / 1.4 var(--font-body);
+  color: var(--muted);
+}
+
+@media (width >= 1024px) {
+  .lesson-stage {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    grid-template-areas:
+      'ara card'
+      'ara actions';
+    gap: var(--sp-5) var(--gap);
+    align-items: start;
+  }
+
+  .lesson-ara {
+    position: sticky;
+    top: calc(64px + var(--gap));
+  }
+
+  .lesson-card {
+    padding: var(--sp-6);
+    min-height: 320px;
+  }
+}
+
+/* Phone and tablet: the action button sticks to the bottom, above the safe area. */
+@media (width < 1024px) {
+  .lesson-main {
+    padding-bottom: 0;
+  }
+
+  /* Steps without a Next button (mini round, reward) keep the XP note but not the sticky bar. */
+  .lesson-actions.lesson-actions--bare {
+    position: static;
+    margin-inline: 0;
+    padding: 0;
+    border-top: 0;
+    background: none;
+  }
+
+  .lesson-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: var(--sp-3) var(--gutter) calc(var(--sp-3) + var(--safe-bottom));
+    background: var(--cream);
+    border-top: var(--px) solid var(--ink);
+  }
+}
+
+@media (width < 600px) {
+  .lesson-bar {
+    gap: var(--sp-2);
+    padding-inline: var(--sp-3);
+  }
+
+  .lesson-bar__title {
+    display: none;
+  }
+
+  .lesson-card {
+    padding: var(--sp-4);
+  }
+
+  .lesson-actions .px-btn--lg {
+    flex: 1;
+  }
+}
+
+/* ---------- Cards ---------- */
+.card {
+  min-width: 0;
+}
+
+.card--info,
+.card--story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-items: center;
+}
+
+@media (width >= 720px) {
+  .card--info,
+  .card--story {
+    grid-template-columns: minmax(120px, 1fr) minmax(0, 2fr);
+  }
+}
+
+.card__title {
+  font: 800 var(--fs-28) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+
+.card__art,
+.card__scene {
+  display: grid;
+  place-items: center;
+  min-height: 140px;
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.card__scene {
+  min-height: 180px;
+}
+
+.card__quote {
+  margin: 0;
+  display: grid;
+  gap: var(--sp-2);
+  font: 700 var(--fs-22) / 1.4 var(--font-head);
+}
+
+.card__quote footer {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card--choice .options,
+.card--poll .options,
+.tiles,
+.bullets {
+  display: grid;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Reveal tiles */
+.tiles {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+
+.tile,
+.option {
+  display: grid;
+  gap: var(--sp-2);
+  width: calc(100% - var(--px));
+  min-height: max(56px, var(--tap));
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  font: 700 var(--fs-18) / 1.4 var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform var(--step-fast) steps(2);
+}
+
+.tile:hover,
+.option:hover {
+  transform: translate(-2px, -2px);
+}
+
+.tile:active,
+.option:active {
+  transform: translate(var(--px), var(--px));
+  box-shadow: none;
+}
+
+.tile__label {
+  font: var(--fs-14) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.tile__detail {
+  font-weight: 600;
+}
+
+.tile__hint {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.tile--open {
+  background: var(--navy-tint);
+  cursor: default;
+}
+
+.tile--open:hover {
+  transform: none;
+}
+
+/* Choice and poll options */
+.option {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--sp-3);
+}
+
+.option__key {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font: var(--fs-12) / 1 var(--font-pixel);
+  background: var(--gold);
+  border: var(--px-chip) solid var(--ink);
+}
+
+.option__why {
+  grid-column: 2 / -1;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.option--right {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  color: var(--fact-ink);
+}
+
+.option--wrong {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+}
+
+.option[aria-pressed='true'] {
+  background: var(--navy-tint);
+  color: var(--navy);
+}
+
+.option[aria-disabled='true'] {
+  cursor: default;
+}
+
+.option[aria-disabled='true']:hover {
+  transform: none;
+}
+
+.option__mark {
+  display: inline-flex;
+}
+
+/* Feedback */
+.feedback {
+  min-height: 0;
+}
+
+.feedback__box {
+  padding: var(--sp-3) var(--sp-4);
+  border: var(--px) solid var(--ink);
+  background: var(--soft);
+}
+
+.feedback__box--fact {
+  background: var(--fact-tint);
+  border-color: var(--fact);
+  color: var(--fact-ink);
+}
+
+.feedback__box--almost {
+  background: var(--gold);
+}
+
+/* Swipe-sort */
+.sort-stage {
+  display: grid;
+  place-items: center;
+  min-height: 140px;
+  padding: var(--sp-3);
+  background: var(--soft);
+  border: var(--px) dashed var(--ink);
+  overflow: hidden;
+}
+
+.sort-card {
+  display: grid;
+  place-items: center;
+  width: min(100%, 320px);
+  min-height: 96px;
+  padding: var(--sp-4);
+  text-align: center;
+  font: 800 var(--fs-22) / 1.3 var(--font-head);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+  transform: translateX(var(--dx, 0)) rotate(calc(var(--dx, 0) / 24 * 1deg));
+}
+
+.sort-done {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  font-weight: 700;
+}
+
+.sort-bins {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.sort-bins .px-btn {
+  flex: 1 1 100px;
+  padding-inline: var(--sp-3);
+}
+
+/* Takeaway */
+.bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  font-size: var(--fs-20);
+}
+
+.bullets__n {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  font: var(--fs-14) / 1 var(--font-pixel);
+  background: var(--gold);
+  border: var(--px) solid var(--ink);
+}
+
+/* Mini Fact or Fake stub */
+.post {
+  position: relative;
+  padding: var(--sp-5) var(--sp-5) var(--sp-6);
+  background: var(--cream);
+}
+
+.post__text {
+  font-size: var(--fs-20);
+  font-weight: 600;
+}
+
+.post .px-stamp {
+  position: static;
+  display: inline-block;
+  margin-top: var(--sp-3);
+}
+
+.practice-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+}
+
+.practice-buttons .px-btn {
+  flex: 1 1 140px;
+}
+
+/* ---------- Game and reward ---------- */
+.stars {
+  display: inline-flex;
+  gap: var(--sp-1);
+}
+
+.star {
+  color: var(--soft);
+  filter: drop-shadow(var(--px-chip) var(--px-chip) 0 var(--line));
+}
+
+.star--on {
+  color: var(--gold-deep);
+  filter: drop-shadow(var(--px-chip) var(--px-chip) 0 var(--ink));
+}
+
+.card--reward {
+  position: relative;
+}
+
+.reward-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+.reward-badge__name {
+  font: var(--fs-16) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+}
+
+.tally {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+}
+
+.tally__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-2);
+  border-bottom: var(--px-chip) dashed var(--line);
+  font-weight: 700;
+}
+
+.tally__row dd,
+.tally__row dt {
+  margin: 0;
+}
+
+.tally__row--total {
+  border-bottom: 0;
+  font: var(--fs-14) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+}
+
+.unlocked {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--fact-tint);
+  border: var(--px) solid var(--fact);
+  color: var(--fact-ink);
+}
+
+.reward-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+}
+
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.confetti-sparkle {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  color: var(--gold-deep);
+}
+
+:root.a11y-high-contrast .lesson-bar,
+:root.a11y-high-contrast .card__art,
+:root.a11y-high-contrast .card__scene {
+  background: var(--surface);
+}
+
+@media print {
+  .confetti {
+    display: none;
+  }
+}

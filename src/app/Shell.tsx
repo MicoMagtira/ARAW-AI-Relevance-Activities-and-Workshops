@@ -9,6 +9,7 @@ import { TABS, type RouteName } from './routes';
 import { displayName, profile, streak, xp } from './state';
 import { Home } from '../screens/Home';
 import { Learn } from '../screens/Learn';
+import { Lesson } from '../screens/Lesson';
 import { Arcade } from '../screens/Arcade';
 import { Library } from '../screens/Library';
 import { Me } from '../screens/Me';
@@ -16,7 +17,7 @@ import { Report } from '../screens/Report';
 import { About } from '../screens/About';
 import { NotFound } from '../screens/NotFound';
 
-const SCREENS: Record<RouteName, ComponentType> = {
+const SCREENS: Record<Exclude<RouteName, 'lesson'>, ComponentType> = {
   home: Home,
   learn: Learn,
   arcade: Arcade,
@@ -29,7 +30,7 @@ const SCREENS: Record<RouteName, ComponentType> = {
 
 export function Shell() {
   const match = matchRoute(location$.value);
-  const Screen = SCREENS[match.def.name];
+  const lessonId = match.def.name === 'lesson' ? match.params.id : undefined;
   const title = t(match.def.titleKey);
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
@@ -42,8 +43,19 @@ export function Shell() {
       return;
     }
     window.scrollTo(0, 0);
-    mainRef.current?.focus({ preventScroll: true });
+    (mainRef.current ?? document.getElementById('main'))?.focus({ preventScroll: true });
   }, [match.def.name, match.location.path]);
+
+  // Focus mode: the module runner replaces the sidebar, banner and tab bar with its own top bar.
+  if (lessonId !== undefined) {
+    return (
+      <div class="shell shell--focus">
+        <Lesson id={lessonId} key={lessonId} />
+        <ToastHost />
+      </div>
+    );
+  }
+  const Screen = SCREENS[match.def.name as Exclude<RouteName, 'lesson'>];
 
   const reportHref = hrefFor('/report', { screen: match.def.name === 'report' ? undefined : match.def.name });
   const activeTab = match.def.tab;

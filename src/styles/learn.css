@@ -1,0 +1,287 @@
+/* Learn path (docs/DESIGN.md sections 5.4 and 11.3): winding stepped road, details side panel, phone bottom sheet. */
+
+.learn__path {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-content: start;
+}
+
+.learn__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+
+.learn__head .stack {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.learn__hint {
+  margin-top: calc(var(--sp-2) * -1);
+}
+
+.learn__details {
+  position: sticky;
+  top: calc(var(--banner-h) + var(--gap));
+  align-self: start;
+}
+
+/* ---------- Road ---------- */
+.road-row {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+.road-wrap {
+  --room: 8px;
+  position: relative;
+  padding-top: var(--room);
+}
+
+.road-wrap--ara {
+  --room: 64px; /* room for Ara above the current node */
+}
+
+.road {
+  position: absolute;
+  left: 0;
+  top: var(--room);
+  width: 100%;
+  overflow: visible;
+  z-index: 0;
+}
+
+.road path {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 6;
+  stroke-dasharray: 12 10;
+  vector-effect: non-scaling-stroke;
+  shape-rendering: crispEdges;
+}
+
+.road-list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.road-item:nth-child(even) {
+  margin-top: 56px;
+}
+
+.road-node {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: 8px var(--sp-1) var(--sp-1);
+  background: none;
+  border: 0;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+}
+
+.road-node:focus-visible {
+  outline: none;
+}
+
+.road-node:focus-visible .road-node__tile {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 7px;
+}
+
+.road-node__tile {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  font: var(--fs-16) / 1 var(--font-pixel);
+  background: var(--soft);
+  color: var(--muted);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+  transition: transform var(--step-fast) steps(2);
+}
+
+.road-node:hover .road-node__tile {
+  transform: translate(-2px, -2px);
+}
+
+.road-node:active .road-node__tile {
+  transform: translate(var(--px), var(--px));
+  box-shadow: none;
+}
+
+.road-node--done .road-node__tile {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.road-node--current .road-node__tile {
+  background: var(--navy);
+  color: var(--on-color);
+  box-shadow:
+    var(--px) var(--px) 0 0 var(--ink),
+    0 0 0 var(--px) var(--coral);
+  animation: path-pulse 1600ms steps(1) infinite;
+}
+
+.road-node[aria-pressed='true'] .road-node__tile {
+  outline: var(--px) solid var(--navy);
+  outline-offset: 4px;
+}
+
+.road-node__label {
+  padding: 0 var(--sp-1);
+  font: 700 var(--fs-14) / 1.2 var(--font-head);
+  background: var(--surface); /* keeps the dashed road from running through the words */
+  overflow-wrap: anywhere;
+}
+
+.road-node__ara {
+  position: absolute;
+  top: -56px;
+  left: 50%;
+  margin-left: -32px;
+  pointer-events: none;
+}
+
+:root.a11y-high-contrast .road-node--locked .road-node__tile {
+  border-style: dashed;
+}
+
+:root.a11y-high-contrast .road path {
+  stroke: var(--ink);
+}
+
+/* ---------- Details ---------- */
+.details > .px-chip {
+  max-width: 100%;
+  white-space: normal; /* the side panel is narrow at 1024 with larger text */
+  overflow-wrap: anywhere;
+}
+
+.details__title {
+  font: 800 var(--fs-24) / 1.2 var(--font-head);
+}
+
+.facts {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+}
+
+.facts > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.facts dt {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font-weight: 700;
+}
+
+.objectives {
+  display: grid;
+  gap: var(--sp-2);
+  margin: var(--sp-2) 0 0;
+  padding-left: var(--sp-5);
+}
+
+.details__badge {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.details__locked {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  background: var(--soft);
+  border: var(--px) solid var(--ink);
+  font-weight: 700;
+}
+
+/* ---------- Phone: vertical road, bottom sheet ---------- */
+@media (width < 600px) {
+  .road-wrap,
+  .road-wrap--ara {
+    --room: 0px;
+  }
+
+  .road-list {
+    display: block;
+  }
+
+  .road-item,
+  .road-item:nth-child(even) {
+    height: 128px;
+    margin-top: 0;
+  }
+
+  .road-item .road-node {
+    width: 50%;
+    margin-left: 0;
+  }
+
+  .road-item:nth-child(even) .road-node {
+    margin-left: 50%;
+  }
+
+  .road-node__ara {
+    top: 8px;
+    left: calc(50% + 44px);
+    margin-left: 0;
+  }
+
+  .road-item:nth-child(even) .road-node__ara {
+    left: auto;
+    right: calc(50% + 44px);
+  }
+
+  .px-dialog--sheet {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    max-height: 88dvh;
+    border-bottom: 0;
+    box-shadow: none;
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .px-dialog--sheet[open] {
+    animation: sheet-in var(--step) steps(4);
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(32px);
+  }
+}

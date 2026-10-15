@@ -7,6 +7,7 @@ import { displayName, streak, xp } from '../app/state';
 import { BADGES, BADGE_TOTAL } from '../content/badges';
 import { ARCADE_GAMES } from '../content/games';
 import { MODULES, MODULE_COUNT } from '../content/modules';
+import { hasContent } from '../modules/registry';
 import { AraSays } from '../ui/AraBubble';
 import { Medal } from '../ui/Badge';
 import { Icon } from '../ui/Icon';
@@ -34,7 +35,7 @@ function Hero() {
             <h3 class="continue__title">{next.title}</h3>
             <ProgressBar value={cards} max={next.cards} label={t('home.cards')} text={t('home.cardsText', { done: cards, total: next.cards })} />
             <div>
-              <Button href={hrefFor('/learn')} variant="gold" large aria-describedby={srDescribedBy('sr-continue')}>
+              <Button href={hrefFor(hasContent(next.id) ? `/learn/${next.id}` : '/learn')} variant="gold" large aria-describedby={srDescribedBy('sr-continue')}>
                 {cards > 0 ? t('home.continue') : t('home.start')}
               </Button>
               <SrHint id="sr-continue">{t('sr.continue')}</SrHint>

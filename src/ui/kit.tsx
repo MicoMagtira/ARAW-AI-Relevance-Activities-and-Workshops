@@ -217,8 +217,10 @@ interface DialogProps {
   onClose: () => void;
   children: ComponentChildren;
   actions?: ComponentChildren;
+  /** Extra class, e.g. `px-dialog--sheet` for a bottom sheet on phones. */
+  class?: string;
 }
-export function Dialog({ open, title, onClose, children, actions }: DialogProps) {
+export function Dialog({ open, title, onClose, children, actions, class: className }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   useEffect(() => {
@@ -233,7 +235,7 @@ export function Dialog({ open, title, onClose, children, actions }: DialogProps)
     }
   }, [open]);
   return (
-    <dialog ref={ref} class="px-dialog px-box" aria-labelledby={titleId} onClose={onClose}>
+    <dialog ref={ref} class={cx('px-dialog px-box', className)} aria-labelledby={titleId} onClose={onClose}>
       <div class="px-dialog__bar">
         <h2 class="px-dialog__title" id={titleId}>
           {title}

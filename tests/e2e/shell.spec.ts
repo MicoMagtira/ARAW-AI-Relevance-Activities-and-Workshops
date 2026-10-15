@@ -10,13 +10,13 @@ const TABS = [
   { label: 'Me', hash: '#/me', title: 'Me' },
 ] as const;
 
-const SCREENS = ['#/', '#/learn', '#/arcade', '#/library', '#/me', '#/report?screen=home', '#/about', '#/nope'];
+const SCREENS = ['#/', '#/learn', '#/learn/m01', '#/arcade', '#/library', '#/me', '#/report?screen=home', '#/about', '#/nope'];
 
 const layoutFor = (width: number) => (width >= 1024 ? 'desktop' : width >= 600 ? 'tablet' : 'phone');
 
 /** Wait for the screen enter animation, so axe does not measure half-faded text. */
 async function screenSettled(page: Page) {
-  await page.waitForFunction(() => document.querySelector('.screen')?.getAnimations().every((a) => a.playState === 'finished') ?? false);
+  await page.waitForFunction(() => document.querySelector('.screen, .lesson-card')?.getAnimations().every((a) => a.playState === 'finished') ?? false);
 }
 
 test.describe('app shell', () => {

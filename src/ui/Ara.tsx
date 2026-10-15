@@ -34,7 +34,7 @@ const MOOD_KEY: Record<AraMood, StringKey> = {
 export const araLabel = (mood: AraMood): string => t('ara.label', { mood: t(MOOD_KEY[mood]) });
 
 /** OS preference OR the in-app Reduce motion setting. */
-function useReducedMotion(): boolean {
+export function useReducedMotion(): boolean {
   const inApp = settings.value.reduceMotion;
   const [os, setOs] = useState(() => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches);
   useEffect(() => {

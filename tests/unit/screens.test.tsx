@@ -111,7 +111,7 @@ describe('Home', () => {
     render(<Home />);
     expect(screen.getByRole('heading', { level: 2, name: /^Magandang (umaga|tanghali|hapon|gabi), Bea!$/ })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 3, name: 'What Is AI, Really?' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'Start' }).getAttribute('href')).toBe('#/learn');
+    expect(screen.getByRole('link', { name: 'Start' }).getAttribute('href')).toBe('#/learn/m01');
     expect(screen.getByText(/No badges yet/)).toBeTruthy();
     expect(screen.getAllByRole('listitem').length).toBeGreaterThanOrEqual(14); // 10 path nodes + badge strip
   });
