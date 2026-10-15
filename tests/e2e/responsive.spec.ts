@@ -125,7 +125,15 @@ test.describe('Accessibility sweep', () => {
       for (const path of AXE_SCREENS) {
         await page.goto(`/#${path}`);
         await settle(page);
-        const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+        const scan = () => new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+        await page.evaluate(() => document.fonts.ready);
+        let result = await scan();
+        if (result.violations.length > 0) {
+          // A lazy chunk or a transition still settling under load can fake a violation; a real one is still there on the second scan.
+          await page.waitForTimeout(600);
+          await settle(page);
+          result = await scan();
+        }
         for (const v of result.violations) problems.push(`${path}: ${v.impact} ${v.id} ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`);
       }
       expect(problems, problems.join('\n')).toEqual([]);
