@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, noHorizontalOverflow, test } from './fixtures';
 
 const TABS = [
   { label: 'Home', hash: '#/', title: 'Home' },
@@ -12,15 +13,6 @@ const TABS = [
 const SCREENS = ['#/', '#/learn', '#/arcade', '#/library', '#/me', '#/report?screen=home', '#/about', '#/nope'];
 
 const layoutFor = (width: number) => (width >= 1024 ? 'desktop' : width >= 600 ? 'tablet' : 'phone');
-
-async function noHorizontalOverflow(page: Page) {
-  // poll: right after a viewport resize the layout can take a frame to settle
-  await expect
-    .poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), {
-      message: 'document must not scroll horizontally',
-    })
-    .toBeLessThanOrEqual(0);
-}
 
 /** Wait for the screen enter animation, so axe does not measure half-faded text. */
 async function screenSettled(page: Page) {

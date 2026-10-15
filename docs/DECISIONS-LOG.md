@@ -33,3 +33,15 @@ Product decisions live in `docs/SPEC.md`, `docs/CONTENT_GUIDE.md` and `docs/DESI
 - 2026-10-15 · T01 · Storage keeps one JSON value per key under `araw:v1:`; blocked or full storage falls back to an in-memory map and Me shows a "progress will not be saved" note · versioning lives in the key prefix, no envelope.
 - 2026-10-15 · T01 · Report screen, About, Not Found and the Me settings switches are functional now, other screens are "Coming soon" panels · the Report flag and settings classes needed something real to point at and test.
 - 2026-10-15 · T01 · e2e axe check fails on serious/critical WCAG 2.2 A/AA violations only and waits for the screen enter animation to finish first · axe measures colour contrast mid-fade otherwise.
+- 2026-10-15 · T02 · Splash shows only when the first load of a session lands on Home; deep links skip it and count as booted · a shared #/learn or #/report link should not detour through an intro.
+- 2026-10-15 · T02 · "Once per session" is a sessionStorage flag (`araw:v1:booted`) with an in-memory fallback, not localStorage · matches the brief and keeps working when storage is blocked.
+- 2026-10-15 · T02 · The splash replaces the shell instead of overlaying it, with a "Skip intro" link first in tab order; focus moves to #main after SIMULAN · nothing hidden behind it for screen readers.
+- 2026-10-15 · T02 · Loading bar is theatre (10 steps over 1.4s, instantly full with reduced motion) and SIMULAN is never disabled · never makes a user wait.
+- 2026-10-15 · T02 · Splash wordmark/tagline sit on a white pixel panel, not directly on the sky bands · DESIGN.md 5.16 "text never sits directly on bands".
+- 2026-10-15 · T02 · Sunrise band tints added as `--sky-1..4` tokens (mockup colours) · tokens only in components.
+- 2026-10-15 · T02 · Ara frames are patches over the idle grid; bob frame B sinks the head one cell onto the shoulders (rows 0-19 shift, neck row dropped) instead of moving the whole sprite · feet stay planted and nothing clips in the 32x32 box.
+- 2026-10-15 · T02 · Wow frame extends the diagonal rays and thickens the edge rays by one cell; think bubble is 7 wide (cols 25-31) with three coral dots · the 32x32 grid has no room outward, and 3 dots need 5 interior cells.
+- 2026-10-15 · T02 · Ara `scale` is rounded and clamped to integers 1-12; `revert` shows a mood for 900ms then returns to idle (happy/wow hop) · keeps every sprite pixel a whole number of screen pixels.
+- 2026-10-15 · T02 · Splash Ara is sized by CSS (--s, integer steps per breakpoint, !important over the inline size) · lets one component scale with viewport and landscape without JS.
+- 2026-10-15 · T02 · Added a hand-made `play` pixel icon for SIMULAN (pixelarticons has none that fits) · matches the mockup's play triangle.
+- 2026-10-15 · T02 · e2e specs other than the splash use `tests/e2e/fixtures.ts`, which presets the boot flag · keeps shell tests independent of the splash.

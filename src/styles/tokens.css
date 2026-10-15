@@ -25,6 +25,10 @@
   --fake-tint: #fde7e8;
   --line: #eadfc8;
   --soft: #f3ecdd;
+  --sky-1: #ffefd2; /* sunrise bands, splash only */
+  --sky-2: #ffe2b0;
+  --sky-3: #ffd08f;
+  --sky-4: #ffb892;
   --on-color: #ffffff; /* the one literal: white text on navy / fact / fake */
 
   /* pixel geometry */

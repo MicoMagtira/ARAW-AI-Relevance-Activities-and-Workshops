@@ -1,0 +1,79 @@
+/* Ara sprite and speech bubble (docs/DESIGN.md sections 5.13 and 7). */
+
+.ara {
+  display: inline-block;
+  flex: none;
+  line-height: 0;
+}
+
+.ara__svg {
+  display: block;
+  max-width: none; /* base.css caps svg at 100%; a fractional shrink would blur the pixels */
+  overflow: visible;
+  image-rendering: pixelated;
+}
+
+/* 2-step hop: two cells up, one cell up, then down (200ms) */
+.ara--hop {
+  animation: ara-hop 200ms steps(1);
+}
+
+@keyframes ara-hop {
+  0% {
+    transform: translateY(calc(var(--cell) * -2));
+  }
+  50% {
+    transform: translateY(calc(var(--cell) * -1));
+  }
+}
+
+/* ---------- Speech bubble ---------- */
+.px-bubble {
+  position: relative;
+  padding: var(--sp-4);
+  font: var(--fs-18) / 1.5 var(--font-body);
+}
+
+.px-bubble__tail {
+  position: absolute;
+  left: -8px;
+  top: 20px;
+  width: 12px;
+  height: 12px;
+  max-width: none;
+  image-rendering: pixelated;
+}
+
+.px-bubble--right .px-bubble__tail {
+  left: auto;
+  right: -8px;
+  transform: scaleX(-1);
+}
+
+.px-bubble--top .px-bubble__tail {
+  left: 20px;
+  top: -8px;
+  transform: rotate(90deg);
+}
+
+/* Ara + bubble pair */
+.ara-says {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-5);
+}
+
+.ara-says--top {
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.ara-says__bubble {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ara-says--top .ara-says__bubble {
+  flex: none;
+  align-self: stretch;
+}

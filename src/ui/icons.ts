@@ -26,6 +26,8 @@ const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close
 const handMade = {
   // pixel sun: disc plus eight rays
   sun: ['M10 6h4v2h2v2h2v4h-2v2h-2v2h-4v-2H8v-2H6v-4h2V8h2z', 'M11 1h2v3h-2zM11 20h2v3h-2zM1 11h3v2H1zM20 11h3v2h-3zM4 4h2v2H4zM18 4h2v2h-2zM4 18h2v2H4zM18 18h2v2h-2z'],
+  // stepped play triangle
+  play: ['M5 3h3v18H5zM8 5h3v14H8zM11 7h3v10h-3zM14 9h3v6h-3zM17 11h2v2h-2z'],
   // four-point XP star
   'xp-star': ['M11 1h2v4h-2zM11 19h2v4h-2zM1 11h4v2H1zM19 11h4v2h-4zM9 5h6v2H9zM9 17h6v2H9zM5 9h2v6H5zM17 9h2v6h-2zM7 7h10v10H7z'],
   // flame with a hollow core (even-odd)

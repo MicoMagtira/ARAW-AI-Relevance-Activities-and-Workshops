@@ -1,0 +1,44 @@
+import { signal } from '@preact/signals';
+import { navigate } from './router';
+
+/** sessionStorage (not localStorage): the splash plays once per browser session. */
+export const BOOT_KEY = 'araw:v1:booted';
+
+let bootedInMemory = false; // fallback when sessionStorage is blocked
+
+export function hasBooted(): boolean {
+  try {
+    return window.sessionStorage.getItem(BOOT_KEY) === '1';
+  } catch {
+    return bootedInMemory;
+  }
+}
+
+export function markBooted(): void {
+  bootedInMemory = true;
+  try {
+    window.sessionStorage.setItem(BOOT_KEY, '1');
+  } catch {
+    /* blocked: the in-memory flag still covers this page load */
+  }
+}
+
+/** True while the sunrise splash is on screen (instead of the shell). */
+export const splashVisible = signal(false);
+
+/** The splash is the first-visit screen of a session. Deep links (any route but Home) skip it. */
+export function initBoot(path: string): void {
+  if (hasBooted() || path !== '/') {
+    markBooted();
+    splashVisible.value = false;
+    return;
+  }
+  splashVisible.value = true;
+}
+
+/** SIMULAN / Skip intro: remember it for this session and land on Home. */
+export function finishSplash(): void {
+  markBooted();
+  navigate('/');
+  splashVisible.value = false;
+}

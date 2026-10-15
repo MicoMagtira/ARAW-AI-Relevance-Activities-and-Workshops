@@ -8,6 +8,19 @@ const en = {
   'app.skip': 'Skip to content',
   'app.home': 'ARAW home',
 
+  'splash.skip': 'Skip intro',
+  'splash.blurb': 'Learn when to trust AI and health info, one fun game at a time.',
+  'splash.loading': 'SUMISIKAT NA ANG ARAW...',
+  'splash.start': 'Simulan',
+
+  'ara.label': 'Ara, your guide, looking {mood}',
+  'ara.mood.idle': 'friendly',
+  'ara.mood.happy': 'happy',
+  'ara.mood.wow': 'amazed',
+  'ara.mood.wink': 'playful',
+  'ara.mood.sad': 'sad',
+  'ara.mood.think': 'thoughtful',
+
   'nav.main': 'Main navigation',
   'nav.home': 'Home',
   'nav.learn': 'Learn',
