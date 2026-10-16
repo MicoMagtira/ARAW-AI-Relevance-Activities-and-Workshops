@@ -125,7 +125,7 @@ export function markKomiksRead(id: string): void {
   if (!komiksRead.value.includes(id)) komiksRead.value = [...komiksRead.value, id];
 }
 
-/** What the last streak change was, so the shell can tell the player (a toast). Cleared once it has been shown. */
+/** What the last streak change was, so the shell can tell the player (a toast, or the streak sound with the HUD flame). Cleared once it has been shown. */
 export interface StreakNotice {
   event: StreakEvent;
   /** The streak ended and a new one started (not the very first day). */
@@ -147,7 +147,7 @@ export function recordActivity(now: Date = new Date()): StreakEvent {
   if (step.event === 'same') return 'same';
   streak.value = step.streak;
   const badges = step.badges.filter((id) => earnBadge(id));
-  if (step.event === 'freeze' || step.event === 'restart' || badges.length > 0) {
+  if (step.event === 'freeze' || step.event === 'restart' || step.event === 'next' || badges.length > 0) {
     streakNotice.value = { event: step.event, badges, current: step.streak.current };
   }
   return step.event;

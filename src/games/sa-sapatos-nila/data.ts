@@ -168,7 +168,7 @@ const lang = (id: string, name: string, l: LangId, who: string, look: Look): Per
   task: 'Book a check-up and get a queue number.',
   barriers: [`lang-${l}`],
   look,
-  thanks: 'Salamat! Now I understand every word.',
+  thanks: 'Thank you! Now I understand every word.',
   left: `${name} shakes their head and walks out, still without an appointment.`,
 });
 
@@ -180,7 +180,7 @@ export const PERSONAS: readonly Persona[] = [
     task: 'Book a check-up and get a queue number.',
     barriers: ['blur'],
     look: { hair: 'var(--soft)', skin: SKIN, shirt: 'var(--coral)', acc: 'glasses' },
-    thanks: 'Ay, salamat, anak! I can read it now.',
+    thanks: 'Oh, thank you, dear! I can read it now.',
     left: 'Lola Nena sighs and goes home without her check-up.',
   },
   {
@@ -201,7 +201,7 @@ export const PERSONAS: readonly Persona[] = [
     task: 'Book a check-up and get a queue number.',
     barriers: ['reach'],
     look: { hair: 'var(--ink)', skin: SKIN, shirt: 'var(--navy)', acc: 'wheelchair' },
-    thanks: 'Ayos! Easy to reach now.',
+    thanks: 'Nice! Easy to reach now.',
     left: 'Kuya Rey cannot reach the buttons and turns his wheelchair around.',
   },
   {
@@ -211,7 +211,7 @@ export const PERSONAS: readonly Persona[] = [
     task: 'Book a check-up and get a queue number.',
     barriers: ['phone'],
     look: { hair: 'var(--soft)', skin: SKIN, shirt: 'var(--fact)', acc: 'none' },
-    thanks: 'Salamat po. A real person helped me, and that is just what I needed.',
+    thanks: 'Thank you. A real person helped me, and that is just what I needed.',
     left: 'Aling Pacita has no phone to scan. She leaves without a number.',
   },
   {
@@ -231,7 +231,7 @@ export const PERSONAS: readonly Persona[] = [
     task: 'Book a check-up and get a queue number.',
     barriers: ['reading'],
     look: { hair: 'var(--ink)', skin: SKIN, shirt: 'var(--gold)', acc: 'none' },
-    thanks: 'Ang galing! It told me what to press.',
+    thanks: 'Amazing! It told me what to press.',
     left: 'Kuya Dodong feels embarrassed and leaves without asking for help.',
   },
   lang('nanay-tess', 'Nanay Tess', 'kapampangan', 'Nanay Tess, a mother who speaks only Kapampangan.', { hair: 'var(--ink)', skin: SKIN, shirt: 'var(--coral)', acc: 'none' }),
@@ -256,7 +256,7 @@ export const PERSONAS: readonly Persona[] = [
     task: 'Book a check-up and get a queue number.',
     barriers: ['blur', 'lang-cebuano'],
     look: { hair: 'var(--soft)', skin: SKIN, shirt: 'var(--fact)', acc: 'glasses' },
-    thanks: 'Salamat kaayo! Big letters in my own language.',
+    thanks: 'Thank you so much! Big letters in my own language.',
     left: 'Lolo Ernie cannot read the screen in any way and goes home.',
   },
   {

@@ -70,6 +70,7 @@ function Tile({ game, status, selected, wide, onPick }: { game: GameInfo; status
         aria-pressed={wide ? selected : undefined}
         aria-haspopup={wide ? undefined : 'dialog'}
         aria-label={t('arcade.tileLabel', { name: game.name, topic: game.topic, status: label })}
+        data-sfx={status === 'locked' ? 'locked' : wide ? 'select' : 'none'}
         onClick={onPick}
       >
         <span class="arcade-tile__icon" aria-hidden="true">

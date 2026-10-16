@@ -269,7 +269,7 @@ describe('Sa Sapatos Nila module game', () => {
     }
     expect(screen.getByRole('heading', { name: 'Five visitors done!' })).toBeTruthy();
     expect(screen.getByText('People served: 5')).toBeTruthy();
-    expect(screen.getByText(/Bukas sa Lahat/)).toBeTruthy();
+    expect(screen.getByText(/Open to All/)).toBeTruthy();
     press('Finish game');
     expect(onComplete).toHaveBeenCalledWith(3);
   });

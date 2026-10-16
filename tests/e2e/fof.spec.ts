@@ -19,9 +19,9 @@ async function settled(page: Page) {
 /** Answer the current item and return whether it was right. Fake is the answer, so right means the item was a fake. */
 async function answerFake(page: Page): Promise<boolean> {
   await page.getByRole('button', { name: 'Fake', exact: true }).click();
-  const feedback = page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ });
+  const feedback = page.getByRole('status').filter({ hasText: /Correct!|So close!/ });
   await expect(feedback).toBeVisible();
-  return /Tama!/.test((await feedback.textContent()) ?? '');
+  return /Correct!/.test((await feedback.textContent()) ?? '');
 }
 
 const SEED = '#/play/fact-or-fake?seed=e2e-seed-2'; // its first round holds all four formats
@@ -84,13 +84,13 @@ test.describe('Fact or Fake free play', () => {
     // the key listener is added a moment after the first paint, so retry the first press
     await expect(async () => {
       await page.keyboard.press('ArrowLeft');
-      await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toBeVisible({ timeout: 500 });
+      await expect(page.getByRole('status').filter({ hasText: /Correct!|So close!/ })).toBeVisible({ timeout: 500 });
     }).toPass();
     await expect(page.getByRole('button', { name: 'Next' })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.getByText(/Fact or Fake · 2 of 10/)).toBeVisible();
     await page.keyboard.press('l');
-    await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: /Correct!|So close!/ })).toBeVisible();
   });
 
   test('touch swipe answers: right is Fact, left is Fake', async ({ page }) => {
@@ -107,15 +107,15 @@ test.describe('Fact or Fake free play', () => {
         fire('pointerup', 200 + delta);
       }, dx);
     await swipe(160);
-    await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toContainText(/FACT|FAKE/);
+    await expect(page.getByRole('status').filter({ hasText: /Correct!|So close!/ })).toContainText(/FACT|FAKE/);
     await page.getByRole('button', { name: 'Next' }).click();
     await swipe(-160);
-    await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: /Correct!|So close!/ })).toBeVisible();
     await expect(page.getByText(/Fact or Fake · 2 of 10/)).toBeVisible();
     // a short drag does nothing
     await page.getByRole('button', { name: 'Next' }).click();
     await swipe(20);
-    await expect(page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ })).toHaveCount(0);
+    await expect(page.getByRole('status').filter({ hasText: /Correct!|So close!/ })).toHaveCount(0);
   });
 
   test('the Report link carries the item id into the report screen', async ({ page }) => {
@@ -205,7 +205,7 @@ test.describe('Hidden assessment forms', () => {
 
     await page.getByRole('button', { name: 'Fact', exact: true }).click();
     await expect(page.getByText(/Fact or Fake · 2 of 20/)).toBeVisible();
-    await expect(page.getByText(/Tama!|Muntik na!/)).toHaveCount(0);
+    await expect(page.getByText(/Correct!|So close!/)).toHaveCount(0);
     await expect(page.getByText('ARAW GAME · FAKE')).toHaveCount(0);
     for (let i = 2; i <= 20; i++) {
       await expect(page.getByText(new RegExp(`Fact or Fake · ${i} of 20`))).toBeVisible();

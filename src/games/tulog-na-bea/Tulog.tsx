@@ -4,6 +4,8 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, Meter, ProgressBar } from '../../ui/kit';
@@ -35,6 +37,8 @@ export interface TulogProps {
 type Phase = 'intro' | 'plan' | 'moment' | 'feedback' | 'summary' | 'end';
 
 const formatScore = (n: number): string => n.toLocaleString('en-US');
+/** Below this a meter is low (Bea looks sleepy, worried or sad: sim.ts feelingOf). */
+const LOW_METER = 35;
 const signed = (n: number): string => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0');
 
 /** Chips for what a choice (or the night's drift) did to each meter. */
@@ -67,6 +71,20 @@ export function Tulog({ mode, seed, daily, endActions }: TulogProps) {
   const feeling = feelingOf(game.meters);
   /** Days Bea lived through to bedtime (`endDay` already moved the day counter on). */
   const daysDone = game.day - 1;
+  const later = useLater();
+  const wasLow = useRef(false);
+
+  // The phone buzzes when a moment comes with a pull (the buzzing phone is drawn next to Bea).
+  useEffect(() => {
+    if (phase === 'moment' && moment?.source) sfx('buzz');
+  }, [phase, game.day, game.slot]);
+
+  // A warning hum only as a meter first drops into the low zone (Bea's face changes with it).
+  const low = METERS.some((m) => game.meters[m] < LOW_METER);
+  useEffect(() => {
+    if (low && !wasLow.current) later(500, () => sfx('meterWarn'));
+    wasLow.current = low;
+  }, [low]);
 
   // Moving between screens puts focus on the new heading.
   const focusKey = `${phase}:${game.day}:${game.slot}`;
@@ -97,6 +115,7 @@ export function Tulog({ mode, seed, daily, endActions }: TulogProps) {
     const o = m.options.find((x) => x.id === id);
     if (!o) return;
     const out = choose(game, m, o);
+    if (m.source) sfx(out.gaveIn ? 'wrong' : 'correct');
     setGame(out.game);
     setLast({ moment: m, option: o, out });
     setPhase('feedback');
@@ -106,11 +125,20 @@ export function Tulog({ mode, seed, daily, endActions }: TulogProps) {
     if (game.reset) setPhase('end');
     else if (game.slot >= SLOTS.length) {
       const d = endDay(game);
+      sfx('lullaby');
       setDayEnded(d);
       setGame(d.game);
       setPhase('summary');
     } else setPhase('moment');
   };
+
+  // Ara's closing line, spoken after the end jingle.
+  useEffect(() => {
+    if (phase !== 'end') return;
+    const r = result();
+    const line = r.reset ? RESET_TEXT[r.reset] : t(r.stars === 3 ? 'tulog.end.great' : r.stars === 2 ? 'tulog.end.good' : 'tulog.end.some');
+    later(1400, () => araSay(line, r.reset ? 'sad' : r.stars === 3 ? 'wow' : 'happy'));
+  }, [phase]);
 
   const afterSummary = () => {
     const over = game.reset !== null || (!arcade && game.day > MODULE_DAYS);
@@ -261,7 +289,7 @@ export function Tulog({ mode, seed, daily, endActions }: TulogProps) {
         {!moment.source && covering.length > 0 && <p class="tulog-quiet px-text-muted">{t('tulog.quiet', { name: covering.map((b) => boundaryById(b).name).join(', ') })}</p>}
         <div class="tulog-options" role="group" aria-label={t('tulog.choose')}>
           {moment.options.map((o) => (
-            <button key={o.id} type="button" class="tulog-opt px-box" onClick={() => pick(moment, o.id)}>
+            <button key={o.id} type="button" class="tulog-opt px-box" data-sfx={moment.source ? 'none' : 'select'} onClick={() => pick(moment, o.id)}>
               {o.text}
             </button>
           ))}

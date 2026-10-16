@@ -415,7 +415,7 @@ describe('Hati Tayo! game', () => {
     expect(hati.name).toBe('Hati Tayo!');
     expect(hati.briefing).toHaveLength(5);
     expect(hati.howTo.length).toBeGreaterThanOrEqual(4);
-    expect(hati.takeaway).toMatch(/^Kailan ako magtitiwala\?/);
+    expect(hati.takeaway).toMatch(/^When should I trust it\?/);
     expect(GAME_LOADERS['hati-tayo']).toBeTypeOf('function');
     const info = ARCADE_GAMES.find((g) => g.slug === 'hati-tayo');
     expect(info).toMatchObject({ module: 'm06', playable: true });
@@ -582,7 +582,7 @@ describe('recap', () => {
 
   it('skips the slip-up line when the AI never failed, and uses singular words', () => {
     const lines = buildRecap({ setting: 'store', days: 1, totals: { good: 1, slow: 1, fail: 0, missed: 0, failTraits: {} } });
-    expect(lines[0]).toBe("You kept Aling Nena's sari-sari store going for 1 day: 1 good split, 1 job done slowly by hand, 0 AI slip-ups and 0 missed tasks.");
+    expect(lines[0]).toBe("You kept Aling Nena's corner store going for 1 day: 1 good split, 1 job done slowly by hand, 0 AI slip-ups and 0 missed tasks.");
     expect(lines).toHaveLength(5);
   });
 });

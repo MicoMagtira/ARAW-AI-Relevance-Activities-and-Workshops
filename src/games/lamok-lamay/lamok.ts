@@ -6,7 +6,8 @@
 import { PALETTE, box, text } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent, timerCue } from '../engine/cues';
 import {
   DONE_SLOT,
   H,
@@ -114,7 +115,7 @@ function where(item: ScanItem): string {
   return `${['far left', 'left', 'right', 'far right'][col]}, ${item.y < WATER.y + WATER.h / 2 ? 'top' : 'bottom'}`;
 }
 
-function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
+function createLamok({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const scans = createScanGenerator(createRng(`${rng()}:lamok-scans`));
 
   let index = 0;
@@ -141,6 +142,7 @@ function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
   let settlement: Settlement | null = null;
   let panel: { lines: string[]; good: boolean } | null = null;
   const counts = { scans: 0, whacked: 0, added: 0, rejected: 0, mistakes: 0, escaped: 0 };
+  let swept = false; // the camera sweep sound plays once per container
 
   const ready = () => phaseMs >= READY_MS;
   const limit = () => scan.timeMs;
@@ -163,6 +165,7 @@ function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
     fx = [];
     settlement = null;
     panel = null;
+    swept = false;
     message = { text: 'AI BOXES: THE % IS HOW SURE THE AI IS.', tone: 'plain' };
   }
 
@@ -179,6 +182,7 @@ function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
     settlement = s;
     panel = resultLines(scan, s, bonus);
     if (s.escaped > 0) streak = 0;
+    cue(s.escaped > 0 ? 'wrong' : 'correct');
     phase = 'result';
     phaseMs = 0;
   }
@@ -212,6 +216,9 @@ function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
       topWrong = Math.max(topWrong, item.confidence);
     }
     message = { text: feedback(result, item, points), tone: isCorrect(result) ? 'good' : isMistake(result) ? 'bad' : 'plain' };
+    if (isMistake(result)) cue('whiff');
+    else if (result === 'whack') cue('whack');
+    else if (isCorrect(result)) cue('fixAI'); // a wrong box rejected or a missed larva added: you fixed the AI
     if (isCorrect(result) || isMistake(result)) {
       const good = isCorrect(result);
       fx.push({ x, y, ms: 0, label: good ? `+${points}` : `-${MISTAKE_POINTS}`, color: good ? PALETTE.fact : PALETTE.fake, burst: good });
@@ -235,6 +242,7 @@ function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
         tickMs -= 150;
         tick += 1;
       }
+      const leftBefore = timeLeft();
       phaseMs += dtMs;
       fx = fx.map((f) => ({ ...f, ms: f.ms + dtMs })).filter((f) => f.ms < FX_MS);
       const pressed = input.actions.length > 0 || input.taps.length > 0;
@@ -250,11 +258,17 @@ function createLamok({ rng }: { seed: string; rng: Rng }): GameInstance {
       }
 
       // the first press only skips the pop-up and the camera sweep
+      if (!swept && phaseMs >= POP_MS) {
+        swept = true;
+        cue('aiScan');
+      }
       if (!ready()) {
         if (pressed) phaseMs = READY_MS;
         return;
       }
       if (timeLeft() <= 0) return finish(false);
+      const tk = timerCue(leftBefore, timeLeft());
+      if (tk) cue(tk);
 
       for (const action of input.actions) {
         if (action === 'act') activateTarget(cur);
@@ -434,13 +448,13 @@ const lamokLamay: GameDef = {
     'The two meters grade the AI. Precision: of its boxes, how many were right. Catch rate: of the real larvae, how many got a box.',
   ],
   briefing: [
-    { title: 'Bantay lamok time!', text: 'Dengue mosquitoes grow from larvae in standing water. Today the AI camera helps you find them in drums, tires and cans.', mood: 'wow' },
+    { title: 'Mosquito watch time!', text: 'Dengue mosquitoes grow from larvae in standing water. Today the AI camera helps you find them in drums, tires and cans.', mood: 'wow' },
     { title: 'AI makes two mistakes', text: 'AI cameras can spot larvae, but they make two kinds of mistakes: a box around a seed, and a larva with no box at all.', mood: 'think' },
     { title: 'How to play', text: 'Whack real larvae, reject wrong boxes, and tap a larva the AI missed to add it. Watch the precision and catch rate meters.', mood: 'idle' },
     { title: 'Clean water, new mosquitoes', text: 'Dengue mosquitoes breed in clean standing water. Cover, clean and empty your containers every week.', mood: 'happy' },
-    { title: 'Kailan ako magtitiwala?', text: 'Trust the AI camera as a helper. Your own eyes make the final call.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'Trust the AI camera as a helper. Your own eyes make the final call.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? I trust the AI camera as a helper, and my own eyes make the final call.',
+  takeaway: 'When should I trust it? I trust the AI camera as a helper, and my own eyes make the final call.',
   create: createLamok,
 };
 

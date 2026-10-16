@@ -4,6 +4,8 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { location$ } from '../../app/router';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { profile } from '../../app/state';
 import { CAST, memberInfo, type ChoiceKind, type GcCheck, type GcChoice, type GcMessage, type GcScenario, type Member, type Ripple } from '../../content/gc';
 import { randomSeed } from '../../games/engine/rng';
@@ -226,7 +228,7 @@ function Choices({ choices, onPick, prompt }: { choices: GcChoice[]; onPick: (c:
       </h4>
       <div class="gc-choices">
         {choices.map((c) => (
-          <button key={c.id} type="button" class="gc-choice px-btn px-notch px-btn--secondary" onClick={() => onPick(c)}>
+          <button key={c.id} type="button" class="gc-choice px-btn px-notch px-btn--secondary" data-sfx="none" onClick={() => onPick(c)}>
             <span class="gc-choice__kind">
               <Icon name={KIND_ICON[c.kind]} size={20} />
               {t(`gc.kind.${c.kind}`)}
@@ -242,6 +244,10 @@ function Choices({ choices, onPick, prompt }: { choices: GcChoice[]; onPick: (c:
 function Feedback({ choice, onContinue }: { choice: GcChoice; onContinue: () => void }) {
   const total = choice.accuracy + choice.kindness;
   const good = total >= 3;
+  const mood = total >= 4 ? 'happy' : total >= 3 ? 'wink' : 'think';
+  const line = total >= 4 ? t('gc.araSays.great') : total >= 3 ? t('gc.araSays.ok') : t('gc.araSays.low');
+  const later = useLater();
+  useEffect(() => later(400, () => araSay(line, mood)), []);
   return (
     <div class="stack" aria-live="polite">
       <section class={`gc-feedback px-box ${good ? 'gc-feedback--right' : 'gc-feedback--wrong'}`} aria-label={t('gc.feedback')}>
@@ -252,8 +258,8 @@ function Feedback({ choice, onContinue }: { choice: GcChoice; onContinue: () => 
         </div>
         <p>{choice.why}</p>
       </section>
-      <AraSays mood={total >= 4 ? 'happy' : total >= 3 ? 'wink' : 'think'} scale={3} revert live>
-        {total >= 4 ? t('gc.araSays.great') : total >= 3 ? t('gc.araSays.ok') : t('gc.araSays.low')}
+      <AraSays mood={mood} scale={3} revert live>
+        {line}
       </AraSays>
       <div>
         <Button variant="gold" large onClick={onContinue} data-gc-focus>
@@ -267,6 +273,14 @@ function Feedback({ choice, onContinue }: { choice: GcChoice; onContinue: () => 
 
 function EndingPanel({ run, scenario, last, onNext }: { run: Run; scenario: GcScenario; last: boolean; onNext: () => void }) {
   const ending = endingById(scenario, run.endingId ?? '');
+  const later = useLater();
+  const mood = ending?.tier === 'light' ? 'happy' : ending?.tier === 'mixed' ? 'wink' : 'think';
+  // How the chat ended: a bright chime, a hint or a low note, then Ara's line.
+  useEffect(() => {
+    if (!ending) return;
+    sfx(ending.tier === 'light' ? 'unlock' : ending.tier === 'mixed' ? 'hint' : 'wrong');
+    later(700, () => araSay(ending.ara, mood));
+  }, [ending?.id]);
   if (!ending) return null;
   const counts = rippleCounts(run.ripple);
   return (
@@ -288,7 +302,7 @@ function EndingPanel({ run, scenario, last, onNext }: { run: Run; scenario: GcSc
           <strong>{t('gc.ending.what')}:</strong> {scenario.lesson}
         </p>
       </section>
-      <AraSays mood={ending.tier === 'light' ? 'happy' : ending.tier === 'mixed' ? 'wink' : 'think'} scale={3} revert live>
+      <AraSays mood={mood} scale={3} revert live>
         {ending.ara}
       </AraSays>
       <div>
@@ -426,6 +440,9 @@ export default function TitasGc({ onComplete }: ModuleGameProps) {
 
   const choose = (c: GcChoice) => {
     if (run.picked) return;
+    const total = c.accuracy + c.kindness;
+    if (total >= 3) sfx('correct', total >= 4 ? 1 : 0);
+    else sfx('wrong');
     const thread: Item[] = [...run.thread, { kind: 'msg', msg: { from: 'you', text: c.say } }];
     if (c.check) thread.push({ kind: 'check', check: c.check });
     setRun({ ...run, thread, ripple: applyRipple(run.ripple, c.ripple), tally: addChoice(run.tally, c), picked: c, revealed: run.revealed || c.kind === 'verify' });

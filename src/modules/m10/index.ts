@@ -1,4 +1,4 @@
-// Module 10 · Karapatan Mo (docs/SPEC.md section 4): hook, seven lesson cards, the OBJECTION! game and the takeaway.
+// Module 10 · Your Rights (docs/SPEC.md section 4): hook, seven lesson cards, the OBJECTION! game and the takeaway.
 // Cards follow SPEC's list: your data rights, the rights in plain words, an AI that rejects a claim, who is responsible, how to
 // complain, red flags, a poll. Kept general: the Data Privacy Act (RA 10173) and the National Privacy Commission, no legal advice.
 import type { ModuleContent } from '../types';
@@ -9,13 +9,13 @@ const content: ModuleContent = {
   hook: {
     id: 'm10-c1',
     type: 'story-hook',
-    scene: 'Tita Baby’s sala',
+    scene: 'Tita Baby’s living room',
     speaker: 'Tita Baby',
-    line: 'My health app sent my lab results to a stranger, anak! Who do I even complain to? Do I have any rights at all?',
+    line: 'My health app sent my lab results to a stranger, dear! Who do I even complain to? Do I have any rights at all?',
     icon: 'shield',
     ara: {
       intro: 'Oh no. Yes, Tita Baby, you do have rights! Let us learn them, then practise speaking up.',
-      done: 'Tara! Knowing your rights is the first step to using them.',
+      done: 'Here we go! Knowing your rights is the first step to using them.',
     },
   },
   cards: [

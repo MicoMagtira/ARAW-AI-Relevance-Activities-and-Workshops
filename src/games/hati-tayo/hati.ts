@@ -5,7 +5,8 @@
 import { PALETTE, box } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent } from '../engine/cues';
 import { CARD, H, W, drawCard, drawGhost, drawHeader, drawLane, drawPanel, drawStrip, drawTile, inside, laneAt, tileAt, type PanelRow } from './art';
 import { wrapText } from '../luto-ni-ara/art';
 import { QUEUE_CAP, pickSetting } from './rules';
@@ -54,7 +55,7 @@ export function buildRecap(run: RunSummary): string[] {
   return lines;
 }
 
-function createHati({ rng }: { seed: string; rng: Rng }): GameInstance {
+function createHati({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const seed = `${rng()}:hati-days`;
   const setting = pickSetting(createRng(`${seed}:setting`));
   const sim: Sim = createSim(seed, setting);
@@ -70,7 +71,9 @@ function createHati({ rng }: { seed: string; rng: Rng }): GameInstance {
   };
 
   const send = (index: number, lane: Lane) => {
-    if (sim.place(index, lane)) clampSel();
+    if (!sim.place(index, lane)) return;
+    cue(lane === 'ai' ? 'toAI' : 'toPerson');
+    clampSel();
   };
 
   function play(input: InputFrame) {
@@ -184,6 +187,8 @@ function createHati({ rng }: { seed: string; rng: Rng }): GameInstance {
         play(input);
         sim.tick(dtMs);
         clampSel();
+        // the day just ended: the report card comes up (a getter, so read it again after the tick)
+        if ((sim.phase as Sim['phase']) === 'report') cue('dayDone');
       }
     },
 
@@ -253,13 +258,13 @@ const hatiTayo: GameDef = {
     'The Service meter drops when AI fails, when a task waits too long, or when the queue is full. It is empty at zero. Each new day is faster, with a new mix.',
   ],
   briefing: [
-    { title: 'Salamat, you are here!', text: "Welcome to a busy day. Tasks pile up fast, and you decide who does each one: the AI helper or a person.", mood: 'wow' },
+    { title: 'Thank goodness you are here!', text: "Welcome to a busy day. Tasks pile up fast, and you decide who does each one: the AI helper or a person.", mood: 'wow' },
     { title: 'AI is a fast helper', text: 'AI is quick and never tired at repeat jobs: counting stock, sorting lists, drafting, scheduling. Send those to the AI lane.', mood: 'happy' },
     { title: 'People do the caring', text: 'Comforting a worried mother, a referral, a tricky decision: these need a person. AI fails here, sometimes in funny ways.', mood: 'think' },
     { title: 'How to play', text: 'Tap a task and then a lane, or drag it there. On a keyboard, use Up and Down, then Left for AI and Right for the person.', mood: 'idle' },
-    { title: 'Kailan ako magtitiwala?', text: 'Trust AI with repeat drafts you can check. Keep people for care and decisions.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'Trust AI with repeat drafts you can check. Keep people for care and decisions.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? With repeat drafts I can check. I keep care and decisions for people, and someone is always responsible.',
+  takeaway: 'When should I trust it? With repeat drafts I can check. I keep care and decisions for people, and someone is always responsible.',
   create: createHati,
 };
 

@@ -1,0 +1,322 @@
+/* "How to use ARAW" guide screen (src/screens/guide/Guide.tsx). 8-bit kit from base.css; tokens only. */
+
+.guide {
+  display: grid;
+  gap: var(--gap);
+  min-width: 0;
+  padding-right: var(--px); /* room for the hard shadows */
+  padding-bottom: var(--px);
+}
+
+.guide-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: calc(var(--sp-5) + 16px);
+}
+.guide-hero .card-band {
+  position: absolute;
+  inset: 0 0 auto 0;
+}
+.guide-hero h2 {
+  font: 800 var(--fs-28) / 1.2 var(--font-head);
+  color: var(--navy);
+}
+.guide-hero p,
+.guide-section__head p,
+.guide-step__text p,
+.guide-list {
+  font: 400 var(--fs-18) / 1.6 var(--font-body);
+  max-width: 68ch;
+}
+
+.guide-pdf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-4);
+}
+.guide-pdf__btn {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+/* ---------- layout: TOC beside the content on desktop, above it below 1024px ---------- */
+.guide-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+@media (width >= 1024px) {
+  .guide-body {
+    grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+  }
+  .guide-toc {
+    position: sticky;
+    top: calc(var(--banner-h, 72px) + var(--sp-5));
+    max-height: calc(100vh - var(--banner-h, 72px) - var(--sp-7));
+    overflow-y: auto;
+  }
+}
+
+.guide-toc {
+  padding: var(--sp-4);
+}
+.guide-toc ol {
+  list-style: none;
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: var(--sp-1) var(--sp-3);
+}
+@media (width >= 1024px) {
+  .guide-toc ol {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.guide-toc__link {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--sp-1) var(--sp-2);
+  border: 0;
+  background: none;
+  color: var(--navy);
+  font: 800 var(--fs-16) / 1.25 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+.guide-toc__link:hover {
+  background: var(--soft);
+}
+.guide-toc__link:focus-visible,
+.guide-top:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.guide-toc__n {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  background: var(--gold);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font: var(--fs-12) / 1 var(--font-pixel);
+}
+
+/* ---------- sections ---------- */
+.guide-main {
+  display: grid;
+  gap: var(--sp-7);
+  min-width: 0;
+}
+.guide-section {
+  display: grid;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+.guide-section__head {
+  display: grid;
+  gap: var(--sp-3);
+  justify-items: start;
+}
+.guide-section__head h2 {
+  font: 800 var(--fs-28) / 1.2 var(--font-head);
+  color: var(--ink);
+  scroll-margin-top: calc(var(--banner-h, 72px) + var(--sp-7));
+}
+.guide-section__head h2:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+.guide-section__kicker {
+  background: var(--gold);
+}
+
+.guide-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-6);
+}
+.guide-step {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  min-width: 0;
+  container-type: inline-size;
+}
+.guide-step__text {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+.guide-step__title {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  font: 800 var(--fs-22) / 1.25 var(--font-head);
+  color: var(--navy);
+}
+.guide-step__n {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--sp-1);
+  background: var(--navy);
+  color: #fff;
+  font: var(--fs-14) / 1 var(--font-pixel);
+  box-shadow: 3px 3px 0 0 var(--ink);
+}
+.guide-list {
+  margin: 0;
+  padding-left: 1.5em;
+  display: grid;
+  gap: var(--sp-2);
+}
+.guide-tip {
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--soft);
+  border-left: var(--px) solid var(--gold-deep);
+}
+.guide-top {
+  justify-self: start;
+  border: 0;
+  background: none;
+  padding: 0 var(--sp-2);
+  color: var(--navy);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- figure: screenshot + numbered markers + legend ---------- */
+.guide-fig {
+  margin: 0;
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.guide-only-wide {
+  display: none;
+}
+@media (width >= 1024px) {
+  .guide-only-narrow {
+    display: none;
+  }
+  .guide-only-wide {
+    display: block;
+  }
+}
+/* a tall phone picture in a roomy step: the legend sits beside it (always below 1024px, where phone pictures show) */
+@container (width >= 640px) {
+  .guide-fig--tall {
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+@media (width < 1024px) {
+  @container (width >= 640px) {
+    .guide-fig {
+      grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+}
+
+.guide-shot {
+  width: 100%;
+  margin-inline: auto;
+}
+.guide-shot__frame {
+  position: relative;
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+  background: var(--cream);
+  line-height: 0;
+}
+.guide-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.guide-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: var(--coral);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 2px 2px 0 0 var(--ink);
+  font: 13px / 1 var(--font-pixel);
+  pointer-events: none;
+}
+@media (width >= 1024px) {
+  .guide-marker {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+}
+
+.guide-legend ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-3);
+}
+.guide-legend li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  font: 400 var(--fs-18) / 1.5 var(--font-body);
+}
+.guide-legend__n {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: var(--coral);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  font: 13px / 1 var(--font-pixel);
+}
+
+/* ---------- settings ---------- */
+.a11y-high-contrast .guide-marker,
+.a11y-high-contrast .guide-legend__n {
+  background: var(--gold);
+}
+.a11y-high-contrast .guide-tip {
+  background: var(--surface);
+  border: var(--px) solid var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-section__head h2 {
+    scroll-behavior: auto;
+  }
+}
+
+@media print {
+  .guide-toc,
+  .guide-top,
+  .guide-pdf {
+    display: none;
+  }
+  .guide-step {
+    break-inside: avoid;
+  }
+}

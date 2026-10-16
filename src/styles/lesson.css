@@ -146,13 +146,6 @@
   color: var(--fact-ink);
 }
 
-.lesson-beta {
-  margin-top: var(--sp-5);
-  text-align: center;
-  font: 600 var(--fs-16) / 1.4 var(--font-body);
-  color: var(--muted);
-}
-
 @media (width >= 1024px) {
   .lesson-stage {
     grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);

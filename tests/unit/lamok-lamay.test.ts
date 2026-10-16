@@ -481,8 +481,8 @@ describe('recap and definition', () => {
 
   it('has the five briefing pages, a takeaway and a canvas that matches the other games', () => {
     expect(lamok.slug).toBe('lamok-lamay');
-    expect(lamok.briefing.map((b) => b.title)).toEqual(['Bantay lamok time!', 'AI makes two mistakes', 'How to play', 'Clean water, new mosquitoes', 'Kailan ako magtitiwala?']);
-    expect(lamok.takeaway).toMatch(/^Kailan ako magtitiwala\?/);
+    expect(lamok.briefing.map((b) => b.title)).toEqual(['Mosquito watch time!', 'AI makes two mistakes', 'How to play', 'Clean water, new mosquitoes', 'When should I trust it?']);
+    expect(lamok.takeaway).toMatch(/^When should I trust it\?/);
     expect(lamok.width / lamok.height).toBeCloseTo(16 / 9, 2);
     expect(lamok.howTo.length).toBeGreaterThanOrEqual(4);
     expect(COLS * 2).toBeGreaterThanOrEqual(MAX_ITEMS);

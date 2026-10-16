@@ -32,22 +32,22 @@ test.describe('Library: tabs', () => {
     await page.goto('/#/library');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Library');
     const tabs = page.getByRole('tablist', { name: 'Library sections' });
-    await expect(tabs.getByRole('tab')).toHaveText(['Myths', 'Diksyunaryo', 'Komiks']);
+    await expect(tabs.getByRole('tab')).toHaveText(['Myths', 'Dictionary', 'Comics']);
     await expect(tabs.getByRole('tab', { name: 'Myths' })).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByRole('heading', { level: 2, name: 'Kwentong Kalusugan' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Health Stories' })).toBeVisible();
     await noHorizontalOverflow(page);
 
-    await tabs.getByRole('tab', { name: 'Diksyunaryo' }).click();
+    await tabs.getByRole('tab', { name: 'Dictionary' }).click();
     await expect(page).toHaveURL(/#\/library\/glossary$/);
-    await expect(page.getByRole('heading', { level: 2, name: "Ara's Diksyunaryo" })).toBeVisible();
-    await tabs.getByRole('tab', { name: 'Komiks' }).click();
+    await expect(page.getByRole('heading', { level: 2, name: "Ara's Dictionary" })).toBeVisible();
+    await tabs.getByRole('tab', { name: 'Comics' }).click();
     await expect(page).toHaveURL(/#\/library\/komiks$/);
     await expect(page.getByRole('heading', { level: 2, name: 'Season 1: The Miracle Tea' })).toBeVisible();
 
     // the tab strip moves with the arrow keys and keeps focus
-    await tabs.getByRole('tab', { name: 'Komiks' }).focus();
+    await tabs.getByRole('tab', { name: 'Comics' }).focus();
     await page.keyboard.press('ArrowLeft');
-    await expect(tabs.getByRole('tab', { name: 'Diksyunaryo' })).toBeFocused();
+    await expect(tabs.getByRole('tab', { name: 'Dictionary' })).toBeFocused();
     await expect(page).toHaveURL(/#\/library\/glossary$/);
 
     for (const hash of ['#/library/myths', '#/library/glossary', '#/library/komiks']) {
@@ -99,7 +99,7 @@ test.describe('Library: Myths', () => {
     // the filters are behind a button on phones
     const filterToggle = page.getByRole('button', { name: /^Filters/ });
     if (await filterToggle.isVisible()) await filterToggle.click();
-    await page.getByRole('button', { name: 'Dengue', exact: true }).click();
+    await page.getByRole('button', { name: 'Dengue and mosquitoes', exact: true }).click();
     const dengue = await cards.count();
     expect(dengue).toBeGreaterThan(0);
     expect(dengue).toBeLessThan(total);
@@ -152,7 +152,7 @@ test.describe('Library: Myths', () => {
   });
 });
 
-test.describe('Library: Diksyunaryo', () => {
+test.describe('Library: Dictionary', () => {
   test('lists terms A to Z, searches and jumps to a letter', async ({ page }) => {
     await page.goto('/#/library/glossary');
     const terms = page.locator('.gl-card__term');
@@ -160,7 +160,7 @@ test.describe('Library: Diksyunaryo', () => {
     expect(await terms.count()).toBeGreaterThanOrEqual(30);
     const names = (await terms.allInnerTexts()).map((s) => s.toLowerCase());
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
-    await expect(page.getByText(/^Halimbawa: /).first()).toBeVisible();
+    await expect(page.getByText(/^Example: /).first()).toBeVisible();
     await expect(page.getByRole('link', { name: /^Seen in Module \d+: / }).first()).toBeVisible();
 
     const letters = await page.locator('.gl-letter').allInnerTexts();
@@ -192,7 +192,7 @@ test.describe('Library: Diksyunaryo', () => {
   });
 });
 
-test.describe('Library: Komiks', () => {
+test.describe('Library: Comics', () => {
   test('every episode is locked on a fresh start, and says which module opens it', async ({ page }) => {
     await page.goto('/#/library/komiks');
     await expect(page.getByText('0 of 10 episodes unlocked')).toBeVisible();
@@ -232,7 +232,7 @@ test.describe('Library: Komiks', () => {
 
     const art = page.locator('.reader__stage .komiks-scene');
     await expect(art).toHaveAttribute('role', 'img');
-    await expect(art).toHaveAttribute('aria-label', /Tita Baby sits on the sala sofa/);
+    await expect(art).toHaveAttribute('aria-label', /Tita Baby sits on the living-room sofa/);
     const artBox = await box(art);
     expect(artBox.width).toBeGreaterThan(200);
     expect(Math.abs(artBox.width / artBox.height - 8 / 5)).toBeLessThan(0.05);

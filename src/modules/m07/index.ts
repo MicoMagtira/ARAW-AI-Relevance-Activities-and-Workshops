@@ -1,4 +1,4 @@
-// Module 7 · Gawa ni AI? (docs/SPEC.md section 4): hook, seven lesson cards, the Gawa Ko 'To! game and the takeaway.
+// Module 7 · Made by AI? (docs/SPEC.md section 4): hook, seven lesson cards, the Gawa Ko 'To! game and the takeaway.
 // Cards follow SPEC's list: what generative AI is, label it, ask consent, credit artists, fake doctor ads, honest or not, a poll.
 import type { ModuleContent } from '../types';
 
@@ -14,7 +14,7 @@ const content: ModuleContent = {
     icon: 'brush',
     ara: {
       intro: 'Bea needs a poster by morning. AI can help her make it fast. Let us find out how to make it honestly.',
-      done: 'Tara! Fast is fine. Honest is better.',
+      done: 'Here we go! Fast is fine. Honest is better.',
     },
   },
   cards: [

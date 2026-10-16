@@ -1,0 +1,8 @@
+parts/
+test-results/
+pdf/
+*.log
+preview/
+layout/
+pyvendor/
+png/

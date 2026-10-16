@@ -12,8 +12,8 @@ const content: ModuleContent = {
     line: 'I have a fever and a headache. Let me just ask the chatbot.',
     icon: 'sun',
     ara: {
-      intro: 'Uy, Bea is asking a chatbot at midnight. Let us see how much it can really help.',
-      done: 'Tara, let us learn when a chatbot helps and when it is time for a health worker.',
+      intro: 'Hey, Bea is asking a chatbot at midnight. Let us see how much it can really help.',
+      done: 'Come on, let us learn when a chatbot helps and when it is time for a health worker.',
     },
   },
   cards: [
@@ -43,14 +43,14 @@ const content: ModuleContent = {
           detail: 'Some signs should never wait for a chat. Chest pain or trouble breathing needs a health worker right away. A good chatbot says so. A bad one keeps chatting.',
         },
       ],
-      ara: { done: 'Tama, Mali, Magpatingin. You will use these three in the game.' },
+      ara: { done: 'Usable, Wrong, Get checked. You will use these three in the game.' },
     },
     {
       id: 'm03-c4',
       type: 'swipe-sort',
-      title: 'Magpatingin agad, or ask at the health center?',
+      title: 'Get checked now, or ask at the health center?',
       bins: [
-        { id: 'now', label: 'Magpatingin agad' },
+        { id: 'now', label: 'Get checked now' },
         { id: 'center', label: 'Ask at the health center' },
       ],
       items: [
@@ -100,7 +100,7 @@ const content: ModuleContent = {
       options: [
         {
           text: '"Yes! Amoxicillin works for all coughs. Take 2 a day."',
-          feedback: 'Hala, mali! It sounds sure, but most coughs come from viruses and antibiotics do not work on them. Never take medicine prescribed for someone else.',
+          feedback: 'Oh no, that is wrong! It sounds sure, but most coughs come from viruses and antibiotics do not work on them. Never take medicine prescribed for someone else.',
         },
         {
           text: '"I cannot tell you what to take. Most coughs are not helped by antibiotics. Please ask a health worker or pharmacist."',

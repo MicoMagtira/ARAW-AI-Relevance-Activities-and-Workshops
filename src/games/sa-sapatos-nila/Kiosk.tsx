@@ -66,7 +66,7 @@ export function Kiosk({ persona, installed, step, onPress, onCounter }: Props) {
   const cls = ['kiosk', blurred && 'kiosk--blur', dark && 'kiosk--dark', large && 'kiosk--large'].filter(Boolean).join(' ');
 
   const button = (
-    <button type="button" class="kiosk__btn px-btn px-btn--gold" onClick={onPress} data-kiosk-press>
+    <button type="button" class="kiosk__btn px-btn px-btn--gold" onClick={onPress} data-kiosk-press data-sfx="kiosk">
       <span class="kiosk__fx">
         <Txt text={screen.button} garbled={garbled} />
       </span>

@@ -167,6 +167,7 @@ function Myth({ now }: { now: Date }) {
         class={`myth-card px-box${flipped ? ' myth-card--back' : ''}`}
         aria-pressed={flipped}
         aria-describedby={srDescribedBy('sr-myth')}
+        data-sfx="page"
         onClick={flip}
       >
         <span class="panel-title" id="myth-h">

@@ -1,4 +1,4 @@
-// Module 8 · Pahinga Muna (docs/SPEC.md section 4): hook, seven lesson cards, the Tulog na, Bea! game and the takeaway.
+// Module 8 · Take a Break (docs/SPEC.md section 4): hook, seven lesson cards, the Tulog na, Bea! game and the takeaway.
 // Cards follow SPEC's list: attention design, sleep, AI companions, feeling down for weeks, boundaries, healthy chatbot use, a poll.
 import type { ModuleContent } from '../types';
 
@@ -10,11 +10,11 @@ const content: ModuleContent = {
     type: 'story-hook',
     scene: 'Bea’s room, 1 AM',
     speaker: 'Lola Nena',
-    line: 'Bea, anak, it is one in the morning and there is still light under your door. What are you watching?',
+    line: 'Bea, dear, it is one in the morning and there is still light under your door. What are you watching?',
     icon: 'moon',
     ara: {
       intro: 'Bea is still scrolling. Lola Nena can see the light under her door. Let us find out why it is so hard to stop.',
-      done: 'Tara! Rest is part of being healthy.',
+      done: 'Here we go! Rest is part of being healthy.',
     },
   },
   cards: [

@@ -99,7 +99,7 @@ export const LEAN_LIMIT = 1;
 export const BALANCED_C = 0.25;
 /** Rounds shorter than this show the Radar as a "rough read". */
 export const MIN_ITEMS_FOR_RADAR = 10;
-/** The Timbang na Radar badge needs d-prime at or above this. */
+/** The Balanced Radar badge needs d-prime at or above this. */
 export const BADGE_D_PRIME = 1.5;
 
 const clamp = (n: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, n));
@@ -135,7 +135,7 @@ export interface Radar {
   lean: Lean;
   /** True for rounds under 10 items. */
   rough: boolean;
-  /** True when the round qualifies for the Timbang na Radar badge. */
+  /** True when the round qualifies for the Balanced Radar badge. */
   earnsBadge: boolean;
 }
 

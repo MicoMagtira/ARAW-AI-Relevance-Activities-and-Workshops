@@ -74,7 +74,7 @@ test.describe('Hati Tayo! (arcade)', () => {
     await page.reload();
     await expect(page.getByRole('button', { name: /^Hati Tayo!/ })).toHaveAttribute('aria-label', 'Hati Tayo!, AI and jobs, New');
     await page.goto(GAME);
-    const titles = ['Salamat, you are here!', 'AI is a fast helper', 'People do the caring', 'How to play', 'Kailan ako magtitiwala?'];
+    const titles = ['Thank goodness you are here!', 'AI is a fast helper', 'People do the caring', 'How to play', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -172,7 +172,7 @@ test.describe('Hati Tayo! (arcade)', () => {
     await expect(page.getByText(/^You kept .* going for \d+ days?:/)).toBeVisible();
     await expect(page.getByText(/^Human in the loop:/)).toBeVisible();
     await expect(page.getByText(/^Someone is always responsible\./)).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? With repeat drafts I can check. I keep care and decisions for people, and someone is always responsible.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? With repeat drafts I can check. I keep care and decisions for people, and someone is always responsible.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -271,7 +271,7 @@ test.describe('Hati Tayo! (Module 6 game)', () => {
     await playAll(page, (t) => (t.needs === 'ai' ? 'ai' : 'person'));
     await expect(page.getByRole('heading', { level: 3, name: 'The day is done!' })).toBeVisible();
     await expect(page.getByText('Good splits: 8 of 8. Done slowly by hand: 0. AI slip-ups: 0.')).toBeVisible();
-    await expect(page.getByText(/Tulong-Tulong in the making/)).toBeVisible();
+    await expect(page.getByText(/Working Together at its best/)).toBeVisible();
     await checkScreen(page);
     await page.getByRole('button', { name: 'Finish game' }).click();
     await expect(page.getByText('Game complete!')).toBeVisible();

@@ -14,9 +14,13 @@ import { initBoot } from './app/boot';
 import { registerServiceWorker } from './app/pwa';
 import { location$, startRouter } from './app/router';
 import { initSettings } from './app/settings';
+import { initSound } from './app/sound';
+import { initMusic } from './app/sound/music';
 
 initSettings();
+initSound();
 startRouter();
+initMusic();
 initBoot(location$.value.path);
 
 const root = document.getElementById('app');

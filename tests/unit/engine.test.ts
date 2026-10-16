@@ -284,7 +284,7 @@ describe('unified input', () => {
   });
 });
 
-describe('Pahinga muna clock', () => {
+describe('Break-time clock', () => {
   it('is due after 10 minutes of cumulative play and stays due until reset', () => {
     const clock = new PlayClock();
     expect(clock.add(9 * 60_000 + 59_000)).toBe(false);

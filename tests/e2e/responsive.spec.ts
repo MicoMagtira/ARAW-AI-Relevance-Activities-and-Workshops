@@ -18,6 +18,7 @@ const VIEWPORTS = [
 
 const SCREENS = [
   '/',
+  '/guide',
   '/learn',
   '/learn/m01',
   '/arcade',
@@ -87,6 +88,7 @@ test.describe('Responsive sweep', () => {
 const GAME_SLUGS = ['takbo-data', 'feed-mo-to', 'luto-ni-ara', 'sino-to', 'lamok-lamay', 'tawid-lola', 'hati-tayo', 'gawa-ko-to', 'tulog-na-bea', 'sa-sapatos-nila', 'objection'];
 const AXE_SCREENS = [
   '/',
+  '/guide',
   '/learn',
   '/arcade',
   '/daily',

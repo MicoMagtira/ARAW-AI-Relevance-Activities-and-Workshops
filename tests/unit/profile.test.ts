@@ -70,13 +70,13 @@ describe('profile persistence', () => {
   it('falls back to the defaults when stored data is invalid', async () => {
     window.localStorage.setItem(KEY, JSON.stringify({ nickname: 'Bea', avatar: 99 }));
     const s = await freshState();
-    expect(s.profile.value).toEqual({ nickname: 'Kaibigan', avatar: 0 });
+    expect(s.profile.value).toEqual({ nickname: 'Friend', avatar: 0 });
   });
 
-  it('shows Kaibigan when the nickname is empty', async () => {
+  it('shows Friend when the nickname is empty', async () => {
     const s = await freshState();
     s.setNickname('   ');
-    expect(s.displayName()).toBe('Kaibigan');
+    expect(s.displayName()).toBe('Friend');
     s.setNickname(' Bea ');
     expect(s.displayName()).toBe('Bea');
   });

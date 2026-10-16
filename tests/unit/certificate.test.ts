@@ -29,7 +29,7 @@ describe('certificate drawing', () => {
     expect(CERT_W / CERT_H).toBeCloseTo(297 / 210, 2);
   });
 
-  it('writes the name, the date, the badge count, the credit line and the not-medical-advice note', () => {
+  it('writes the name, the date, the badge count, and the credit line', () => {
     const { ctx, texts, fills } = recorder();
     drawCertificate(ctx, data);
     expect(texts).toContain('Maria Santos');
@@ -37,7 +37,6 @@ describe('certificate drawing', () => {
     expect(texts).toContain('on 16 October 2026');
     expect(texts).toContain('Badges earned: 3 of 20');
     expect(texts).toContain('An AIKasalig project · DOST-PCHRD · National University');
-    expect(texts).toContain('Educational, not medical advice');
     expect(fills()).toBeGreaterThan(500); // border, sunrise, Ara and the medals are drawn
   });
 

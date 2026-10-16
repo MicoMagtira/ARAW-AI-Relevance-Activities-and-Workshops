@@ -56,27 +56,27 @@ export const MODULES: readonly ModuleInfo[] = [
     'Reply to family kindly without shaming.',
     'Know where to report misinformation.',
   ], 8),
-  mod(6, 'Katuwang si AI', 'Katuwang si AI', 'AI as a tool at work, humans in the loop, and who is responsible.', 'Hati Tayo!', [
+  mod(6, 'AI as Your Partner', 'AI as Partner', 'AI as a tool at work, humans in the loop, and who is responsible.', 'Hati Tayo!', [
     'Name tasks AI does well and tasks that need people.',
     'Explain "human in the loop".',
     'Say who is responsible when AI is used at work.',
   ], 8),
-  mod(7, 'Gawa ni AI?', 'Gawa ni AI?', 'Generative AI, labels, consent and credit.', "Gawa Ko 'To!", [
+  mod(7, 'Made by AI?', 'Made by AI?', 'Generative AI, labels, consent and credit.', "Gawa Ko 'To!", [
     'Explain that generative AI makes new content from patterns.',
     'Label AI-made content, ask consent and credit artists.',
     'Explain why deepfaked doctor ads cause harm.',
   ], 8),
-  mod(8, 'Pahinga Muna', 'Pahinga Muna', 'Attention-grabbing design, sleep, AI companions and healthy boundaries.', 'Tulog na, Bea!', [
+  mod(8, 'Take a Break', 'Take a Break', 'Attention-grabbing design, sleep, AI companions and healthy boundaries.', 'Tulog na, Bea!', [
     'Name the design tricks that keep people scrolling.',
     'Explain why sleep matters and see AI companions as products, not friends.',
     'Set simple boundaries and know when to talk to a real person.',
   ], 8),
-  mod(9, 'Para sa Lahat', 'Para sa Lahat', 'Who gets left out of health AI, bias from data, and inclusive design.', 'Sa Sapatos Nila', [
+  mod(9, 'For Everyone', 'For Everyone', 'Who gets left out of health AI, bias from data, and inclusive design.', 'Sa Sapatos Nila', [
     'Name the groups often left out by health tech.',
     'Explain that biased data makes unfair AI and suggest fixes.',
     'Insist on a human option.',
   ], 8),
-  mod(10, 'Karapatan Mo', 'Karapatan Mo', 'Your data rights in plain words and who is accountable.', 'OBJECTION!', [
+  mod(10, 'Your Rights', 'Your Rights', 'Your data rights in plain words and who is accountable.', 'OBJECTION!', [
     'List your data rights in plain words.',
     'Describe the complaint path, from the organisation to the National Privacy Commission.',
     'Know that the organisation using AI is responsible, not "the AI".',

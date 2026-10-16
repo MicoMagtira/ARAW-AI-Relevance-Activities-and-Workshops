@@ -185,6 +185,34 @@
   color: var(--gold);
 }
 
+/* Music and Sound effects switches under START (like TALA's start gate) */
+.sound-switches {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3) var(--sp-6);
+}
+
+.sound-switch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  color: var(--cream);
+  cursor: pointer;
+}
+
+.sound-switch__text {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.sound-switch__state {
+  color: var(--gold);
+}
+
+.splash .px-switch:focus-visible,
 .splash__ground .px-btn:focus-visible,
 .splash .skip-link:focus-visible {
   outline-color: var(--gold);

@@ -3,6 +3,7 @@
 // It always completes after the retest: there is no fail state.
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t, type StringKey } from '../../app/i18n';
+import { sfx } from '../../app/sound';
 import { LOCAL_POSTS, TEST_POSTS, TRAIN_POSTS, type PostLang, type TuruanPost } from '../../content/turuan';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, Meter, Stamp } from '../../ui/kit';
@@ -318,6 +319,12 @@ function LabelPhase({ phase, hud, headingRef, trainLabels, localLabels, setTrain
     else if (index > 0) questionRef.current?.focus({ preventScroll: true });
   }, [answered, index]);
 
+  const give = (label: Label) => {
+    if (answered) return;
+    sfx(label === post.label ? 'correct' : 'wrong');
+    setLabels([...labels, label]);
+  };
+
   const next = () => {
     if (!isLast) setMoved(moved + 1);
     else setPhase(train ? 'test1' : 'test2');
@@ -344,10 +351,10 @@ function LabelPhase({ phase, hud, headingRef, trainLabels, localLabels, setTrain
                 {t('tu.question')}
               </h4>
               <div class="tu-buttons">
-                <Button variant="fake" large onClick={() => setLabels([...labels, 'fake'])}>
+                <Button variant="fake" large data-sfx="none" onClick={() => give('fake')}>
                   {t('tu.fake')}
                 </Button>
-                <Button variant="fact" large onClick={() => setLabels([...labels, 'real'])}>
+                <Button variant="fact" large data-sfx="none" onClick={() => give('real')}>
                   {t('tu.real')}
                 </Button>
               </div>

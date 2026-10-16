@@ -97,7 +97,7 @@ export interface PollCard extends CardBase {
   reflection: string;
 }
 
-/** "Kailan ako magtitiwala?" in three plain bullets. */
+/** "When should I trust it?" in three plain bullets. */
 export interface TakeawayCard extends CardBase {
   type: 'takeaway';
   bullets: readonly [string, string, string];

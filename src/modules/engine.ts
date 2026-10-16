@@ -13,7 +13,7 @@ export type Step =
   | { kind: 'practice'; id: string }
   | { kind: 'reward'; id: string };
 
-/** hook -> lesson cards -> module game -> "Kailan ako magtitiwala?" -> mini Fact or Fake -> reward. */
+/** hook -> lesson cards -> module game -> "When should I trust it?" -> mini Fact or Fake -> reward. */
 export function buildSteps(content: ModuleContent): Step[] {
   const cards: Card[] = [content.hook, ...content.cards];
   return [

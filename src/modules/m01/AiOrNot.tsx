@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { location$ } from '../../app/router';
+import { sfx } from '../../app/sound';
 import { answerFor, type AonAnswer, type AonItem } from '../../content/aiOrNot';
 import { randomSeed } from '../../games/engine/rng';
 import { Icon } from '../../ui/Icon';
@@ -74,6 +75,8 @@ export default function AiOrNot({ onComplete }: ModuleGameProps) {
     locked.current = true;
     setDrag(0);
     const result = scoreAnswer(round, item, choice);
+    if (result.right) sfx('correct', Math.min(5, result.state.streak - 1)); // brighter for every right answer in a row
+    else sfx('wrong');
     setRound(result.state);
     setPlayed([...played, { item, answer: choice, result }]);
   };
@@ -238,11 +241,11 @@ export default function AiOrNot({ onComplete }: ModuleGameProps) {
 
         <h4 class="aon-question">{t('aon.question')}</h4>
         <div class="aon-buttons">
-          <Button variant="secondary" large aria-disabled={answered ? 'true' : undefined} aria-keyshortcuts="ArrowLeft" class={last?.answer === 'not-ai' && answered ? 'is-chosen' : undefined} onClick={() => answer('not-ai')}>
+          <Button variant="secondary" large aria-disabled={answered ? 'true' : undefined} aria-keyshortcuts="ArrowLeft" class={last?.answer === 'not-ai' && answered ? 'is-chosen' : undefined} data-sfx="none" onClick={() => answer('not-ai')}>
             <Icon name="arrow-left" />
             {t('aon.notAi')}
           </Button>
-          <Button variant="gold" large aria-disabled={answered ? 'true' : undefined} aria-keyshortcuts="ArrowRight" class={last?.answer === 'ai' && answered ? 'is-chosen' : undefined} onClick={() => answer('ai')}>
+          <Button variant="gold" large aria-disabled={answered ? 'true' : undefined} aria-keyshortcuts="ArrowRight" class={last?.answer === 'ai' && answered ? 'is-chosen' : undefined} data-sfx="none" onClick={() => answer('ai')}>
             {t('aon.ai')}
             <Icon name="arrow-right" />
           </Button>

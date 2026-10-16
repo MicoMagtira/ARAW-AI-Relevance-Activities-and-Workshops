@@ -10,11 +10,11 @@ const content: ModuleContent = {
     type: 'story-hook',
     scene: 'The family group chat lights up',
     speaker: 'Tita Baby',
-    line: 'Miracle tea replaces your maintenance meds! 100% natural, walang side effects! Please share po 🙏🙏🙏',
+    line: 'Miracle tea replaces your maintenance meds! 100% natural, no side effects! Please share 🙏🙏🙏',
     icon: 'mail',
     ara: {
-      intro: 'Uy, the family GC is buzzing. Tita Baby means well. Let us learn how to check first, and answer kindly.',
-      done: 'Tara! Three small steps, and one kind reply.',
+      intro: 'Hey, the family GC is buzzing. Tita Baby means well. Let us learn how to check first, and answer kindly.',
+      done: 'Here we go! Three small steps, and one kind reply.',
     },
   },
   cards: [
@@ -95,7 +95,7 @@ const content: ModuleContent = {
           detail: 'Show the label to your health worker or pharmacist. Never stop or change your maintenance medicine without talking to your doctor.',
         },
       ],
-      ara: { done: 'Search, registered or not, read the note, ask. Ayan!' },
+      ara: { done: 'Search, registered or not, read the note, ask. There you go!' },
     },
     {
       id: 'm05-c6',
@@ -103,7 +103,7 @@ const content: ModuleContent = {
       question: 'Tita forwards the tea post to the GC. Which reply helps most?',
       options: [
         {
-          text: '"Tita, stop sharing fake news. Nakakahiya!"',
+          text: '"Tita, stop sharing fake news. How embarrassing!"',
           feedback: 'It may be true that the post is fake, but shaming makes people hide and stop listening. Tita shared out of love.',
         },
         {
@@ -111,7 +111,7 @@ const content: ModuleContent = {
           feedback: 'Yes! Warm first, then the facts, then a source and a next step. Kindness keeps your family listening.',
         },
         {
-          text: '"Okay po 👍" and say nothing more',
+          text: '"Okay 👍" and say nothing more',
           feedback: 'Kind, but Lola is still reading it. A gentle correction, with a source, is part of caring.',
         },
       ],
@@ -137,7 +137,7 @@ const content: ModuleContent = {
         },
       ],
       correct: 1,
-      ara: { done: 'Share the true thing, not the fake thing. Matalino!' },
+      ara: { done: 'Share the true thing, not the fake thing. Smart move!' },
     },
     {
       id: 'm05-c8',

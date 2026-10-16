@@ -30,7 +30,7 @@ function Frame({ title, closeHref, confirmClose, children }: FrameProps) {
   return (
     <div class="lesson fof-frame">
       <header class="lesson-bar">
-        <Button icon variant="secondary" aria-label={t('fof.close')} onClick={close}>
+        <Button icon variant="secondary" aria-label={t('fof.close')} data-sfx={confirmClose ? 'none' : 'back'} onClick={close}>
           <Icon name="close" />
         </Button>
         <p class="lesson-bar__title" title={title}>
@@ -40,7 +40,6 @@ function Frame({ title, closeHref, confirmClose, children }: FrameProps) {
       <main class="lesson-main fof-main" id="main" tabIndex={-1}>
         <h1 class="sr-only">{title}</h1>
         {children}
-        <footer class="lesson-beta">{t('app.betaNote')}</footer>
       </main>
       <Dialog
         open={asking}
@@ -127,7 +126,8 @@ function Results({ mode, answers, score, xp, outcome, onAgain, doneHref }: Resul
         <h2 class="panel-title" id="fof-radar-h">
           {t('radar.title')}
         </h2>
-        <TruthRadar score={score} />
+        {/* no sound in assessment mode; after a new radar badge the sweep waits for the badge fanfare */}
+        <TruthRadar score={score} soundAfterMs={assess ? undefined : outcome?.badge ? 1500 : 0} />
       </Panel>
     </div>
   );

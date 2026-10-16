@@ -39,7 +39,7 @@ test.describe("Feed Mo 'To", () => {
     await page.goto('/#/arcade');
     await expect(page.getByRole('button', { name: /^Feed Mo 'To/ })).toHaveAttribute('aria-label', "Feed Mo 'To, Algorithms and filter bubbles, New");
     await page.goto(GAME);
-    const titles = ['Today, YOU are the algorithm!', 'Feeds pick what keeps people scrolling', 'How to play', 'Why it matters', 'Kailan ako magtitiwala?'];
+    const titles = ['Today, YOU are the algorithm!', 'Feeds pick what keeps people scrolling', 'How to play', 'Why it matters', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -109,7 +109,7 @@ test.describe("Feed Mo 'To", () => {
     await expect(page.getByText(/^A filter bubble is when a feed keeps showing/)).toBeVisible();
     await expect(page.getByText(/^Why scary health posts spread/)).toBeVisible();
     await expect(page.getByText(/^Tip: search on purpose for trusted sources/)).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? When a feed shows me many sides, and I search on purpose for trusted sources.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? When a feed shows me many sides, and I search on purpose for trusted sources.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

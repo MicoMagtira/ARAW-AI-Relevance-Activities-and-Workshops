@@ -5,6 +5,7 @@ import { t } from '../../app/i18n';
 import { Icon } from '../../ui/Icon';
 import { Button } from '../../ui/kit';
 import { useWindowKey } from '../../ui/useWindowKey';
+import { sfx } from '../../app/sound';
 import { placeSortItem, type PlaceResult } from '../engine';
 import type { SwipeSortCard } from '../types';
 import type { CardProps } from './Cards';
@@ -30,6 +31,7 @@ export function SwipeSort({ card, onReady, onReact }: CardProps<SwipeSortCard>) 
     const result = placeSortItem(card, at, binIndex);
     if (!result) return;
     const correct = sofar + (result.correct ? 1 : 0);
+    sfx(result.correct ? 'correct' : 'wrong');
     live.current = { index: at + 1, score: correct };
     setScore(correct);
     setLast({ ...result, text: card.items[at]?.text ?? '' });
@@ -96,11 +98,11 @@ export function SwipeSort({ card, onReady, onReact }: CardProps<SwipeSortCard>) 
       </div>
 
       <div class="sort-bins">
-        <Button variant="secondary" onClick={() => place(0)} disabled={finished} aria-keyshortcuts="ArrowLeft">
+        <Button variant="secondary" data-sfx="none" onClick={() => place(0)} disabled={finished} aria-keyshortcuts="ArrowLeft">
           <Icon name="arrow-left" />
           {left.label}
         </Button>
-        <Button variant="secondary" onClick={() => place(1)} disabled={finished} aria-keyshortcuts="ArrowRight">
+        <Button variant="secondary" data-sfx="none" onClick={() => place(1)} disabled={finished} aria-keyshortcuts="ArrowRight">
           {right.label}
           <Icon name="arrow-right" />
         </Button>

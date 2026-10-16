@@ -20,12 +20,12 @@ export interface AvatarSpec {
 export const AVATARS: readonly AvatarSpec[] = [
   { id: 'young-woman', label: 'Young woman with long hair', skin: '#E2A77E', hair: 'long', hairColor: '#2B2118', shirt: '#35408E' },
   { id: 'young-man', label: 'Young man with short hair', skin: '#A86B45', hair: 'short', hairColor: '#1A1410', shirt: '#FF7A59' },
-  { id: 'lola', label: 'Lola with a bun and glasses', skin: '#D9A07A', hair: 'bun', hairColor: '#B9B6B0', shirt: '#2FA36B', glasses: true },
+  { id: 'lola', label: 'Grandmother with a bun and glasses', skin: '#D9A07A', hair: 'bun', hairColor: '#B9B6B0', shirt: '#2FA36B', glasses: true },
   { id: 'hijab', label: 'Woman in a hijab', skin: '#C98E66', hair: 'hijab', hairColor: '#35408E', shirt: '#E8B84A' },
-  { id: 'lolo', label: 'Lolo with glasses', skin: '#B97B52', hair: 'short', hairColor: '#C9C6C0', shirt: '#4A56A8', glasses: true },
+  { id: 'lolo', label: 'Grandfather with glasses', skin: '#B97B52', hair: 'short', hairColor: '#C9C6C0', shirt: '#4A56A8', glasses: true },
   { id: 'wheelchair', label: 'Teen who uses a wheelchair', skin: '#8C5A3C', hair: 'short', hairColor: '#1A1410', shirt: '#E8B84A', chair: true },
-  { id: 'tita', label: 'Tita with short curly hair', skin: '#F1C9A5', hair: 'curly', hairColor: '#5A3A22', shirt: '#C4323A' },
-  { id: 'tatay', label: 'Tatay with a moustache', skin: '#7A4A30', hair: 'short', hairColor: '#1A1410', shirt: '#2FA36B', moustache: true },
+  { id: 'tita', label: 'Auntie with short curly hair', skin: '#F1C9A5', hair: 'curly', hairColor: '#5A3A22', shirt: '#C4323A' },
+  { id: 'tatay', label: 'Dad with a moustache', skin: '#7A4A30', hair: 'short', hairColor: '#1A1410', shirt: '#2FA36B', moustache: true },
 ];
 
 export const AVATAR_COUNT = AVATARS.length;

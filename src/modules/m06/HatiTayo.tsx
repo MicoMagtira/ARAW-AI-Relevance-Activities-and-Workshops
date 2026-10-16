@@ -4,6 +4,8 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { location$ } from '../../app/router';
+import { sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { randomSeed } from '../../games/engine/rng';
 import { SERVICE_MAX, buildModulePlay, judge, starsFor, type Verdict } from '../../games/hati-tayo/rules';
 import type { Lane, Task } from '../../games/hati-tayo/tasks';
@@ -117,6 +119,7 @@ export default function HatiTayo({ onComplete }: ModuleGameProps) {
   const [picked, setPicked] = useState<Pick | null>(null);
   const [service, setService] = useState(SERVICE_MAX);
   const [finished, setFinished] = useState(false);
+  const later = useLater();
   const rootRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
 
@@ -139,6 +142,8 @@ export default function HatiTayo({ onComplete }: ModuleGameProps) {
   const choose = (lane: Lane) => {
     if (picked) return;
     const result = judge(task, lane, 0.5);
+    sfx(lane === 'ai' ? 'toAI' : 'toPerson');
+    later(300, () => sfx(result.verdict === 'good' ? 'correct' : result.verdict === 'slow' ? 'hint' : 'wrong'));
     setPicked({ lane, verdict: result.verdict });
     setService(Math.min(SERVICE_MAX, Math.max(0, service + result.service)));
   };
@@ -172,12 +177,12 @@ export default function HatiTayo({ onComplete }: ModuleGameProps) {
               {t('hati.where')}
             </h4>
             <div class="hati-lanes">
-              <Button variant="secondary" class="hati-lane" onClick={() => choose('ai')}>
+              <Button variant="secondary" class="hati-lane" data-sfx="none" onClick={() => choose('ai')}>
                 <Icon name="ai-scan" size={24} />
                 {t('hati.ai')}
                 <span class="hati-lane__hint">{t('hati.aiHint')}</span>
               </Button>
-              <Button variant="secondary" class="hati-lane" onClick={() => choose('human')}>
+              <Button variant="secondary" class="hati-lane" data-sfx="none" onClick={() => choose('human')}>
                 <Icon name="me" size={24} />
                 {t('hati.person')}
                 <span class="hati-lane__hint">{t('hati.personHint')}</span>

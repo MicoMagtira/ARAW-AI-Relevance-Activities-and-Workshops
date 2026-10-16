@@ -76,6 +76,10 @@
   border-radius: 0;
   cursor: pointer;
   text-align: left;
+  /* long topic labels ("Coughs, flu and outbreaks") wrap inside the chip instead of pushing the panel wider */
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .lib-chip:hover {

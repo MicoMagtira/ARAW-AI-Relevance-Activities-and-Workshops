@@ -1,4 +1,4 @@
-// What a finished Fact or Fake round changes: XP, the best Truth Radar and the Timbang na Radar badge.
+// What a finished Fact or Fake round changes: XP, the best Truth Radar and the Balanced Radar badge.
 import { addXp } from '../../app/state';
 import { bestRadar, earnBadge, recordActivity } from '../../app/progress';
 import type { RoundAnswer } from './FofRound';

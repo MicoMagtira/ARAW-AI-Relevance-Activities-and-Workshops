@@ -15,6 +15,7 @@ import { AVATARS, safeAvatarIndex } from '../ui/avatars';
 import { Medal } from '../ui/Badge';
 import { Icon } from '../ui/Icon';
 import { Button, Dialog, Panel, SrHint, SwitchRow, pushToast, srDescribedBy } from '../ui/kit';
+import { SoundSettings } from '../ui/SoundControls';
 
 function ProfilePanel() {
   const current = safeAvatarIndex(profile.value.avatar);
@@ -150,7 +151,7 @@ function CabinetPanel() {
         {badge && (
           <div class="badge-info px-box" aria-live="polite">
             <p class="badge-info__name">
-              {badge.name} <span class="px-text-muted">({badge.english})</span>
+              {badge.name}
             </p>
             <p>{has ? t('me.badgeEarned') : `${t('me.badgeLocked')}: ${badge.howTo}`}</p>
           </div>
@@ -212,6 +213,7 @@ function SettingsPanel({ onReset }: { onReset: () => void }) {
             />
           ))}
         </div>
+        <SoundSettings />
         <CertificatePanel />
         <h2 class="panel-title">{t('me.more')}</h2>
         <ul class="menu-list">
@@ -222,6 +224,13 @@ function SettingsPanel({ onReset }: { onReset: () => void }) {
           <li>
             <a class="menu-row" href={hrefFor('/report', { screen: 'me' })}>
               <span class="menu-row__label">{t('report.open')}</span>
+              <Icon name="chevron-right" />
+            </a>
+          </li>
+          <li>
+            <a class="menu-row" href={hrefFor('/guide')}>
+              <span class="menu-row__label">{t('me.guide')}</span>
+              <span class="menu-row__value">{t('me.guideValue')}</span>
               <Icon name="chevron-right" />
             </a>
           </li>

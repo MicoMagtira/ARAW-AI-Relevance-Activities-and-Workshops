@@ -87,7 +87,7 @@ export const AUDIENCES: readonly Phrase[] = [
   { text: 'for Lola', word: 'Lola' },
   { text: 'for Lolo', word: 'Lolo' },
   { text: 'for a Grade 4 kid', word: 'a Grade 4 kid' },
-  { text: 'for a busy nanay', word: 'a busy nanay' },
+  { text: 'for a busy mom', word: 'a busy mom' },
   { text: 'for a health aide', word: 'a health aide' },
   { text: 'for a teen', word: 'a teen' },
 ];

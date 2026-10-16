@@ -4,6 +4,8 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, ProgressBar } from '../../ui/kit';
@@ -109,8 +111,18 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
   });
 
   const finished = (g: Game): boolean => isOver(g) || (!arcade && moduleDone(g));
+  const later = useLater();
+
+  // Ara's closing line (the one in her bubble), spoken after the end jingle.
+  useEffect(() => {
+    if (phase !== 'end') return;
+    const r = result();
+    const line = rootRef.current?.querySelector('.ara-says__bubble p')?.textContent ?? '';
+    later(1400, () => araSay(line, r.served >= 3 ? (r.stars === 3 ? 'wow' : 'happy') : 'sad'));
+  }, [phase]);
 
   const resolveLeft = (g: Game, why: 'fails' | 'let-go' | 'queue') => {
+    if (why !== 'let-go') later(250, () => sfx('wrong'));
     setGame(leave(g, why));
     setPhase('result');
   };
@@ -122,10 +134,12 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
       setGame(r.game);
       setPhase('try');
     } else if (r.ok) {
+      later(250, () => sfx('correct')); // after the kiosk beep
       setGame(serveAtKiosk(r.game, persona));
       setPhase('result');
     } else if (r.gaveUp) resolveLeft(r.game, 'fails');
     else {
+      later(250, () => sfx('wrong'));
       setGame(r.game);
       setStuck(r.blockers);
       setBusy(false);
@@ -136,6 +150,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
   const goCounter = () => {
     const r = takeCounter(game, persona);
     if (r.ok) {
+      sfx('correct');
       setGame(r.game);
       setPhase('result');
     } else if (r.gaveUp) resolveLeft(r.game, 'queue');
@@ -150,6 +165,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
   const next = () => {
     if (finished(game)) setPhase('end');
     else {
+      sfx('persona'); // the next visitor walks up
       setGame(beginVisit(game));
       setPhase('arrive');
     }
@@ -323,9 +339,12 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
             {voiceNote && <p>{t('sapatos.voiceNote')}</p>}
             <p class="sapatos-tries">{t('sapatos.tries', { n: game.fails, max: MAX_FAILS })}</p>
             <p>{t('sapatos.fixIntro', { n: game.fp })}</p>
-            <FixGrid game={game} unmet={unmet} name={persona.name} onInstall={(id) => setGame(install(game, id))} />
+            <FixGrid game={game} unmet={unmet} name={persona.name} onInstall={(id) => {
+                sfx('fixApplied');
+                setGame(install(game, id));
+              }} />
             <div class="sapatos-actions">
-              <Button variant="gold" onClick={press}>
+              <Button variant="gold" data-sfx="kiosk" onClick={press}>
                 {t('sapatos.tryAgain')}
                 <Icon name="arrow-right" />
               </Button>
@@ -370,7 +389,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
           </ul>
         </div>
         <div>
-          <Button variant="gold" onClick={next}>
+          <Button variant="gold" data-sfx="none" onClick={next}>
             {finished(game) ? t('sapatos.seeResult') : t('sapatos.nextVisitor')}
             <Icon name="arrow-right" />
           </Button>
@@ -411,6 +430,7 @@ function FixGrid({ game, unmet, name, onInstall }: FixGridProps) {
           type="button"
           class={`sapatos-fix px-box${on ? ' is-on' : ''}${useful && !on ? ' is-useful' : ''}`}
           aria-disabled={on || !affordable}
+          data-sfx="none"
           onClick={() => {
             if (!on && affordable) onInstall(fix.id);
           }}

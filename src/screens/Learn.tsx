@@ -68,6 +68,7 @@ function Node({ m, state, selected, onPick }: NodeProps) {
         aria-pressed={selected}
         aria-current={state === 'current' ? 'step' : undefined}
         aria-label={t('learn.node', { n: m.n, title: m.title, state: t(STATE_KEY[state]) })}
+        data-sfx={state === 'locked' ? 'locked' : 'select'}
         onClick={() => onPick(m.id)}
       >
         {state === 'current' && <Ara mood="idle" scale={2} decorative class="road-node__ara" />}
@@ -153,7 +154,7 @@ function Details({ m, headingId }: { m: ModuleInfo; headingId: string }) {
           <p>
             <span class="panel-title">{t('learn.badge')}</span>
             <br />
-            <strong>{badge.name}</strong> <span class="px-text-muted">({badge.english})</span>
+            <strong>{badge.name}</strong>
           </p>
         </div>
       )}

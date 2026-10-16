@@ -1,7 +1,10 @@
 // Truth Radar panel (docs/SPEC.md section 6, docs/DESIGN.md section 11.5): two plain-language pixel meters.
 // The raw d-prime and c values stay behind a "details" disclosure.
 import type { CSSProperties } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { t } from '../../app/i18n';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { Meter } from '../../ui/kit';
 import { AraSays } from '../../ui/AraBubble';
 import { BALANCED_C, LEAN_LIMIT, radarFor, type RoundScore } from './scoring';
@@ -9,8 +12,22 @@ import { BALANCED_C, LEAN_LIMIT, radarFor, type RoundScore } from './scoring';
 const ZONE_START = ((-BALANCED_C + LEAN_LIMIT) / (2 * LEAN_LIMIT)) * 100;
 const ZONE_WIDTH = ((2 * BALANCED_C) / (2 * LEAN_LIMIT)) * 100;
 
-export function TruthRadar({ score }: { score: RoundScore }) {
+interface TruthRadarProps {
+  score: RoundScore;
+  /** Ring the radar sweep (then Ara reads her tip) this many ms after the panel shows. Leave out for silence (assessment). */
+  soundAfterMs?: number;
+}
+
+export function TruthRadar({ score, soundAfterMs }: TruthRadarProps) {
   const radar = radarFor(score);
+  const later = useLater();
+  const tip = t(`radar.tip.${radar.lean}` as const);
+  const tipMood = radar.lean === 'balanced' ? 'happy' : 'think';
+  useEffect(() => {
+    if (soundAfterMs === undefined) return;
+    later(soundAfterMs, () => sfx('radar'));
+    later(soundAfterMs + 1100, () => araSay(tip, tipMood));
+  }, []);
   const leanText = t(`radar.lean.${radar.lean}` as const);
   const accText = t(`radar.acc.${radar.accuracyLabel}` as const);
   return (
@@ -46,8 +63,8 @@ export function TruthRadar({ score }: { score: RoundScore }) {
         </p>
       </div>
 
-      <AraSays mood={radar.lean === 'balanced' ? 'happy' : 'think'} scale={3} class="radar__ara">
-        <p>{t(`radar.tip.${radar.lean}` as const)}</p>
+      <AraSays mood={tipMood} scale={3} class="radar__ara">
+        <p>{tip}</p>
       </AraSays>
 
       <details class="radar__details">

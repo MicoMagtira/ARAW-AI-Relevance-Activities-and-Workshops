@@ -151,7 +151,7 @@ describe('AiOrNot component', () => {
       clickAnswer(give);
       if (give === answerFor(item)) right++;
       const status = screen.getByRole('status');
-      expect(status.textContent).toContain(i === 0 ? 'Muntik na!' : 'Tama!');
+      expect(status.textContent).toContain(i === 0 ? 'So close!' : 'Correct!');
       expect(status.textContent).toContain(item.kind === 'hype' ? 'Hype alert!' : item.why);
       fireEvent.click(screen.getByRole('button', { name: i === DECK_SIZE - 1 ? 'See my score' : 'Next card' }));
     }
@@ -181,14 +181,14 @@ describe('AiOrNot component', () => {
     setup();
     const first = itemNamed(currentName());
     fireEvent.keyDown(window, { key: answerFor(first) === 'ai' ? 'ArrowRight' : 'ArrowLeft' });
-    expect(screen.getByRole('status').textContent).toContain('Tama!');
+    expect(screen.getByRole('status').textContent).toContain('Correct!');
     expect(screen.getByText('10 pts')).toBeTruthy();
     // a second key press on the same card changes nothing
     fireEvent.keyDown(window, { key: answerFor(first) === 'ai' ? 'ArrowLeft' : 'ArrowRight' });
     expect(screen.getByText('10 pts')).toBeTruthy();
     fireEvent.keyDown(window, { key: 'Enter' });
     expect(screen.getByText('Card 2 of 12')).toBeTruthy();
-    expect(screen.getByRole('status').textContent).not.toContain('Tama!');
+    expect(screen.getByRole('status').textContent).not.toContain('Correct!');
   });
 
   it('a swipe past the threshold answers (right is AI), a short drag does not, and the mouse never drags', () => {
@@ -205,7 +205,7 @@ describe('AiOrNot component', () => {
     const dir = answerFor(first) === 'ai' ? 1 : -1;
     fireEvent.pointerDown(el, { clientX: 200, pointerId: 3, pointerType: 'touch' });
     fireEvent.pointerUp(el, { clientX: 200 + dir * AON_SWIPE_DISTANCE, pointerId: 3, pointerType: 'touch' });
-    expect(screen.getByRole('status').textContent).toContain('Tama!');
+    expect(screen.getByRole('status').textContent).toContain('Correct!');
     expect(screen.getByRole('button', { name: 'Next card' })).toBeTruthy();
   });
 

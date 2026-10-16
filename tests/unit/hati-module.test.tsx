@@ -160,7 +160,7 @@ describe('Hati Tayo! module game', () => {
     playAll((t) => (t.needs === 'ai' ? 'ai' : 'person'));
     expect(screen.getByRole('heading', { name: 'The day is done!' })).toBeTruthy();
     expect(screen.getByText('Good splits: 8 of 8. Done slowly by hand: 0. AI slip-ups: 0.')).toBeTruthy();
-    expect(screen.getByText(/Tulong-Tulong in the making/)).toBeTruthy();
+    expect(screen.getByText(/Working Together at its best/)).toBeTruthy();
     expect(screen.getAllByRole('listitem').length).toBeGreaterThanOrEqual(8);
     fireEvent.click(screen.getByRole('button', { name: 'Finish game' }));
     expect(stars).toBe(3);

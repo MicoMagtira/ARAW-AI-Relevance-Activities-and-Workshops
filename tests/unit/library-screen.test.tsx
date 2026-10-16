@@ -33,15 +33,15 @@ describe('Library tabs', () => {
     open('#/library/glossary');
     render(<LibraryScreen />);
     const tabs = screen.getAllByRole('tab');
-    expect(tabs.map((tab) => tab.textContent)).toEqual(['Myths', 'Diksyunaryo', 'Komiks']);
-    expect(screen.getByRole('tab', { name: 'Diksyunaryo' }).getAttribute('aria-selected')).toBe('true');
-    expect(screen.getByRole('tabpanel', { name: 'Diksyunaryo' })).toBeTruthy();
+    expect(tabs.map((tab) => tab.textContent)).toEqual(['Myths', 'Dictionary', 'Comics']);
+    expect(screen.getByRole('tab', { name: 'Dictionary' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('tabpanel', { name: 'Dictionary' })).toBeTruthy();
   });
 
   it('opens Myths for an unknown tab', () => {
     open('#/library/whatever');
     render(<LibraryScreen />);
-    expect(screen.getByRole('heading', { name: 'Kwentong Kalusugan' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Health Stories' })).toBeTruthy();
   });
 });
 
@@ -81,8 +81,8 @@ describe('Myths', () => {
     expect(document.querySelectorAll('.myth-flip')).toHaveLength(MYTHS.length);
 
     const topics = screen.getByRole('group', { name: 'Topic' });
-    fireEvent.click(within(topics).getByRole('button', { name: 'Dengue' }));
-    expect(within(topics).getByRole('button', { name: 'Dengue' }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(within(topics).getByRole('button', { name: 'Dengue and mosquitoes' }));
+    expect(within(topics).getByRole('button', { name: 'Dengue and mosquitoes' }).getAttribute('aria-pressed')).toBe('true');
     const dengue = MYTHS.filter((m) => m.topic === 'dengue').length;
     expect(document.querySelectorAll('.myth-flip')).toHaveLength(dengue);
 
@@ -126,7 +126,7 @@ describe('Diksyunaryo', () => {
     const terms = screen.getAllByRole('heading', { level: 4 }).map((h) => h.textContent ?? '');
     expect(terms).toHaveLength(GLOSSARY.length);
     expect(terms).toEqual([...terms].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
-    expect(screen.getAllByText(/^Halimbawa: /).length).toBe(GLOSSARY.length);
+    expect(screen.getAllByText(/^Example: /).length).toBe(GLOSSARY.length);
     expect(screen.getAllByRole('link', { name: /^Seen in Module \d+: / }).length).toBe(GLOSSARY.length);
   });
 
@@ -241,7 +241,7 @@ describe('Komiks reader', () => {
 
   it('leaves the arrow keys to the tab strip', () => {
     render(<LibraryScreen />);
-    const tab = screen.getByRole('tab', { name: 'Komiks' });
+    const tab = screen.getByRole('tab', { name: 'Comics' });
     fireEvent.keyDown(tab, { key: 'ArrowRight' });
     expect(screen.getByRole('status').textContent).toMatch(/^Panel 1 /);
   });

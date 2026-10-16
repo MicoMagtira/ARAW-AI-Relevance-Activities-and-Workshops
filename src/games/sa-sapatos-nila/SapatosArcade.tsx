@@ -7,18 +7,20 @@ import { recordRun } from '../../app/scores';
 import { Button, Chip } from '../../ui/kit';
 import { randomSeed } from '../engine/rng';
 import type { DomGameProps } from '../registry';
+import { useRunEndSound } from '../engine/useRunEnd';
 import { Sapatos, type SapatosResult } from './Sapatos';
 import { GOOD_RUN } from './sim';
 
 function ArcadeEnd({ result, daily, onAgain }: { result: SapatosResult; daily?: boolean; onAgain: () => void }) {
   // saved once, when the end screen first shows
   const [run] = useState(() => recordRun('sa-sapatos-nila', result.score, GOOD_RUN, daily));
+  useRunEndSound(run.goodRun);
   return (
     <>
       <p>
         {run.newBest && <Chip kind="streak">{t('game.newBest')}</Chip>} <Chip kind="xp">{t('game.xp', { n: run.xp })}</Chip> <span>{t('game.bestLine', { n: run.best.toLocaleString('en-US') })}</span>
       </p>
-      <Button variant="gold" large onClick={onAgain}>
+      <Button variant="gold" large data-sfx="start" onClick={onAgain}>
         {t('game.again')}
       </Button>
       <Button variant="secondary" href={hrefFor(daily ? '/daily' : '/arcade')}>

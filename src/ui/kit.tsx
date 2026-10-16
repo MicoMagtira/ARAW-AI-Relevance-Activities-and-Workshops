@@ -4,6 +4,7 @@ import { useEffect, useId, useRef } from 'preact/hooks';
 import { signal } from '@preact/signals';
 import { t } from '../app/i18n';
 import { settings } from '../app/settings';
+import { sfx } from '../app/sound';
 import { Icon } from './Icon';
 
 const cx = (...parts: Array<string | false | null | undefined>): string => parts.filter(Boolean).join(' ');
@@ -81,8 +82,9 @@ interface SwitchProps {
   id?: string;
 }
 export function Switch({ checked, onChange, ...aria }: SwitchProps) {
+  // The app-wide click sound plays the switch's own up or down blip (src/app/sound).
   return (
-    <button type="button" class="px-switch" role="switch" aria-checked={checked} onClick={() => onChange(!checked)} {...aria}>
+    <button type="button" class="px-switch" role="switch" aria-checked={checked} data-sfx={checked ? 'toggleOff' : 'toggleOn'} onClick={() => onChange(!checked)} {...aria}>
       <span class="px-switch__knob" />
     </button>
   );
@@ -178,6 +180,7 @@ export function Tabs<T extends string>({ items, value, onChange, label }: TabsPr
     const next = (index + items.length) % items.length;
     const item = items[next];
     if (!item) return;
+    if (item.id !== value) sfx('tab'); // arrow keys move the tab without a click
     onChange(item.id);
     refs.current[next]?.focus();
   };
@@ -225,7 +228,11 @@ interface DialogProps {
 export function Dialog({ open, title, onClose, children, actions, class: className }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const wasOpen = useRef(false);
   useEffect(() => {
+    // open and close blips on real changes only (not on the first render of a closed dialog)
+    if (open !== wasOpen.current) sfx(open ? 'open' : 'close');
+    wasOpen.current = open;
     const el = ref.current;
     if (!el) return;
     if (open && !el.open) {
@@ -242,7 +249,7 @@ export function Dialog({ open, title, onClose, children, actions, class: classNa
         <h2 class="px-dialog__title" id={titleId}>
           {title}
         </h2>
-        <Button icon variant="secondary" aria-label={t('dialog.close')} onClick={onClose}>
+        <Button icon variant="secondary" aria-label={t('dialog.close')} data-sfx="none" onClick={onClose}>
           <Icon name="close" />
         </Button>
       </div>
@@ -262,7 +269,9 @@ export interface Toast {
 export const toasts = signal<Toast[]>([]);
 let toastId = 0;
 
-export function pushToast(toast: Omit<Toast, 'id'>): void {
+/** Show a toast. A badge toast rings the badge fanfare unless `quiet` (the screen plays it in its own sequence). */
+export function pushToast(toast: Omit<Toast, 'id'>, opts?: { quiet?: boolean }): void {
+  if (toast.kind === 'badge' && !opts?.quiet) sfx('badge');
   toasts.value = [...toasts.value, { ...toast, id: ++toastId }].slice(-3);
 }
 export function dismissToast(id: number): void {

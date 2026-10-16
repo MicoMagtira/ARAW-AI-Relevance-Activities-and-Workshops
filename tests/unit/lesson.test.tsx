@@ -89,7 +89,7 @@ describe('card types', () => {
 
     fireEvent.click(buttons[card.correct]!);
     expect(onReady).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole('status').textContent).toContain('Tama!');
+    expect(screen.getByRole('status').textContent).toContain('Correct!');
     card.options.forEach((o) => expect(document.body.textContent).toContain(o.feedback));
     expect(onReact).toHaveBeenLastCalledWith(expect.objectContaining({ mood: 'happy' }));
   });
@@ -111,11 +111,11 @@ describe('card types', () => {
     // first card by the right button
     const first = card.items[0]!.bin === left.id ? left.label : right.label;
     fireEvent.click(screen.getByRole('button', { name: first }));
-    expect(screen.getByRole('status').textContent).toContain('Tama!');
+    expect(screen.getByRole('status').textContent).toContain('Correct!');
     expect(screen.getByText(card.items[1]!.text)).toBeTruthy();
     // wrong placement says so
     fireEvent.keyDown(window, { key: placeFor(1) === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft' });
-    expect(screen.getByRole('status').textContent).toContain('Muntik na!');
+    expect(screen.getByRole('status').textContent).toContain('So close!');
     expect(onReady).not.toHaveBeenCalled();
     for (let i = 2; i < card.items.length; i++) fireEvent.keyDown(window, { key: placeFor(i) });
     expect(onReady).toHaveBeenCalledTimes(1);
@@ -151,9 +151,9 @@ describe('card types', () => {
     expect(onReady).toHaveBeenCalledTimes(1);
   });
 
-  it('takeaway: "Kailan ako magtitiwala?" with three bullets, ready at once', () => {
+  it('takeaway: "When should I trust it?" with three bullets, ready at once', () => {
     const { onReady } = setup(content.takeaway);
-    expect(screen.getByRole('heading', { name: 'Kailan ako magtitiwala?' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'When should I trust it?' })).toBeTruthy();
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
     expect(onReady).toHaveBeenCalledTimes(1);
   });

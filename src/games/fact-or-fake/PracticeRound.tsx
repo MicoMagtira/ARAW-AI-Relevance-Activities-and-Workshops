@@ -34,7 +34,7 @@ export default function PracticeRound({ moduleId, count, onAnswer, onDone }: Pra
     return (
       <div class="stack">
         <h2 class="card__title">{t('radar.title')}</h2>
-        <TruthRadar score={score} />
+        <TruthRadar score={score} soundAfterMs={0} />
         <div>
           <Button variant="gold" large onClick={() => done(finished)}>
             {t('practice.finish')}

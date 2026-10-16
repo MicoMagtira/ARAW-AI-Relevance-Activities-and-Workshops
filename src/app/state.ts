@@ -9,7 +9,7 @@ export interface Profile {
   avatar: number;
 }
 
-export const DEFAULT_NICKNAME = 'Kaibigan';
+export const DEFAULT_NICKNAME = 'Friend';
 
 export const profile = persisted<Profile>(
   'profile',

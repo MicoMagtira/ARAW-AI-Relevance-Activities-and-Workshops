@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../app/i18n';
 import { cardsDone, isUnlocked, modulesDone } from '../app/progress';
 import { hrefFor } from '../app/router';
+import { araSay, sfx } from '../app/sound';
+import { useLater } from '../app/sound/useLater';
 import { BADGES } from '../content/badges';
 import { MODULES, moduleById, type ModuleInfo } from '../content/modules';
 import { CardView, type Reaction } from '../modules/cards/Cards';
@@ -36,7 +38,7 @@ function Frame({ title, itemId, progress, children }: { title: string; itemId: s
   return (
     <div class="lesson">
       <header class="lesson-bar">
-        <Button href={hrefFor('/learn')} icon variant="secondary" aria-label={t('lesson.close')}>
+        <Button href={hrefFor('/learn')} icon variant="secondary" data-sfx="back" aria-label={t('lesson.close')}>
           <Icon name="close" />
         </Button>
         <p class="lesson-bar__title" title={title}>
@@ -57,7 +59,6 @@ function Frame({ title, itemId, progress, children }: { title: string; itemId: s
       <main class="lesson-main" id="main" tabIndex={-1}>
         <h1 class="sr-only">{title}</h1>
         {children}
-        <footer class="lesson-beta">{t('app.betaNote')}</footer>
       </main>
     </div>
   );
@@ -156,9 +157,12 @@ function Runner({ info, content }: { info: ModuleInfo; content: ModuleContent })
   const first = useRef(true);
   const gainTimer = useRef<number | undefined>(undefined);
   const step = steps[Math.min(index, steps.length - 1)] as Step;
+  const later = useLater();
 
-  const showGain = (xp: number) => {
+  /** XP line. `ding` only where no other sound marks the moment (answers and game results have their own). */
+  const showGain = (xp: number, ding = false) => {
     if (xp <= 0) return;
+    if (ding) later(120, () => sfx('xp'));
     setGain(t('lesson.gain', { n: xp }));
     window.clearTimeout(gainTimer.current);
     gainTimer.current = window.setTimeout(() => setGain(''), 2400);
@@ -185,14 +189,21 @@ function Runner({ info, content }: { info: ModuleInfo; content: ModuleContent })
 
   // Reset in the same update as the step change: cards call onReady() from their own mount effect.
   const goTo = (i: number) => {
+    later.clear(); // a reaction line still waiting belongs to the old step
     setReady(false);
     setReaction(null);
     setIndex(i);
   };
   const advance = () => {
     if (!ready) return;
-    if (step.kind === 'card') showGain(completeCard(info, step.id, step.index));
+    const gained = step.kind === 'card' ? completeCard(info, step.id, step.index) : 0;
     goTo(index + 1);
+    showGain(gained, true);
+  };
+  /** Ara answers a card: her line shows at once and she speaks it after the answer sound has played. */
+  const react = (r: Reaction) => {
+    setReaction(r);
+    if (!r.quiet) later(400, () => araSay(r.line, r.mood));
   };
 
   // Enter or Space moves on when nothing else has focus (docs/DESIGN.md section 11.4).
@@ -201,6 +212,7 @@ function Runner({ info, content }: { info: ModuleInfo; content: ModuleContent })
     const target = e.target as HTMLElement | null;
     if (target && target !== document.body && target !== cardRef.current) return;
     e.preventDefault();
+    sfx('page'); // Enter on the card turns the page like the Next button
     advance();
   });
 
@@ -211,10 +223,10 @@ function Runner({ info, content }: { info: ModuleInfo; content: ModuleContent })
   let body: ComponentChildren;
   switch (step.kind) {
     case 'card':
-      body = <CardView key={step.id} card={step.card} onReady={() => setReady(true)} onReact={setReaction} />;
+      body = <CardView key={step.id} card={step.card} onReady={() => setReady(true)} onReact={react} />;
       break;
     case 'takeaway':
-      body = <CardView key={step.id} card={step.card} onReady={() => setReady(true)} onReact={setReaction} />;
+      body = <CardView key={step.id} card={step.card} onReady={() => setReady(true)} onReact={react} />;
       break;
     case 'game':
       body = (
@@ -259,7 +271,7 @@ function Runner({ info, content }: { info: ModuleInfo; content: ModuleContent })
             {gain}
           </span>
           {hasNext && (
-            <Button variant="gold" large onClick={advance} disabled={!ready}>
+            <Button variant="gold" large data-sfx="page" onClick={advance} disabled={!ready}>
               {nextLabel}
               <Icon name="arrow-right" />
             </Button>
@@ -323,6 +335,7 @@ function GameStage({ game, moduleId, onComplete }: { game: ModuleGameDef; module
           moduleId={moduleId}
           onComplete={(s) => {
             setStars(s);
+            sfx(s === 3 ? 'complete' : 'xp');
             onComplete(s);
           }}
         />
@@ -368,15 +381,30 @@ function PracticeStage(props: Omit<PracticeRoundProps, 'onDone'> & { onDone: () 
   return <Comp {...props} />;
 }
 
+type RewardCue = 'complete' | 'badge' | 'tally' | 'unlock';
+
+/** Reward fanfare order (ms): the module jingle, the badge, the XP rows counting up, then the unlock line. */
+export function rewardCues(r: Pick<FinishResult, 'firstTime' | 'newBadges'>): Array<[number, RewardCue]> {
+  if (!r.firstTime) return [[0, 'complete']];
+  const badge = r.newBadges.length > 0;
+  const cues: Array<[number, RewardCue]> = [[0, 'complete']];
+  if (badge) cues.push([1900, 'badge']);
+  cues.push([badge ? 3300 : 1700, 'tally'], [badge ? 4300 : 2700, 'unlock']);
+  return cues;
+}
+
 function RewardStage({ info }: { info: ModuleInfo }) {
   const [result, setResult] = useState<FinishResult | null>(null);
+  const later = useLater();
 
   useEffect(() => {
     const r = finishModule(info);
     setResult(r);
+    for (const [at, name] of rewardCues(r)) later(at, () => sfx(name));
     if (r.newBadges.length > 0) {
       const badge = BADGES.find((b) => b.id === r.badgeId);
-      pushToast({ kind: 'badge', title: t('lesson.badgeToast', { name: badge?.name ?? '' }), text: badge?.english });
+      // the badge fanfare is part of the sequence above, not rung again by the toast
+      pushToast({ kind: 'badge', title: t('lesson.badgeToast', { name: badge?.name ?? '' }) }, { quiet: true });
     }
   }, [info.id]);
 
@@ -401,8 +429,6 @@ function RewardStage({ info }: { info: ModuleInfo }) {
         <Medal earned size={96} />
         <p>
           <strong class="reward-badge__name">{badge?.name}</strong>
-          <br />
-          <span class="px-text-muted">{badge?.english}</span>
         </p>
       </div>
       {result?.firstTime === false ? (

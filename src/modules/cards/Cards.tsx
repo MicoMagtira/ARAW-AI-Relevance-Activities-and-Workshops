@@ -4,6 +4,7 @@ import { t } from '../../app/i18n';
 import type { AraMood } from '../../ui/Ara';
 import { Icon } from '../../ui/Icon';
 import { useWindowKey } from '../../ui/useWindowKey';
+import { sfx } from '../../app/sound';
 import { checkChoice } from '../engine';
 import type { Card, ChoiceCard, InfoCard, PollCard, RevealCard, StoryHookCard, TakeawayCard } from '../types';
 import { SwipeSort } from './SwipeSort';
@@ -11,6 +12,8 @@ import { SwipeSort } from './SwipeSort';
 export interface Reaction {
   mood: AraMood;
   line: string;
+  /** Show the line without Ara's voice (small in-between reactions). */
+  quiet?: boolean;
 }
 
 export interface CardProps<C extends Card = Card> {
@@ -67,7 +70,7 @@ export function Reveal({ card, onReady, onReact }: CardProps<RevealCard>) {
       onReady();
       onReact({ mood: 'happy', line: card.ara?.done ?? t('lesson.ara.revealDone') });
     } else {
-      onReact({ mood: 'wow', line: t('lesson.ara.revealMore', { n: card.tiles.length - next.length }) });
+      onReact({ mood: 'wow', line: t('lesson.ara.revealMore', { n: card.tiles.length - next.length }), quiet: true });
     }
   };
   return (
@@ -82,7 +85,7 @@ export function Reveal({ card, onReady, onReact }: CardProps<RevealCard>) {
           const shown = open.includes(i);
           return (
             <li key={tile.label}>
-              <button type="button" class={`tile px-box${shown ? ' tile--open' : ''}`} aria-expanded={shown} onClick={() => toggle(i)}>
+              <button type="button" class={`tile px-box${shown ? ' tile--open' : ''}`} aria-expanded={shown} data-sfx={shown ? 'none' : 'page'} onClick={() => toggle(i)}>
                 <span class="tile__label">{tile.label}</span>
                 <span class="tile__detail" hidden={!shown}>
                   {tile.detail}
@@ -109,6 +112,7 @@ export function Choice({ card, onReady, onReact }: CardProps<ChoiceCard>) {
     const result = checkChoice(card, i);
     live.current = [...before, i];
     setTried(live.current);
+    sfx(result.correct ? 'correct' : 'wrong');
     if (result.correct) {
       onReady();
       onReact({ mood: 'happy', line: card.ara?.done ?? t('lesson.ara.right') });
@@ -138,6 +142,7 @@ export function Choice({ card, onReady, onReact }: CardProps<ChoiceCard>) {
                 type="button"
                 class={`option px-box${right ? ' option--right' : ''}${wrong ? ' option--wrong' : ''}`}
                 aria-disabled={solved || wrong ? 'true' : undefined}
+                data-sfx="none"
                 onClick={() => pick(i)}
               >
                 <span class="option__key" aria-hidden="true">
@@ -173,6 +178,7 @@ export function Poll({ card, onReady, onReact }: CardProps<PollCard>) {
   const pick = (i: number) => {
     if (picked !== null) return;
     setPicked(i);
+    sfx('hint'); // no right answer here: Ara's reflection pops up
     onReady();
     onReact({ mood: 'wink', line: card.ara?.done ?? t('lesson.ara.poll') });
   };
@@ -183,7 +189,7 @@ export function Poll({ card, onReady, onReact }: CardProps<PollCard>) {
       <ul class="options">
         {card.options.map((o, i) => (
           <li key={o}>
-            <button type="button" class="option px-box" aria-pressed={picked === i} aria-disabled={picked !== null && picked !== i ? 'true' : undefined} onClick={() => pick(i)}>
+            <button type="button" class="option px-box" data-sfx="none" aria-pressed={picked === i} aria-disabled={picked !== null && picked !== i ? 'true' : undefined} onClick={() => pick(i)}>
               <span class="option__key" aria-hidden="true">
                 {i + 1}
               </span>

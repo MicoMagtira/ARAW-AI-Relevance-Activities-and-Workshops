@@ -2,7 +2,7 @@ import type { StringKey } from './i18n';
 import type { IconName } from '../ui/icons';
 
 export type TabId = 'home' | 'learn' | 'arcade' | 'library' | 'me';
-export type RouteName = 'home' | 'learn' | 'arcade' | 'library' | 'me' | 'lesson' | 'fof' | 'assess' | 'game' | 'daily' | 'certificate' | 'report' | 'about' | 'notFound';
+export type RouteName = 'home' | 'learn' | 'arcade' | 'library' | 'me' | 'lesson' | 'fof' | 'assess' | 'game' | 'daily' | 'certificate' | 'report' | 'about' | 'guide' | 'notFound';
 
 export interface TabDef {
   id: TabId;
@@ -44,6 +44,7 @@ export const ROUTES: readonly RouteDef[] = [
   { name: 'certificate', pattern: '/certificate', titleKey: 'title.certificate', tab: 'me' },
   { name: 'report', pattern: '/report', titleKey: 'title.report' },
   { name: 'about', pattern: '/about', titleKey: 'title.about' },
+  { name: 'guide', pattern: '/guide', titleKey: 'title.guide', tab: 'me' },
 ];
 
 export const NOT_FOUND: RouteDef = { name: 'notFound', pattern: '*', titleKey: 'title.notFound' };

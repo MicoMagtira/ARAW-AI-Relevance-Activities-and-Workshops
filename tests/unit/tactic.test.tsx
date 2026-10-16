@@ -30,7 +30,7 @@ describe('villains', () => {
       expect(v.review_status).toBe('unreviewed');
       const badge = BADGES.find((b) => b.id === v.badgeId);
       expect(badge?.group).toBe('villain');
-      expect(badge?.name).toBe(`Talo si ${v.name}`);
+      expect(badge?.name).toBe(`Beat ${v.name}`);
     }
   });
 });
@@ -263,18 +263,18 @@ describe('Spot the Tactic game', () => {
     }
     fireEvent.click(button(pickName(first.trick)));
     const v = villainById(first.trick as (typeof VILLAIN_IDS)[number]);
-    expect(screen.getByText('Tama!')).toBeTruthy();
+    expect(screen.getByText('Correct!')).toBeTruthy();
     expect(screen.getByText(v.ara)).toBeTruthy();
     expect(screen.getByText(new RegExp(`${v.name} lost a heart`))).toBeTruthy();
     expect(tacticStreaks.value[first.trick]).toBe(1);
   });
 
-  it('a wrong pick says Muntik na!, highlights the signs and gives no points', () => {
+  it('a wrong pick says So close!, highlights the signs and gives no points', () => {
     render(<SpotTheTactic moduleId="m04" onComplete={vi.fn()} />);
     fireEvent.click(button('Start spotting'));
     const first = posts()[0]!;
     fireEvent.click(button(pickName(first.trick === 'none' ? 'dr_fake' : 'none')));
-    expect(screen.getByText('Muntik na!')).toBeTruthy();
+    expect(screen.getByText('So close!')).toBeTruthy();
     expect(screen.getByText('No points this time. On to the next one!')).toBeTruthy();
     expect(screen.getByText('0 pts')).toBeTruthy();
     expect(document.querySelectorAll('.tt-mark').length).toBe(first.marks.length);
@@ -331,7 +331,7 @@ describe('Spot the Tactic game', () => {
     fireEvent.click(button(/^Dr\. Fake:/));
     expect(screen.getByText('New card unlocked!')).toBeTruthy();
     expect(screen.getByText('Dr. Fake is beaten!', { selector: 'p' })).toBeTruthy();
-    expect(screen.getByText(/Badge earned: Talo si Dr. Fake/, { selector: 'p' })).toBeTruthy();
+    expect(screen.getByText(/Badge earned: Beat Dr. Fake/, { selector: 'p' })).toBeTruthy();
   });
 
   it('a miss gives the hearts back', () => {

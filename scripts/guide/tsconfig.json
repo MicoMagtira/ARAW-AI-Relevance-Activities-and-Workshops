@@ -1,0 +1,5 @@
+{
+  "//": "Type-checks the guide capture scripts, which the app tsconfig does not include: npx tsc --noEmit -p scripts/guide",
+  "extends": "../../tsconfig.json",
+  "include": ["./*.ts", "../../src/screens/guide", "../../src/content/guide.ts", "../../tests/unit/guide*"]
+}

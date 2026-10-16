@@ -76,8 +76,8 @@ test.describe('app shell', () => {
     await expect(page.locator('.px-chip--streak')).toContainText('0 day streak');
     await expect(page.locator('.px-chip--xp')).toBeVisible();
     await expect(page.locator('.px-chip--streak')).toBeVisible();
-    // beta disclaimer is visible on every size (sidebar footer on desktop, page footer elsewhere)
-    await expect(page.getByText('Beta: educational, not medical advice').locator('visible=true').first()).toBeVisible();
+    // the creator credit is visible on every size (sidebar footer on desktop, page footer elsewhere)
+    await expect(page.getByText('Created by Mico C. Magtira').locator('visible=true').first()).toBeVisible();
   });
 
   test('tap targets are at least 44px', async ({ page }) => {
@@ -103,13 +103,13 @@ test.describe('app shell', () => {
     await expect(page).toHaveURL(/#\/report\?screen=arcade$/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Report');
     await expect(page.locator('.preview-list dd').first()).toHaveText('arcade');
-    const open = page.getByRole('link', { name: 'Open email' });
+    const open = page.getByRole('link', { name: 'Use my email app' });
     await expect(open).toHaveAttribute('href', /^mailto:AIKasalig@gmail\.com\?subject=%5BARAW%5D%20Report%3A%20Something%20broke/);
   });
 
   test('unknown routes show a friendly Not Found with a Home button', async ({ page }) => {
     await page.goto('/#/definitely-not-here');
-    await expect(page.getByText('Hala! This page is lost.')).toBeVisible();
+    await expect(page.getByText('Oh no! This page is lost.')).toBeVisible();
     await page.getByRole('link', { name: 'Home', exact: true }).last().click();
     await expect(page).toHaveURL(/#\/$/);
   });

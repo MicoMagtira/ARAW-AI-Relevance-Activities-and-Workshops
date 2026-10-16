@@ -4,6 +4,9 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
+import { timerCue } from '../engine/cues';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, ProgressBar } from '../../ui/kit';
@@ -115,6 +118,7 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
   posterRef.current = poster;
   const leftRef = useRef(left);
   leftRef.current = left;
+  const later = useLater();
 
   const brief = useMemo<Brief>(() => (arcade ? buildBrief(seed, n) : (moduleBriefs[n - 1] as Brief)), [arcade, seed, n, moduleBriefs]);
   const topic = topicById(brief.topic);
@@ -138,6 +142,7 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
     setDone((d) => [...d, { brief, poster: p, ev, timedOut }]);
     setScore((s) => s + ev.points);
     if (arcade && ev.reported) setHearts((h) => Math.max(0, h - 1));
+    sfx(ev.reported ? 'wrong' : 'correct');
     setPhase('reveal');
   };
   const publishRef = useRef(publish);
@@ -148,6 +153,8 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
     if (!arcade || phase !== 'build' || paused) return;
     const id = window.setInterval(() => {
       const next = leftRef.current - 1;
+      const tick = timerCue(leftRef.current * 1000, next * 1000);
+      if (tick) sfx(tick);
       leftRef.current = next;
       setLeft(Math.max(0, next));
       if (next <= 0) {
@@ -171,6 +178,14 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
     if (over) setPhase('end');
     else startBrief(n + 1);
   };
+
+  // Ara's closing line, spoken after the end jingle.
+  useEffect(() => {
+    if (phase !== 'end') return;
+    const great = done.filter((d) => !d.ev.reported).length;
+    const line = t(great === done.length ? 'gawa.end.great' : great > 0 ? 'gawa.end.good' : 'gawa.end.some');
+    later(1400, () => araSay(line, great === done.length ? 'wow' : 'happy'));
+  }, [phase]);
 
   const pick = (key: 'slogan' | 'fact', id: string) => setPoster((p) => ({ ...p, [key]: id }));
   const pickPicture = (id: string) => setPoster((p) => ({ ...p, picture: id as PictureId, asked: false }));
@@ -258,7 +273,7 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
               <span class={`gawa-stat gawa-time${lowTime ? ' is-low' : ''}`} role="timer" aria-live="off">
                 {t('gawa.time', { n: left })}
               </span>
-              <Button variant="secondary" aria-pressed={paused} onClick={() => setPaused(!paused)}>
+              <Button variant="secondary" aria-pressed={paused} data-sfx={paused ? 'open' : 'close'} onClick={() => setPaused(!paused)}>
                 {paused ? t('gawa.resume') : t('gawa.pause')}
               </Button>
             </>
@@ -349,15 +364,15 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
           <fieldset class="gawa-group">
             <legend class="gawa-legend">{t('gawa.step.honest')}</legend>
             <div class="gawa-honest">
-              <Button variant="secondary" aria-pressed={poster.label} onClick={() => toggle('label')}>
+              <Button variant="secondary" aria-pressed={poster.label} data-sfx={poster.label ? 'toggleOff' : 'label'} onClick={() => toggle('label')}>
                 <Icon name={poster.label ? 'check' : 'info'} size={20} />
                 {t('gawa.label')}
               </Button>
-              <Button variant="secondary" aria-pressed={poster.credit} onClick={() => toggle('credit')}>
+              <Button variant="secondary" aria-pressed={poster.credit} data-sfx={poster.credit ? 'toggleOff' : 'credit'} onClick={() => toggle('credit')}>
                 <Icon name={poster.credit ? 'check' : 'brush'} size={20} />
                 {t('gawa.credit', { name: ARTIST })}
               </Button>
-              <Button variant="secondary" disabled={!person || poster.asked} onClick={() => setPoster((p) => ({ ...p, asked: true }))}>
+              <Button variant="secondary" disabled={!person || poster.asked} data-sfx="consent" onClick={() => setPoster((p) => ({ ...p, asked: true }))}>
                 <Icon name="chat" size={20} />
                 {poster.asked ? t('gawa.asked') : t('gawa.ask')}
               </Button>
@@ -371,7 +386,7 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
             )}
           </fieldset>
           <div class="gawa-publish">
-            <Button variant="gold" large disabled={!complete} onClick={() => publish(false)}>
+            <Button variant="gold" large disabled={!complete} data-sfx="none" onClick={() => publish(false)}>
               {t('gawa.publish')}
               <Icon name="arrow-right" />
             </Button>

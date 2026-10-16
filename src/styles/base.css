@@ -325,6 +325,98 @@ button {
   text-align: right;
 }
 
+/* ---------- 5.7 Slider (volume) ---------- */
+/* The input is a full --tap tall so the whole strip is the hit area; the 20px track and the thumb are drawn inside it. */
+.px-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: var(--tap);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.px-range::-webkit-slider-runnable-track {
+  height: 20px;
+  box-sizing: border-box;
+  background: var(--soft) linear-gradient(var(--gold-deep), var(--gold-deep)) no-repeat;
+  background-size: var(--fill, 50%) 100%;
+  border: var(--px) solid var(--ink);
+}
+
+.px-range::-moz-range-track {
+  height: 20px;
+  box-sizing: border-box;
+  background: var(--soft) linear-gradient(var(--gold-deep), var(--gold-deep)) no-repeat;
+  background-size: var(--fill, 50%) 100%;
+  border: var(--px) solid var(--ink);
+}
+
+.px-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 32px;
+  margin-top: -10px; /* centred on the 12px inside of the track */
+  background: var(--navy);
+  border: var(--px) solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+}
+
+.px-range::-moz-range-thumb {
+  width: 12px;
+  height: 24px;
+  background: var(--navy);
+  border: var(--px) solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+}
+
+.px-range:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.px-range:disabled {
+  cursor: not-allowed;
+}
+
+.px-range:disabled::-webkit-slider-thumb {
+  background: var(--soft);
+  box-shadow: none;
+}
+
+.px-range:disabled::-moz-range-thumb {
+  background: var(--soft);
+  box-shadow: none;
+}
+
+.volume-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4ch;
+  align-items: center;
+  column-gap: var(--sp-3);
+  padding: 0 var(--px) var(--sp-2) 0;
+}
+
+.volume-row__label {
+  grid-column: 1 / -1;
+}
+
+.volume-row__value {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-align: right;
+}
+
+.volume-row--off .volume-row__label,
+.volume-row--off .volume-row__value {
+  color: var(--muted);
+}
+
 /* ---------- 5.8 Progress ---------- */
 .px-progress-wrap {
   display: grid;

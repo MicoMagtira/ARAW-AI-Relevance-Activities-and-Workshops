@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { collectVillain, tacticStreaks, villainCards } from '../../app/progress';
 import { location$ } from '../../app/router';
+import { sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { BADGES } from '../../content/badges';
 import { villainById, VILLAINS, type TacticPick, type TacticPost, type VillainId } from '../../content/tactics';
 import { randomSeed } from '../../games/engine/rng';
@@ -89,6 +91,7 @@ function PickButtons({ onPick }: PickButtonsProps) {
             type="button"
             class="tt-pick px-btn px-notch px-btn--secondary"
             aria-label={t('tt.pickLabel', { name: v.name, trick: v.trick })}
+            data-sfx="none"
             onClick={() => onPick(v.id)}
           >
             <VillainPortrait id={v.id} size={48} locked={false} decorative />
@@ -99,7 +102,7 @@ function PickButtons({ onPick }: PickButtonsProps) {
             <Hearts name={v.name} left={heartsLeft(streaks[v.id] ?? 0, beaten.includes(v.id))} size={16} />
           </button>
         ))}
-        <Button variant="fact" large class="tt-pick tt-pick--none" onClick={() => onPick('none')}>
+        <Button variant="fact" large class="tt-pick tt-pick--none" data-sfx="none" onClick={() => onPick('none')}>
           <Icon name="check" size={24} />
           <span class="tt-pick__text">
             <span class="tt-pick__name">{t('tt.none')}</span>
@@ -196,6 +199,7 @@ export default function SpotTheTactic({ onComplete }: ModuleGameProps) {
   const [correct, setCorrect] = useState(0);
   const [fresh, setFresh] = useState<VillainId[]>([]);
   const [finished, setFinished] = useState(false);
+  const later = useLater();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
@@ -264,11 +268,16 @@ export default function SpotTheTactic({ onComplete }: ModuleGameProps) {
     if (!post || answered) return;
     const result = applyPick(tacticStreaks.value, villainCards.value, post, choice);
     tacticStreaks.value = result.streaks;
+    const inARow = result.villain ? (result.streaks[result.villain] ?? 0) : 0;
+    if (result.correct) sfx('correct', Math.max(0, Math.min(5, inARow - 1)));
+    else sfx('wrong');
     if (result.defeatedNow) {
       const v = villainById(result.defeatedNow);
       if (collectVillain(v.id, v.badgeId)) {
         setFresh([...fresh, v.id]);
-        pushToast({ kind: 'badge', title: t('lesson.badgeToast', { name: BADGES.find((b) => b.id === v.badgeId)?.name ?? v.name }), text: t('tt.hearts.beaten', { name: v.name }) });
+        // the villain card's fanfare follows the answer sound instead of ringing over it
+        pushToast({ kind: 'badge', title: t('lesson.badgeToast', { name: BADGES.find((b) => b.id === v.badgeId)?.name ?? v.name }), text: t('tt.hearts.beaten', { name: v.name }) }, { quiet: true });
+        later(700, () => sfx('badge'));
       }
     }
     if (result.correct) setCorrect(correct + 1);

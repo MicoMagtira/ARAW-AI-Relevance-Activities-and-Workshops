@@ -13,8 +13,8 @@ const content: ModuleContent = {
     line: 'Doctor reveals: this tea cures diabetes in 7 days! Share before it\'s deleted!',
     icon: 'mail',
     ara: {
-      intro: 'Uy, Tita Baby forwarded something again. It is full of tricks. Let us find them.',
-      done: 'Tara! Learn the trick and you can spot a hundred fakes.',
+      intro: 'Hey, Tita Baby forwarded something again. It is full of tricks. Let us find them.',
+      done: 'Here we go! Learn the trick and you can spot a hundred fakes.',
     },
   },
   cards: [
@@ -94,7 +94,7 @@ const content: ModuleContent = {
         },
       ],
       correct: 0,
-      ara: { done: 'Kalma lang, Fear Monger. We pause first.' },
+      ara: { done: 'Calm down, Fear Monger. We pause first.' },
     },
     {
       id: 'm04-c6',
@@ -115,7 +115,7 @@ const content: ModuleContent = {
         },
       ],
       correct: 1,
-      ara: { done: 'Nice kwento, Kim. Pero isang kwento lang.' },
+      ara: { done: 'Nice story, Kim. But it is only one story.' },
     },
     {
       id: 'm04-c7',

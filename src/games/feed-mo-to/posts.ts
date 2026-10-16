@@ -120,7 +120,7 @@ const FAMILY: readonly Template[] = [
 ];
 
 const SHOWBIZ: readonly Template[] = [
-  () => ({ key: 'showbiz-finale', lines: ['TELESERYE', 'FINALE', 'TONIGHT!'], text: 'The big teleserye finale airs tonight. Will the two sisters finally make up?' }),
+  () => ({ key: 'showbiz-finale', lines: ['SOAP OPERA', 'FINALE', 'TONIGHT!'], text: 'The big soap opera finale airs tonight. Will the two sisters finally make up?' }),
   () => ({ key: 'showbiz-singing', lines: ['SINGING', 'CONTEST', 'WINNER!'], text: 'Who won the town singing contest? The crowd went wild!' }),
   () => ({ key: 'showbiz-fiesta', lines: ['SINGER AT', 'THE FIESTA', 'SURPRISE!'], text: 'A famous singer surprised the fiesta crowd with a free show.' }),
 ];

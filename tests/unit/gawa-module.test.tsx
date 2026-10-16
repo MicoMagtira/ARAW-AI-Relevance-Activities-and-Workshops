@@ -177,7 +177,7 @@ describe("Gawa Ko 'To! module game", () => {
     }
     expect(screen.getByRole('heading', { name: 'All three posters are done!' })).toBeTruthy();
     expect(screen.getByText('Honest posters: 3 of 3.')).toBeTruthy();
-    expect(screen.getByText(/Tapat na Likha/)).toBeTruthy();
+    expect(screen.getByText(/Honest Maker/)).toBeTruthy();
     press(/^Finish game/);
     expect(stars).toBe(3);
   });

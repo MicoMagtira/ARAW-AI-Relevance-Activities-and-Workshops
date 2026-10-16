@@ -106,7 +106,7 @@ export const CHAT_ROUNDS: readonly ChatRound[] = [
   round(
     'cb-m02',
     'mali',
-    'My lola has diabetes. Can guava leaf tea cure it so she can stop her medicine?',
+    'My grandmother has diabetes. Can guava leaf tea cure it so she can stop her medicine?',
     'Yes. Guava leaf tea cures diabetes in a few days, so she can safely stop her medicine.',
     'No drink or herb has been shown to cure diabetes. Stopping medicine without asking her doctor can be dangerous.',
     'There is no proven herbal cure. She should keep to her treatment and ask her doctor before any change.',
@@ -153,7 +153,7 @@ export const CHAT_ROUNDS: readonly ChatRound[] = [
   round(
     'cb-r01',
     'magpatingin',
-    'My tatay has chest pain and is sweating. It started while he was walking. What should he do?',
+    'My dad has chest pain and is sweating. It started while he was walking. What should he do?',
     'It is probably just gas. Let him sit down, drink warm water and rest. It should pass.',
     'Chest pain can be a sign of a heart emergency. A chatbot cannot tell gas from a heart problem, so this goes to a health worker now.',
     'Treat it as an emergency: get him to the nearest hospital or call for help right away.',
@@ -171,7 +171,7 @@ export const CHAT_ROUNDS: readonly ChatRound[] = [
   round(
     'cb-r03',
     'magpatingin',
-    "My lolo's face is drooping on one side and his words are slurred. He says he just feels sleepy.",
+    "My grandfather's face is drooping on one side and his words are slurred. He says he just feels sleepy.",
     'He is probably tired. Let him lie down and sleep, and check on him in the morning.',
     'A drooping face and slurred speech are stroke signs. Every minute matters, and sleeping it off can cost him a lot.',
     'Call for help and go to the nearest hospital right away. Do not wait to see if it passes.',

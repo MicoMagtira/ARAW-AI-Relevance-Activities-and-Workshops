@@ -57,11 +57,11 @@ describe('item renderers', () => {
 });
 
 describe('answering', () => {
-  it('right answer on a fake: Tama, stamp, why, how to check, trick chip, report link with the id', () => {
+  it('right answer on a fake: Correct, stamp, why, how to check, trick chip, report link with the id', () => {
     const { onAnswer } = setup([FAKE_TEXT, FACT_CHAT]);
     fireEvent.click(screen.getByRole('button', { name: 'Fake' }));
     expect(onAnswer).toHaveBeenCalledWith({ item: FAKE_TEXT, answer: 'fake', correct: true });
-    expect(screen.getByText('Tama! It is FAKE.')).toBeTruthy();
+    expect(screen.getByText('Correct! It is FAKE.')).toBeTruthy();
     expect(screen.getByText('ARAW GAME · FAKE')).toBeTruthy();
     expect(screen.getByText('Trick: Miracle Mike')).toBeTruthy();
     expect(screen.getByText(/not proof/)).toBeTruthy();
@@ -71,10 +71,10 @@ describe('answering', () => {
     expect(report.getAttribute('href')).toBe('#/report?screen=fact-or-fake&item=fof-p-001');
   });
 
-  it('wrong answer on a fact says Muntik na, shows no stamp and no trick', () => {
+  it('wrong answer on a fact says So close, shows no stamp and no trick', () => {
     setup([FACT_CHAT, FAKE_TEXT]);
     fireEvent.click(screen.getByRole('button', { name: 'Fake' }));
-    expect(screen.getByText('Muntik na! It is actually FACT.')).toBeTruthy();
+    expect(screen.getByText('So close! It is actually FACT.')).toBeTruthy();
     expect(screen.queryByText('ARAW GAME · FAKE')).toBeNull();
     expect(screen.queryByText(/^Trick:/)).toBeNull();
   });
@@ -164,7 +164,7 @@ describe('assessment mode', () => {
     expect(screen.queryByRole('link', { name: /Report/ })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Fake' }));
     expect(onAnswer).toHaveBeenCalledTimes(1);
-    expect(screen.queryByText(/Tama!|Muntik na!/)).toBeNull();
+    expect(screen.queryByText(/Correct!|So close!/)).toBeNull();
     expect(screen.queryByText('ARAW GAME · FAKE')).toBeNull();
     expect(screen.getByText(/2 of 2/)).toBeTruthy();
     expect(screen.getByText('Item 1: answered')).toBeTruthy();

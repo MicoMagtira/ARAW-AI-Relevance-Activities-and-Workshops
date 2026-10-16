@@ -1,0 +1,8 @@
+/* Mimics the shell's columns: sidebar on desktop, full width below 1024px. */
+.pv { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 100vh; }
+.pv-side { display: none; }
+@media (width >= 1024px) {
+  .pv { grid-template-columns: clamp(240px, 18.75vw, 288px) minmax(0, 1fr); }
+  .pv-side { display: block; background: var(--surface); border-right: 4px solid var(--ink); }
+}
+.pv-col { min-width: 0; }

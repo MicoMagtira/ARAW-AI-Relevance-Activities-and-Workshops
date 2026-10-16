@@ -109,8 +109,8 @@ export const aiPicture = (p: PictureId | null): boolean => p === 'ai' || p === '
 export function replyFor(picture: PictureId | null, brief: Brief): { name: string; yes: boolean; text: string } | null {
   if (picture === 'neighbor') {
     return brief.neighborSays === 'yes'
-      ? { name: NEIGHBOR, yes: true, text: 'Sure, for the health drive! Just for this poster, ha?' }
-      : { name: NEIGHBOR, yes: false, text: 'Ay, nakakahiya! Please use another picture.' };
+      ? { name: NEIGHBOR, yes: true, text: 'Sure, for the health drive! Just for this poster, okay?' }
+      : { name: NEIGHBOR, yes: false, text: 'Oh, I am too shy! Please use another picture.' };
   }
   if (picture === 'ai-doctor') return { name: DOCTOR, yes: false, text: 'I never made that picture, and I never said that. Please take it down!' };
   return null;

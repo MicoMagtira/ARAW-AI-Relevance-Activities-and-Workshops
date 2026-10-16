@@ -9,16 +9,18 @@ import { randomSeed } from '../engine/rng';
 import { Studio, type StudioResult } from './Studio';
 import { GOOD_RUN } from './rules';
 import type { DomGameProps } from '../registry';
+import { useRunEndSound } from '../engine/useRunEnd';
 
 function ArcadeEnd({ result, daily, onAgain }: { result: StudioResult; daily?: boolean; onAgain: () => void }) {
   // saved once, when the end screen first shows
   const [run] = useState(() => recordRun('gawa-ko-to', result.score, GOOD_RUN, daily));
+  useRunEndSound(run.goodRun);
   return (
     <>
       <p>
         {run.newBest && <Chip kind="streak">{t('game.newBest')}</Chip>} <Chip kind="xp">{t('game.xp', { n: run.xp })}</Chip> <span>{t('game.bestLine', { n: run.best.toLocaleString('en-US') })}</span>
       </p>
-      <Button variant="gold" large onClick={onAgain}>
+      <Button variant="gold" large data-sfx="start" onClick={onAgain}>
         {t('game.again')}
       </Button>
       <Button variant="secondary" href={hrefFor(daily ? '/daily' : '/arcade')}>

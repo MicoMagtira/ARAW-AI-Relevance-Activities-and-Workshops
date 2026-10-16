@@ -4,7 +4,8 @@
 // users and posts come only from the seeded random numbers, never from what the player chose.
 import { PALETTE, box, text } from '../engine/draw';
 import { createRng, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent, timerCue } from '../engine/cues';
 import { CARD_X, GRID, H, PANEL_LABEL, W, bubbleRadii, cardAt, drawBanner, drawBubble, drawCard, drawChip, drawMeter, drawPerson, layoutChips, meterColor, type Face, type Pos } from './art';
 import { makeCandidates, type Post } from './posts';
 import {
@@ -78,7 +79,7 @@ function noteFor(topic: TopicId, liked: boolean, repeated: boolean): string {
 
 const signed = (n: number): string => (n > 0 ? `+${n}` : String(n));
 
-function createFeed({ rng }: { seed: string; rng: Rng }): GameInstance {
+function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const nextUser = createUserQueue(createRng(`${rng()}:feed-users`));
 
   let phase: Phase = 'intro';
@@ -125,6 +126,7 @@ function createFeed({ rng }: { seed: string; rng: Rng }): GameInstance {
     while (recent.length > RECENT_KEYS) recent.shift();
     sel = 1;
     timeLeft = pickMs(userIndex);
+    cue('swipe');
     phase = 'choose';
     phaseMs = 0;
     outcome = null;
@@ -159,6 +161,7 @@ function createFeed({ rng }: { seed: string; rng: Rng }): GameInstance {
     if (topicById(post.topic).sensational) counts.scary += 1;
     if (post.topic === 'clinic') counts.trusted += 1;
     pendingCrash = result.crash;
+    cue(result.crash === 'bubble' ? 'bubble' : liked ? 'heart' : 'select');
     phase = 'result';
     phaseMs = 0;
   }
@@ -171,6 +174,7 @@ function createFeed({ rng }: { seed: string; rng: Rng }): GameInstance {
     counts.timeouts += 1;
     outcome = { chosen: -1, engagementDelta: delta, balanceDelta: 0, points: 0, note: 'TOO SLOW! SHE SCROLLED AWAY.' };
     pendingCrash = result.crash;
+    cue('whiff');
     phase = 'result';
     phaseMs = 0;
   }
@@ -244,8 +248,10 @@ function createFeed({ rng }: { seed: string; rng: Rng }): GameInstance {
           return;
         }
       }
+      const tick = timerCue(timeLeft, timeLeft - dtMs);
       timeLeft -= dtMs;
       if (timeLeft <= 0) timeout();
+      else if (tick) cue(tick);
     },
 
     draw(ctx) {
@@ -386,9 +392,9 @@ const feedMoTo: GameDef = {
     { title: 'Feeds pick what keeps people scrolling', text: 'An algorithm shows more of whatever gets clicks. Keep Tita interested, but keep her feed balanced.', mood: 'happy' },
     { title: 'How to play', text: 'Pick one of three posts before the timer ends. Use left and right with Enter, or just tap a post.', mood: 'idle' },
     { title: 'Why it matters', text: 'Scary health posts get clicks, so feeds show more of them. That can trap people in a bubble of fear.', mood: 'think' },
-    { title: 'Kailan ako magtitiwala?', text: 'Trust a feed that shows you many sides, and search on purpose for trusted sources.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'Trust a feed that shows you many sides, and search on purpose for trusted sources.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? When a feed shows me many sides, and I search on purpose for trusted sources.',
+  takeaway: 'When should I trust it? When a feed shows me many sides, and I search on purpose for trusted sources.',
   create: createFeed,
 };
 

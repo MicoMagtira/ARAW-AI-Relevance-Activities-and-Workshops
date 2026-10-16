@@ -52,12 +52,12 @@ export interface Relative {
 }
 
 export const FAMILY: readonly Relative[] = [
-  { id: 'mama', name: 'MAMA', say: 'Mama', addr: 'anak', look: { hair: '#1f2550', skin: '#e2a77e', shirt: '#ff7a59' } },
-  { id: 'papa', name: 'PAPA', say: 'Papa', addr: 'anak', look: { hair: '#4a4f6a', skin: '#c98a5e', shirt: '#35408e' } },
-  { id: 'lola', name: 'LOLA NENA', say: 'Lola Nena', addr: 'apo', look: { hair: '#c9c9d6', skin: '#e2a77e', shirt: '#1e7d50', glasses: true } },
-  { id: 'liza', name: 'ATE LIZA', say: 'Ate Liza', addr: 'bunso', look: { hair: '#4a2c1a', skin: '#f0c19a', shirt: '#c4323a' } },
-  { id: 'ben', name: 'KUYA BEN', say: 'Kuya Ben', addr: 'bunso', look: { hair: '#1f2550', skin: '#d99a6c', shirt: '#e8b84a' } },
-  { id: 'raul', name: 'TITO RAUL', say: 'Tito Raul', addr: 'pamangkin', look: { hair: '#6b6f8a', skin: '#c98a5e', shirt: '#1e7d50', glasses: true } },
+  { id: 'mama', name: 'MAMA', say: 'Mama', addr: 'Sweetheart', look: { hair: '#1f2550', skin: '#e2a77e', shirt: '#ff7a59' } },
+  { id: 'papa', name: 'PAPA', say: 'Papa', addr: 'Sweetheart', look: { hair: '#4a4f6a', skin: '#c98a5e', shirt: '#35408e' } },
+  { id: 'lola', name: 'LOLA NENA', say: 'Lola Nena', addr: 'Dear', look: { hair: '#c9c9d6', skin: '#e2a77e', shirt: '#1e7d50', glasses: true } },
+  { id: 'liza', name: 'ATE LIZA', say: 'Ate Liza', addr: 'Kiddo', look: { hair: '#4a2c1a', skin: '#f0c19a', shirt: '#c4323a' } },
+  { id: 'ben', name: 'KUYA BEN', say: 'Kuya Ben', addr: 'Kiddo', look: { hair: '#1f2550', skin: '#d99a6c', shirt: '#e8b84a' } },
+  { id: 'raul', name: 'TITO RAUL', say: 'Tito Raul', addr: 'Kiddo', look: { hair: '#6b6f8a', skin: '#c98a5e', shirt: '#1e7d50', glasses: true } },
 ];
 
 const DOCTOR_LOOK: Look = { hair: '#1f2550', skin: '#e2a77e', shirt: '#e3e6f5', glasses: true };
@@ -146,7 +146,7 @@ export const STORIES: readonly Story[] = [
   },
   {
     id: 'd-s2', kind: 'doctor', scam: true, level: 1,
-    text: 'Kumusta! Dr. Alcantara here. Stop your maintenance medicine, it is poison. My herbal capsules cure it all. Send {amount} on {wallet} for a box.',
+    text: 'Hello! Dr. Alcantara here. Stop your maintenance medicine, it is poison. My herbal capsules cure it all. Send {amount} on {wallet} for a box.',
     lesson: 'Never stop prescribed medicine because of a call or an ad. Ask your own doctor or health worker.',
   },
   {

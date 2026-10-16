@@ -23,9 +23,9 @@ test.describe('Me: badge cabinet and certificate', () => {
       await expect(page.getByRole('heading', { level: 3, name })).toBeVisible();
     }
     await expect(page.locator('.badge-pick')).toHaveCount(20);
-    await page.getByRole('button', { name: /Isang Linggo/ }).click();
+    await page.getByRole('button', { name: /One Week/ }).click();
     await expect(page.locator('.badge-info')).toContainText('Learn or play on 7 days in a row');
-    await page.getByRole('button', { name: /Tatlong Araw/ }).click();
+    await page.getByRole('button', { name: /Three Days/ }).click();
     await expect(page.locator('.badge-info')).toContainText('Earned');
     // the certificate is locked until all 10 modules are done
     await expect(page.getByText('Locked: 0 of 10 modules done')).toBeVisible();
@@ -61,7 +61,7 @@ test.describe('Me: badge cabinet and certificate', () => {
     await expect(print).toBeEnabled();
     const canvas = page.getByRole('img', { name: /^Certificate\. Maria Santos completed all 10 ARAW modules on .+\. Badges earned: 2 of 20\./ });
     await expect(canvas).toBeVisible();
-    await expect(canvas).toHaveAttribute('aria-label', /An AIKasalig project, DOST-PCHRD, National University\. Educational, not medical advice\./);
+    await expect(canvas).toHaveAttribute('aria-label', /An AIKasalig project, DOST-PCHRD, National University\./);
 
     // the canvas has real drawing in it (not blank) and is A4 landscape
     const stats = await canvas.evaluate((el) => {

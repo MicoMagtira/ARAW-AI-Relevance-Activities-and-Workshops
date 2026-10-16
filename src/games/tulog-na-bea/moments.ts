@@ -94,7 +94,7 @@ const pull = (id: string, slot: SlotId, source: PullSource, title: string, text:
 
 /** Ordinary moments: the choices that fill (and spend) the meters. */
 export const LIFE: readonly Moment[] = [
-  life('l-wake', 'morning', 'Alarm at six', 'The alarm rings. Lola Nena has already cooked sinangag and egg.', [
+  life('l-wake', 'morning', 'Alarm at six', 'The alarm rings. Lola Nena has already cooked garlic rice and egg.', [
     opt('a', 'Get up and eat breakfast with Lola', [0, 4, 2, 6], 'A calm breakfast with family is a good start. Mood and friendships both grow a little.'),
     opt('b', 'Eat while you go over your notes', [0, 0, 10, -2], 'A quick review helps you study, but you were quiet at the table.'),
     opt('c', 'Sleep twenty more minutes', [8, -2, -4, 0], 'Rest is real health. But rushing out the door costs you some study time.'),
@@ -124,7 +124,7 @@ export const LIFE: readonly Moment[] = [
     opt('b', 'Say no, you have homework', [0, -4, 8, -6], 'You studied, but missing the fun cost a little mood and friendship.'),
     opt('c', 'Invite her to study together later', [0, 2, 4, 6], 'A nice middle: you stay close and keep the study plan.'),
   ]),
-  life('l-dinner', 'dinner', 'Dinner is ready', 'Tita Baby cooked tinola. Everyone is at the table.', [
+  life('l-dinner', 'dinner', 'Dinner is ready', 'Tita Baby cooked chicken soup. Everyone is at the table.', [
     opt('a', 'Tell them about your day', [0, 6, 0, 10], 'Real talk at the table is how families stay close.'),
     opt('b', 'Help Lola serve and wash up', [0, 4, 0, 6], 'Small kindnesses at home build real bonds.'),
     opt('c', 'Eat fast, then go to your room', [0, -2, 4, -6], 'You studied a little more, but dinner is also when your family hears you.'),
@@ -178,7 +178,7 @@ export const PULLS_POOL: readonly Moment[] = [
     opt('b', 'Pause, and turn autoplay off', [0, 1, 4, 0], 'Autoplay can be turned off in settings. Now the stop is yours.'),
     opt('c', 'Finish this video on purpose, then stop', [-1, 4, -2, 0], 'You watched one on purpose. That is fine.'),
   ]),
-  pull('p-aft-chat', 'afternoon', 'groupchat', '112 new messages', 'The barkada chat has 112 new messages about nothing in particular.', [
+  pull('p-aft-chat', 'afternoon', 'groupchat', '112 new messages', 'The friends’ group chat has 112 new messages about nothing in particular.', [
     opt('a', 'Read them all, to be safe', [-2, -4, -6, 3], 'You got a lot of noise, not many friends.', true),
     opt('b', 'Mute the chat for tonight', [0, 2, 4, -2], 'You may miss a joke. You did not miss anything that matters.'),
     opt('c', 'Message Joy directly with the one question', [0, 2, 2, 5], 'You used the phone as a tool and kept it short.'),
@@ -186,14 +186,14 @@ export const PULLS_POOL: readonly Moment[] = [
   pull('p-dinner-notif', 'dinner', 'notification', 'Buzz at the table', 'Bea’s phone buzzes next to her plate: a sale, a like, a new message.', [
     opt('a', 'Check it under the table', [0, 3, -2, -8], 'Everyone noticed. Your family wants you in the room.', true),
     opt('b', 'Phone face down, away from the table', [0, 2, 0, 6], 'Phone-free dinner is a small habit with a big effect on how connected you feel.'),
-    opt('c', 'Say "sandali" and answer Joy once', [0, 2, 0, 2], 'A short reply is okay, but the buzzing still took you out of dinner.'),
+    opt('c', 'Say "one moment" and answer Joy once', [0, 2, 0, 2], 'A short reply is okay, but the buzzing still took you out of dinner.'),
   ]),
   pull('p-dinner-scroll', 'dinner', 'scroll', 'Reels with the rice', 'Bea opens a feed for just a second. Her rice goes cold.', [
     opt('a', 'Keep scrolling while you eat', [0, 4, 0, -10], 'You ate, but you missed dinner. Eating is better when you are there.', true),
     opt('b', 'Put it away and join the conversation', [0, 3, 0, 8], 'The feed will never end, but dinner will.'),
     opt('c', 'Show one funny clip to everyone, then put it away', [0, 5, 0, 4], 'Sharing one thing as a family is good. Then you stopped.'),
   ]),
-  pull('p-eve-auto', 'evening', 'autoplay', 'The next episode', 'A teleserye clip ends. "Next episode in 5 seconds."', [
+  pull('p-eve-auto', 'evening', 'autoplay', 'The next episode', 'A soap opera clip ends. "Next episode in 5 seconds."', [
     opt('a', 'Watch the next one', [-6, 5, -6, -4], 'One more became four. Your homework waited.', true),
     opt('b', 'Turn autoplay off, then pick what to do', [0, 2, 4, 0], 'Turning off autoplay turns "one more" back into your decision.'),
     opt('c', 'Save it for the weekend', [0, 1, 6, 0], 'The show will wait. A plan makes it better.'),

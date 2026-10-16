@@ -1,0 +1,1521 @@
+{
+ "generatedAt": "2026-10-16T04:34:18.940Z",
+ "shots": {
+  "arcade": {
+   "desktop": {
+    "file": "guide/arcade-desktop.webp",
+    "w": 1366,
+    "h": 900,
+    "scale": 1,
+    "boxes": {
+     "featured": {
+      "x": 288,
+      "y": 104,
+      "w": 1042,
+      "h": 303
+     },
+     "tile": {
+      "x": 316,
+      "y": 561,
+      "w": 301,
+      "h": 123
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/arcade-phone.webp",
+    "w": 360,
+    "h": 1000,
+    "scale": 2,
+    "boxes": {
+     "featured": {
+      "x": 16,
+      "y": 72,
+      "w": 324,
+      "h": 513
+     },
+     "tile": {
+      "x": 36,
+      "y": 808,
+      "w": 280,
+      "h": 104
+     }
+    }
+   }
+  },
+  "arcade-fof": {
+   "desktop": {
+    "file": "guide/arcade-fof-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "fof": {
+      "x": 340,
+      "y": 367,
+      "w": 286,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/arcade-fof-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "fof": {
+      "x": 60,
+      "y": 401,
+      "w": 228,
+      "h": 66
+     }
+    }
+   }
+  },
+  "certificate": {
+   "desktop": {
+    "file": "guide/certificate-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "certificate": {
+      "x": 510,
+      "y": 100,
+      "w": 741,
+      "h": 524
+     },
+     "name": {
+      "x": 143,
+      "y": 306,
+      "w": 315,
+      "h": 49
+     },
+     "save": {
+      "x": 147,
+      "y": 439,
+      "w": 176,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/certificate-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "certificate": {
+      "x": 16,
+      "y": 84,
+      "w": 328,
+      "h": 232
+     },
+     "name": {
+      "x": 36,
+      "y": 530,
+      "w": 288,
+      "h": 49
+     },
+     "save": {
+      "x": 40,
+      "y": 663,
+      "w": 176,
+      "h": 56
+     }
+    }
+   }
+  },
+  "comics-reader": {
+   "desktop": {
+    "file": "guide/comics-reader-desktop.webp",
+    "w": 1366,
+    "h": 1000,
+    "scale": 1,
+    "boxes": {
+     "stage": {
+      "x": 679,
+      "y": 288,
+      "w": 623,
+      "h": 647
+     },
+     "steps": {
+      "x": 679,
+      "y": 951,
+      "w": 623,
+      "h": 49
+     },
+     "next": {
+      "x": 1162,
+      "y": 955,
+      "w": 128,
+      "h": 45
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/comics-reader-phone.webp",
+    "w": 360,
+    "h": 1180,
+    "scale": 2,
+    "boxes": {
+     "stage": {
+      "x": 36,
+      "y": 288,
+      "w": 284,
+      "h": 543
+     },
+     "steps": {
+      "x": 36,
+      "y": 846,
+      "w": 284,
+      "h": 214
+     },
+     "next": {
+      "x": 40,
+      "y": 936,
+      "w": 128,
+      "h": 48
+     }
+    }
+   }
+  },
+  "daily": {
+   "desktop": {
+    "file": "guide/daily-desktop.webp",
+    "w": 1366,
+    "h": 860,
+    "scale": 1,
+    "boxes": {
+     "game": {
+      "x": 316,
+      "y": 313,
+      "w": 542,
+      "h": 224
+     },
+     "items": {
+      "x": 316,
+      "y": 554,
+      "w": 542,
+      "h": 195
+     },
+     "status": {
+      "x": 1078,
+      "y": 240,
+      "w": 204,
+      "h": 24
+     },
+     "streak": {
+      "x": 910,
+      "y": 336,
+      "w": 420,
+      "h": 285
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/daily-phone.webp",
+    "w": 360,
+    "h": 1200,
+    "scale": 2,
+    "boxes": {
+     "game": {
+      "x": 36,
+      "y": 353,
+      "w": 284,
+      "h": 304
+     },
+     "items": {
+      "x": 36,
+      "y": 673,
+      "w": 284,
+      "h": 332
+     }
+    }
+   }
+  },
+  "daily-streak": {
+   "phone": {
+    "file": "guide/daily-streak-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "status": {
+      "x": 176,
+      "y": 250,
+      "w": 124,
+      "h": 48
+     },
+     "streak": {
+      "x": 16,
+      "y": 354,
+      "w": 324,
+      "h": 293
+     }
+    }
+   }
+  },
+  "fof-answer": {
+   "desktop": {
+    "file": "guide/fof-answer-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "stamp": {
+      "x": 646,
+      "y": 161,
+      "w": 228,
+      "h": 73
+     },
+     "feedback": {
+      "x": 912,
+      "y": 100,
+      "w": 415,
+      "h": 472
+     },
+     "report": {
+      "x": 795,
+      "y": 100,
+      "w": 94,
+      "h": 44
+     },
+     "next": {
+      "x": 1127,
+      "y": 476,
+      "w": 160,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/fof-answer-phone.webp",
+    "w": 360,
+    "h": 1100,
+    "scale": 2,
+    "boxes": {
+     "stamp": {
+      "x": 98,
+      "y": 233,
+      "w": 228,
+      "h": 73
+     },
+     "feedback": {
+      "x": 16,
+      "y": 537,
+      "w": 324,
+      "h": 514
+     },
+     "report": {
+      "x": 16,
+      "y": 172,
+      "w": 94,
+      "h": 44
+     },
+     "next": {
+      "x": 160,
+      "y": 962,
+      "w": 148,
+      "h": 56
+     }
+    }
+   }
+  },
+  "fof-item": {
+   "desktop": {
+    "file": "guide/fof-item-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "count": {
+      "x": 370,
+      "y": 100,
+      "w": 468,
+      "h": 18
+     },
+     "card": {
+      "x": 370,
+      "y": 186,
+      "w": 518,
+      "h": 415
+     },
+     "fact": {
+      "x": 641,
+      "y": 664,
+      "w": 235,
+      "h": 72
+     },
+     "fake": {
+      "x": 374,
+      "y": 664,
+      "w": 235,
+      "h": 72
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/fof-item-phone.webp",
+    "w": 360,
+    "h": 1000,
+    "scale": 2,
+    "boxes": {
+     "count": {
+      "x": 16,
+      "y": 128,
+      "w": 324,
+      "h": 36
+     },
+     "card": {
+      "x": 16,
+      "y": 232,
+      "w": 324,
+      "h": 523
+     },
+     "fact": {
+      "x": 190,
+      "y": 818,
+      "w": 138,
+      "h": 72
+     },
+     "fake": {
+      "x": 20,
+      "y": 818,
+      "w": 138,
+      "h": 72
+     }
+    }
+   }
+  },
+  "fof-radar": {
+   "desktop": {
+    "file": "guide/fof-radar-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "score": {
+      "x": 63,
+      "y": 386,
+      "w": 152,
+      "h": 34
+     },
+     "radar": {
+      "x": 615,
+      "y": 188,
+      "w": 684,
+      "h": 24
+     },
+     "verdict": {
+      "x": 615,
+      "y": 220,
+      "w": 684,
+      "h": 22
+     },
+     "again": {
+      "x": 67,
+      "y": 495,
+      "w": 224,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/fof-radar-phone.webp",
+    "w": 360,
+    "h": 1000,
+    "scale": 2,
+    "boxes": {
+     "score": {
+      "x": 36,
+      "y": 122,
+      "w": 152,
+      "h": 34
+     },
+     "radar": {
+      "x": 36,
+      "y": 517,
+      "w": 284,
+      "h": 24
+     },
+     "verdict": {
+      "x": 36,
+      "y": 549,
+      "w": 284,
+      "h": 22
+     },
+     "again": {
+      "x": 40,
+      "y": 231,
+      "w": 224,
+      "h": 56
+     }
+    }
+   }
+  },
+  "game-briefing": {
+   "desktop": {
+    "file": "guide/game-briefing-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "ara": {
+      "x": 217,
+      "y": 197,
+      "w": 584,
+      "h": 160
+     },
+     "page": {
+      "x": 217,
+      "y": 369,
+      "w": 584,
+      "h": 12
+     },
+     "next": {
+      "x": 685,
+      "y": 431,
+      "w": 104,
+      "h": 48
+     },
+     "skip": {
+      "x": 221,
+      "y": 431,
+      "w": 104,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/game-briefing-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "ara": {
+      "x": 52,
+      "y": 120,
+      "w": 252,
+      "h": 399
+     },
+     "page": {
+      "x": 52,
+      "y": 531,
+      "w": 252,
+      "h": 12
+     },
+     "next": {
+      "x": 188,
+      "y": 593,
+      "w": 104,
+      "h": 48
+     },
+     "skip": {
+      "x": 56,
+      "y": 593,
+      "w": 104,
+      "h": 48
+     }
+    }
+   }
+  },
+  "game-intro": {
+   "desktop": {
+    "file": "guide/game-intro-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "howto": {
+      "x": 404,
+      "y": 480,
+      "w": 202,
+      "h": 48
+     },
+     "start": {
+      "x": 417,
+      "y": 396,
+      "w": 176,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/game-intro-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "howto": {
+      "x": 73,
+      "y": 448,
+      "w": 202,
+      "h": 48
+     },
+     "start": {
+      "x": 86,
+      "y": 364,
+      "w": 176,
+      "h": 56
+     }
+    }
+   }
+  },
+  "game-play": {
+   "desktop": {
+    "file": "guide/game-play-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "hud": {
+      "x": 967,
+      "y": 100,
+      "w": 320,
+      "h": 159
+     },
+     "canvas": {
+      "x": 82,
+      "y": 104,
+      "w": 853,
+      "h": 480
+     },
+     "pause": {
+      "x": 971,
+      "y": 279,
+      "w": 150,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/game-play-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "hud": {
+      "x": 16,
+      "y": 282,
+      "w": 324,
+      "h": 159
+     },
+     "canvas": {
+      "x": 23,
+      "y": 88,
+      "w": 309,
+      "h": 174
+     },
+     "pause": {
+      "x": 20,
+      "y": 461,
+      "w": 140,
+      "h": 87
+     }
+    }
+   }
+  },
+  "home": {
+   "desktop": {
+    "file": "guide/home-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "hud": {
+      "x": 979,
+      "y": 12,
+      "w": 355,
+      "h": 44
+     },
+     "continue": {
+      "x": 348,
+      "y": 511,
+      "w": 192,
+      "h": 56
+     },
+     "progress": {
+      "x": 344,
+      "y": 441,
+      "w": 416,
+      "h": 24
+     },
+     "report": {
+      "x": 20,
+      "y": 582,
+      "w": 204,
+      "h": 48
+     },
+     "nav": {
+      "x": 0,
+      "y": 0,
+      "w": 256,
+      "h": 768
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/home-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "hud": {
+      "x": 124,
+      "y": 2,
+      "w": 224,
+      "h": 48
+     },
+     "continue": {
+      "x": 60,
+      "y": 506,
+      "w": 192,
+      "h": 56
+     },
+     "progress": {
+      "x": 56,
+      "y": 435,
+      "w": 240,
+      "h": 24
+     },
+     "report": {
+      "x": 292,
+      "y": 6,
+      "w": 44,
+      "h": 44
+     },
+     "nav": {
+      "x": 0,
+      "y": 676,
+      "w": 360,
+      "h": 64
+     }
+    }
+   }
+  },
+  "home-more": {
+   "desktop": {
+    "file": "guide/home-more-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "daily": {
+      "x": 288,
+      "y": 84,
+      "w": 509,
+      "h": 325
+     },
+     "myth": {
+      "x": 821,
+      "y": 84,
+      "w": 238,
+      "h": 273
+     },
+     "arcade": {
+      "x": 1088,
+      "y": 84,
+      "w": 242,
+      "h": 325
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/home-more-phone.webp",
+    "w": 360,
+    "h": 1100,
+    "scale": 2,
+    "boxes": {
+     "daily": {
+      "x": 16,
+      "y": 68,
+      "w": 324,
+      "h": 332
+     },
+     "myth": {
+      "x": 16,
+      "y": 799,
+      "w": 320,
+      "h": 207
+     },
+     "arcade": {
+      "x": 16,
+      "y": 1073,
+      "w": 324,
+      "h": 27
+     }
+    }
+   }
+  },
+  "learn": {
+   "desktop": {
+    "file": "guide/learn-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "done": {
+      "x": 316,
+      "y": 397,
+      "w": 126,
+      "h": 101
+     },
+     "current": {
+      "x": 821,
+      "y": 397,
+      "w": 126,
+      "h": 118
+     },
+     "locked": {
+      "x": 316,
+      "y": 616,
+      "w": 126,
+      "h": 101
+     },
+     "count": {
+      "x": 785,
+      "y": 134,
+      "w": 156,
+      "h": 32
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/learn-phone.webp",
+    "w": 360,
+    "h": 1180,
+    "scale": 2,
+    "boxes": {
+     "done": {
+      "x": 36,
+      "y": 402,
+      "w": 142,
+      "h": 101
+     },
+     "current": {
+      "x": 36,
+      "y": 914,
+      "w": 142,
+      "h": 118
+     },
+     "locked": {
+      "x": 36,
+      "y": 1096,
+      "w": 142,
+      "h": 84
+     },
+     "count": {
+      "x": 38,
+      "y": 246,
+      "w": 156,
+      "h": 32
+     }
+    }
+   }
+  },
+  "learn-details": {
+   "desktop": {
+    "file": "guide/learn-details-desktop.webp",
+    "w": 1366,
+    "h": 900,
+    "scale": 1,
+    "boxes": {
+     "title": {
+      "x": 1027,
+      "y": 188,
+      "w": 275,
+      "h": 29
+     },
+     "start": {
+      "x": 1031,
+      "y": 802,
+      "w": 192,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/learn-details-phone.webp",
+    "w": 360,
+    "h": 1000,
+    "scale": 2,
+    "boxes": {
+     "title": {
+      "x": 28,
+      "y": 323,
+      "w": 304,
+      "h": 29
+     },
+     "start": {
+      "x": 32,
+      "y": 908,
+      "w": 192,
+      "h": 56
+     }
+    }
+   }
+  },
+  "lesson": {
+   "desktop": {
+    "file": "guide/lesson-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "close": {
+      "x": 36,
+      "y": 12,
+      "w": 44,
+      "h": 44
+     },
+     "progress": {
+      "x": 344,
+      "y": 22,
+      "w": 839,
+      "h": 20
+     },
+     "ara": {
+      "x": 115,
+      "y": 100,
+      "w": 277,
+      "h": 238
+     },
+     "answer": {
+      "x": 452,
+      "y": 186,
+      "w": 755,
+      "h": 64
+     },
+     "feedback": {
+      "x": 452,
+      "y": 418,
+      "w": 759,
+      "h": 61
+     },
+     "next": {
+      "x": 1075,
+      "y": 542,
+      "w": 160,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/lesson-phone.webp",
+    "w": 360,
+    "h": 1200,
+    "scale": 2,
+    "boxes": {
+     "close": {
+      "x": 16,
+      "y": 12,
+      "w": 44,
+      "h": 44
+     },
+     "progress": {
+      "x": 80,
+      "y": 22,
+      "w": 121,
+      "h": 20
+     },
+     "ara": {
+      "x": 16,
+      "y": 84,
+      "w": 324,
+      "h": 94
+     },
+     "answer": {
+      "x": 36,
+      "y": 331,
+      "w": 280,
+      "h": 82
+     },
+     "feedback": {
+      "x": 36,
+      "y": 618,
+      "w": 284,
+      "h": 147
+     },
+     "next": {
+      "x": 102,
+      "y": 821,
+      "w": 226,
+      "h": 56
+     }
+    }
+   }
+  },
+  "library-card": {
+   "desktop": {
+    "file": "guide/library-card-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "fact": {
+      "x": 612,
+      "y": 261,
+      "w": 315,
+      "h": 81
+     },
+     "why": {
+      "x": 612,
+      "y": 358,
+      "w": 315,
+      "h": 18
+     },
+     "check": {
+      "x": 612,
+      "y": 507,
+      "w": 315,
+      "h": 18
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/library-card-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "fact": {
+      "x": 36,
+      "y": 245,
+      "w": 280,
+      "h": 81
+     },
+     "why": {
+      "x": 36,
+      "y": 342,
+      "w": 280,
+      "h": 18
+     },
+     "check": {
+      "x": 36,
+      "y": 520,
+      "w": 280,
+      "h": 18
+     }
+    }
+   }
+  },
+  "library-comics": {
+   "desktop": {
+    "file": "guide/library-comics-desktop.webp",
+    "w": 1366,
+    "h": 960,
+    "scale": 1,
+    "boxes": {
+     "episode": {
+      "x": 316,
+      "y": 383,
+      "w": 279,
+      "h": 250
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/library-comics-phone.webp",
+    "w": 360,
+    "h": 1100,
+    "scale": 2,
+    "boxes": {
+     "episode": {
+      "x": 36,
+      "y": 335,
+      "w": 280,
+      "h": 250
+     }
+    }
+   }
+  },
+  "library-dictionary": {
+   "desktop": {
+    "file": "guide/library-dictionary-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "search": {
+      "x": 316,
+      "y": 340,
+      "w": 224,
+      "h": 49
+     },
+     "letters": {
+      "x": 316,
+      "y": 405,
+      "w": 224,
+      "h": 332
+     },
+     "word": {
+      "x": 612,
+      "y": 303,
+      "w": 315,
+      "h": 26
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/library-dictionary-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "search": {
+      "x": 36,
+      "y": 292,
+      "w": 284,
+      "h": 49
+     },
+     "letters": {
+      "x": 36,
+      "y": 357,
+      "w": 284,
+      "h": 52
+     },
+     "word": {
+      "x": 36,
+      "y": 560,
+      "w": 280,
+      "h": 26
+     }
+    }
+   }
+  },
+  "library-myths": {
+   "desktop": {
+    "file": "guide/library-myths-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "tabs": {
+      "x": 292,
+      "y": 108,
+      "w": 1026,
+      "h": 44
+     },
+     "search": {
+      "x": 316,
+      "y": 388,
+      "w": 224,
+      "h": 49
+     },
+     "chips": {
+      "x": 316,
+      "y": 479,
+      "w": 224,
+      "h": 289
+     },
+     "card": {
+      "x": 592,
+      "y": 228,
+      "w": 355,
+      "h": 540
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/library-myths-phone.webp",
+    "w": 360,
+    "h": 1100,
+    "scale": 2,
+    "boxes": {
+     "tabs": {
+      "x": 20,
+      "y": 76,
+      "w": 308,
+      "h": 44
+     },
+     "search": {
+      "x": 36,
+      "y": 316,
+      "w": 284,
+      "h": 49
+     },
+     "chips": {
+      "x": 40,
+      "y": 385,
+      "w": 268,
+      "h": 48
+     },
+     "card": {
+      "x": 16,
+      "y": 521,
+      "w": 320,
+      "h": 154
+     }
+    }
+   }
+  },
+  "me-badges": {
+   "desktop": {
+    "file": "guide/me-badges-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "badge": {
+      "x": 671,
+      "y": 210,
+      "w": 134,
+      "h": 100
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/me-badges-phone.webp",
+    "w": 360,
+    "h": 1100,
+    "scale": 2,
+    "boxes": {
+     "badge": {
+      "x": 36,
+      "y": 186,
+      "w": 89,
+      "h": 115
+     }
+    }
+   }
+  },
+  "me-cert": {
+   "desktop": {
+    "file": "guide/me-cert-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "cert": {
+      "x": 1027,
+      "y": 84,
+      "w": 275,
+      "h": 194
+     },
+     "open": {
+      "x": 1031,
+      "y": 186,
+      "w": 234,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/me-cert-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "cert": {
+      "x": 36,
+      "y": 68,
+      "w": 284,
+      "h": 194
+     },
+     "open": {
+      "x": 40,
+      "y": 170,
+      "w": 234,
+      "h": 48
+     }
+    }
+   }
+  },
+  "me-profile": {
+   "desktop": {
+    "file": "guide/me-profile-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "nickname": {
+      "x": 412,
+      "y": 197,
+      "w": 179,
+      "h": 49
+     },
+     "avatar": {
+      "x": 316,
+      "y": 360,
+      "w": 275,
+      "h": 220
+     },
+     "stats": {
+      "x": 316,
+      "y": 630,
+      "w": 275,
+      "h": 138
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/me-profile-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "nickname": {
+      "x": 132,
+      "y": 157,
+      "w": 188,
+      "h": 49
+     },
+     "avatar": {
+      "x": 36,
+      "y": 320,
+      "w": 284,
+      "h": 220
+     },
+     "stats": {
+      "x": 36,
+      "y": 590,
+      "w": 284,
+      "h": 150
+     }
+    }
+   }
+  },
+  "me-settings": {
+   "desktop": {
+    "file": "guide/me-settings-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "larger": {
+      "x": 1230,
+      "y": 230,
+      "w": 72,
+      "h": 44
+     },
+     "contrast": {
+      "x": 1230,
+      "y": 325,
+      "w": 72,
+      "h": 44
+     },
+     "buttons": {
+      "x": 1230,
+      "y": 421,
+      "w": 72,
+      "h": 44
+     },
+     "motion": {
+      "x": 1230,
+      "y": 636,
+      "w": 72,
+      "h": 44
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/me-settings-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "larger": {
+      "x": 248,
+      "y": 206,
+      "w": 72,
+      "h": 44
+     },
+     "contrast": {
+      "x": 248,
+      "y": 301,
+      "w": 72,
+      "h": 44
+     },
+     "buttons": {
+      "x": 248,
+      "y": 397,
+      "w": 72,
+      "h": 44
+     },
+     "motion": {
+      "x": 248,
+      "y": 612,
+      "w": 72,
+      "h": 44
+     }
+    }
+   }
+  },
+  "me-sound": {
+   "desktop": {
+    "file": "guide/me-sound-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "music": {
+      "x": 1230,
+      "y": 213,
+      "w": 72,
+      "h": 44
+     },
+     "musicVolume": {
+      "x": 1027,
+      "y": 307,
+      "w": 216,
+      "h": 44
+     },
+     "sfx": {
+      "x": 1230,
+      "y": 401,
+      "w": 72,
+      "h": 44
+     },
+     "sfxVolume": {
+      "x": 1027,
+      "y": 506,
+      "w": 216,
+      "h": 44
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/me-sound-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "music": {
+      "x": 248,
+      "y": 197,
+      "w": 72,
+      "h": 44
+     },
+     "musicVolume": {
+      "x": 36,
+      "y": 291,
+      "w": 225,
+      "h": 44
+     },
+     "sfx": {
+      "x": 248,
+      "y": 385,
+      "w": 72,
+      "h": 44
+     },
+     "sfxVolume": {
+      "x": 36,
+      "y": 490,
+      "w": 225,
+      "h": 44
+     }
+    }
+   }
+  },
+  "report": {
+   "desktop": {
+    "file": "guide/report-desktop.webp",
+    "w": 1366,
+    "h": 1000,
+    "scale": 1,
+    "boxes": {
+     "kind": {
+      "x": 359,
+      "y": 182,
+      "w": 492,
+      "h": 168
+     },
+     "details": {
+      "x": 359,
+      "y": 392,
+      "w": 492,
+      "h": 128
+     },
+     "send": {
+      "x": 359,
+      "y": 854,
+      "w": 262,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/report-phone.webp",
+    "w": 360,
+    "h": 1300,
+    "scale": 2,
+    "boxes": {
+     "kind": {
+      "x": 36,
+      "y": 175,
+      "w": 284,
+      "h": 336
+     },
+     "details": {
+      "x": 36,
+      "y": 553,
+      "w": 284,
+      "h": 128
+     },
+     "send": {
+      "x": 36,
+      "y": 1111,
+      "w": 256,
+      "h": 66
+     }
+    }
+   }
+  },
+  "splash": {
+   "desktop": {
+    "file": "guide/splash-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "title": {
+      "x": 363,
+      "y": 46,
+      "w": 640,
+      "h": 234
+     },
+     "sound": {
+      "x": 537,
+      "y": 720,
+      "w": 72,
+      "h": 44
+     },
+     "start": {
+      "x": 467,
+      "y": 610,
+      "w": 424,
+      "h": 56
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/splash-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "title": {
+      "x": 20,
+      "y": 44,
+      "w": 320,
+      "h": 249
+     },
+     "sound": {
+      "x": 34,
+      "y": 662,
+      "w": 72,
+      "h": 44
+     },
+     "start": {
+      "x": 20,
+      "y": 552,
+      "w": 312,
+      "h": 56
+     }
+    }
+   }
+  }
+ }
+}

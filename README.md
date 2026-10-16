@@ -15,8 +15,12 @@ short_description: AI literacy and health-misinformation games for Filipinos
 
 ARAW is a gamified, mobile-first web app that teaches non-technical Filipinos (seniors, parents, students, health workers)
 AI literacy and how to resist health misinformation. The core idea is **calibrated trust**, not "trust less": every module
-ends with *Kailan ako magtitiwala?* (When should I trust?). It is a sibling of TALA, with the same 8-bit retro spirit and a
-light, warm daytime palette. Content is English with light Filipino flavour, and it is a beta: educational, not medical advice.
+ends with "When should I trust it?". It is a sibling of TALA, with the same 8-bit retro spirit and a
+light, warm daytime palette. All text is in English; only proper names (game titles, characters) stay Filipino.
+
+ARAW is part of a DOST-NICER program. Its home project is **AIKasalig** (responsible AI in Philippine health care), and it sits
+alongside **HealthPH+** (public health surveillance with multilingual NLP), **AdvocAid PH** (geospatial AI on online HIV
+conversations) and the **Mosquito Density and Disease Outbreak Prediction** project. The Library myths cover topics from all four.
 
 ## Features
 
@@ -24,9 +28,11 @@ light, warm daytime palette. Content is English with light Filipino flavour, and
 - **Arcade:** 11 pixel-art Canvas games (Takbo, Data!, Feed Mo 'To, Luto ni Ara, Sino 'To?, Lamok Lamay, Tawid, Lola!,
   Hati Tayo!, Gawa Ko 'To!, Tulog na, Bea!, Sa Sapatos Nila, OBJECTION!) plus Fact or Fake, with touch, mouse and keyboard.
 - **Daily challenge, streaks, badges and a report card** to keep practice going.
-- **Library:** myth cards, glossary and the Komiks series.
+- **Library:** myth cards, glossary and the Comics series.
 - **Accessibility:** WCAG 2.2 AA baseline; settings for larger text, high contrast, extra-large buttons, screen-reader
   hints and reduced motion (all off by default).
+- **8-bit sound:** chiptune music per area and sound effects generated live (no audio files), with TALA-style Music and Sound
+  effects switches and volume sliders (on at 25 and 65); everything heard is also shown on screen.
 - **Responsive:** desktop sidebar layout first, tablet tabs, phone bottom tab bar. Installable PWA, works offline.
 - **Private:** progress is kept in `localStorage` only. No backend, no accounts, no trackers.
 
@@ -59,6 +65,20 @@ npm run preview    # serves dist/ at http://localhost:4173
 ```
 
 The build uses a relative base path (`base: './'`) and a hash router, so `dist/` works from any static host or sub-path.
+
+## Report relay (optional, set before deploying)
+
+The Report screen can send reports straight to AIKasalig@gmail.com through a free Google Apps Script web app
+(`tools/report-relay/`, step-by-step guide in `tools/report-relay/README.md`). After deploying the script, put its `/exec`
+URL in `.env.production` (see `.env.example`):
+
+```bash
+VITE_REPORT_ENDPOINT=https://script.google.com/macros/s/<id>/exec
+```
+
+The URL is read at build time, so rebuild after changing it. It is not a secret, so committing `.env.production` is fine
+(the Hugging Face and GitHub Pages builds need it in the repo or as a build variable). Left empty, the Send button is hidden
+and players use the fallbacks (Open in Gmail, their email app, or Copy report). The e2e tests pass either way.
 
 ## Deploy to a free static Hugging Face Space
 

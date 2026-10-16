@@ -11,7 +11,7 @@ let stop: () => void = () => {};
 beforeEach(() => {
   window.localStorage.clear();
   settings.value = DEFAULT_SETTINGS;
-  profile.value = { nickname: 'Kaibigan', avatar: 0 };
+  profile.value = { nickname: 'Friend', avatar: 0 };
   modulesDone.value = [];
   badgesEarned.value = [];
   stop = initSettings();
@@ -31,10 +31,10 @@ const SWITCHES = [
 ] as const;
 
 describe('Me: accessibility settings', () => {
-  it('lists five switches, all off by default', () => {
+  it('lists five switches, all off by default (plus the two sound switches, on like TALA)', () => {
     render(<Me />);
-    const switches = screen.getAllByRole('switch');
-    expect(switches).toHaveLength(5);
+    const switches = SWITCHES.map(([name]) => screen.getByRole('switch', { name }));
+    expect(screen.getAllByRole('switch')).toHaveLength(7);
     expect(switches.every((s) => s.getAttribute('aria-checked') === 'false')).toBe(true);
     expect(document.documentElement.className).toBe('');
   });
@@ -95,12 +95,12 @@ describe('Me: profile', () => {
     expect(profile.value.nickname).toBe('Bea');
     fireEvent.input(input, { target: { value: '  ' } });
     fireEvent.blur(input);
-    expect(profile.value.nickname).toBe('Kaibigan');
+    expect(profile.value.nickname).toBe('Friend');
   });
 
   it('shows how to earn a locked badge when it is picked', () => {
     render(<Me />);
-    fireEvent.click(screen.getByRole('button', { name: /Guro ni AI/ }));
+    fireEvent.click(screen.getByRole('button', { name: /AI's Teacher/ }));
     expect(screen.getByText(/Finish Module 2: How AI Learns and Makes Mistakes/)).toBeTruthy();
   });
 });
@@ -109,7 +109,7 @@ describe('Home', () => {
   it('greets by nickname, offers Module 1 and shows locked badges when new', () => {
     profile.value = { nickname: 'Bea', avatar: 0 };
     render(<Home />);
-    expect(screen.getByRole('heading', { level: 2, name: /^Magandang (umaga|tanghali|hapon|gabi), Bea!$/ })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: /^Good (morning|day|afternoon|evening), Bea!$/ })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 3, name: 'What Is AI, Really?' })).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Start' }).getAttribute('href')).toBe('#/learn/m01');
     expect(screen.getByText(/No badges yet/)).toBeTruthy();

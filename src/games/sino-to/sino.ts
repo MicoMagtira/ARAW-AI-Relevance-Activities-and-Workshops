@@ -5,7 +5,8 @@
 import { PALETTE, box, text } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent } from '../engine/cues';
 import { drawPerson, type Face } from '../feed-mo-to/art';
 import {
   BUBBLE_CHARS,
@@ -79,7 +80,7 @@ export function headlineFor(j: Judgement): [string, string] {
 
 const plain = (call: Call): string => `${call.channel === 'CALL' ? 'a call' : 'a voice note'} from ${call.callerName.toLowerCase()} (${call.tag === 'NEW NO.' ? 'new number' : call.tag === 'SAVED' ? 'saved contact' : 'unknown number'})`;
 
-function createSino({ rng }: { seed: string; rng: Rng }): GameInstance {
+function createSino({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const calls = createCallGenerator(createRng(`${rng()}:sino-calls`));
 
   let index = 0;
@@ -98,6 +99,7 @@ function createSino({ rng }: { seed: string; rng: Rng }): GameInstance {
   let tickMs = 0;
   let lastPointer = '';
   const counts = { stopped: 0, helped: 0, paid: 0, hungUp: 0, guesses: 0 };
+  let ringing = true; // the phone rings once as each call starts (on the next step)
 
   const fullMs = () => RING_MS + (call.text.length / TYPE_CPS) * 1000;
 
@@ -108,6 +110,7 @@ function createSino({ rng }: { seed: string; rng: Rng }): GameInstance {
     phaseMs = 0;
     used = [];
     judgement = null;
+    ringing = true;
   }
 
   function decide(choice: Choice) {
@@ -119,6 +122,10 @@ function createSino({ rng }: { seed: string; rng: Rng }): GameInstance {
     counts[j.result] += 1;
     if (!j.verified) counts.guesses += 1;
     if (j.heartLost) hearts -= 1;
+    if (j.result === 'stopped') cue('scamCaught');
+    else if (j.result === 'helped') cue('correct', Math.max(0, Math.min(5, streak - 1)));
+    else if (j.result === 'paid') cue('wrong');
+    else cue('hangUp');
     phase = 'result';
     phaseMs = 0;
   }
@@ -128,7 +135,10 @@ function createSino({ rng }: { seed: string; rng: Rng }): GameInstance {
     else if (slot === HANGUP_SLOT) decide('hangup');
     else {
       const id = CHECKS[slot];
-      if (id && !used.includes(id)) used = [...used, id];
+      if (id && !used.includes(id)) {
+        used = [...used, id];
+        cue('verify');
+      }
     }
   }
 
@@ -146,6 +156,10 @@ function createSino({ rng }: { seed: string; rng: Rng }): GameInstance {
         tick += 1;
       }
       phaseMs += dtMs;
+      if (ringing) {
+        ringing = false;
+        cue('ring');
+      }
       const pressed = input.actions.length > 0 || input.taps.length > 0;
 
       if (phase === 'result') {
@@ -282,13 +296,13 @@ const sinoTo: GameDef = {
     'Some checks cannot settle a call (the phone rings out, the line is busy). Try another one. Later calls leave fewer checks that settle it.',
   ],
   briefing: [
-    { title: "Ring ring! Sino 'to?", text: 'A call comes in: "Anak, I am in the hospital, send money now!" Is it really your family? Your job at the switchboard is to find out.', mood: 'wow' },
+    { title: 'Ring ring! Who is this?', text: 'A call comes in: "It is me, I am in the hospital, send money now!" Is it really your family? Your job at the switchboard is to find out.', mood: 'wow' },
     { title: 'AI can copy a voice', text: 'A scammer needs only a short clip to make an AI copy of a voice. It can sound just like your mother, your doctor or your bank.', mood: 'think' },
     { title: 'How to play', text: 'Tap a check to verify the caller: secret question, call back, ask a relative, or the hotline. Then help them or hang up and report.', mood: 'idle' },
     { title: 'Hurry is the red flag', text: 'Scammers fake hospital emergencies to rush you. Real emergencies can wait two minutes for a check.', mood: 'happy' },
-    { title: 'Kailan ako magtitiwala?', text: 'Trust a call after you verify it through a number or a person you already know.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'Trust a call after you verify it through a number or a person you already know.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? After I verify the call through a number or a person I already know, never the voice alone.',
+  takeaway: 'When should I trust it? After I verify the call through a number or a person I already know, never the voice alone.',
   create: createSino,
 };
 

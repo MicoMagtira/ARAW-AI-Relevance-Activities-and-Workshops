@@ -29,7 +29,7 @@ describe('Briefing', () => {
     expect(screen.getAllByText('Page 1 of 5').length).toBeGreaterThan(0);
     expect(screen.queryByRole('button', { name: 'Back' })).toBeNull();
     for (let i = 0; i < 4; i++) fireEvent.click(screen.getByRole('button', { name: 'Next' }));
-    expect(screen.getByRole('heading', { name: 'Kailan ako magtitiwala?' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'When should I trust it?' })).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Next' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Back' }));
     expect(screen.getByRole('heading', { name: 'Why it matters' })).toBeTruthy();
@@ -117,10 +117,10 @@ describe('GameShell', () => {
       act(() => {
         vi.advanceTimersByTime(1000);
       });
-      expect(screen.getByRole('heading', { name: 'Pahinga muna!' })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: 'Time for a break!' })).toBeTruthy();
       expect(screen.getByText(/Stand up, roll your shoulders/)).toBeTruthy();
       fireEvent.click(screen.getByRole('button', { name: 'Keep playing' }));
-      expect(screen.queryByRole('heading', { name: 'Pahinga muna!' })).toBeNull();
+      expect(screen.queryByRole('heading', { name: 'Time for a break!' })).toBeNull();
       expect(sessionClock.due).toBe(false);
     } finally {
       vi.useRealTimers();

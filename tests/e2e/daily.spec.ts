@@ -109,7 +109,7 @@ test.describe('Daily Challenge', () => {
     await page.goto('/#/daily');
     await expect(page.getByText('0-day streak')).toBeVisible();
     await playItems(page);
-    await expect(page.getByText('Bagong simula!')).toBeVisible();
+    await expect(page.getByText('A fresh start!')).toBeVisible();
     await expect(page.getByText('1-day streak')).toBeVisible();
     await expect(page.getByText('Best: 9 days')).toBeVisible();
   });

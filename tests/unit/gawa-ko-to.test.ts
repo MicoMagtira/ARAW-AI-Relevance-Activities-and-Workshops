@@ -210,7 +210,7 @@ describe('small helpers', () => {
   });
 
   it('wraps text greedily and keeps a long word whole', () => {
-    expect(wrap('Walang tubig, walang lamok!', 22)).toEqual(['Walang tubig, walang', 'lamok!']);
+    expect(wrap('No water, no mosquitoes!', 22)).toEqual(['No water, no', 'mosquitoes!']);
     expect(wrap('Supercalifragilistic word', 5)).toEqual(['Supercalifragilistic', 'word']);
     expect(wrap('', 10)).toEqual([]);
   });
@@ -224,7 +224,7 @@ describe('small helpers', () => {
     expect(describePoster(EMPTY_POSTER, b)).toMatch(/No picture yet\. No slogan yet\. No health fact yet\./);
     const full = describePoster(poster({ picture: 'artist', label: true, credit: true }), b);
     expect(full).toMatch(/Picture: Ate Dani/);
-    expect(full).toMatch(/Slogan: Walang tubig, walang lamok!/);
+    expect(full).toMatch(/Slogan: No water, no mosquitoes!/);
     expect(full).toMatch(/Sticker: Made with AI\. Credit: Art by Ate Dani\./);
   });
 });

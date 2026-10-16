@@ -13,7 +13,7 @@ const content: ModuleContent = {
     icon: 'sun',
     ara: {
       intro: 'Ooh, a school project! Let us find out what a computer can learn.',
-      done: 'Tara, let us teach it and see what happens!',
+      done: 'Come on, let us teach it and see what happens!',
     },
   },
   cards: [
@@ -21,7 +21,7 @@ const content: ModuleContent = {
       id: 'm02-c2',
       type: 'info',
       title: 'AI only knows what it was shown.',
-      body: 'An AI learns from the examples people give it, and nothing else. If it never saw a ripe mango, it has no idea what one is. Kung ano ang itinuro, iyon lang ang alam. Good examples make a good helper. Missing examples make blind spots.',
+      body: 'An AI learns from the examples people give it, and nothing else. If it never saw a ripe mango, it has no idea what one is. It only knows what it was taught. Good examples make a good helper. Missing examples make blind spots.',
       icon: 'learn',
     },
     {

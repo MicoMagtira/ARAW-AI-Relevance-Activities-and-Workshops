@@ -98,7 +98,7 @@ test.describe('GameShell with the demo game', () => {
       await expect(page.getByText(`Page ${i} of 5`).first()).toBeVisible();
       await page.getByRole('button', { name: 'Next' }).click();
     }
-    await expect(page.getByRole('heading', { level: 2, name: 'Kailan ako magtitiwala?' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'When should I trust it?' })).toBeVisible();
     await page.getByRole('button', { name: 'Back' }).click();
     await page.getByRole('button', { name: 'Skip' }).click();
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
@@ -143,7 +143,7 @@ test.describe('GameShell with the demo game', () => {
     await expect(page.getByText('+50 XP')).toBeVisible(); // 10 base + 20 good run + 20 new best
     await expect(page.getByText('New personal best!')).toBeVisible();
     await expect(page.getByRole('heading', { level: 3, name: "Ara's recap" })).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? When I can check who said it.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? When I can check who said it.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -185,19 +185,19 @@ test.describe('GameShell with the demo game', () => {
     await expect(page.getByRole('heading', { level: 2, name: 'Paused' })).toBeHidden();
   });
 
-  test('"Pahinga muna!" pauses the game for a recap and a stretch, then play goes on', async ({ page }) => {
+  test('"Time for a break!" pauses the game for a recap and a stretch, then play goes on', async ({ page }) => {
     await briefingSeen(page);
     await page.goto('/#/arcade/demo?seed=e2e-seed&break=1.5');
     await page.getByRole('button', { name: 'Start' }).click();
     // the demo run lasts about 3 seconds untouched, so the break (after 1.5 s of play) comes first
-    await expect(page.getByRole('heading', { level: 2, name: 'Pahinga muna!' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Time for a break!' })).toBeVisible();
     await expect(page.getByText(/Stand up, roll your shoulders/)).toBeVisible();
     await expect(page.getByText(/Your run so far: \d+ points/)).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
     await page.getByRole('button', { name: 'Keep playing' }).click();
-    await expect(page.getByRole('heading', { level: 2, name: 'Pahinga muna!' })).toBeHidden();
+    await expect(page.getByRole('heading', { level: 2, name: 'Time for a break!' })).toBeHidden();
     await expect(page.getByRole('button', { name: 'Pause' })).toBeEnabled();
   });
 

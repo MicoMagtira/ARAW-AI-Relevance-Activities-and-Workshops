@@ -508,6 +508,74 @@ a.menu-row:hover {
   align-content: start;
 }
 
+.report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  padding-right: calc(var(--px) * 3); /* room for the hard button shadow */
+  padding-bottom: calc(var(--px) * 3);
+}
+
+.report-actions .px-btn {
+  margin: 0;
+}
+
+.report-ways {
+  padding-top: var(--sp-4);
+  border-top: var(--px) dashed var(--line);
+}
+
+.report-note {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+  color: var(--ink);
+  background: var(--soft);
+  border: var(--px) solid var(--ink);
+}
+
+.report-note--warn {
+  background: var(--fake-tint);
+  border-color: var(--fake);
+}
+
+/* Live region that is empty (or only echoes the button's "Sending..."): kept in the accessibility tree, takes no space. */
+.report-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.report-address {
+  margin: 0;
+  font: 600 var(--fs-16) / 1.5 var(--font-body);
+  color: var(--ink);
+}
+
+.report-email {
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.report-copybox {
+  min-height: 180px;
+  font-size: var(--fs-14);
+}
+
+/* Honeypot field: off-screen for people, hidden from screen readers, still in the DOM for form-filling bots. */
+.report-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* ---------- Responsive ---------- */
 /* Wide desktop: greeting+continue | daily + arcade | stats + myth all above the fold */
 @media (width >= 1700px) {

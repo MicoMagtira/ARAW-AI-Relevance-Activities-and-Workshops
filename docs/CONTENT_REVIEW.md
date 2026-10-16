@@ -125,47 +125,100 @@ File: `src/content/factOrFake/assessment.ts`
 | [ ] | `fof-b-19` | [ ] | [ ] |
 | [ ] | `fof-b-20` | [ ] | [ ] |
 
-## Myth cards (Library) (35)
+## Myth cards (Library) (88)
 
 File: `src/content/library/myths.ts`
 
-| Done | Id | Medical | Cultural |
-| --- | --- | --- | --- |
-| [ ] | `tawa-tawa-dengue` | [ ] | [ ] |
-| [ ] | `papaya-leaf-dengue` | [ ] | [ ] |
-| [ ] | `dengue-night-bites` | [ ] | [ ] |
-| [ ] | `dengue-dirty-water` | [ ] | [ ] |
-| [ ] | `fogging-is-enough` | [ ] | [ ] |
-| [ ] | `antibiotics-colds` | [ ] | [ ] |
-| [ ] | `stop-antibiotics-early` | [ ] | [ ] |
-| [ ] | `tea-replaces-meds` | [ ] | [ ] |
-| [ ] | `natural-is-safe` | [ ] | [ ] |
-| [ ] | `supplement-is-medicine` | [ ] | [ ] |
-| [ ] | `fda-number-means-cure` | [ ] | [ ] |
-| [ ] | `vaccines-not-checked` | [ ] | [ ] |
-| [ ] | `vaccine-fever-danger` | [ ] | [ ] |
-| [ ] | `vaccines-only-if-you-pay` | [ ] | [ ] |
-| [ ] | `share-vaccine-warnings` | [ ] | [ ] |
-| [ ] | `high-bp-you-feel-it` | [ ] | [ ] |
-| [ ] | `ampalaya-cures-diabetes` | [ ] | [ ] |
-| [ ] | `herbal-cancer-cure` | [ ] | [ ] |
-| [ ] | `cured-means-stop` | [ ] | [ ] |
-| [ ] | `pasma-washing-hands` | [ ] | [ ] |
-| [ ] | `long-cough-normal` | [ ] | [ ] |
-| [ ] | `animal-bite-home-remedy` | [ ] | [ ] |
-| [ ] | `flood-water-harmless` | [ ] | [ ] |
-| [ ] | `diarrhea-no-fluids` | [ ] | [ ] |
-| [ ] | `clear-water-safe` | [ ] | [ ] |
-| [ ] | `vape-just-water` | [ ] | [ ] |
-| [ ] | `teens-need-less-sleep` | [ ] | [ ] |
-| [ ] | `forwarded-many-times` | [ ] | [ ] |
-| [ ] | `chatbot-always-right` | [ ] | [ ] |
-| [ ] | `chatbot-can-diagnose` | [ ] | [ ] |
-| [ ] | `doctor-in-ad-proves-it` | [ ] | [ ] |
-| [ ] | `spot-fakes-by-glitches` | [ ] | [ ] |
-| [ ] | `deleted-means-true` | [ ] | [ ] |
-| [ ] | `ai-powered-is-better` | [ ] | [ ] |
-| [ ] | `phone-is-listening` | [ ] | [ ] |
+| Done | Id | Topic · project | Medical | Cultural |
+| --- | --- | --- | --- | --- |
+| [ ] | `tawa-tawa-dengue` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `papaya-leaf-dengue` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `dengue-night-bites` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `dengue-dirty-water` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `fogging-is-enough` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `antibiotics-colds` | medicines · HealthPH+ | [ ] | [ ] |
+| [ ] | `stop-antibiotics-early` | medicines · none | [ ] | [ ] |
+| [ ] | `tea-replaces-meds` | medicines · none | [ ] | [ ] |
+| [ ] | `natural-is-safe` | medicines · none | [ ] | [ ] |
+| [ ] | `supplement-is-medicine` | medicines · none | [ ] | [ ] |
+| [ ] | `fda-number-means-cure` | medicines · none | [ ] | [ ] |
+| [ ] | `vaccines-not-checked` | vaccines · none | [ ] | [ ] |
+| [ ] | `vaccine-fever-danger` | vaccines · none | [ ] | [ ] |
+| [ ] | `vaccines-only-if-you-pay` | vaccines · none | [ ] | [ ] |
+| [ ] | `share-vaccine-warnings` | vaccines · HealthPH+ | [ ] | [ ] |
+| [ ] | `high-bp-you-feel-it` | chronic · none | [ ] | [ ] |
+| [ ] | `ampalaya-cures-diabetes` | chronic · none | [ ] | [ ] |
+| [ ] | `herbal-cancer-cure` | chronic · none | [ ] | [ ] |
+| [ ] | `cured-means-stop` | chronic · none | [ ] | [ ] |
+| [ ] | `pasma-washing-hands` | everyday · none | [ ] | [ ] |
+| [ ] | `long-cough-normal` | everyday · HealthPH+ | [ ] | [ ] |
+| [ ] | `animal-bite-home-remedy` | everyday · none | [ ] | [ ] |
+| [ ] | `flood-water-harmless` | everyday · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `diarrhea-no-fluids` | everyday · none | [ ] | [ ] |
+| [ ] | `clear-water-safe` | everyday · none | [ ] | [ ] |
+| [ ] | `vape-just-water` | everyday · none | [ ] | [ ] |
+| [ ] | `teens-need-less-sleep` | everyday · none | [ ] | [ ] |
+| [ ] | `forwarded-many-times` | online · HealthPH+ | [ ] | [ ] |
+| [ ] | `chatbot-always-right` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `chatbot-can-diagnose` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `doctor-in-ad-proves-it` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `spot-fakes-by-glitches` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `deleted-means-true` | online · HealthPH+ | [ ] | [ ] |
+| [ ] | `ai-powered-is-better` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `phone-is-listening` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `dengue-only-once` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `dengue-fever-gone` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `dengue-any-pain-reliever` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `dengue-rainy-season-only` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `share-leftover-antibiotics` | medicines · none | [ ] | [ ] |
+| [ ] | `generics-are-weaker` | medicines · none | [ ] | [ ] |
+| [ ] | `online-medicine-same` | medicines · none | [ ] | [ ] |
+| [ ] | `more-vitamins-better` | medicines · none | [ ] | [ ] |
+| [ ] | `vaccines-cause-autism` | vaccines · none | [ ] | [ ] |
+| [ ] | `measles-natural-better` | vaccines · HealthPH+ | [ ] | [ ] |
+| [ ] | `too-many-vaccines-at-once` | vaccines · none | [ ] | [ ] |
+| [ ] | `vaccines-only-for-kids` | vaccines · HealthPH+ | [ ] | [ ] |
+| [ ] | `cervical-cancer-unpreventable` | chronic · none | [ ] | [ ] |
+| [ ] | `biopsy-spreads-cancer` | chronic · none | [ ] | [ ] |
+| [ ] | `diabetes-only-sweets` | chronic · none | [ ] | [ ] |
+| [ ] | `maintenance-meds-kidneys` | chronic · none | [ ] | [ ] |
+| [ ] | `stroke-prick-fingers` | chronic · none | [ ] | [ ] |
+| [ ] | `depression-weak-mind` | everyday · none | [ ] | [ ] |
+| [ ] | `deworm-only-if-worms` | everyday · none | [ ] | [ ] |
+| [ ] | `formula-smarter-babies` | everyday · none | [ ] | [ ] |
+| [ ] | `heat-stroke-only-elderly` | everyday · none | [ ] | [ ] |
+| [ ] | `tb-runs-in-family` | everyday · HealthPH+ | [ ] | [ ] |
+| [ ] | `cloned-voice-hospital-money` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `happy-comments-prove-it` | online · HealthPH+ | [ ] | [ ] |
+| [ ] | `cures-many-diseases` | online · HealthPH+ | [ ] | [ ] |
+| [ ] | `chatbot-chat-private` | online · AIKasalig | [ ] | [ ] |
+| [ ] | `many-posts-outbreak` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `gc-outbreak-rumour` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `flu-just-a-cold` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `flu-vaccine-gives-flu` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `cover-cough-not-needed` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `pneumonia-just-cold` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `water-rinse-enough` | outbreaks · HealthPH+ | [ ] | [ ] |
+| [ ] | `hiv-casual-contact` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-death-sentence` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-always-passed-on` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-test-costly-public` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-only-some-groups` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-no-prevention-medicine` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-tell-by-looks` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `hiv-map-shows-cases` | hiv · AdvocAid PH | [ ] | [ ] |
+| [ ] | `ai-decides-alone` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `ai-cannot-be-biased` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `ai-app-high-ratings` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `cannot-ask-ai-why` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `chatbot-skip-checkups` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `health-data-never-shared` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `right-mostly-right-for-me` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `trust-ai-fully` | healthai · AIKasalig | [ ] | [ ] |
+| [ ] | `aedes-only-dengue` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `bottle-cap-too-small` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `reporting-breeding-site-useless` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
+| [ ] | `mosquitoes-health-workers-job` | dengue · Mosquito Density and Disease Outbreak Prediction | [ ] | [ ] |
 
 ## Glossary terms (35)
 
@@ -209,7 +262,7 @@ File: `src/content/library/glossary.ts`
 | [ ] | `viral` | [ ] | [ ] |
 | [ ] | `voice-clone` | [ ] | [ ] |
 
-## Komiks episodes (10)
+## Comics episodes (10)
 
 File: `src/content/library/komiks.ts`
 
@@ -288,7 +341,7 @@ File: `src/content/chatbot.ts`
 | [ ] | `cb-r07` | [ ] | [ ] |
 | [ ] | `cb-p01` | [ ] | [ ] |
 
-## Pamilya GC scenarios (5)
+## Family GC scenarios (5)
 
 File: `src/content/gc.ts`
 

@@ -98,12 +98,12 @@ test.describe('Spot the Tactic', () => {
     await checkScreen(page);
   });
 
-  test('a wrong pick says Muntik na! and highlights the tell-tale signs', async ({ page }) => {
+  test('a wrong pick says So close! and highlights the tell-tale signs', async ({ page }) => {
     await openGame(page);
     await start(page);
     const post = await currentPost(page);
     await pickButton(page, post.trick === 'none' ? 'dr_fake' : 'none').click();
-    await expect(page.getByText('Muntik na!', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('So close!', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('No points this time. On to the next one!')).toBeVisible();
     await expect(page.locator('.tt-mark')).toHaveCount(post.marks.length);
     await checkScreen(page);
@@ -129,7 +129,7 @@ test.describe('Spot the Tactic', () => {
       if (post.trick === 'dr_fake') {
         await expect(page.getByText('New card unlocked!')).toBeVisible();
         await expect(page.getByText('Dr. Fake is beaten!').first()).toBeVisible();
-        await expect(page.getByText('Badge earned: Talo si Dr. Fake').first()).toBeVisible();
+        await expect(page.getByText('Badge earned: Beat Dr. Fake').first()).toBeVisible();
         await settled(page);
         await noHorizontalOverflow(page);
         break;
@@ -179,7 +179,7 @@ test.describe('Spot the Tactic', () => {
     await page.getByRole('button', { name: 'Finish game' }).click();
     await expect(page.getByText('Game complete!')).toBeVisible();
     await page.getByRole('button', { name: /^Next/ }).click();
-    await expect(page.getByRole('heading', { name: 'Kailan ako magtitiwala?' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'When should I trust it?' })).toBeVisible();
     await page.getByRole('button', { name: /^Next: quick Fact or Fake round/ }).click();
     // module 4 ends with a ten-item Fact or Fake round
     await expect(page.getByRole('list', { name: 'Round progress' }).getByRole('listitem')).toHaveCount(10);

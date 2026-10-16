@@ -5,6 +5,7 @@ import { episodeUnlocked, parseEpisode, stepPanel, swipeStep } from '../../app/l
 import { t } from '../../app/i18n';
 import { komiksRead, markKomiksRead, modulesDone } from '../../app/progress';
 import { hrefFor, location$ } from '../../app/router';
+import { sfx } from '../../app/sound';
 import { KOMIKS, KOMIKS_CAST_NAMES, KOMIKS_SEASON_TITLE, type KomiksEpisode, type KomiksPanel } from '../../content/library/komiks';
 import { MODULES } from '../../content/modules';
 import { Ara } from '../../ui/Ara';
@@ -63,6 +64,14 @@ function Reader({ ep }: { ep: KomiksEpisode }) {
   const nextOpen = next ? episodeUnlocked(next, done) : false;
 
   const go = (delta: number) => setIndex((i) => stepPanel(i, delta, total));
+  const shown = useRef(index);
+
+  // Every panel turn rustles a page; reaching the end of an episode for the first time rings a light unlock.
+  useEffect(() => {
+    if (shown.current === index) return;
+    shown.current = index;
+    sfx(last && !komiksRead.value.includes(ep.id) ? 'unlock' : 'page');
+  }, [index]);
 
   useEffect(() => {
     if (last) markKomiksRead(ep.id);
@@ -92,7 +101,7 @@ function Reader({ ep }: { ep: KomiksEpisode }) {
     <Panel class="reader" aria-labelledby="reader-h">
       <div class="stack">
         <header class="reader__head">
-          <a class="text-link reader__back" href={hrefFor('/library/komiks')}>
+          <a class="text-link reader__back" data-sfx="back" href={hrefFor('/library/komiks')}>
             <Icon name="arrow-left" size={16} /> {t('komiks.backToList')}
           </a>
           <p class="panel-title">{t('komiks.episode', { n: ep.n })}</p>
@@ -110,19 +119,19 @@ function Reader({ ep }: { ep: KomiksEpisode }) {
         </p>
 
         <div class="reader__nav">
-          <Button variant="secondary" onClick={() => go(-1)} aria-disabled={index === 0}>
+          <Button variant="secondary" data-sfx="none" onClick={() => go(-1)} aria-disabled={index === 0}>
             <Icon name="arrow-left" size={16} /> {t('komiks.prev')}
           </Button>
           <ol class="reader__steps" aria-label={t('komiks.panels.nav')}>
             {ep.panels.map((_, i) => (
               <li key={i}>
-                <button type="button" class="reader__step" aria-label={t('komiks.goTo', { n: i + 1 })} aria-current={i === index ? 'step' : undefined} onClick={() => setIndex(i)}>
+                <button type="button" class="reader__step" data-sfx="none" aria-label={t('komiks.goTo', { n: i + 1 })} aria-current={i === index ? 'step' : undefined} onClick={() => setIndex(i)}>
                   {i + 1}
                 </button>
               </li>
             ))}
           </ol>
-          <Button variant="gold" onClick={() => go(1)} aria-disabled={last}>
+          <Button variant="gold" data-sfx="none" onClick={() => go(1)} aria-disabled={last}>
             {t('komiks.next')} <Icon name="arrow-right" size={16} />
           </Button>
         </div>
@@ -270,7 +279,7 @@ export function Komiks() {
         ) : (
           <Panel class="komiks__note" aria-labelledby="komiks-note-h">
             <div class="stack">
-              <a class="text-link reader__back" href={hrefFor('/library/komiks')}>
+              <a class="text-link reader__back" data-sfx="back" href={hrefFor('/library/komiks')}>
                 <Icon name="arrow-left" size={16} /> {t('komiks.backToList')}
               </a>
               <Ara mood={lockedMod ? 'think' : 'happy'} scale={4} />

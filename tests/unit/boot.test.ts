@@ -23,7 +23,7 @@ describe('boot flow', () => {
     expect(splashVisible.value).toBe(false);
   });
 
-  it('SIMULAN hides the splash, marks the session and lands on Home', () => {
+  it('START hides the splash, marks the session and lands on Home', () => {
     initBoot('/');
     finishSplash();
     expect(splashVisible.value).toBe(false);

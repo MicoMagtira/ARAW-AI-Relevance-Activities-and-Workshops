@@ -1,5 +1,6 @@
 import { signal } from '@preact/signals';
 import { navigate } from './router';
+import { holdMusic, sfx, sfxAfter } from './sound';
 
 /** sessionStorage (not localStorage): the splash plays once per browser session. */
 export const BOOT_KEY = 'araw:v1:booted';
@@ -36,8 +37,15 @@ export function initBoot(path: string): void {
   splashVisible.value = true;
 }
 
-/** SIMULAN / Skip intro: remember it for this session and land on Home. */
+/** The START chime, the sunrise jingle a beat later, then the morning theme comes in once the jingle has rung out. */
+export const SUNRISE_AT_MS = 300;
+export const MUSIC_AFTER_START_MS = 2200;
+
+/** START / Skip intro: remember it for this session and land on Home. */
 export function finishSplash(): void {
+  holdMusic(MUSIC_AFTER_START_MS);
+  sfx('start');
+  sfxAfter(SUNRISE_AT_MS, 'sunrise');
   markBooted();
   navigate('/');
   splashVisible.value = false;

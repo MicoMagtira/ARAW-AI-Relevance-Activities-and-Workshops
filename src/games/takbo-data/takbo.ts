@@ -3,7 +3,8 @@
 // function of the seed (the layout never depends on what the player does), so the Daily Challenge is the same for everyone.
 import { PALETTE, box, text } from '../engine/draw';
 import { createRng, rngInt, rngPick, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent } from '../engine/cues';
 import {
   ARA_HEIGHT,
   ARA_X,
@@ -60,7 +61,7 @@ function describeItem(cell: NonNullable<Cell>): string {
   return `a ${cell.kind}`;
 }
 
-function createTakbo({ seed, rng }: { seed: string; rng: Rng }): GameInstance {
+function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const spawner = createSpawner(rng);
   const sceneryRng = createRng(`${seed}:barangay`);
 
@@ -102,12 +103,15 @@ function createTakbo({ seed, rng }: { seed: string; rng: Rng }): GameInstance {
     const { cell } = item;
     item.decided = true;
     if (cell.type === 'safe') {
+      const before = shield;
       shield = refill(shield);
+      cue(before < SHIELD_MAX && shield >= SHIELD_MAX ? 'shield' : 'freebie');
       safeGrabs += 1;
       pop(`+${SAFE_POINTS} SAFE`, PALETTE.fact);
     } else if (cell.type === 'trap') {
       const trap = trapByKind(cell.kind);
       shield = drain(shield, trap.cost);
+      cue('leak');
       gave.set(cell.kind, (gave.get(cell.kind) ?? 0) + 1);
       pop(`-${trap.cost} ${trap.ask.replace('?', '')}`, PALETTE.fake);
     }
@@ -121,12 +125,14 @@ function createTakbo({ seed, rng }: { seed: string; rng: Rng }): GameInstance {
       const speed = speedAt(timeMs / 1000);
       scroll += speed * dt;
 
+      const grounded = height === 0 && vy === 0;
       for (const action of input.actions) {
         if (action === 'up') targetLane = Math.max(0, targetLane - 1);
         else if (action === 'down') targetLane = Math.min(LANES - 1, targetLane + 1);
         else if (action === 'act' && height === 0) vy = JUMP_SPEED;
       }
       if (input.taps.length > 0 && height === 0) vy = JUMP_SPEED;
+      if (grounded && vy === JUMP_SPEED) cue('jump');
 
       if (vy !== 0 || height > 0) {
         height += vy * dt;
@@ -152,6 +158,7 @@ function createTakbo({ seed, rng }: { seed: string; rng: Rng }): GameInstance {
             if (invulnerable === 0) {
               shield = drain(shield, BUMP_COST);
               bumps += 1;
+              cue('whack');
               invulnerable = INVULNERABLE_MS;
               pop(`-${BUMP_COST} BUMP`, PALETTE.fake);
             }
@@ -242,7 +249,7 @@ export function buildRecap(metres: number, safeGrabs: number, bumps: number, gav
   const lines = [`You ran ${metres} ${metres === 1 ? 'metre' : 'metres'}, grabbed ${safeGrabs} safe ${safeGrabs === 1 ? 'freebie' : 'freebies'} and bumped into ${bumps} ${bumps === 1 ? 'obstacle' : 'obstacles'}.`];
   const given = [...gave.entries()].map(([kind, n]) => ({ trap: trapByKind(kind), n })).sort((a, b) => b.trap.cost - a.trap.cost);
   if (given.length === 0) {
-    lines.push('You did not give away any data. Galing!');
+    lines.push('You did not give away any data. Great job!');
   } else {
     lines.push(`You gave away ${given.map(({ trap, n }) => (n > 1 ? `${trap.gave} (${n} times)` : trap.gave)).join(', ')}.`);
     for (const { trap } of given.slice(0, 2)) lines.push(`Why it matters: ${trap.why}`);
@@ -265,13 +272,13 @@ const takbo: GameDef = {
     'The run ends when the Privacy Shield hits 0. You run faster the longer you last.',
   ],
   briefing: [
-    { title: 'Hala, freebies everywhere!', text: 'Free load, free phones, free everything! Come, run through the barangay with me.', mood: 'wow' },
+    { title: 'Wow, freebies everywhere!', text: 'Free load, free phones, free everything! Come, run through the barangay with me.', mood: 'wow' },
     { title: 'Some "free" things cost your data', text: 'Grab the freebies that ask for nothing. Dodge the ones that ask for your details.', mood: 'happy' },
     { title: 'How to play', text: 'Space or tap to jump. Up and down (or swipe) to change lane. Keep your Privacy Shield above zero.', mood: 'idle' },
     { title: 'Why it matters', text: 'Your PhilHealth number and health records are valuable. Scammers want them more than you want free load.', mood: 'think' },
-    { title: 'Kailan ako magtitiwala?', text: "Trust offers that don't ask for more than they need.", mood: 'happy' },
+    { title: 'When should I trust it?', text: "Trust offers that don't ask for more than they need.", mood: 'happy' },
   ],
-  takeaway: "Kailan ako magtitiwala? When an offer doesn't ask for more of my data than it needs.",
+  takeaway: "When should I trust it? When an offer doesn't ask for more of my data than it needs.",
   create: createTakbo,
 };
 

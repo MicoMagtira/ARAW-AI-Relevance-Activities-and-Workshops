@@ -35,7 +35,7 @@ async function openGame(page: Page) {
 }
 
 const start = (page: Page) => page.getByRole('button', { name: 'Start the chat' }).click();
-const ruleButton = (page: Page, r: Ruling) => page.getByRole('button', { name: new RegExp(`^${r === 'tama' ? 'Tama' : r === 'mali' ? 'Mali' : 'Magpatingin'}:`) });
+const ruleButton = (page: Page, r: Ruling) => page.getByRole('button', { name: new RegExp(`^${r === 'tama' ? 'Usable' : r === 'mali' ? 'Wrong' : 'Get checked'}:`) });
 
 /** The chat round on screen, found from Bea's question; null on the privacy round. */
 async function currentRound(page: Page): Promise<ChatRound | null> {
@@ -109,7 +109,7 @@ test.describe('Tanong kay Chatbot', () => {
         await ruleButton(page, 'tama').click();
         const alert = page.getByRole('alert').filter({ hasText: 'always go to a health worker' });
         await expect(alert).toBeVisible();
-        await expect(page.getByText('Muntik na!')).toBeVisible();
+        await expect(page.getByText('So close!')).toBeVisible();
         await settled(page);
         await noHorizontalOverflow(page);
         expect(await axeSerious(page)).toEqual([]);
@@ -151,7 +151,7 @@ test.describe('Tanong kay Chatbot', () => {
 
     await page.getByRole('switch', { name: /Your contacts/ }).click();
     await page.getByRole('button', { name: 'Decide' }).click();
-    await expect(page.getByText('Muntik na!')).toBeVisible();
+    await expect(page.getByText('So close!')).toBeVisible();
     await expect(page.getByText(/Do not allow: counting steps never needs your family/)).toBeVisible();
     await expect(page.getByText(/Allow: counting steps is its whole job/)).toBeVisible();
     await settled(page);

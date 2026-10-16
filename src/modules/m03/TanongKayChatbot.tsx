@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t, type StringKey } from '../../app/i18n';
 import { location$ } from '../../app/router';
+import { sfx } from '../../app/sound';
 import type { ChatRound, PrivacyScenario, Ruling } from '../../content/chatbot';
 import { randomSeed } from '../../games/engine/rng';
 import { Icon } from '../../ui/Icon';
@@ -93,7 +94,7 @@ function QaRound({ round, ruled, onRule, action }: QaRoundProps) {
             </h4>
             <div class="cb-rulings">
               {(Object.keys(RULING_KEY) as Ruling[]).map((r) => (
-                <Button key={r} variant={VARIANT[r]} large class="cb-rule" aria-label={t(RULING_KEY[r].label)} onClick={() => onRule(r)}>
+                <Button key={r} variant={VARIANT[r]} large class="cb-rule" aria-label={t(RULING_KEY[r].label)} data-sfx="none" onClick={() => onRule(r)}>
                   <span class="cb-rule__name">{t(RULING_KEY[r].name)}</span>
                   <span class="cb-rule__hint">{t(RULING_KEY[r].hint)}</span>
                 </Button>
@@ -195,7 +196,7 @@ function PrivacyRound({ scenario, decided, onDecide, action }: PrivacyRoundProps
               {t('cb.privacy.ask')}
             </h4>
             <div>
-              <Button variant="gold" large onClick={() => onDecide(allowed)}>
+              <Button variant="gold" large data-sfx="none" onClick={() => onDecide(allowed)}>
                 {t('cb.privacy.decide')}
               </Button>
             </div>
@@ -317,7 +318,14 @@ export default function TanongKayChatbot({ onComplete }: ModuleGameProps) {
     </div>
   );
 
-  const record = (correctNow: boolean) => setPlayed([...played, { correct: correctNow }]);
+  const record = (correctNow: boolean) => {
+    if (correctNow) {
+      let inARow = 1;
+      for (let i = played.length - 1; i >= 0 && played[i]?.correct; i--) inARow++;
+      sfx('correct', Math.min(5, inARow - 1));
+    } else sfx('wrong');
+    setPlayed([...played, { correct: correctNow }]);
+  };
 
   return (
     <div class="cb" ref={stageRef}>

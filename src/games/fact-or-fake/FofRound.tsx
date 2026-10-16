@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { hrefFor } from '../../app/router';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import type { FofItem, Truth } from '../../content/factOrFake/schema';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
@@ -29,6 +31,13 @@ interface FofRoundProps {
   onFinish: (answers: RoundAnswer[]) => void;
 }
 
+/** The stamp lands first, the verdict follows a beat later, then Ara speaks (ms after the answer). */
+export const VERDICT_AFTER_MS = 900;
+export const ARA_AFTER_MS = 1300;
+
+/** Combo level for the correct-answer sound: plain for the first right answer, brighter for each one in a row (max 5). */
+export const comboLevel = (inARow: number): number => Math.max(0, Math.min(5, inARow - 1));
+
 /** Drag distance in px that counts as a swipe. */
 export const SWIPE_DISTANCE = 70;
 
@@ -44,6 +53,8 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
   const swipeEl = useRef<HTMLDivElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
   const firstIndex = useRef(true);
+  const inARow = useRef(0);
+  const later = useLater();
 
   const assess = mode === 'assess';
   const item = items[index] as FofItem;
@@ -64,6 +75,7 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
       finished.current = true;
       return;
     }
+    later.clear();
     setIndex(index + 1);
     setPicked(null);
     locked.current = false;
@@ -77,6 +89,14 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
     const list = [...answers, a];
     setAnswers(list);
     onAnswer?.(a);
+    if (!assess) {
+      // Assessment forms give no feedback of any kind, sound included.
+      inARow.current = a.correct ? inARow.current + 1 : 0;
+      const level = comboLevel(inARow.current);
+      sfx(item.truth === 'fact' ? 'stampFact' : 'stampFake');
+      later(VERDICT_AFTER_MS, () => sfx(a.correct ? 'correct' : 'wrong', a.correct ? level : undefined));
+      later(ARA_AFTER_MS, () => araSay(a.correct ? t('fof.ara.right') : t('fof.ara.wrong'), a.correct ? 'happy' : 'think'));
+    }
     if (assess) advance(list);
     else setPicked(choice);
   };
@@ -206,11 +226,11 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
           {t('fof.question')}
         </h2>
         <div class="fof-buttons">
-          <Button variant="fake" large class={picked === 'fake' ? 'is-chosen' : undefined} aria-disabled={picked ? 'true' : undefined} onClick={() => pick('fake')}>
+          <Button variant="fake" large class={picked === 'fake' ? 'is-chosen' : undefined} aria-disabled={picked ? 'true' : undefined} data-sfx={assess ? undefined : 'none'} onClick={() => pick('fake')}>
             <Icon name="close" />
             {t('practice.fake')}
           </Button>
-          <Button variant="fact" large class={picked === 'fact' ? 'is-chosen' : undefined} aria-disabled={picked ? 'true' : undefined} onClick={() => pick('fact')}>
+          <Button variant="fact" large class={picked === 'fact' ? 'is-chosen' : undefined} aria-disabled={picked ? 'true' : undefined} data-sfx={assess ? undefined : 'none'} onClick={() => pick('fact')}>
             <Icon name="check" />
             {t('practice.fact')}
           </Button>
@@ -247,7 +267,7 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
             <p class="fof-feedback__basis">{t('fof.basis', { basis: item.basis })}</p>
             <div class="fof-feedback__actions">
               <span class="fof-feedback__id">{item.id}</span>
-              <Button variant="gold" large onClick={next}>
+              <Button variant="gold" large data-sfx={last ? undefined : 'page'} onClick={next}>
                 {last ? finishLabel : t('lesson.next')}
                 <Icon name="arrow-right" />
               </Button>

@@ -24,7 +24,7 @@ test.describe('Takbo, Data!', () => {
     const tile = page.getByRole('button', { name: /^Takbo, Data!/ });
     await expect(tile).toHaveAttribute('aria-label', 'Takbo, Data!, Data privacy, New');
     await page.goto(GAME);
-    const titles = ['Hala, freebies everywhere!', 'Some "free" things cost your data', 'How to play', 'Why it matters', 'Kailan ako magtitiwala?'];
+    const titles = ['Wow, freebies everywhere!', 'Some "free" things cost your data', 'How to play', 'Why it matters', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -80,7 +80,7 @@ test.describe('Takbo, Data!', () => {
     await expect(page.getByText(/^You ran \d+ metres/)).toBeVisible();
     for (const n of [1, 2, 3]) await expect(page.getByText(new RegExp(`^Privacy tip ${n}: `))).toBeVisible();
     await expect(page.getByText(/give away any data|You gave away/)).toBeVisible();
-    await expect(page.getByText("Kailan ako magtitiwala? When an offer doesn't ask for more of my data than it needs.")).toBeVisible();
+    await expect(page.getByText("When should I trust it? When an offer doesn't ask for more of my data than it needs.")).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

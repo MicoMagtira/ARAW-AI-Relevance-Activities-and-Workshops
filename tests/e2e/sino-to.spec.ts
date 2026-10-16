@@ -52,7 +52,7 @@ test.describe("Sino 'To?", () => {
     await page.goto('/#/arcade');
     await expect(page.getByRole('button', { name: /^Sino 'To\?/ })).toHaveAttribute('aria-label', "Sino 'To?, Voice-clone scams, New");
     await page.goto(GAME);
-    const titles = ["Ring ring! Sino 'to?", 'AI can copy a voice', 'How to play', 'Hurry is the red flag', 'Kailan ako magtitiwala?'];
+    const titles = ['Ring ring! Who is this?', 'AI can copy a voice', 'How to play', 'Hurry is the red flag', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -159,7 +159,7 @@ test.describe("Sino 'To?", () => {
     await expect(page.getByText(/^You took 4 calls: /)).toBeVisible();
     await expect(page.getByText(/^How it works: AI can copy a voice from a short clip/)).toBeVisible();
     await expect(page.getByText(/^Verify through a number or a person you already know/)).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? After I verify the call through a number or a person I already know, never the voice alone.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? After I verify the call through a number or a person I already know, never the voice alone.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

@@ -145,9 +145,9 @@ describe('Takbo, Data! run', () => {
   it('has the definition the shell needs: five briefing pages, how to play, takeaway', () => {
     expect(takbo.slug).toBe('takbo-data');
     expect(takbo.briefing).toHaveLength(5);
-    expect(takbo.briefing[0]?.title).toBe('Hala, freebies everywhere!');
-    expect(takbo.briefing[4]?.title).toBe('Kailan ako magtitiwala?');
-    expect(takbo.takeaway).toMatch(/^Kailan ako magtitiwala\?/);
+    expect(takbo.briefing[0]?.title).toBe('Wow, freebies everywhere!');
+    expect(takbo.briefing[4]?.title).toBe('When should I trust it?');
+    expect(takbo.takeaway).toMatch(/^When should I trust it\?/);
     expect(takbo.width / takbo.height).toBeCloseTo(16 / 9, 2);
   });
 
@@ -228,7 +228,7 @@ describe('recap', () => {
   it('praises a run that gave nothing away and uses singular words', () => {
     const lines = buildRecap(1, 1, 0, new Map());
     expect(lines[0]).toBe('You ran 1 metre, grabbed 1 safe freebie and bumped into 0 obstacles.');
-    expect(lines[1]).toBe('You did not give away any data. Galing!');
+    expect(lines[1]).toBe('You did not give away any data. Great job!');
     expect(lines).toHaveLength(5);
   });
 });

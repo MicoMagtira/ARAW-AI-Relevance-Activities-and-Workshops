@@ -1,4 +1,4 @@
-// Module 9 · Para sa Lahat (docs/SPEC.md section 4): hook, seven lesson cards, the Sa Sapatos Nila game and the takeaway.
+// Module 9 · For Everyone (docs/SPEC.md section 4): hook, seven lesson cards, the Sa Sapatos Nila game and the takeaway.
 // Cards follow SPEC's list: fair AI, who gets left out, one-accent voice, fixes that help, the human option, feedback, a poll.
 import type { ModuleContent } from '../types';
 
@@ -10,11 +10,11 @@ const content: ModuleContent = {
     type: 'story-hook',
     scene: 'The barangay health center',
     speaker: 'Lola Nena',
-    line: 'The health center has a new AI kiosk, anak. But the words are so tiny, I cannot read a thing. Where do I press?',
+    line: 'The health center has a new AI kiosk, dear. But the words are so tiny, I cannot read a thing. Where do I press?',
     icon: 'eye',
     ara: {
       intro: 'A shiny new kiosk, and Lola Nena cannot use it. Let us find out who else gets left out.',
-      done: 'Tara! Good tech works for everyone you love.',
+      done: 'Here we go! Good tech works for everyone you love.',
     },
   },
   cards: [

@@ -7,6 +7,8 @@ import { t } from '../../app/i18n';
 import { hrefFor } from '../../app/router';
 import { bestScores, briefingsSeen, markBriefingSeen, recordRun, type RunResult } from '../../app/scores';
 import { settings } from '../../app/settings';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { Ara } from '../../ui/Ara';
 import { Confetti } from '../../ui/Confetti';
 import { Icon } from '../../ui/Icon';
@@ -67,6 +69,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
   const howOpenRef = useRef(false);
   const lastDescribe = useRef({ at: 0, text: '' });
   const lastHud = useRef('');
+  const later = useLater();
 
   const setPhase = (next: Phase) => {
     phaseRef.current = next;
@@ -109,23 +112,27 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
   const start = () => {
     const seed = fixedSeed ?? randomSeed();
     seedRef.current = seed;
-    instanceRef.current = game.create({ seed, rng: createRng(seed) });
+    instanceRef.current = game.create({ seed, rng: createRng(seed), cue: sfx });
     lastDescribe.current = { at: 0, text: '' };
     lastHud.current = '';
     inputRef.current?.clear();
     setResult(null);
+    later.clear();
     refresh(true);
     setStatus(t('game.announce.started', { name: game.name }));
     setPhase('playing');
   };
 
-  const pause = () => {
+  /** `quiet` when a dialog opens right after (it plays its own sound). */
+  const pause = (quiet = false) => {
     if (phaseRef.current !== 'playing') return;
+    if (!quiet) sfx('close');
     setStatus(t('game.announce.paused'));
     setPhase('paused');
   };
   const resume = () => {
     if (phaseRef.current !== 'paused' && phaseRef.current !== 'break') return;
+    sfx('open');
     setStatus(t('game.announce.resumed'));
     setPhase('playing');
   };
@@ -145,7 +152,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
     paint();
 
     const onVisibility = () => {
-      if (document.hidden) pause();
+      if (document.hidden) pause(true);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey || howOpenRef.current) return;
@@ -198,6 +205,8 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
         if (stats?.over) {
           loop.stop();
           const run = recordRun(game.slug, stats.score, game.goodRun, !!daily);
+          sfx(run.goodRun ? 'complete' : 'xp');
+          later(run.goodRun ? 1400 : 600, () => araSay(run.goodRun ? t('game.goodRun') : t('game.over'), run.goodRun ? 'wow' : 'think'));
           refresh(true);
           setResult(run);
           setStatus(t('game.announce.over', { score: formatScore(run.score) }));
@@ -221,13 +230,16 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
   const overlay = phase !== 'playing';
 
   const askQuit = () => {
-    if (phaseRef.current === 'playing') pause();
+    if (phaseRef.current === 'playing') pause(true);
     if (phaseRef.current === 'paused' || phaseRef.current === 'break') setQuitAsk(true);
-    else window.location.hash = closeHref;
+    else {
+      sfx('back');
+      window.location.hash = closeHref;
+    }
   };
 
   const openHowToPlay = () => {
-    if (phaseRef.current === 'playing') pause();
+    if (phaseRef.current === 'playing') pause(true);
     openHow(true);
   };
 
@@ -252,7 +264,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
   return (
     <div class="lesson game-frame">
       <header class="lesson-bar">
-        <Button icon variant="secondary" aria-label={t('game.close')} onClick={askQuit}>
+        <Button icon variant="secondary" aria-label={t('game.close')} data-sfx="none" onClick={askQuit}>
           <Icon name="close" />
         </Button>
         <p class="lesson-bar__title" title={game.name}>
@@ -297,7 +309,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                     {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
                     {best > 0 ? <p class="px-text-muted">{t('game.bestLine', { n: formatScore(best) })}</p> : <p class="px-text-muted">{t('game.noBest')}</p>}
                     <div class="game-card__actions">
-                      <Button variant="gold" large data-autofocus onClick={start}>
+                      <Button variant="gold" large data-autofocus data-sfx="start" onClick={start}>
                         <Icon name="play" />
                         {t('game.start')}
                       </Button>
@@ -313,14 +325,14 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                   <Panel class="game-card" aria-labelledby="game-card-h">
                     <h2 id="game-card-h">{t('game.paused')}</h2>
                     <div class="game-card__actions game-card__actions--col">
-                      <Button variant="gold" large data-autofocus onClick={resume}>
+                      <Button variant="gold" large data-autofocus data-sfx="none" onClick={resume}>
                         <Icon name="play" />
                         {t('game.resume')}
                       </Button>
                       <Button variant="secondary" onClick={openHowToPlay}>
                         {t('game.howTo')}
                       </Button>
-                      <Button variant="secondary" onClick={start}>
+                      <Button variant="secondary" data-sfx="start" onClick={start}>
                         {t('game.restart')}
                       </Button>
                       <Button variant="secondary" href={closeHref}>
@@ -338,7 +350,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                     <p>{t('game.break.recap', { min: breakMinutes, score: formatScore(view.score) })}</p>
                     <p>{t('game.break.stretch')}</p>
                     <div class="game-card__actions">
-                      <Button variant="gold" large data-autofocus onClick={keepPlaying}>
+                      <Button variant="gold" large data-autofocus data-sfx="none" onClick={keepPlaying}>
                         {t('game.break.continue')}
                       </Button>
                       <Button variant="secondary" href={closeHref} onClick={() => sessionClock.reset()}>
@@ -374,7 +386,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                       <p class="game-trust">{game.takeaway}</p>
                     </section>
                     <div class="game-card__actions">
-                      <Button variant="gold" large data-autofocus onClick={start}>
+                      <Button variant="gold" large data-autofocus data-sfx="start" onClick={start}>
                         {t('game.again')}
                       </Button>
                       <Button variant="secondary" href={closeHref}>
@@ -390,7 +402,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
           <aside class="game-side" aria-label={t('game.panel')}>
             {view.hud.length > 0 && <Hud stats={view.hud} />}
             <div class="game-side__buttons">
-              <Button variant="secondary" disabled={phase !== 'playing' && phase !== 'paused'} onClick={phase === 'paused' ? resume : pause}>
+              <Button variant="secondary" data-sfx="none" disabled={phase !== 'playing' && phase !== 'paused'} onClick={phase === 'paused' ? resume : () => pause()}>
                 <Icon name={phase === 'paused' ? 'play' : 'clock'} />
                 {phase === 'paused' ? t('game.resume') : t('game.pause')}
               </Button>
@@ -417,7 +429,6 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
         <p class="sr-only" role="status" aria-live="polite">
           {status}
         </p>
-        <footer class="lesson-beta">{t('app.betaNote')}</footer>
       </main>
 
       <Dialog

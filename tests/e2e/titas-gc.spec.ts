@@ -134,14 +134,14 @@ test.describe("Tita's GC", () => {
     await checkScreen(page);
   });
 
-  test('a poor move says Muntik na! with low scores, and the chat carries on to a rough ending', async ({ page }) => {
+  test('a poor move says So close! with low scores, and the chat carries on to a rough ending', async ({ page }) => {
     await openGame(page);
     await start(page);
     const s = play[0] as GcScenario;
     const turn = await currentTurn(page, s);
     const poor = worst(turn.choices);
     await choiceButton(page, poor).click();
-    await expect(page.getByText('Muntik na!', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('So close!', { exact: true }).first()).toBeVisible();
     await expect(page.getByText(poor.why)).toBeVisible();
     await page.getByRole('button', { name: /^Continue the chat/ }).click();
     await move(page, s, worst);
@@ -179,7 +179,7 @@ test.describe("Tita's GC", () => {
     await page.getByRole('button', { name: 'Finish game' }).click();
     await expect(page.getByText('Game complete!')).toBeVisible();
     await page.getByRole('button', { name: /^Next/ }).click();
-    await expect(page.getByRole('heading', { name: 'Kailan ako magtitiwala?' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'When should I trust it?' })).toBeVisible();
     await page.getByRole('button', { name: /^Next: quick Fact or Fake round/ }).click();
     await expect(page.getByRole('list', { name: 'Round progress' }).getByRole('listitem')).toHaveCount(5);
   });

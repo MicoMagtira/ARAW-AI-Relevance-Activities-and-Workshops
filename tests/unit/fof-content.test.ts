@@ -222,7 +222,7 @@ describe('round results', () => {
     expect(recordRound(scoreRound(answers(5, 5, 5, 0))).newBest).toBe(true);
   });
 
-  it('earns the Timbang na Radar badge once for a sharp, balanced 10-item round', () => {
+  it('earns the Balanced Radar badge once for a sharp, balanced 10-item round', () => {
     expect(recordRound(scoreRound(answers(5, 5, 5, 0))).badge).toBe(true);
     expect(badgesEarned.value).toContain('radar');
     expect(recordRound(scoreRound(answers(5, 5, 5, 0))).badge).toBe(false);

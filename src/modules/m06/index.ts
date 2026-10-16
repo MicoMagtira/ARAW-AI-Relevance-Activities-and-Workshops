@@ -1,4 +1,4 @@
-// Module 6 · Katuwang si AI (docs/SPEC.md section 4): hook, seven lesson cards, the Hati Tayo! game and the takeaway.
+// Module 6 · AI as Your Partner (docs/SPEC.md section 4): hook, seven lesson cards, the Hati Tayo! game and the takeaway.
 // Cards follow SPEC's list: AI is a tool, sort the tasks, AI's weak spots, who checks, jobs change, who is responsible, a poll.
 import type { ModuleContent } from '../types';
 
@@ -14,7 +14,7 @@ const content: ModuleContent = {
     icon: 'briefcase',
     ara: {
       intro: 'Kuya Jun is buried in forms. A new AI helper has arrived. Let us find out what it is good at, and what it is not.',
-      done: 'Tara! AI for the repeat jobs, people for the caring.',
+      done: 'Here we go! AI for the repeat jobs, people for the caring.',
     },
   },
   cards: [

@@ -1,11 +1,13 @@
 // First-visit boot screen: the 8-bit sunrise (design/mockup/Main.dc.html, redrawn desktop-first).
 import { useEffect, useState } from 'preact/hooks';
-import { finishSplash } from '../app/boot';
+import { MUSIC_AFTER_START_MS, finishSplash } from '../app/boot';
+import { holdMusic } from '../app/sound';
 import { t } from '../app/i18n';
 import { settings } from '../app/settings';
 import { Icon } from '../ui/Icon';
 import { Ara } from '../ui/Ara';
 import { Button } from '../ui/kit';
+import { SoundSwitches } from '../ui/SoundControls';
 
 const SEGMENTS = 10;
 const SEGMENT_MS = 140;
@@ -76,7 +78,7 @@ export function Splash() {
 
   return (
     <main class="splash" id="splash" aria-labelledby="splash-title">
-      <Button href="#/" class="skip-link" variant="gold" onClick={skip}>
+      <Button href="#/" class="skip-link" variant="gold" data-sfx="none" onClick={skip}>
         {t('splash.skip')}
       </Button>
 
@@ -108,19 +110,25 @@ export function Splash() {
               {t('splash.loading')} {percent}%
             </p>
           </div>
-          <Button large variant="gold" class="splash__start" onClick={finishSplash}>
+          <Button large variant="gold" class="splash__start" data-sfx="none" onPointerDown={quietMusic} onKeyDown={quietMusic} onClick={finishSplash}>
             {t('splash.start')}
             <Icon name="play" />
           </Button>
+          <SoundSwitches />
         </div>
         <p class="splash__credit">
           {t('app.credit')}
           <br />
-          {t('app.betaNote')}
+          {t('app.createdBy')}
         </p>
       </div>
     </main>
   );
+}
+
+/** The first press unlocks audio: keep the morning theme back so the START chime and the sunrise jingle ring out alone. */
+function quietMusic(): void {
+  holdMusic(MUSIC_AFTER_START_MS);
 }
 
 function skip(e: MouseEvent): void {

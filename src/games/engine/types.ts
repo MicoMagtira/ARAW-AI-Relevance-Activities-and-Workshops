@@ -1,4 +1,5 @@
 // The contract between a game and the shared GameShell.
+import type { SfxName } from '../../app/sound';
 import type { AraMood } from '../../ui/Ara';
 import type { InputFrame } from './input';
 import type { Rng } from './rng';
@@ -38,6 +39,12 @@ export interface BriefingPage {
   mood?: AraMood;
 }
 
+/**
+ * A game asks for a sound at a moment that changes its state (a jump, a catch, a timer second): never every frame.
+ * The shell passes the real player; tests leave it out, so the game logic stays pure and silent.
+ */
+export type Cue = (name: SfxName, arg?: number) => void;
+
 export interface GameDef {
   slug: string;
   name: string;
@@ -50,7 +57,7 @@ export interface GameDef {
   howTo: readonly string[];
   /** The five first-run briefing pages (SPEC section 5). */
   briefing: readonly BriefingPage[];
-  /** The "Kailan ako magtitiwala?" one-liner shown at game over. */
+  /** The "When should I trust it?" one-liner shown at game over. */
   takeaway: string;
-  create(options: { seed: string; rng: Rng }): GameInstance;
+  create(options: { seed: string; rng: Rng; cue?: Cue }): GameInstance;
 }

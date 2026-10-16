@@ -57,7 +57,7 @@ test.describe('Lamok Lamay', () => {
     await page.goto('/#/arcade');
     await expect(page.getByRole('button', { name: /^Lamok Lamay/ })).toHaveAttribute('aria-label', 'Lamok Lamay, How AI sees, and misses, New');
     await page.goto(GAME);
-    const titles = ['Bantay lamok time!', 'AI makes two mistakes', 'How to play', 'Clean water, new mosquitoes', 'Kailan ako magtitiwala?'];
+    const titles = ['Mosquito watch time!', 'AI makes two mistakes', 'How to play', 'Clean water, new mosquitoes', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -167,7 +167,7 @@ test.describe('Lamok Lamay', () => {
     await expect(page.getByText(/^You checked \d+ containers?: /)).toBeVisible();
     await expect(page.getByText(/^The AI camera's precision was \d+%/)).toBeVisible();
     await expect(page.getByText(/^Dengue mosquitoes breed in clean standing water/)).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? I trust the AI camera as a helper, and my own eyes make the final call.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? I trust the AI camera as a helper, and my own eyes make the final call.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

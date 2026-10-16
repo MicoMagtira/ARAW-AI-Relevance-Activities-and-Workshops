@@ -6,6 +6,7 @@ import { manilaLongDate } from '../../app/daily';
 import { t } from '../../app/i18n';
 import { badgesEarned, modulesDone } from '../../app/progress';
 import { hrefFor } from '../../app/router';
+import { holdMusic, sfx } from '../../app/sound';
 import { BADGES, BADGE_TOTAL } from '../../content/badges';
 import { MODULES } from '../../content/modules';
 import { Icon } from '../../ui/Icon';
@@ -14,12 +15,13 @@ import '../../styles/certificate.css';
 import { CERT_H, CERT_W, drawCertificate, loadCertificateFonts } from './certificateArt';
 
 const NAME_MAX = 40;
+const CERT_FANFARE_MS = 2600;
 
 function Frame({ children }: { children: ComponentChildren }) {
   return (
     <div class="lesson cert-frame">
       <header class="lesson-bar">
-        <Button href={hrefFor('/me')} icon variant="secondary" aria-label={t('cert.close')}>
+        <Button href={hrefFor('/me')} icon variant="secondary" data-sfx="back" aria-label={t('cert.close')}>
           <Icon name="close" />
         </Button>
         <p class="lesson-bar__title">{t('title.certificate')}</p>
@@ -27,7 +29,6 @@ function Frame({ children }: { children: ComponentChildren }) {
       <main class="lesson-main cert-main" id="main" tabIndex={-1}>
         <h1 class="sr-only">{t('title.certificate')}</h1>
         {children}
-        <footer class="lesson-beta">{t('app.betaNote')}</footer>
       </main>
     </div>
   );
@@ -44,6 +45,13 @@ export default function CertificateScreen() {
   const medals = BADGES.map((b) => earned.includes(b.id));
   const earnedCount = medals.filter(Boolean).length;
   const typed = name.trim();
+
+  // The certificate fanfare plays once on open; the victory theme comes in after it.
+  useEffect(() => {
+    if (!unlocked) return;
+    holdMusic(CERT_FANFARE_MS);
+    sfx('certificate');
+  }, []);
 
   useEffect(() => {
     let live = true;

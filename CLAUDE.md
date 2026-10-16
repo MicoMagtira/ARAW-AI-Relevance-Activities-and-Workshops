@@ -2,18 +2,15 @@
 
 ARAW = **AI Relevance Activities and Workshops**: a fun, gamified, mobile-first web app that teaches NON-technical Filipinos
 (seniors, parents, students, health workers) AI literacy and how to resist health misinformation.
-Core idea: **calibrated trust**, not "trust less". Every module ends with "Kailan ako magtitiwala?" (When should I trust?).
+Core idea: **calibrated trust**, not "trust less". Every module ends with "When should I trust it?".
 Sibling of TALA: same 8-bit retro spirit and desktop-first layout, but a light, warm daytime palette. Product spec: `docs/SPEC.md`.
 Content rules: `docs/CONTENT_GUIDE.md`. **Design system: `docs/DESIGN.md` (8-bit, desktop-first) is the visual authority.**
-`design/mockup/*.dc.html` is a CONTENT AND FLOW reference only (it was drawn phone-first and flat): reuse its screens, copy,
-colours and interactions, never its flat style or phone-first layout.
+The early phone-first mockups live in the private planning folder, not in this repo; DESIGN.md supersedes them.
 
-## You are working unattended
-- An overnight script runs you one task at a time in fresh sessions. **Never ask questions.** Make a sensible decision, then add
-  one line to `docs/DECISIONS-LOG.md` (date, task id, decision, why).
-- Do only the current task, completely and well. Do not start other tasks.
-- Finish by running `npm run verify` until it passes, then commit: `git add -A && git commit -m "<TASK-ID>: <title>"`.
-- Never `git push`, never add remotes, never touch files outside this repo, never install global tools.
+## Working rules
+- Log every product or content decision as one line in `docs/DECISIONS-LOG.md` (date, decision, why).
+- Run `npm run verify` and get it green before committing.
+- Never commit secrets. The report relay URL is not secret (it ships in the built JS): set `VITE_REPORT_ENDPOINT` in `.env.production`.
 
 ## Stack (fixed)
 - Vite + TypeScript (strict) + Preact (`preact`, `preact/hooks`, `@preact/signals` allowed). Hash router (static hosting).
@@ -59,10 +56,10 @@ Real buttons/links/labels, focus-visible rings, tap targets >= 44px, alt text/AR
 Reduce motion. Settings apply app-wide via root classes.
 
 ## Content rules (summary; full rules in docs/CONTENT_GUIDE.md)
-- All content in English with light Filipino flavour; game names stay Filipino. Strings go through `src/app/i18n.ts` (en only now).
+- All player-visible text is English; only proper names (game titles, characters, ARAW) stay Filipino. Strings go through `src/app/i18n.ts` (en only now).
 - Health facts must be well established (WHO/DOH-level consensus). Never give dosing or diagnosis. Point to health workers.
 - All people, pages and brands are fictional. No real names. Synthetic personas only.
-- Every content entry has `review_status: "unreviewed"`. A visible "Beta: educational, not medical advice" note stays in the app.
+- Every content entry has `review_status: "unreviewed"`. No beta or "not medical advice" banner (dropped 2026-10-16: the proposal already frames ARAW as educational).
 - Generated fake posts/scams show an "ARAW GAME · FAKE" stamp when revealed. True facts only from the curated pool, never generated.
 - Fact or Fake Forms A/B (test sets) never appear in practice rounds, the arcade or the daily challenge.
 
@@ -71,9 +68,8 @@ Reduce motion. Settings apply app-wide via root classes.
 - Each feature ships with tests (unit for logic such as scoring, RNG, unlocks; e2e for the screen at all 3 viewports).
 - Performance: initial JS <= 200 KB gzip; lazy-load each game and module; smooth on low-end Android.
 
-## Token discipline (this run is paid per token)
-- Read only the files you need; use Grep/Glob to locate code before reading. Do not re-read files you just wrote.
+## Testing
 - Run tests with terse reporters: `npx vitest run --reporter=dot`, `npx playwright test --reporter=line`.
   When something fails, re-run only the failing test file/project.
-- Do not spawn subagents. Do not use web search or web fetch. Do not paste large logs into your reasoning.
-- Write complete files in one go rather than many tiny edits. End with a summary of at most 5 lines.
+- Screenshot sweep for releases and the user guide (not part of verify): `npx playwright test -c scripts/shots/shots.config.ts`;
+  output goes to `shots-out/` (gitignored).

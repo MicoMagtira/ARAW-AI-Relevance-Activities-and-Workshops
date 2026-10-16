@@ -1,6 +1,7 @@
 // Ara's first-run briefing: five short pages (about 12 seconds each), always skippable, replayable from How to play.
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
+import { araSay, sfx } from '../../app/sound';
 import { AraSays } from '../../ui/AraBubble';
 import { Button, Panel } from '../../ui/kit';
 import type { BriefingPage } from './types';
@@ -25,9 +26,17 @@ export function Briefing({ pages, onStart, onSkip, startLabel }: Props) {
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
   }, [index]);
+  // Ara reads each page out in her blip voice (idle pages stay quiet).
+  useEffect(() => {
+    if (page) araSay(page.text, page.mood ?? 'happy');
+  }, [index]);
 
   if (!page) return null;
-  const go = (next: number) => setIndex(Math.max(0, Math.min(pages.length - 1, next)));
+  const go = (next: number) => {
+    const to = Math.max(0, Math.min(pages.length - 1, next));
+    if (to !== index) sfx('page');
+    setIndex(to);
+  };
   const onKey = (e: KeyboardEvent) => {
     if (e.key === 'ArrowRight' && !last) go(index + 1);
     else if (e.key === 'ArrowLeft' && index > 0) go(index - 1);
@@ -55,16 +64,16 @@ export function Briefing({ pages, onStart, onSkip, startLabel }: Props) {
         </Button>
         <span class="briefing__nav">
           {index > 0 && (
-            <Button variant="secondary" onClick={() => go(index - 1)}>
+            <Button variant="secondary" data-sfx="none" onClick={() => go(index - 1)}>
               {t('game.briefing.back')}
             </Button>
           )}
           {last ? (
-            <Button variant="gold" onClick={onStart}>
+            <Button variant="gold" data-sfx={startLabel ? 'open' : 'start'} onClick={onStart}>
               {startLabel ?? t('game.briefing.start')}
             </Button>
           ) : (
-            <Button variant="gold" onClick={() => go(index + 1)}>
+            <Button variant="gold" data-sfx="none" onClick={() => go(index + 1)}>
               {t('game.briefing.next')}
             </Button>
           )}

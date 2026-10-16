@@ -5,7 +5,8 @@
 import { PALETTE, box, text } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent, timerCue } from '../engine/cues';
 import { drawPerson, type Face } from '../feed-mo-to/art';
 import {
   BUBBLE_CHARS,
@@ -74,7 +75,7 @@ export interface RunSummary {
 
 const list = (ids: readonly Ingredient[]): string => (ids.length > 0 ? ids.map((i) => INGREDIENT_INFO[i].name).join(', ') : 'nothing yet');
 
-function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
+function createLuto({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const orders = createOrderGenerator(createRng(`${rng()}:luto-orders`));
 
   let index = 0;
@@ -111,7 +112,9 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
   }
 
   function toggle(id: Ingredient) {
-    pot = pot.includes(id) ? pot.filter((i) => i !== id) : [...pot, id];
+    const adding = !pot.includes(id);
+    pot = adding ? [...pot, id] : pot.filter((i) => i !== id);
+    cue(adding ? 'plop' : 'whiff');
   }
 
   function startCooking() {
@@ -119,6 +122,7 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
     phase = 'cooking';
     phaseMs = 0;
     dragging = null;
+    cue('sizzle');
   }
 
   function serve() {
@@ -133,6 +137,7 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
       for (const id of dish.missing) missed[id] = (missed[id] ?? 0) + 1;
     }
     outcome = { dish, pay, heartLost: !served };
+    cue(served ? 'served' : 'funnyDish');
     phase = 'result';
     phaseMs = 0;
   }
@@ -141,6 +146,7 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
     counts.timeouts += 1;
     hearts -= 1;
     outcome = { dish: null, pay: { base: 0, speed: 0, tips: 0, total: 0 }, heartLost: true };
+    cue('wrong');
     phase = 'result';
     phaseMs = 0;
     dragging = null;
@@ -151,7 +157,10 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
     const d = dragging;
     dragging = null;
     if (!d?.moved) return false;
-    if (inside(DROP, d.x, d.y) && !pot.includes(d.id)) pot = [...pot, d.id];
+    if (inside(DROP, d.x, d.y) && !pot.includes(d.id)) {
+      pot = [...pot, d.id];
+      cue('plop');
+    }
     return true;
   }
 
@@ -202,6 +211,7 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
       const chip = chipAt(pot, tap.x, tap.y);
       if (chip >= 0) {
         pot = pot.filter((_, k) => k !== chip);
+        cue('whiff');
         continue;
       }
       const slot = slotAt(tap.x, tap.y);
@@ -212,8 +222,10 @@ function createLuto({ rng }: { seed: string; rng: Rng }): GameInstance {
       if (phase !== 'choose') return;
     }
 
+    const tick = timerCue(timeLeft, timeLeft - dtMs);
     timeLeft -= dtMs;
     if (timeLeft <= 0) timeout();
+    else if (tick) cue(tick);
   }
 
   return {
@@ -341,13 +353,13 @@ const lutoNiAra: GameDef = {
     'Faster cooking earns a speed bonus, and health orders earn tips. You have 3 hearts, and orders get quicker and never repeat.',
   ],
   briefing: [
-    { title: 'Welcome to my kusina!', text: 'Customers order answers from an AI chatbot, and you cook up the prompt. Do not worry, nobody gets food poisoning. Just funny dishes.', mood: 'wow' },
+    { title: 'Welcome to my kitchen!', text: 'Customers order answers from an AI chatbot, and you cook up the prompt. Do not worry, nobody gets food poisoning. Just funny dishes.', mood: 'wow' },
     { title: 'A good prompt is a good recipe', text: 'Say who the answer is for, which language, how long, what format and what role. A clear recipe makes a clear dish.', mood: 'happy' },
     { title: 'How to play', text: 'Tap or drag ingredients into the pot, then press COOK before the timer ends. On a keyboard, use the arrows and Enter.', mood: 'idle' },
     { title: 'Health questions need extras', text: 'For health questions, ask the AI to cite sources and to say when it is unsure. Both go in the pot.', mood: 'think' },
-    { title: 'Kailan ako magtitiwala?', text: 'Trust answers that show their sources, and check them with a health worker.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'Trust answers that show their sources, and check them with a health worker.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? When an answer shows its sources and admits when it is unsure, and I still check it with a health worker.',
+  takeaway: 'When should I trust it? When an answer shows its sources and admits when it is unsure, and I still check it with a health worker.',
   create: createLuto,
 };
 

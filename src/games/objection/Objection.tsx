@@ -4,6 +4,8 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
+import { araSay, sfx } from '../../app/sound';
+import { useLater } from '../../app/sound/useLater';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import type { IconName } from '../../ui/icons';
@@ -80,7 +82,7 @@ function Card({ card, onPick }: { card: Evidence; onPick?: () => void }) {
     </>
   );
   return onPick ? (
-    <button type="button" class="objection-card objection-card--pick px-box" onClick={onPick}>
+    <button type="button" class="objection-card objection-card--pick px-box" data-sfx="none" onClick={onPick}>
       {inner}
     </button>
   ) : (
@@ -113,6 +115,16 @@ export function Objection({ mode, seed, daily, endActions }: ObjectionProps) {
 
   const result = (): ObjectionResult => ({ score: game.score, won: game.won, clean: game.clean, strikes: game.strikes, stars: moduleStars(game.won, game.strikes) });
 
+  const later = useLater();
+
+  // Ara's closing line (the one in her bubble), spoken after the end jingle.
+  useEffect(() => {
+    if (phase !== 'end') return;
+    const r = result();
+    const line = rootRef.current?.querySelector('.ara-says__bubble p')?.textContent ?? '';
+    later(1400, () => araSay(line, r.won >= MODULE_CASES || (arcade && r.won >= 3) ? 'wow' : r.won >= 1 ? 'happy' : 'sad'));
+  }, [phase]);
+
   const openCase = (g: Game) => {
     setGame(beginCase(g));
     setCursor(0);
@@ -131,6 +143,9 @@ export function Objection({ mode, seed, daily, endActions }: ObjectionProps) {
     const ruling = objection(game, c, cursor, card.id);
     setGame(ruling.game);
     setVerdict({ ruling, index: cursor, card });
+    // the card slides onto the bench, then the judge rules
+    sfx('evidence');
+    later(600, () => sfx(ruling.kind === 'won' ? 'verdict' : 'gavel'));
     setPhase(ruling.kind === 'won' ? 'closed' : 'overruled');
   };
 
@@ -295,7 +310,7 @@ export function Objection({ mode, seed, daily, endActions }: ObjectionProps) {
               <Button variant="gold" onClick={() => setPressed(true)}>
                 {t('objection.press')}
               </Button>
-              <Button variant="fake" class="objection-shout-btn" aria-disabled={checked} onClick={() => !checked && setPhase('present')}>
+              <Button variant="fake" class="objection-shout-btn" aria-disabled={checked} data-sfx="objection" onClick={() => !checked && setPhase('present')}>
                 {t('objection.objection')}
               </Button>
             </div>

@@ -35,7 +35,9 @@ const images = [];
 const walk = (dir) => {
   for (const name of readdirSync(dir)) {
     const path = join(dir, name);
-    if (statSync(path).isDirectory()) walk(path);
+    if (statSync(path).isDirectory()) {
+      if (name !== 'guide') walk(path); // the user guide's screenshots load only on #/guide, one section at a time
+    }
     else if (['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif'].includes(extname(name))) images.push({ path, size: statSync(path).size });
   }
 };

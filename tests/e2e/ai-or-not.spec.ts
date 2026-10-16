@@ -52,7 +52,7 @@ test.describe('AI or Not?', () => {
 
     const item = await currentItem(page);
     await answerButton(page, answerFor(item)).click();
-    const feedback = page.getByRole('status').filter({ hasText: 'Tama!' });
+    const feedback = page.getByRole('status').filter({ hasText: 'Correct!' });
     await expect(feedback).toContainText(item.kind === 'hype' ? 'Hype alert!' : item.why);
     await expect(feedback).toContainText('+10 points');
     await expect(page.getByText('10 pts')).toBeVisible();
@@ -122,7 +122,7 @@ test.describe('AI or Not?', () => {
       // the key listener attaches just after the first paint, so the very first press may need a retry (a later press is ignored)
       await expect(async () => {
         await page.keyboard.press(answerFor(item) === 'ai' ? 'ArrowRight' : 'ArrowLeft');
-        await expect(page.getByRole('status').filter({ hasText: 'Tama!' })).toBeVisible({ timeout: 1000 });
+        await expect(page.getByRole('status').filter({ hasText: 'Correct!' })).toBeVisible({ timeout: 1000 });
       }).toPass();
       await page.keyboard.press('Enter');
       await expect(page.getByText(`Card ${i + 1} of 12`)).toBeVisible();
@@ -130,7 +130,7 @@ test.describe('AI or Not?', () => {
     // a wrong arrow explains and pays nothing
     const item = await currentItem(page);
     await page.keyboard.press(answerFor(item) === 'ai' ? 'ArrowLeft' : 'ArrowRight');
-    await expect(page.getByRole('status').filter({ hasText: 'Muntik na!' })).toContainText('No points this time');
+    await expect(page.getByRole('status').filter({ hasText: 'So close!' })).toContainText('No points this time');
     await expect(page.getByText('20 pts')).toBeVisible();
   });
 
@@ -141,12 +141,12 @@ test.describe('AI or Not?', () => {
 
     const item = await currentItem(page);
     await touchSwipe(page, answerFor(item) === 'ai' ? 150 : -150);
-    await expect(page.getByRole('status').filter({ hasText: 'Tama!' })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'Correct!' })).toBeVisible();
     await page.getByRole('button', { name: 'Next card' }).click();
 
     const second = await currentItem(page);
     await touchSwipe(page, answerFor(second) === 'ai' ? -150 : 150); // the wrong way on purpose
-    await expect(page.getByRole('status').filter({ hasText: 'Muntik na!' })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'So close!' })).toBeVisible();
   });
 
   test('every setting on: the game still fits and stays accessible', async ({ page }) => {

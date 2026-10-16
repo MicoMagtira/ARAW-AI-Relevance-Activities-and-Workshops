@@ -63,8 +63,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'mosquito',
     basis: 'DOH and WHO dengue guidance: mosquitoes breed in standing water; see a health worker for a lasting fever.',
     slogans: [
-      { id: 'dengue-s1', text: 'Walang tubig, walang lamok!', ai: false },
-      { id: 'dengue-s2', text: 'Tuyo ang paligid, ligtas ang pamilya!', ai: false },
+      { id: 'dengue-s1', text: 'No water, no mosquitoes!', ai: false },
+      { id: 'dengue-s2', text: 'Dry surroundings, safe family!', ai: false },
       { id: 'dengue-s3', text: 'Stop the sting, empty the thing!', ai: true },
     ],
     facts: [
@@ -81,8 +81,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'drop',
     basis: 'WHO and DOH hand hygiene guidance: soap, clean water and about 20 seconds, at key moments.',
     slogans: [
-      { id: 'hands-s1', text: 'Sabon at tubig, laging handa!', ai: false },
-      { id: 'hands-s2', text: 'Malinis na kamay, malusog na bayan!', ai: false },
+      { id: 'hands-s1', text: 'Soap and water, always ready!', ai: false },
+      { id: 'hands-s2', text: 'Clean hands, healthy town!', ai: false },
       { id: 'hands-s3', text: 'Scrub, rinse, repeat, stay neat!', ai: true },
     ],
     facts: [
@@ -99,8 +99,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'syringe',
     basis: 'DOH Expanded Program on Immunization and WHO: routine child vaccines are free at health centers and do not cause the disease.',
     slogans: [
-      { id: 'vaccine-s1', text: 'Bakuna ngayon, bata’y protektado!', ai: false },
-      { id: 'vaccine-s2', text: 'Dalhin ang baby, libre sa health center!', ai: false },
+      { id: 'vaccine-s1', text: 'Vaccines today, kids protected!', ai: false },
+      { id: 'vaccine-s2', text: 'Bring baby, it is free at the health center!', ai: false },
       { id: 'vaccine-s3', text: 'A small shot, a big shield!', ai: true },
     ],
     facts: [
@@ -117,8 +117,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'heart',
     basis: 'DOH and WHO hypertension guidance: high blood pressure often has no signs, and too much salt raises it.',
     slogans: [
-      { id: 'bp-s1', text: 'Presyon mo, alamin mo!', ai: false },
-      { id: 'bp-s2', text: 'Libreng check-up, kalusugan ang premyo!', ai: false },
+      { id: 'bp-s1', text: 'Your pressure: know it!', ai: false },
+      { id: 'bp-s2', text: 'Free check-up, health is the prize!', ai: false },
       { id: 'bp-s3', text: 'Know your number, love your heart!', ai: true },
     ],
     facts: [
@@ -135,8 +135,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'lungs',
     basis: 'DOH and WHO tuberculosis guidance: a cough of two weeks or more needs a check; TB is curable with full treatment.',
     slogans: [
-      { id: 'tb-s1', text: 'Ubo ng dalawang linggo? Magpa-check!', ai: false },
-      { id: 'tb-s2', text: 'Ang TB ay nagagamot!', ai: false },
+      { id: 'tb-s1', text: 'Coughing for two weeks? Get checked!', ai: false },
+      { id: 'tb-s2', text: 'TB can be cured!', ai: false },
       { id: 'tb-s3', text: 'Breathe easy, get checked today!', ai: true },
     ],
     facts: [
@@ -153,8 +153,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'drop',
     basis: 'WHO and DOH safe water guidance: clear water can still carry germs; boil or treat it and store it covered.',
     slogans: [
-      { id: 'water-s1', text: 'Pakuluan muna, bago inumin!', ai: false },
-      { id: 'water-s2', text: 'Malinis na tubig, malusog na tahanan!', ai: false },
+      { id: 'water-s1', text: 'Boil it first, then drink!', ai: false },
+      { id: 'water-s2', text: 'Clean water, healthy home!', ai: false },
       { id: 'water-s3', text: 'Boil it, cover it, sip it safe!', ai: true },
     ],
     facts: [
@@ -171,8 +171,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'paw',
     basis: 'WHO and DOH rabies guidance: wash a bite at once, see a health worker, and vaccinate dogs.',
     slogans: [
-      { id: 'rabies-s1', text: 'Kagat ng aso? Hugasan, tapos magpa-check!', ai: false },
-      { id: 'rabies-s2', text: 'Bakunahan ang alaga, protektahan ang lahat!', ai: false },
+      { id: 'rabies-s1', text: 'Dog bite? Wash it, then get checked!', ai: false },
+      { id: 'rabies-s2', text: 'Vaccinate pets, protect everyone!', ai: false },
       { id: 'rabies-s3', text: 'Be a good owner, vaccinate your dog!', ai: true },
     ],
     facts: [
@@ -189,8 +189,8 @@ export const TOPICS: readonly Topic[] = [
     motif: 'baby',
     basis: 'WHO and DOH infant feeding guidance: breast milk alone for the first six months, plus regular check-ups.',
     slogans: [
-      { id: 'baby-s1', text: 'Gatas ni Nanay, unang regalo!', ai: false },
-      { id: 'baby-s2', text: 'Check-up ni baby, huwag kaligtaan!', ai: false },
+      { id: 'baby-s1', text: 'Mother’s milk, the first gift!', ai: false },
+      { id: 'baby-s2', text: 'Baby check-ups, never miss one!', ai: false },
       { id: 'baby-s3', text: 'Little ones, big futures!', ai: true },
     ],
     facts: [

@@ -27,7 +27,7 @@ test.describe('Home', () => {
     await page.clock.setFixedTime(new Date('2026-10-15T09:00:00'));
     await page.goto('/#/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Home');
-    await expect(page.getByRole('heading', { level: 2, name: 'Magandang umaga, Kaibigan!' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Good morning, Friend!' })).toBeVisible();
     await expect(page.locator('.home-hero .ara')).toBeVisible();
 
     // Continue card: next module + progress
@@ -59,7 +59,7 @@ test.describe('Home', () => {
     await page.goto('/#/me');
     await page.getByLabel('Nickname').fill('Bea');
     await page.goto('/#/');
-    await expect(page.getByRole('heading', { level: 2, name: 'Magandang gabi, Bea!' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Good evening, Bea!' })).toBeVisible();
   });
 
   test('myth card flips between the myth and the fact', async ({ page }) => {
@@ -105,7 +105,7 @@ test.describe('Me', () => {
     await page.getByLabel('Nickname').fill('Lola Bea');
     const picker = page.getByRole('group', { name: 'Pick your avatar' });
     expect(await picker.getByRole('button').count()).toBeGreaterThanOrEqual(6);
-    for (const label of ['Lola with a bun and glasses', 'Woman in a hijab', 'Teen who uses a wheelchair']) {
+    for (const label of ['Grandmother with a bun and glasses', 'Woman in a hijab', 'Teen who uses a wheelchair']) {
       await expect(picker.getByRole('button', { name: new RegExp(label) })).toBeVisible();
     }
     await picker.getByRole('button', { name: 'Teen who uses a wheelchair' }).click();
@@ -123,12 +123,44 @@ test.describe('Me', () => {
     }
   });
 
+  test('sound controls (TALA-style) start on at 25 and 65, persist after a reload and fit', async ({ page }) => {
+    await page.goto('/#/me');
+    const group = page.getByRole('group', { name: 'Sound' });
+    const music = group.getByRole('switch', { name: 'Music' });
+    const effects = group.getByRole('switch', { name: 'Sound effects' });
+    const musicVol = group.getByRole('slider', { name: 'Music volume' });
+    const fxVol = group.getByRole('slider', { name: 'Sound effects volume' });
+    await expect(music).toHaveAttribute('aria-checked', 'true');
+    await expect(effects).toHaveAttribute('aria-checked', 'true');
+    await expect(musicVol).toHaveValue('25');
+    await expect(fxVol).toHaveValue('65');
+    await expect(group.locator('.volume-row__value').first()).toHaveText('25');
+
+    await musicVol.fill('60');
+    await music.click();
+    await expect(music).toHaveAttribute('aria-checked', 'false');
+    await expect(musicVol).toBeDisabled();
+    await expect(fxVol).toBeEnabled();
+
+    await page.reload();
+    await expect(group.getByRole('switch', { name: 'Music' })).toHaveAttribute('aria-checked', 'false');
+    await expect(musicVol).toHaveValue('60');
+    await expect(musicVol).toBeDisabled();
+    await expect(effects).toHaveAttribute('aria-checked', 'true');
+    for (const control of [music, effects, musicVol, fxVol]) {
+      const box = await control.boundingBox();
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(43.5);
+    }
+    await noHorizontalOverflow(page);
+  });
+
   test('shows stats, badge cabinet, language row and links', async ({ page }) => {
     await page.goto('/#/me');
     for (const label of ['Total XP', 'Current streak', 'Best streak', 'Modules done', 'Badges', 'Best Truth Radar']) {
       await expect(page.locator('.stat-list dt', { hasText: label })).toBeVisible();
     }
-    await page.getByRole('button', { name: /Guro ni AI/ }).click();
+    await page.getByRole('button', { name: /AI's Teacher/ }).click();
     await expect(page.getByText('Locked: Finish Module 2: How AI Learns and Makes Mistakes')).toBeVisible();
     await expect(page.getByText('English · more coming')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Report a problem' }).last()).toHaveAttribute('href', '#/report?screen=me');
@@ -203,15 +235,18 @@ test.describe('Me', () => {
 });
 
 test.describe('Report', () => {
-  test('builds the mailto from category, screen, item, version, device and details', async ({ page }) => {
+  test('builds the report from category, screen, item, version, device and details, with fallbacks to send it', async ({ page }) => {
+    // Tests build without VITE_REPORT_ENDPOINT, so the fallback path is expected. If a build does have one, the relay call
+    // is blocked here and the failure message must lead to the same fallbacks.
+    await page.route('https://script.google.com/**', (route) => route.abort());
     await page.goto('/#/report?screen=fact-or-fake&item=m03-c2');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Report');
     await expect(page.locator('.preview-list dd').nth(0)).toHaveText('fact-or-fake');
     await expect(page.locator('.preview-list dd').nth(1)).toHaveText('m03-c2');
     await expect(page.locator('.preview-list dd').nth(2)).toHaveText(/^ARAW 0\.\d+\.\d+ beta$/);
     await expect(page.locator('.preview-list dd').nth(3)).toHaveText(/Chrome/);
-    await expect(page.getByText(/Nothing is sent until you press Send/)).toBeVisible();
-    await expect(page.getByText('AIKasalig@gmail.com', { exact: false }).first()).toBeVisible();
+    await expect(page.getByText(/What gets sent:/)).toBeVisible();
+    await expect(page.locator('.report-email')).toHaveText('AIKasalig@gmail.com');
 
     const cats = page.getByRole('group', { name: 'What kind of problem?' });
     await expect(cats.getByRole('button')).toHaveCount(4);
@@ -220,7 +255,15 @@ test.describe('Report', () => {
     await expect(cats.getByRole('button', { name: 'Something broke' })).toHaveAttribute('aria-pressed', 'false');
     await page.getByLabel('Details (optional)').fill('Wrong dose & a typo?');
 
-    const href = (await page.getByRole('link', { name: 'Open email' }).getAttribute('href')) ?? '';
+    const send = page.getByRole('button', { name: 'Send report' });
+    if ((await send.count()) > 0) {
+      await send.click();
+      await expect(page.getByText(/did not go through/)).toBeVisible();
+    } else {
+      await expect(page.getByText(/Pick one of the ways below/)).toBeVisible();
+    }
+
+    const href = (await page.getByRole('link', { name: 'Use my email app' }).getAttribute('href')) ?? '';
     expect(href.startsWith('mailto:AIKasalig@gmail.com?')).toBe(true);
     const params = new URLSearchParams(href.slice(href.indexOf('?') + 1));
     expect(params.get('subject')).toBe('[ARAW] Report: Wrong or unsafe info');
@@ -231,11 +274,24 @@ test.describe('Report', () => {
     expect(body).toContain('Device: ');
     expect(body).toContain('Wrong dose & a typo?');
     expect(href).not.toMatch(/\s/);
+
+    const gmail = page.getByRole('link', { name: /Open in Gmail/ });
+    await expect(gmail).toHaveAttribute('target', '_blank');
+    const gmailUrl = new URL((await gmail.getAttribute('href')) ?? '');
+    expect(gmailUrl.origin).toBe('https://mail.google.com');
+    expect(gmailUrl.searchParams.get('to')).toBe('AIKasalig@gmail.com');
+    expect(gmailUrl.searchParams.get('su')).toBe('[ARAW] Report: Wrong or unsafe info');
+    expect(gmailUrl.searchParams.get('body')).toContain('Wrong dose & a typo?');
+
+    // Copy: works with clipboard permission, otherwise a selected read-only box asks for Ctrl+C. Either way it says so.
+    await page.getByRole('button', { name: 'Copy report' }).click();
+    await expect(page.getByText(/Report copied|press Ctrl\+C/)).toBeVisible();
+    await noHorizontalOverflow(page);
   });
 
   test('Ara thanks the player and the layout has no overflow or serious a11y violations', async ({ page }) => {
     await page.goto('/#/report?screen=home');
-    await expect(page.getByText(/Salamat for helping/)).toBeVisible();
+    await expect(page.getByText(/Thank you for helping/)).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

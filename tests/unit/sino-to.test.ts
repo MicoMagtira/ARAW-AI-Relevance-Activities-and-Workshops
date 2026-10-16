@@ -405,12 +405,12 @@ describe('recap and definition', () => {
     expect(buildRecap({ calls: 1, stopped: 1, helped: 0, paid: 0, hungUp: 0, guesses: 0, bestStreak: 1 })[1]).toMatch(/Every decision had proof/);
   });
 
-  it('is a complete game definition with a five-page briefing that ends on Kailan ako magtitiwala', () => {
+  it('is a complete game definition with a five-page briefing that ends on When should I trust it?', () => {
     expect(sino.slug).toBe('sino-to');
     expect(sino.briefing).toHaveLength(5);
-    expect(sino.briefing[0]?.title).toBe("Ring ring! Sino 'to?");
-    expect(sino.briefing[4]?.title).toBe('Kailan ako magtitiwala?');
-    expect(sino.takeaway).toMatch(/^Kailan ako magtitiwala\?/);
+    expect(sino.briefing[0]?.title).toBe('Ring ring! Who is this?');
+    expect(sino.briefing[4]?.title).toBe('When should I trust it?');
+    expect(sino.takeaway).toMatch(/^When should I trust it\?/);
     expect(sino.howTo.length).toBeGreaterThanOrEqual(4);
     expect(sino.goodRun).toBeGreaterThan(0);
   });

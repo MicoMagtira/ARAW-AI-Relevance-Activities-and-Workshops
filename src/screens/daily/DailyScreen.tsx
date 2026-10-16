@@ -1,11 +1,12 @@
 // Daily Challenge (docs/SPEC.md section 7): today's featured game with the day's seed, plus 3 date-seeded Fact or Fake items.
 // One scored try a day, a Wordle-style share text and the streak with its weekly freeze.
-import { useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { dailyGame, manilaDate, manilaDayLabel } from '../../app/daily';
 import { DAILY_BONUS_XP, DAILY_ITEM_COUNT, dailyRecord, isComplete, recordDailyFof, recordFor, shareText } from '../../app/dailyChallenge';
 import { t } from '../../app/i18n';
 import { modulesDone } from '../../app/progress';
 import { hrefFor } from '../../app/router';
+import { sfx } from '../../app/sound';
 import { streak } from '../../app/state';
 import { activeStreak, weekStart } from '../../app/streak';
 import { MODULES } from '../../content/modules';
@@ -46,6 +47,12 @@ async function copyText(text: string): Promise<boolean> {
 
 function ResultPanel({ text, complete, stepsDone }: { text: string; complete: boolean; stepsDone: number }) {
   const [status, setStatus] = useState('');
+  const wasComplete = useRef(complete);
+  // Finishing the last step here (not coming back to a finished day) rings the module jingle with the confetti.
+  useEffect(() => {
+    if (complete && !wasComplete.current) sfx('complete');
+    wasComplete.current = complete;
+  }, [complete]);
   const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
   const copy = async () => setStatus((await copyText(text)) ? t('daily.copied') : t('daily.copyFail'));
@@ -212,7 +219,7 @@ export default function DailyScreen() {
                 <>
                   <p>{t('daily.itemsText')}</p>
                   <div class="daily-actions">
-                    <Button variant="gold" large onClick={() => setPlaying(true)} disabled={items.length !== DAILY_ITEM_COUNT}>
+                    <Button variant="gold" large data-sfx="countdown" onClick={() => setPlaying(true)} disabled={items.length !== DAILY_ITEM_COUNT}>
                       <Icon name="play" />
                       {t('daily.itemsStart')}
                     </Button>

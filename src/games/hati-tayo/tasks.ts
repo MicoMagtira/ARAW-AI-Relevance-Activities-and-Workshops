@@ -36,7 +36,7 @@ export interface SettingInfo {
 
 export const SETTINGS: Readonly<Record<Setting, SettingInfo>> = {
   bhw: { id: 'bhw', header: "KUYA JUN'S CLINIC", place: "Kuya Jun's barangay health work", boss: 'Kuya Jun' },
-  store: { id: 'store', header: "ALING NENA'S STORE", place: "Aling Nena's sari-sari store", boss: 'Aling Nena' },
+  store: { id: 'store', header: "ALING NENA'S STORE", place: "Aling Nena's corner store", boss: 'Aling Nena' },
 };
 
 export const TRAIT_NAME: Readonly<Record<Trait, string>> = {
@@ -239,7 +239,7 @@ export const TASKS: readonly Task[] = [
     needs: 'ai',
     trait: 'repeat',
     why: 'Counting stock is the same job over and over. AI does it fast.',
-    wrong: 'Aling Nena counted every can herself. The suki line grew long.',
+    wrong: 'Aling Nena counted every can herself. The line grew long.',
   },
   {
     id: 'store-sales',
@@ -255,7 +255,7 @@ export const TASKS: readonly Task[] = [
     id: 'store-prices',
     setting: 'store',
     short: 'PRICES',
-    text: 'Make a neat price list for the sari-sari board.',
+    text: 'Make a neat price list for the store board.',
     needs: 'ai',
     trait: 'repeat',
     why: 'A tidy list is an easy draft. Read it before you hang it up.',
@@ -285,7 +285,7 @@ export const TASKS: readonly Task[] = [
     id: 'store-text',
     setting: 'store',
     short: 'REMIND',
-    text: 'Write a short text to tell suki about the new rice price.',
+    text: 'Write a short text to tell regular customers about the new rice price.',
     needs: 'ai',
     trait: 'repeat',
     why: 'A short, plain notice is an easy draft. Read it, then send it.',
@@ -326,7 +326,7 @@ export const TASKS: readonly Task[] = [
     id: 'store-sick',
     setting: 'store',
     short: 'COMFORT',
-    text: 'A suki is scared because her child is sick. Comfort her.',
+    text: 'A regular customer is scared because her child is sick. Comfort her.',
     needs: 'human',
     trait: 'empathy',
     why: 'She needs a caring person, and a push to the health center.',
@@ -350,7 +350,7 @@ export const TASKS: readonly Task[] = [
     needs: 'human',
     trait: 'context',
     why: 'You know Ka Tonyo and his family. No tool has that knowledge.',
-    wrong: "The AI said 'Credit denied' to a suki of twenty years. Ouch.",
+    wrong: "The AI said 'Credit denied' to a customer of twenty years. Ouch.",
   },
   {
     id: 'store-argue',
@@ -380,7 +380,7 @@ export const TASKS: readonly Task[] = [
     needs: 'human',
     trait: 'judgement',
     why: 'Saying sorry and fixing it fairly is a judgement call.',
-    wrong: "The AI sent 'No refunds.' The suki told the whole barangay.",
+    wrong: "The AI sent 'No refunds.' The customer told the whole barangay.",
   },
   {
     id: 'store-new',

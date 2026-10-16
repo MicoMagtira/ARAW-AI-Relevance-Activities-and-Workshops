@@ -4,10 +4,10 @@
 non-technical Filipinos (seniors, parents, students, health workers) AI literacy and how to resist health misinformation.
 
 - Content rules: `docs/CONTENT_GUIDE.md`. Visual system: `docs/DESIGN.md` (8-bit, desktop-first, the visual authority).
-- `design/mockup/*.dc.html` is a content and flow reference only (screens, copy, colours, interactions), never a style or layout reference.
+- The early phone-first mockups (kept in the private planning folder) were a content and flow reference only, never a style or layout reference.
 - App version shown in the app and in reports: `0.1.0 beta` (read from `package.json`).
 - Credit line (splash, sidebar footer, About, certificate): **An AIKasalig project · DOST-PCHRD · National University**.
-- Licences: MIT for code, CC BY 4.0 for content (lessons, items, Komiks, art), credited to AIKasalig, NU and DOST.
+- Licences: MIT for code, CC BY 4.0 for content (lessons, items, Comics, art), credited to AIKasalig, NU and DOST.
 
 ---
 
@@ -16,7 +16,7 @@ non-technical Filipinos (seniors, parents, students, health workers) AI literacy
 ARAW does not teach people to "trust less". It teaches them to **trust the right things for the right reasons**.
 Over-suspicion is a failure too: a player who calls every true health post "fake" has not learned anything useful.
 
-- Every module ends with the same card: **"Kailan ako magtitiwala?"** (When should I trust?), three plain bullets.
+- Every module ends with the same card: **"When should I trust it?"** (When should I trust?), three plain bullets.
 - Scoring rewards **discernment** (telling true from false), not doubt. Fact or Fake reports both skill and lean (see section 6).
 - Every game that has an "AI said X" moment includes cases where the AI is right and following it is the correct move.
 - The app always points to people and institutions that can help: health workers, the barangay health center, DOH, FDA.
@@ -32,11 +32,11 @@ All characters are fictional. Real cases are described as patterns, never by nam
 | **Tita Baby** | Forwards everything to the family GC, always out of love. | Messenger forwards; correcting family kindly. |
 | **Kuya Jun** | Barangay Health Worker (BHW). | The trusted local source; how to check with DOH and FDA; AI as a tool at work. |
 | **Bea** | Student who uses AI chatbots for everything. | Chatbot trust, AI errors, privacy, digital wellbeing. |
-| Aling Nena's sari-sari store, the barangay hall, the health center | Recurring places. | Settings for games and Komiks. |
+| Aling Nena's sari-sari store, the barangay hall, the health center | Recurring places. | Settings for games and Comics. |
 
 **Ara's voice** (full rules in `CONTENT_GUIDE.md`): a bubbly *ate* who teases but is kind.
 - Reactions: "Hala!", "Uy, galing!", "Ayan!", playful nudges ("Sure ka na diyan? 👀").
-- Wrong answers: "Muntik na! Here's the trick..." then the explanation. Never mocks the player or people who believe myths.
+- Wrong answers: "So close! Here's the trick..." then the explanation. Never mocks the player or people who believe myths.
 - Her jokes target the villains, never the player or believers.
 - Short lines: one or two sentences per bubble.
 
@@ -52,11 +52,11 @@ Each module is data-driven (`src/modules/mNN/`) and runs in the shared module ru
    - `choice`: one question, 2 to 4 options, one correct, instant feedback (why) for every option.
    - `swipe-sort`: 4 to 8 mini-cards sorted into two bins (swipe on touch, buttons and arrow keys everywhere).
    - `poll`: opinion question with no right answer; shows a friendly reflection after answering.
-   - `takeaway`: the "Kailan ako magtitiwala?" card (three bullets).
+   - `takeaway`: the "When should I trust it?" card (three bullets).
 3. **Module game.** The module's signature game (lazy-loaded).
-4. **"Kailan ako magtitiwala?"** Three-bullet takeaway card.
+4. **"When should I trust it?"** Three-bullet takeaway card.
 5. **Mini Fact or Fake.** Five practice items tagged to the module (M4 uses ten and shows the Truth Radar). Never Form A or B.
-6. **Reward.** Badge ceremony (confetti, Ara "wow" then "happy"), XP tally, then: next module unlocks, next Komiks episode
+6. **Reward.** Badge ceremony (confetti, Ara "wow" then "happy"), XP tally, then: next module unlocks, next Comics episode
    unlocks, and for M6 to M10 the module's endless game joins the Arcade.
 
 Rules:
@@ -163,7 +163,7 @@ Modules M1 to M5 are the **Core modules**; M6 to M10 are **More modules**. Both 
 - **Game: Spot the Tactic** (plus the 10-item Fact or Fake round as the module's mini round)
   - *Mechanic:* collectible villain cards. Each villain has 2 HP shown as pixel hearts.
   - *Loop:* a post appears (seeded from ~20 templates) → player picks which villain's trick it uses from the 5 cards →
-    correct: villain loses 1 HP with a hit animation, Ara jokes at the villain; wrong: "Muntik na!" with the tell-tale sign highlighted.
+    correct: villain loses 1 HP with a hit animation, Ara jokes at the villain; wrong: "So close!" with the tell-tale sign highlighted.
     10 posts per play, at least 2 per villain.
   - *Scoring:* +10 per correct pick. A villain at 0 HP is "defeated" and awards its villain badge. Stars: 3 at ≥9/10, 2 at ≥6, else 1.
   - *Win/lose:* completes after 10 posts; undefeated villains can be beaten on replay.
@@ -334,7 +334,7 @@ Shared rules for every endless game:
   text descriptions of game state for screen readers, keyboard + mouse + touch.
 - **First-run briefing:** the first time a game is opened, Ara gives a paged, skippable, ~60-second briefing (5 pages, about
   12 seconds each): (1) hook, (2) the idea in one line, (3) how to play and controls, (4) the health hook, (5) a
-  "Kailan ako magtitiwala?" one-liner, then **Start**. Replayable from How to play.
+  "When should I trust it?" one-liner, then **Start**. Replayable from How to play.
 - **Pahinga muna!** After ~10 minutes of cumulative play in a session, Ara pauses the game for a short recap and a stretch suggestion.
 - Personal best per game is stored locally.
 - Run XP: 10 base + 20 if the run reached the game's "good run" threshold + 20 for a new personal best (max 50 per run).
@@ -450,7 +450,7 @@ A/B pairs matched on domain, format, trick and difficulty).
 - Every round is balanced between fact and fake (odd sizes differ by at most one), drawn without repeats, seeded.
 - True items are never "obviously real"; fakes are never cartoonishly fake.
 - Answer by **FACT** / **FAKE** buttons, swipe (right = Fact, left = Fake) on touch, or keys (→ or L = Fact, ← or A = Fake).
-- Instant feedback card after every answer: correct or "Muntik na!", **why**, **how to check**, trick chip (for fakes), the
+- Instant feedback card after every answer: correct or "So close!", **why**, **how to check**, trick chip (for fakes), the
   **ARAW GAME · FAKE** stamp (for fakes), and a Report link with the item id.
 - Modes: module mini round (5 practice items for that module; 10 in M4), free play (10 balanced random practice items),
   Daily Challenge (3 date-seeded practice items, at least one fact and one fake), assessment (hidden).
@@ -494,16 +494,21 @@ Two plain-language pixel meters, never the raw numbers (raw values available in 
 
 ## 8. Library
 
-Three tabs: **Myths**, **Diksyunaryo**, **Komiks**. Content lives in `src/content/library/`.
+Three tabs: **Myths**, **Dictionary**, **Comics**. Content lives in `src/content/library/`.
 
-- **Myths (Kwentong Kalusugan):** ≥24 Philippine health myths as flip cards. Front: the myth. Back: the fact, why people believe it,
+- **Myths (Health Stories):** 88 Philippine health myths as flip cards (minimum 24). Front: the myth. Back: the fact, why people believe it,
   how to check, linked villain trick chip, related module. Filter by topic, search. Seeds: tawa-tawa as a dengue cure, herbal cancer
   cures, vaccine fear, antibiotics for colds, "pasma"-type beliefs (handled respectfully), deepfaked doctor supplements.
+  Topics (filter chips, in order): Dengue and mosquitoes, Coughs, flu and outbreaks, HIV, Medicines, Vaccines, BP, sugar and cancer,
+  Everyday health, AI and online, AI in health care. The chips wrap inside the filter panel at every width.
+  Myth topics map to the four DOST-NICER program projects: every myth carries a `program` tag (`healthph` HealthPH+,
+  `advocaid` AdvocAid PH, `mosquito` Mosquito Density and Disease Outbreak Prediction, `aikasalig` AIKasalig, or `null`), used for
+  reporting and the review list only, never shown to players (docs/CONTENT_GUIDE.md section 10).
   Practice items can link to a myth (`myth_id`). Home shows a "Myth of the day" (date-seeded).
-- **Ara's Diksyunaryo:** ~32 plain-language AI terms: term, one-line meaning, a funny Filipino example ("Halimbawa: ..."), "Seen in
+- **Ara's Dictionary:** ~32 plain-language AI terms: term, one-line meaning, a funny Filipino example ("Halimbawa: ..."), "Seen in
   module X" link. Search plus alphabetical index. Starter terms: algorithm, AI, machine learning, training data, bias, hallucination,
   chatbot, deepfake, voice clone, prompt, feed, viral, bot, troll, fact-check, source, and more.
-- **Ara's Komiks, Season 1: "The Miracle Tea".** 10 episodes, 4 to 6 panels each, drawn as pixel SVG scenes from descriptors.
+- **Ara's Comics, Season 1: "The Miracle Tea".** 10 episodes, 4 to 6 panels each, drawn as pixel SVG scenes from descriptors.
   Episode N unlocks when module N is complete. Arc: Tita Baby's forwarded miracle cure spreads through the family; Lola nearly stops
   her maintenance meds; Bea and Kuya Jun use what the player learned to sort it out kindly.
   1. *The Miracle Tea*: a "doctor" video sells a tea that "replaces maintenance meds"; Tita forwards it.
@@ -534,7 +539,7 @@ Three tabs: **Myths**, **Diksyunaryo**, **Komiks**. Content lives in `src/conten
   at 1 with a kind message ("Bagong simula! Welcome back."). Never guilt-trip.
 - **Certificate:** after all 10 modules. Generated client-side: the player types a name (**not stored**), sees a preview, then
   **Print** (print CSS, A4 landscape) or **Download PNG** (drawn on canvas). Shows: name, "completed all 10 ARAW modules", date,
-  badges earned, pixel Ara and sunrise border, credit line, and "Educational, not medical advice".
+  badges earned, pixel Ara and sunrise border, and the credit line.
 - **Storage:** browser `localStorage` on this device only, keys prefixed `araw:v1:` (profile, progress, settings, scores, daily, streak,
   seen). All access in try/catch; the app works (without saving) if storage is blocked. Me → "Reset my progress" clears it after a confirm dialog.
 
@@ -552,6 +557,11 @@ Three tabs: **Myths**, **Diksyunaryo**, **Komiks**. Content lives in `src/conten
   | Extra-large buttons | Bigger tap areas | Min target 56px, larger paddings |
   | Screen-reader hints | Extra spoken descriptions for TalkBack | Adds extra `aria-describedby` hints and game-state narration |
   | Reduce motion | Fewer bounces and no confetti | Disables bob, confetti, barber-pole motion and transitions (also on by OS `prefers-reduced-motion`) |
+- **Sound** (like TALA; saved under `araw:v1:sound`): **Music** switch + volume slider (0 to 100, on at 25 by default) and
+  **Sound effects** switch + volume slider (on at 65). A slider is disabled while its switch is off; releasing the effects slider plays a
+  short preview. The splash shows the two switches next to START. Music changes by area (morning theme, study theme in lessons and
+  Fact or Fake, arcade theme in games, victory theme on the certificate); every sound has a visual twin, and the assessment forms make
+  no feedback sound (DESIGN.md section 12).
 - **Language:** English · more coming (disabled row).
 - **Certificate** button (locked until all 10 modules).
 - **Report a problem**, **About and licences** (MIT code, CC BY 4.0 content, font licences OFL, credit line, beta note),
@@ -600,7 +610,7 @@ Fact or Fake feedback card (with item id), and the game pause menu.
 
 | # | Screen | Purpose |
 |---|---|---|
-| 1 | Splash (boot) | First visit per session: 8-bit sunrise, ARAW wordmark, loading bar, **SIMULAN**, credit, beta note. Skippable, not a route. |
+| 1 | Splash (boot) | First visit per session: 8-bit sunrise, ARAW wordmark, loading bar, **START**, credit lines. Skippable, not a route. |
 | 2 | Home | Greeting by time of day with nickname, Continue card, Daily Challenge card, path preview, Arcade and Myth-of-the-day shortcuts, badge strip, stats. |
 | 3 | Learn | The 10-module path (Core and More rows), states done/current/locked, module details panel or sheet. |
 | 4 | Module runner | Hook → cards → game → takeaway → mini Fact or Fake → reward. |
@@ -610,8 +620,8 @@ Fact or Fake feedback card (with item id), and the game pause menu.
 | 8 | Game | GameShell: briefing, HUD, pause, game over. |
 | 9 | Daily Challenge | Today's game + 3 items, result card, share. |
 | 10 | Library: Myths | Flip cards, filter, search. |
-| 11 | Library: Diksyunaryo | Search, A–Z, glossary cards. |
-| 12 | Library: Komiks | Episode list and panel reader. |
+| 11 | Library: Dictionary | Search, A–Z, glossary cards. |
+| 12 | Library: Comics | Episode list and panel reader. |
 | 13 | Me | Profile, stats, badge cabinet, accessibility settings, language, about, reset. |
 | 14 | Report | Category, auto context, details, mailto. |
 | 15 | Certificate | Name entry, preview, print, PNG. |
@@ -624,4 +634,4 @@ Fact or Fake feedback card (with item id), and the game pause menu.
 - WCAG 2.2 AA baseline always on. All images, icon buttons and game states have text alternatives.
 - Initial JS ≤ 200 KB gzip; every game and module lazy-loaded; smooth on low-end Android.
 - Works offline after first visit (PWA), no backend, no tracking, no data leaves the device except what the player chooses to email or share.
-- A visible "Beta: educational, not medical advice" note stays in the app.
+- No beta or "not medical advice" banner in the app (dropped 2026-10-16; the proposal frames ARAW as educational). The creator credit shows on the splash, About and the app footer.

@@ -20,9 +20,9 @@ const demo: GameDef = {
     { title: 'The idea', text: 'Keep the sun glowing for as long as you can.', mood: 'happy' },
     { title: 'How to play', text: 'Tap, click or press Space. Swipes and arrow keys count too.', mood: 'idle' },
     { title: 'Why it matters', text: 'Real games here teach how to stay safe from health misinformation.', mood: 'think' },
-    { title: 'Kailan ako magtitiwala?', text: 'When the source is clear and the facts can be checked.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'When the source is clear and the facts can be checked.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? When I can check who said it.',
+  takeaway: 'When should I trust it? When I can check who said it.',
   create({ rng }): GameInstance {
     const drainPerSecond = rngInt(rng, 40, 50);
     let glow = START_GLOW;

@@ -43,7 +43,7 @@ test.describe('Tawid, Lola!', () => {
     await page.goto('/#/arcade');
     await expect(page.getByRole('button', { name: /^Tawid, Lola!/ })).toHaveAttribute('aria-label', 'Tawid, Lola!, When to trust the AI guide, New');
     await page.goto(GAME);
-    const titles = ['Tara, Lola, sa health center!', 'The AI guide is helpful but not perfect', 'How to play', 'Your eyes count', 'Kailan ako magtitiwala?'];
+    const titles = ['Come on, Lola, to the health center!', 'The AI guide is helpful but not perfect', 'How to play', 'Your eyes count', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -114,7 +114,7 @@ test.describe('Tawid, Lola!', () => {
     await expect(page.getByText(/^You made \d+ trips? to the health center/)).toBeVisible();
     await expect(page.getByText(/^How it works: automation bias/)).toBeVisible();
     await expect(page.getByText(/^Health apps and chatbots are the same/)).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? When the app matches what I see. When it does not, I stop and check with a person.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? When the app matches what I see. When it does not, I stop and check with a person.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

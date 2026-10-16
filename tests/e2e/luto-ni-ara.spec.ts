@@ -56,7 +56,7 @@ test.describe('Luto ni Ara', () => {
     await page.goto('/#/arcade');
     await expect(page.getByRole('button', { name: /^Luto ni Ara/ })).toHaveAttribute('aria-label', 'Luto ni Ara, Prompting AI well, New');
     await page.goto(GAME);
-    const titles = ['Welcome to my kusina!', 'A good prompt is a good recipe', 'How to play', 'Health questions need extras', 'Kailan ako magtitiwala?'];
+    const titles = ['Welcome to my kitchen!', 'A good prompt is a good recipe', 'How to play', 'Health questions need extras', 'When should I trust it?'];
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -169,7 +169,7 @@ test.describe('Luto ni Ara', () => {
     await expect(page.getByText(/^How it works: an AI chatbot answers exactly what you ask/)).toBeVisible();
     await expect(page.getByText(/^For health questions, ask it to cite sources/)).toBeVisible();
     await expect(page.getByText(/^A chatbot can still be wrong/)).toBeVisible();
-    await expect(page.getByText('Kailan ako magtitiwala? When an answer shows its sources and admits when it is unsure, and I still check it with a health worker.')).toBeVisible();
+    await expect(page.getByText('When should I trust it? When an answer shows its sources and admits when it is unsure, and I still check it with a health worker.')).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

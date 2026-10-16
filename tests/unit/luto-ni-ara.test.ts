@@ -467,12 +467,12 @@ describe('recap and definition', () => {
     expect(buildRecap({ orders: 1, served: 0, wrong: 0, timeouts: 1, missed: {} })).toHaveLength(5);
   });
 
-  it('is a complete game definition with a five-page briefing that ends on Kailan ako magtitiwala', () => {
+  it('is a complete game definition with a five-page briefing that ends on When should I trust it?', () => {
     expect(luto.slug).toBe('luto-ni-ara');
     expect(luto.briefing).toHaveLength(5);
-    expect(luto.briefing[0]?.title).toBe('Welcome to my kusina!');
-    expect(luto.briefing[4]?.title).toBe('Kailan ako magtitiwala?');
-    expect(luto.takeaway.startsWith('Kailan ako magtitiwala?')).toBe(true);
+    expect(luto.briefing[0]?.title).toBe('Welcome to my kitchen!');
+    expect(luto.briefing[4]?.title).toBe('When should I trust it?');
+    expect(luto.takeaway.startsWith('When should I trust it?')).toBe(true);
     expect(luto.howTo.length).toBeGreaterThanOrEqual(4);
     expect(luto.goodRun).toBeGreaterThan(0);
   });

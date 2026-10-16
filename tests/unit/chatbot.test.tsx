@@ -146,7 +146,7 @@ describe('Tanong kay Chatbot game', () => {
 
   const button = (name: string | RegExp) => screen.getByRole('button', { name });
   const rounds = () => buildRounds('unit');
-  const labels = { tama: /^Tama/, mali: /^Mali/, magpatingin: /^Magpatingin/ } as const;
+  const labels = { tama: /^Usable/, mali: /^Wrong/, magpatingin: /^Get checked/ } as const;
 
   /** Rule one chat round, then press Next. */
   function playQa(ruling: keyof typeof labels, last = false) {
@@ -183,7 +183,7 @@ describe('Tanong kay Chatbot game', () => {
         expect(screen.getByText(r.round.question)).toBeTruthy();
         expect(screen.getByText(r.round.answer)).toBeTruthy();
         fireEvent.click(button(labels[r.round.ruling]));
-        expect(screen.getByText('Tama!')).toBeTruthy();
+        expect(screen.getByText('Correct!')).toBeTruthy();
         expect(screen.getByText('+10 points')).toBeTruthy();
         expect(screen.getByText(r.round.why)).toBeTruthy();
         expect(screen.getByText(r.round.good)).toBeTruthy();
@@ -220,7 +220,7 @@ describe('Tanong kay Chatbot game', () => {
       } else {
         expect(screen.queryByRole('alert')).toBeNull();
       }
-      if (r.round.ruling !== 'tama') expect(screen.getByText('Muntik na!')).toBeTruthy();
+      if (r.round.ruling !== 'tama') expect(screen.getByText('So close!')).toBeTruthy();
       fireEvent.click(button(last ? 'See my result' : 'Next round'));
     });
     expect(sawWarning).toBe(true);
@@ -243,7 +243,7 @@ describe('Tanong kay Chatbot game', () => {
     expect(switches.every((s) => s.getAttribute('aria-checked') === 'false')).toBe(true);
     fireEvent.click(switches[1] as HTMLElement); // contacts: not needed
     fireEvent.click(button('Decide'));
-    expect(screen.getByText('Muntik na!')).toBeTruthy();
+    expect(screen.getByText('So close!')).toBeTruthy();
     expect(screen.getByText(/Do not allow: counting steps never needs your family/)).toBeTruthy();
     expect(screen.getByText('You allowed it')).toBeTruthy();
     expect(screen.getByText('No points this time. On to the next one!')).toBeTruthy();

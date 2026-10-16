@@ -133,5 +133,4 @@ export function drawCertificate(ctx: CanvasRenderingContext2D, data: Certificate
   sprite(ctx, STAR, { K: PALETTE.ink, G: PALETTE.goldDeep }, CERT_W - 12 * P - 8 * 12, 128 * P, 12);
 
   line(ctx, t('app.credit'), { font: `700 22px ${FONT_BODY}`, color: PALETTE.ink, y: 141 * P });
-  line(ctx, t('cert.c.notAdvice'), { font: `600 20px ${FONT_BODY}`, color: PALETTE.muted, y: 147 * P });
 }

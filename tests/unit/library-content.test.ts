@@ -12,7 +12,7 @@ import {
   KOMIKS_SETTINGS,
   KOMIKS_TIMES,
 } from '../../src/content/library/komiks';
-import { MYTH_TOPICS, MYTH_TOPIC_LABELS, MYTHS, mythById } from '../../src/content/library/myths';
+import { MYTH_PROGRAMS, MYTH_PROGRAM_LABELS, MYTH_TOPICS, MYTH_TOPIC_LABELS, MYTHS, mythById } from '../../src/content/library/myths';
 import { VILLAIN_IDS } from '../../src/content/tactics';
 
 const words = (s: string): number => s.trim().split(/\s+/).length;
@@ -62,6 +62,24 @@ describe('myth bank', () => {
     for (const v of VILLAIN_IDS) expect(MYTHS.some((m) => m.villain === v), v).toBe(true);
   });
 
+  it('tags every myth with a DOST-NICER project or null, and each project has myths', () => {
+    for (const m of MYTHS) expect(m.program === null || MYTH_PROGRAMS.includes(m.program), m.id).toBe(true);
+    for (const p of MYTH_PROGRAMS) {
+      expect(MYTH_PROGRAM_LABELS[p].length).toBeGreaterThan(0);
+      expect(MYTHS.filter((m) => m.program === p).length, p).toBeGreaterThanOrEqual(4);
+    }
+    // the project topics map to their projects
+    const tie: Record<string, string> = { outbreaks: 'healthph', hiv: 'advocaid', healthai: 'aikasalig', dengue: 'mosquito' };
+    for (const m of MYTHS) if (tie[m.topic]) expect(m.program, m.id).toBe(tie[m.topic]);
+  });
+
+  it('HIV cards use person-first, stigma-free words', () => {
+    const hiv = MYTHS.filter((m) => m.topic === 'hiv');
+    expect(hiv.length).toBeGreaterThanOrEqual(6);
+    const STIGMA = /\b(victims?|suffer(s|ing|ers?)?|carriers?|infected (people|persons?)|AIDS patients?|promiscuous|high-risk people|HIV-positive people|risky lifestyles?)\b/i;
+    for (const m of hiv) expect([m.myth, m.fact, m.why, m.check].filter((s) => STIGMA.test(s)), m.id).toEqual([]);
+  });
+
   it('includes the seed myths from the spec', () => {
     for (const id of ['tawa-tawa-dengue', 'herbal-cancer-cure', 'vaccines-not-checked', 'antibiotics-colds', 'pasma-washing-hands', 'doctor-in-ad-proves-it']) {
       expect(mythById(id), id).toBeDefined();
@@ -92,11 +110,11 @@ describe('glossary (Diksyunaryo)', () => {
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
   });
 
-  it('every entry has a short meaning, a Halimbawa example and a module link', () => {
+  it('every entry has a short meaning, an Example line and a module link', () => {
     for (const g of GLOSSARY) {
       expect(words(g.meaning), g.id).toBeLessThanOrEqual(15);
       expect(g.meaning.length, g.id).toBeGreaterThan(10);
-      expect(g.example, g.id).toMatch(/^Halimbawa: .{20,}/);
+      expect(g.example, g.id).toMatch(/^Example: .{20,}/);
       expect(MODULE_TAGS).toContain(g.module);
       expect(g.review_status).toBe('unreviewed');
     }

@@ -5,7 +5,8 @@
 import { PALETTE, box, text } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
-import type { GameDef, GameInstance, GameStats } from '../engine/types';
+import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
+import { silent } from '../engine/cues';
 import {
   COLUMN_X,
   FIELD_Y,
@@ -92,7 +93,7 @@ export const restLane = (lanes: readonly Lane[], lane: number): number => {
 
 const fitText = (value: string, max: number): string => (value.length > max ? value.slice(0, max) : value);
 
-function createTawid({ rng }: { seed: string; rng: Rng }): GameInstance {
+function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const gen = createTripGenerator(createRng(`${rng()}:tawid-lanes`));
 
   let tripNo = 0;
@@ -138,15 +139,20 @@ function createTawid({ rng }: { seed: string; rng: Rng }): GameInstance {
   const say = (text: string, good: boolean) => {
     message = { text: fitText(text, MSG_CHARS), good, ms: MESSAGE_MS };
   };
+  let spoken = ''; // the guide's last GO / WAIT: its voice only plays when the advice changes
   const refreshAdvice = () => {
     adviceMs = 0;
     advice = adviceFor(next(), col, tMs);
+    const said = advice?.headline ?? '';
+    if (said && said !== spoken) cue('aiVoice');
+    spoken = said;
   };
   refreshAdvice();
 
   function hop() {
     cooldown = HOP_MS;
     hopMs = 0;
+    cue('step');
   }
 
   /** Judge a GO or WAIT against the guide, once per lane and decision. */
@@ -173,6 +179,7 @@ function createTawid({ rng }: { seed: string; rng: Rng }): GameInstance {
     counts.trips += 1;
     const points = Math.round(TRIP_POINTS * mult());
     score += points;
+    cue('arrive');
     arrivedLines = ['LOLA MADE IT!', `+${points} POINTS. TRIP ${tripNo + 1} DONE`, 'The next street is busier!', TIPS[tripNo % TIPS.length] as string];
     message = null;
   }
@@ -199,6 +206,7 @@ function createTawid({ rng }: { seed: string; rng: Rng }): GameInstance {
     hearts -= 1;
     counts.horns += 1;
     horn = { lane, x: COLUMN_X(col), ms: HORN_MS };
+    cue('honk');
     lane = restLane(trip.lanes, lane);
     from = { lane, col };
     hopMs = HOP_MS;
@@ -414,13 +422,13 @@ const tawidLola: GameDef = {
     'Standing still for a moment in front of a road counts as choosing to wait. Each new lane scores 10 points and each trip to the health center 100. The next street is busier.',
   ],
   briefing: [
-    { title: 'Tara, Lola, sa health center!', text: 'Lola needs to cross a busy street to reach the health center. You will guide her, with a little help from an AI voice.', mood: 'happy' },
+    { title: 'Come on, Lola, to the health center!', text: 'Lola needs to cross a busy street to reach the health center. You will guide her, with a little help from an AI voice.', mood: 'happy' },
     { title: 'The AI guide is helpful but not perfect', text: 'The guide says GO or WAIT for each lane, and it is usually right. Sometimes it is sure and wrong, and it sounds the same either way.', mood: 'think' },
     { title: 'How to play', text: 'Tap GO or WAIT, or use the arrow keys. Watch the traffic yourself. The Trust Meter rises when you follow a right call and when you catch a wrong one.', mood: 'idle' },
     { title: 'Your eyes count', text: 'Health apps help, but your eyes and your health worker know your situation. Do not let a confident voice do all your looking.', mood: 'wow' },
-    { title: 'Kailan ako magtitiwala?', text: 'Trust the app when it matches what you see. Speak up, and check, when it does not.', mood: 'happy' },
+    { title: 'When should I trust it?', text: 'Trust the app when it matches what you see. Speak up, and check, when it does not.', mood: 'happy' },
   ],
-  takeaway: 'Kailan ako magtitiwala? When the app matches what I see. When it does not, I stop and check with a person.',
+  takeaway: 'When should I trust it? When the app matches what I see. When it does not, I stop and check with a person.',
   create: createTawid,
 };
 

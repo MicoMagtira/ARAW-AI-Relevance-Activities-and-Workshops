@@ -11,7 +11,7 @@ const content: ModuleContent = {
     speaker: 'Lola Nena',
     line: 'Is my phone listening to me? It keeps showing me tea ads!',
     icon: 'heart',
-    ara: { intro: 'Uy, good question, Lola! Let us find out how these guesses work.', done: 'Tara, let us look inside the guess!' },
+    ara: { intro: 'Hey, good question, Lola! Let us find out how these guesses work.', done: 'Come on, let us look inside the guess!' },
   },
   cards: [
     {
@@ -31,7 +31,7 @@ const content: ModuleContent = {
         { label: 'Patterns', detail: 'What the examples have in common, like shapes and colours.' },
         { label: 'Guess', detail: 'An answer for something new. It can be right or wrong.' },
       ],
-      ara: { done: 'Examples, patterns, guess. Kaya mo na ito!' },
+      ara: { done: 'Examples, patterns, guess. You have got this!' },
     },
     {
       id: 'm01-c4',
@@ -80,7 +80,7 @@ const content: ModuleContent = {
         { label: 'Appointment systems', detail: 'Guess busy hours to shorten the queue. Staff still run the clinic.' },
         { label: 'Claims-fraud flags', detail: 'Flag odd insurance claims for a person to check. A flag is not a verdict.' },
       ],
-      ara: { done: 'AI helps; people decide. Tandaan mo iyan!' },
+      ara: { done: 'AI helps; people decide. Remember that!' },
     },
     {
       id: 'm01-c8',

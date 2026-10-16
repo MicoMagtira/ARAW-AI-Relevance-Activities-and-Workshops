@@ -29,7 +29,7 @@ export const AON_POOL: readonly AonItem[] = [
   ai('aon-symptom', 'Symptom-checker app', 'You type how you feel and it suggests what it might be.', 'It guesses from patterns in past cases. It is only a guess, so a health worker decides.'),
   ai('aon-maps', 'Maps traffic guess', 'Says your trip will take 20 minutes.', 'It guesses from patterns in past traffic. A guess, not a promise.'),
   ai('aon-spam', 'Spam filter', 'Moves junk email to a separate folder.', 'It learned from many junk and normal messages what spam usually looks like.'),
-  ai('aon-voice', 'Voice assistant', 'You say "call Nanay" and it dials.', 'It learned from many recorded voices how to turn sound into words.'),
+  ai('aon-voice', 'Voice assistant', 'You say "call Mom" and it dials.', 'It learned from many recorded voices how to turn sound into words.'),
   ai('aon-album', 'Photo app that groups faces', 'Puts every photo of Lola in one album.', 'It learned to match faces from many examples.'),
   ai('aon-captions', 'Auto-captions on a video', 'Words appear on screen as people talk.', 'It learned from hours of speech to guess the words, and sometimes guesses wrong.'),
   ai('aon-translate', 'Translation app', 'Turns Tagalog into English as you type.', 'It learned patterns from huge amounts of text that was already translated.'),

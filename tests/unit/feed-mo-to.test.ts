@@ -441,10 +441,10 @@ describe('recap text', () => {
     expect(lines.join(' ')).toContain('Spreading fast does not make a post true.');
   });
 
-  it('has the Kailan ako magtitiwala takeaway and a five-page briefing', () => {
+  it('has the When should I trust it? takeaway and a five-page briefing', () => {
     expect(feed.briefing).toHaveLength(5);
     expect(feed.briefing[0]?.title).toBe('Today, YOU are the algorithm!');
-    expect(feed.briefing[4]?.title).toBe('Kailan ako magtitiwala?');
-    expect(feed.takeaway).toMatch(/^Kailan ako magtitiwala\?/);
+    expect(feed.briefing[4]?.title).toBe('When should I trust it?');
+    expect(feed.takeaway).toMatch(/^When should I trust it\?/);
   });
 });

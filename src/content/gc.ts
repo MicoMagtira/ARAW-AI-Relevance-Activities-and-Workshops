@@ -167,7 +167,7 @@ const TEA_FDA: GcCheck = {
 const TEA: GcScenario = {
   id: 'tea',
   title: 'The Miracle Tea',
-  scene: 'Pamilya GC, Sunday morning',
+  scene: 'Family GC, Sunday morning',
   legit: false,
   lesson: 'A seller made the post. No FDA registration, a "doctor" with no official page, and a promise to replace maintenance medicine are all red flags.',
   start: startWith({ tita: { believed: true } }),
@@ -178,14 +178,14 @@ const TEA: GcScenario = {
     {
       id: 'tea-1',
       messages: [
-        fwd('tita', 'DOCTOR REVEALS: Sambong-Luya Miracle Tea CURES diabetes in 7 days! Throw away your maintenance meds! 100% natural, no side effects! Share po 🙏🙏🙏'),
-        say('tita', 'Para kay Lola po ito! Love you all!'),
-        say('lola', 'Ay, a tea that cures diabetes? Maybe I can stop my pills, anak.'),
+        fwd('tita', 'DOCTOR REVEALS: Sambong-Luya Miracle Tea CURES diabetes in 7 days! Throw away your maintenance meds! 100% natural, no side effects! Please share 🙏🙏🙏'),
+        say('tita', 'This is for Lola! Love you all!'),
+        say('lola', 'Oh, a tea that cures diabetes? Maybe I can stop my pills, dear.'),
       ],
       prompt: 'Lola may stop her pills. What do you do?',
       choices: [
         pick('react', 'tea-1-react', 'React with 🙏', '🙏', [0, 1], 'A quick reaction looks like a yes. Lola reads your 🙏 as "go ahead".', 'tea-2p', { ripple: { lola: { believed: true } } }),
-        pick('verify', 'tea-1-who', 'Check who posted it', 'Wait, let me check who posted this first.', [2, 2], 'Uy, galing! You paused and looked at the source first, quietly, without blaming anyone.', 'tea-2v', { ripple: { you: { checked: true } }, check: TEA_WHO }),
+        pick('verify', 'tea-1-who', 'Check who posted it', 'Wait, let me check who posted this first.', [2, 2], 'Great job! You paused and looked at the source first, quietly, without blaming anyone.', 'tea-2v', { ripple: { you: { checked: true } }, check: TEA_WHO }),
         pick('verify', 'tea-1-fda', 'Look the tea up on the FDA portal', 'Let me look up this tea on the FDA portal.', [2, 2], 'A product check is one of the strongest steps. You looked before reacting.', 'tea-2v', { ripple: { you: { checked: true } }, check: TEA_FDA }),
         pick('forward', 'tea-1-fwd', 'Forward it to the Barangay Moms group', 'Forwarded to Barangay Moms', [0, 1], 'You meant well, but sharing an unchecked fake sends it to more people. Accuracy 0.', 'tea-2f', { ripple: { you: { believed: true } } }),
         pick('reply', 'tea-1-sharp', '"Tita, that is FAKE. Stop sharing nonsense!"', 'Tita, that is FAKE. Stop sharing nonsense!', [1, 0], 'It may be fake, but you did not check, and the words sting. Tita shared out of love.', 'tea-2h', { ripple: { tita: { hurt: true } } }),
@@ -193,7 +193,7 @@ const TEA: GcScenario = {
     },
     {
       id: 'tea-2v',
-      messages: [say('bea', 'So what did you find? Kuya Jun is online too.'), say('jun', 'Hello po! What is happening here?'), say('lola', 'Baby says it is natural, so it must be safe, di ba?')],
+      messages: [say('bea', 'So what did you find? Kuya Jun is online too.'), say('jun', 'Hello! What is happening here?'), say('lola', 'Baby says it is natural, so it must be safe, right?')],
       prompt: 'You checked. How do you answer?',
       choices: [
         pick('reply', 'tea-2v-kind', '"Thank you for caring, Tita! I checked: the tea has no FDA registration. Lola, please keep your medicine, and let us ask Kuya Jun."', 'Thank you for caring, Tita! I checked: the tea has no FDA registration and the page is a seller. Lola, please keep taking your medicine, and let us ask Kuya Jun first.', [2, 2], 'Warm first, then facts, a source and a next step. Kindness keeps the family listening.', 'tea-end-light', { ripple: { tita: { believed: false, checked: true }, lola: { believed: false }, jun: { checked: true } } }),
@@ -203,27 +203,27 @@ const TEA: GcScenario = {
     },
     {
       id: 'tea-2p',
-      messages: [say('lola', 'Ay, thank you, Baby! Amen! I will start the tea tomorrow and stop my pills.'), say('bea', 'Wait... is that safe? You reacted 🙏 too, Ate.')],
+      messages: [say('lola', 'Oh, thank you, Baby! Amen! I will start the tea tomorrow and stop my pills.'), say('bea', 'Wait... is that safe? You reacted 🙏 too, Ate.')],
       prompt: 'Lola read your 🙏 as a yes. What now?',
       choices: [
         pick('verify', 'tea-2p-fda', 'Say "Wait, Lola!" and look up the tea on the FDA portal', 'Wait, Lola! Let me look this tea up first.', [2, 2], 'Good catch, and in time. It is never too late to pause and check.', 'tea-end-mixed', { ripple: { you: { checked: true }, lola: { believed: false } }, check: TEA_FDA }),
-        pick('reply', 'tea-2p-sorry', '"Sorry po, I only reacted out of love. Lola, please talk to Kuya Jun before you stop any pills."', 'Sorry po, I only reacted because I love you all. Lola, please talk to Kuya Jun before you stop any pills.', [2, 2], 'An honest sorry and a safe next step. You turned your reaction around.', 'tea-end-mixed', { ripple: { lola: { believed: false }, jun: { checked: true } } }),
+        pick('reply', 'tea-2p-sorry', '"Sorry, I only reacted out of love. Lola, please talk to Kuya Jun before you stop any pills."', 'Sorry, I only reacted because I love you all. Lola, please talk to Kuya Jun before you stop any pills.', [2, 2], 'An honest sorry and a safe next step. You turned your reaction around.', 'tea-end-mixed', { ripple: { lola: { believed: false }, jun: { checked: true } } }),
         pick('react', 'tea-2p-again', 'Send another 🙏 and leave the chat', '🙏', [0, 1], 'Silence reads as agreement. Lola still thinks the tea is safe.', 'tea-end-rough', { ripple: { lola: { believed: true } } }),
       ],
     },
     {
       id: 'tea-2f',
-      messages: [say('bea', 'Ate, you forwarded it too? Two titas already asked me where to buy.'), say('jun', 'I saw this tea in two other groups. Who sent it first?')],
+      messages: [say('bea', 'Ate, you forwarded it too? Two aunties already asked me where to buy.'), say('jun', 'I saw this tea in two other groups. Who sent it first?')],
       prompt: 'Your forward has spread. What do you do?',
       choices: [
         pick('verify', 'tea-2f-fix', 'Check it now, then post a kind correction in both groups', 'I should have checked first. I looked it up: this tea has no FDA registration. Please do not stop any medicine. Ask Kuya Jun.', [2, 2], 'Owning a mistake and fixing it is brave. Some people already saw the first post, so the ripple is only half undone.', 'tea-end-mixed', { ripple: { you: { checked: true, believed: false }, jun: { checked: true } }, check: TEA_FDA }),
         pick('reply', 'tea-2f-quiet', 'Say nothing. It will blow over', 'Haha, no worries everyone.', [0, 1], 'It will not blow over. People are still reading it and some may buy the tea.', 'tea-end-rough'),
-        pick('forward', 'tea-2f-more', 'Forward it to a third group too', 'Forwarded to Kumare Group', [0, 1], 'More shares mean more people who may skip their medicine.', 'tea-end-rough'),
+        pick('forward', 'tea-2f-more', 'Forward it to a third group too', 'Forwarded to the Friends Group', [0, 1], 'More shares mean more people who may skip their medicine.', 'tea-end-rough'),
       ],
     },
     {
       id: 'tea-2h',
-      messages: [say('tita', 'Ay, sorry... I only wanted to help Lola. 😢'), say('lola', 'Baby, do not cry. But is it fake, anak?'), say('bea', 'Ate, maybe say it nicely? Let us check it first.')],
+      messages: [say('tita', 'Oh, sorry... I only wanted to help Lola. 😢'), say('lola', 'Baby, do not cry. But is it fake, dear?'), say('bea', 'Ate, maybe say it nicely? Let us check it first.')],
       prompt: 'Tita is hurt, and you never checked. Repair it?',
       choices: [
         pick('reply', 'tea-2h-sorry', '"Sorry, Tita, I was harsh. Thank you for caring! I looked it up: no FDA registration. Let us ask Kuya Jun together."', 'Sorry Tita, I was harsh. Thank you for caring! I looked it up: no FDA registration. Let us ask Kuya Jun together.', [2, 2], 'A real sorry, then the facts. You mended the hurt without dropping the truth.', 'tea-end-mixed', { ripple: { tita: { hurt: false, believed: false }, you: { checked: true }, lola: { believed: false } } }),
@@ -233,9 +233,9 @@ const TEA: GcScenario = {
     },
   ],
   endings: [
-    ending('tea-end-light', 'light', "Lola keeps her pills", 'You checked first and answered kindly. Lola keeps taking her medicine, Kuya Jun will check her blood sugar at the health center, and Tita feels proud she started the talk.', [say('lola', 'Salamat, anak. I will keep my pills, and see Kuya Jun on Monday.'), say('tita', 'Next time I will check first too. Thank you, ha? ❤️')], 'Liwanag ng Pamilya! You were warm and you were right.'),
-    ending('tea-end-mixed', 'mixed', 'A close call', 'The family got the right facts in the end, but not everyone was spared. Someone felt hurt, or a few people saw the fake first. A kinder, earlier check would have been smoother.', [say('jun', 'Good that we caught it. Lola, please do not stop any medicine. Visit me at the health center.'), say('bea', 'Ate, next time check first, then reply. 😅')], 'Muntik na to be perfect! Pause, check, then reply kindly.'),
-    ending('tea-end-rough', 'rough', 'The ripple grows', 'The fake kept going. Lola started the tea and skipped her pills. Kuya Jun noticed during a house visit and took her to see a doctor. She is okay, but it did not need to happen.', [say('jun', 'Lola, please never stop your medicine without your doctor. Let us go to the health center now.'), say('lola', 'Ay, sorry anak. I thought it was safe.')], 'It is not your fault, Kaibigan. Let us try again: pause, check, reply kindly.'),
+    ending('tea-end-light', 'light', "Lola keeps her pills", 'You checked first and answered kindly. Lola keeps taking her medicine, Kuya Jun will check her blood sugar at the health center, and Tita feels proud she started the talk.', [say('lola', 'Thank you, dear. I will keep my pills, and see Kuya Jun on Monday.'), say('tita', 'Next time I will check first too. Thank you, okay? ❤️')], "Family's Light! You were warm and you were right."),
+    ending('tea-end-mixed', 'mixed', 'A close call', 'The family got the right facts in the end, but not everyone was spared. Someone felt hurt, or a few people saw the fake first. A kinder, earlier check would have been smoother.', [say('jun', 'Good that we caught it. Lola, please do not stop any medicine. Visit me at the health center.'), say('bea', 'Ate, next time check first, then reply. 😅')], 'So close to perfect! Pause, check, then reply kindly.'),
+    ending('tea-end-rough', 'rough', 'The ripple grows', 'The fake kept going. Lola started the tea and skipped her pills. Kuya Jun noticed during a house visit and took her to see a doctor. She is okay, but it did not need to happen.', [say('jun', 'Lola, please never stop your medicine without your doctor. Let us go to the health center now.'), say('lola', 'Oh, sorry, dear. I thought it was safe.')], 'It is not your fault, friend. Let us try again: pause, check, reply kindly.'),
   ],
 };
 
@@ -263,7 +263,7 @@ const FEVER_DOH: GcCheck = {
 const FEVER: GcScenario = {
   id: 'fever',
   title: 'Share Before It Is Deleted',
-  scene: 'Pamilya GC, late evening',
+  scene: 'Family GC, late evening',
   legit: false,
   lesson: 'It has no author, no date, no source, a copied city name and a deadline. The deadline is the trick: it pushes you to share before you check.',
   start: startWith({ tita: { believed: true } }),
@@ -276,7 +276,7 @@ const FEVER: GcScenario = {
       messages: [
         fwd('tita', 'URGENT!!! NEW KILLER FEVER in our city! Hospitals are FULL and HIDING the numbers! SHARE to 10 groups before they DELETE this!!! 😱'),
         say('tita', 'Please everyone, stay safe!'),
-        say('bea', 'Hala, should I tell my classmates? Should the kids stay home tomorrow?'),
+        say('bea', 'Oh no, should I tell my classmates? Should the kids stay home tomorrow?'),
       ],
       prompt: 'Everyone is scared. What do you do first?',
       choices: [
@@ -289,7 +289,7 @@ const FEVER: GcScenario = {
     },
     {
       id: 'fever-2v',
-      messages: [say('jun', 'Hello po! I am at the health center. We have no notice about this.'), say('bea', 'So should we stay home tomorrow?'), say('tita', 'But it said they would delete it! 😢')],
+      messages: [say('jun', 'Hello! I am at the health center. We have no notice about this.'), say('bea', 'So should we stay home tomorrow?'), say('tita', 'But it said they would delete it! 😢')],
       prompt: 'You checked. How do you reply to Tita?',
       choices: [
         pick('reply', 'fever-2v-kind', '"Thanks for looking out for us, Tita! I checked: the DOH page has no such alert, and the same message went around last year. If someone has a fever that will not go away, go to the health center."', 'Thanks for looking out for us, Tita! I checked: there is no such alert on the DOH page, and this same message went around last year. If anyone has a fever that will not go away, go to the health center.', [2, 2], 'Warm, factual, with a source and a safe next step. Kuya Jun backs you up.', 'fever-end-light', { ripple: { tita: { believed: false, checked: true }, bea: { believed: false }, jun: { checked: true } } }),
@@ -313,7 +313,7 @@ const FEVER: GcScenario = {
       prompt: 'Your forward caused real worry. What now?',
       choices: [
         pick('verify', 'fever-2f-fix', 'Check the DOH page, then post a calm correction in every group', 'I forwarded without checking. I looked at the DOH page: there is no such alert. Please stay calm, and ask your health worker if you have questions.', [2, 2], 'A calm correction is the right fix. Some people saw the scare first, so it only half undoes.', 'fever-end-mixed', { ripple: { you: { checked: true, believed: false }, bea: { believed: false }, jun: { checked: true } }, check: FEVER_DOH }),
-        pick('reply', 'fever-2f-quiet', 'Say "sorry, na-forward ko lang" and leave it', 'Sorry, na-forward ko lang.', [0, 1], 'Owning it is good, but without a correction the scare keeps going.', 'fever-end-rough'),
+        pick('reply', 'fever-2f-quiet', 'Say "sorry, I just forwarded it" and leave it', 'Sorry, I just forwarded it.', [0, 1], 'Owning it is good, but without a correction the scare keeps going.', 'fever-end-rough'),
         pick('forward', 'fever-2f-more', 'Forward it once more, "just in case it is true"', 'Forwarded again, just in case', [0, 1], '"Just in case" is how hoaxes survive. Check first, then share.', 'fever-end-rough'),
       ],
     },
@@ -329,9 +329,9 @@ const FEVER: GcScenario = {
     },
   ],
   endings: [
-    ending('fever-end-light', 'light', 'The family stays calm', 'You paused and checked, then answered kindly. Bea does not forward it, the kids go to school, and Tita says she will look for the official page next time.', [say('tita', 'Thank you, anak. I get scared easily. I will check first next time. ❤️'), say('bea', 'I almost sent it to everyone! Pause first, okay.')], 'Liwanag ng Pamilya! A calm reply beat a scary post.'),
-    ending('fever-end-mixed', 'mixed', 'A bumpy evening', 'The hoax stopped in the family, but it left a mark. Someone felt hurt, or a few people saw the scare before the correction. Checking earlier would have helped.', [say('jun', 'Thank you all for checking. If someone has a fever that will not go away, come to the health center.'), say('tita', 'Okay po. Next time I will ask first.')], 'Muntik na! You got there. Pause first, then reply kindly.'),
-    ending('fever-end-rough', 'rough', 'The scare spreads', 'The message went to more groups. Several families kept their kids home out of fear, and Kuya Jun spent the next day answering calls. No one is to blame. Fear is fast.', [say('jun', 'Everyone, there is no such fever alert. Please check the official pages before sharing.'), say('bea', 'Hala, I told my whole class... 😬')], 'Fear spreads fast, Kaibigan. A calm check and a kind reply spread truth. Try again?'),
+    ending('fever-end-light', 'light', 'The family stays calm', 'You paused and checked, then answered kindly. Bea does not forward it, the kids go to school, and Tita says she will look for the official page next time.', [say('tita', 'Thank you, dear. I get scared easily. I will check first next time. ❤️'), say('bea', 'I almost sent it to everyone! Pause first, okay.')], "Family's Light! A calm reply beat a scary post."),
+    ending('fever-end-mixed', 'mixed', 'A bumpy evening', 'The hoax stopped in the family, but it left a mark. Someone felt hurt, or a few people saw the scare before the correction. Checking earlier would have helped.', [say('jun', 'Thank you all for checking. If someone has a fever that will not go away, come to the health center.'), say('tita', 'Okay. Next time I will ask first.')], 'So close! You got there. Pause first, then reply kindly.'),
+    ending('fever-end-rough', 'rough', 'The scare spreads', 'The message went to more groups. Several families kept their kids home out of fear, and Kuya Jun spent the next day answering calls. No one is to blame. Fear is fast.', [say('jun', 'Everyone, there is no such fever alert. Please check the official pages before sharing.'), say('bea', 'Oh no, I told my whole class... 😬')], 'Fear spreads fast, friend. A calm check and a kind reply spread truth. Try again?'),
   ],
 };
 
@@ -359,7 +359,7 @@ const DOC_FDA: GcCheck = {
 const DOC: GcScenario = {
   id: 'doctor',
   title: 'The Doctor Who Is Not',
-  scene: 'Pamilya GC, Saturday afternoon',
+  scene: 'Family GC, Saturday afternoon',
   legit: false,
   lesson: 'The "doctor" was a faked video on a sales page. Real doctors have official pages, products need FDA registration, and "today only" is a pressure trick.',
   start: startWith({ tita: { believed: true }, lola: { believed: true } }),
@@ -371,7 +371,7 @@ const DOC: GcScenario = {
       id: 'doc-1',
       messages: [
         fwd('tita', 'WATCH: Dr. Reyes says ONE capsule a day removes joint pain for good! 50% off TODAY ONLY. Message the shop to order! 🙏'),
-        say('lola', 'My knees hurt so much. I will order two bottles, anak. Look, he is a real doctor!'),
+        say('lola', 'My knees hurt so much. I will order two bottles, dear. Look, he is a real doctor!'),
         say('bea', 'The video looks so real. Even his voice! 😮'),
       ],
       prompt: 'Lola wants to order. What do you do?',
@@ -379,13 +379,13 @@ const DOC: GcScenario = {
         pick('react', 'doc-1-react', 'React with 👍', '👍', [0, 1], 'Your 👍 tells Lola it is okay to order.', 'doc-2p', { ripple: { lola: { believed: true } } }),
         pick('verify', 'doc-1-who', "Look for the doctor's own official page", "Let me look for Dr. Reyes's own page first.", [2, 2], 'Check the source, not the face. That is the best counter to a fake doctor.', 'doc-2v', { ripple: { you: { checked: true } }, check: DOC_WHO }),
         pick('verify', 'doc-1-fda', 'Search the capsule on the FDA portal', 'Let me search this capsule on the FDA portal.', [2, 2], 'A product check works even when the video looks real.', 'doc-2v', { ripple: { you: { checked: true } }, check: DOC_FDA }),
-        pick('forward', 'doc-1-fwd', 'Forward the video to Lola\'s friends GC', 'Forwarded to Lola\'s Kumare GC', [0, 1], 'Sending it on lets a deepfake reach more people. Accuracy 0.', 'doc-2f', { ripple: { you: { believed: true } } }),
+        pick('forward', 'doc-1-fwd', 'Forward the video to Lola\'s friends GC', 'Forwarded to Lola\'s Friends GC', [0, 1], 'Sending it on lets a deepfake reach more people. Accuracy 0.', 'doc-2f', { ripple: { you: { believed: true } } }),
         pick('reply', 'doc-1-sharp', '"Lola, you will fall for any scam!"', 'Lola, you will fall for any scam!', [1, 0], 'That stings, and you have not checked yet. Lola may stop listening.', 'doc-2h', { ripple: { lola: { hurt: true } } }),
       ],
     },
     {
       id: 'doc-2v',
-      messages: [say('bea', 'Wait, so the doctor never said it? It looked so real!'), say('lola', 'But I saw his face and heard his voice...'), say('jun', 'Hello po! Anything I can help with?')],
+      messages: [say('bea', 'Wait, so the doctor never said it? It looked so real!'), say('lola', 'But I saw his face and heard his voice...'), say('jun', 'Hello! Anything I can help with?')],
       prompt: 'You checked. How do you answer Lola?',
       choices: [
         pick('reply', 'doc-2v-kind', '"I know it looks real, Lola. Faces and voices can be faked now. The real Dr. Reyes says he never sells anything, and the capsule has no FDA registration. Let us ask Kuya Jun about your knees."', 'I know it looks real, Lola. Faces and voices can be faked now. The real Dr. Reyes says he never sells anything, and the capsule has no FDA registration. Let us ask Kuya Jun about your knees.', [2, 2], 'You explained why it looked real, gave two checks, and offered a real person to help.', 'doc-end-light', { ripple: { lola: { believed: false, checked: true }, tita: { believed: false }, jun: { checked: true } } }),
@@ -395,12 +395,12 @@ const DOC: GcScenario = {
     },
     {
       id: 'doc-2p',
-      messages: [say('lola', 'Thank you, anak! You say it is good too. I will order two bottles now.'), say('bea', 'Ate, are you sure? He is selling it...')],
+      messages: [say('lola', 'Thank you, dear! You say it is good too. I will order two bottles now.'), say('bea', 'Ate, are you sure? He is selling it...')],
       prompt: 'Lola is about to send money. Step in?',
       choices: [
         pick('verify', 'doc-2p-who', "Say \"Wait, Lola!\" and look for the doctor's page", "Wait, Lola! Let me look for the doctor's own page first.", [2, 2], 'Good. You caught it before the money went out.', 'doc-end-mixed', { ripple: { you: { checked: true }, lola: { believed: false } }, check: DOC_WHO }),
         pick('reply', 'doc-2p-sorry', '"Sorry, my 👍 was too quick. Lola, please hold off and ask Kuya Jun about your knees first."', 'Sorry, my 👍 was too quick. Lola, please hold off and ask Kuya Jun about your knees first.', [2, 2], 'An honest correction with a person to ask.', 'doc-end-mixed', { ripple: { lola: { believed: false }, jun: { checked: true } } }),
-        pick('react', 'doc-2p-again', 'Say "Sige po, Lola" and leave it', 'Sige po, Lola.', [0, 1], 'Agreeing hands Lola over to the seller.', 'doc-end-rough', { ripple: { lola: { believed: true } } }),
+        pick('react', 'doc-2p-again', 'Say "Okay, Lola" and leave it', 'Okay, Lola.', [0, 1], 'Agreeing hands Lola over to the seller.', 'doc-end-rough', { ripple: { lola: { believed: true } } }),
       ],
     },
     {
@@ -409,13 +409,13 @@ const DOC: GcScenario = {
       prompt: 'The deepfake is spreading from your forward. What now?',
       choices: [
         pick('verify', 'doc-2f-fix', 'Check the doctor\'s page and post a kind correction', 'Sorry, I should have checked first. Dr. Reyes\'s own page says that video is fake. Please do not order. Ask your health worker about joint pain.', [2, 2], 'A kind, clear correction. Some friends already saw the first one.', 'doc-end-mixed', { ripple: { you: { checked: true, believed: false }, jun: { checked: true } }, check: DOC_WHO }),
-        pick('reply', 'doc-2f-quiet', 'Say "Ay, sorry!" and nothing else', 'Ay, sorry po!', [0, 1], 'Sorry alone does not tell anyone the video is fake.', 'doc-end-rough'),
+        pick('reply', 'doc-2f-quiet', 'Say "Oh, sorry!" and nothing else', 'Oh, sorry!', [0, 1], 'Sorry alone does not tell anyone the video is fake.', 'doc-end-rough'),
         pick('forward', 'doc-2f-more', 'Send the shop number to the friends who asked', 'Forwarded: the shop number', [0, 1], 'This sends people straight to the seller, and maybe their money.', 'doc-end-rough'),
       ],
     },
     {
       id: 'doc-2h',
-      messages: [say('lola', 'Hmph. I only wanted my knees to feel better...'), say('tita', 'Anak, be kind to Lola.'), say('bea', 'Maybe look first before saying that, Ate.')],
+      messages: [say('lola', 'Hmph. I only wanted my knees to feel better...'), say('tita', 'Dear, be kind to Lola.'), say('bea', 'Maybe look first before saying that, Ate.')],
       prompt: 'Lola feels scolded. Repair it?',
       choices: [
         pick('reply', 'doc-2h-sorry', '"Sorry, Lola, I was rude. I know your knees hurt. I looked: the capsule has no FDA registration. Can we ask Kuya Jun about it?"', 'Sorry Lola, I was rude. I know your knees hurt. I looked: the capsule has no FDA registration. Can we ask Kuya Jun about it?', [2, 2], 'You honoured Lola\'s pain, then gave facts and a person to ask.', 'doc-end-mixed', { ripple: { lola: { hurt: false, believed: false }, you: { checked: true } } }),
@@ -425,9 +425,9 @@ const DOC: GcScenario = {
     },
   ],
   endings: [
-    ending('doc-end-light', 'light', 'Lola asks Kuya Jun', 'You checked the source and answered with care. Lola cancels the order and goes to the health center, where Kuya Jun helps her plan a check-up for her knees.', [say('lola', 'Hay, it looked so real. Thank you, anak. I will see Kuya Jun on Monday.'), say('bea', 'Faces can be faked, check the source. Got it!')], 'Liwanag ng Pamilya! You taught the check, not just the answer.'),
-    ending('doc-end-mixed', 'mixed', 'Almost ordered', 'Lola did not buy the capsule, but the video made it to a few other groups, or Lola felt scolded. A calm, early check keeps everyone closer.', [say('jun', 'Lola, do not buy it. Let me look at your knees at the health center.'), say('lola', 'Sige, Jun. Salamat.')], 'Muntik na! Kind and early is the combo.'),
-    ending('doc-end-rough', 'rough', 'The order goes through', 'Lola sent money to the shop and the bottles never came. The family is sad but safe. Kuya Jun helped them report the shop, and Lola will see a real doctor about her knees.', [say('jun', 'Let us report the shop and keep your messages. If someone asks for money, call the cybercrime hotline, 1326.'), say('lola', 'Sorry, anak. I trusted the video.')], 'A faked video can fool anyone. We still have a way to fix it. Try again?'),
+    ending('doc-end-light', 'light', 'Lola asks Kuya Jun', 'You checked the source and answered with care. Lola cancels the order and goes to the health center, where Kuya Jun helps her plan a check-up for her knees.', [say('lola', 'Oh, it looked so real. Thank you, dear. I will see Kuya Jun on Monday.'), say('bea', 'Faces can be faked, check the source. Got it!')], "Family's Light! You taught the check, not just the answer."),
+    ending('doc-end-mixed', 'mixed', 'Almost ordered', 'Lola did not buy the capsule, but the video made it to a few other groups, or Lola felt scolded. A calm, early check keeps everyone closer.', [say('jun', 'Lola, do not buy it. Let me look at your knees at the health center.'), say('lola', 'Okay, Jun. Thank you.')], 'So close! Kind and early is the combo.'),
+    ending('doc-end-rough', 'rough', 'The order goes through', 'Lola sent money to the shop and the bottles never came. The family is sad but safe. Kuya Jun helped them report the shop, and Lola will see a real doctor about her knees.', [say('jun', 'Let us report the shop and keep your messages. If someone asks for money, call the cybercrime hotline, 1326.'), say('lola', 'Sorry, dear. I trusted the video.')], 'A faked video can fool anyone. We still have a way to fix it. Try again?'),
   ],
 };
 
@@ -455,7 +455,7 @@ const COUGH_JUN: GcCheck = {
 const COUGH: GcScenario = {
   id: 'cough',
   title: "Aling Cora's Garlic Tea",
-  scene: 'Pamilya GC, rainy afternoon',
+  scene: 'Family GC, rainy afternoon',
   legit: false,
   lesson: 'One person\'s story is not proof. A cough that lasts 2 weeks or more should be checked by a health worker, and a home remedy can delay that check.',
   start: startWith({ tita: { believed: true }, bea: { believed: true } }),
@@ -466,7 +466,7 @@ const COUGH: GcScenario = {
     {
       id: 'cough-1',
       messages: [
-        fwd('tita', 'Si Aling Cora was coughing for 3 months. She drank garlic tea and skipped the health center. GUMALING NA! Try niyo po! 🙏'),
+        fwd('tita', 'Aling Cora was coughing for 3 months. She drank garlic tea and skipped the health center. SHE GOT WELL! Try it! 🙏'),
         say('bea', 'Papa has coughed for three weeks. Maybe we try the garlic tea first?'),
       ],
       prompt: "Bea's father has had a cough for three weeks. What do you do?",
@@ -490,7 +490,7 @@ const COUGH: GcScenario = {
     },
     {
       id: 'cough-2p',
-      messages: [say('bea', 'Thanks, Ate! I will buy garlic tonight and make Papa drink tea.'), say('jun', 'Hello po. Is somebody coughing for a long time?')],
+      messages: [say('bea', 'Thanks, Ate! I will buy garlic tonight and make Papa drink tea.'), say('jun', 'Hello. Is somebody coughing for a long time?')],
       prompt: 'Bea will try the tea instead of the health center. Step in?',
       choices: [
         pick('verify', 'cough-2p-jun', 'Say "Wait, Bea!" and ask Kuya Jun', 'Wait, Bea! Let us ask Kuya Jun first.', [2, 2], 'Good. You stopped the delay before it started.', 'cough-end-mixed', { ripple: { you: { checked: true }, jun: { checked: true }, bea: { believed: false } }, check: COUGH_JUN }),
@@ -504,13 +504,13 @@ const COUGH: GcScenario = {
       prompt: 'Your forward told people to skip the health center. What now?',
       choices: [
         pick('verify', 'cough-2f-fix', 'Ask Kuya Jun, then post a kind correction', 'Sorry, I forwarded this too fast. Kuya Jun says a cough of 2 weeks or more should be checked at the health center, and the tests are free. Please go.', [2, 2], 'A clear, kind correction. Some moms already saw the first post.', 'cough-end-mixed', { ripple: { you: { checked: true, believed: false }, jun: { checked: true } }, check: COUGH_JUN }),
-        pick('reply', 'cough-2f-quiet', 'Say "Hay, sorry" and nothing else', 'Hay, sorry po.', [0, 1], 'Without the correction, people still believe the story.', 'cough-end-rough'),
-        pick('forward', 'cough-2f-more', 'Forward it to another group to be safe', 'Forwarded to Kumare Group', [0, 1], 'More shares mean more people who may skip their check-up.', 'cough-end-rough'),
+        pick('reply', 'cough-2f-quiet', 'Say "Oh, sorry" and nothing else', 'Oh, sorry.', [0, 1], 'Without the correction, people still believe the story.', 'cough-end-rough'),
+        pick('forward', 'cough-2f-more', 'Forward it to another group to be safe', 'Forwarded to the Friends Group', [0, 1], 'More shares mean more people who may skip their check-up.', 'cough-end-rough'),
       ],
     },
     {
       id: 'cough-2h',
-      messages: [say('tita', 'Ay... I only meant to help Bea\'s Papa. 😢'), say('bea', 'Ate, please be gentle. But is it safe or not?'), say('jun', 'Let us talk calmly.')],
+      messages: [say('tita', 'Oh... I only meant to help Bea\'s Papa. 😢'), say('bea', 'Ate, please be gentle. But is it safe or not?'), say('jun', 'Let us talk calmly.')],
       prompt: 'You spoke sharply before you checked. Repair it?',
       choices: [
         pick('reply', 'cough-2h-sorry', '"Sorry, Tita, I was sharp. Thank you for wanting to help! I asked: a cough of 3 weeks should be checked at the health center."', 'Sorry Tita, I was sharp. Thank you for wanting to help! I asked: a cough of 3 weeks should be checked at the health center.', [2, 2], 'A real sorry, then the right advice. Tita and Bea both feel heard.', 'cough-end-mixed', { ripple: { tita: { hurt: false, believed: false }, you: { checked: true }, bea: { believed: false } } }),
@@ -520,9 +520,9 @@ const COUGH: GcScenario = {
     },
   ],
   endings: [
-    ending('cough-end-light', 'light', 'Papa gets checked', 'You kept it kind and specific. Bea takes Papa to the health center this week, and Tita learns to ask "who says so?" before she shares.', [say('bea', 'We are going to the health center on Monday. Thank you, Ate!'), say('tita', 'Salamat, anak. I will not forward stories like that anymore. ❤️')], 'Liwanag ng Pamilya! A free check beats a nice story.'),
-    ending('cough-end-mixed', 'mixed', 'Caught in time', 'Papa will get checked, but Tita felt hurt, or the story reached a few other groups first. A calm early check would have kept it smoother.', [say('jun', 'Bea, bring Papa to the health center. The tests are free. See you!'), say('tita', 'Okay po, sorry for the trouble.')], 'Muntik na! A calm, early check keeps everyone close.'),
-    ending('cough-end-rough', 'rough', 'The check is delayed', 'Papa kept coughing and drank garlic tea for two more weeks. Kuya Jun finally persuaded him to go to the health center. Nobody is to blame, but the delay was avoidable.', [say('jun', 'Let us get Papa checked this week. Please remember: 2 weeks or more of coughing needs a check.'), say('bea', 'Sorry, Papa. We should have gone sooner.')], 'It is not your fault, Kaibigan. One story felt convincing. Try again?'),
+    ending('cough-end-light', 'light', 'Papa gets checked', 'You kept it kind and specific. Bea takes Papa to the health center this week, and Tita learns to ask "who says so?" before she shares.', [say('bea', 'We are going to the health center on Monday. Thank you, Ate!'), say('tita', 'Thank you, dear. I will not forward stories like that anymore. ❤️')], "Family's Light! A free check beats a nice story."),
+    ending('cough-end-mixed', 'mixed', 'Caught in time', 'Papa will get checked, but Tita felt hurt, or the story reached a few other groups first. A calm early check would have kept it smoother.', [say('jun', 'Bea, bring Papa to the health center. The tests are free. See you!'), say('tita', 'Okay, sorry for the trouble.')], 'So close! A calm, early check keeps everyone close.'),
+    ending('cough-end-rough', 'rough', 'The check is delayed', 'Papa kept coughing and drank garlic tea for two more weeks. Kuya Jun finally persuaded him to go to the health center. Nobody is to blame, but the delay was avoidable.', [say('jun', 'Let us get Papa checked this week. Please remember: 2 weeks or more of coughing needs a check.'), say('bea', 'Sorry, Papa. We should have gone sooner.')], 'It is not your fault, friend. One story felt convincing. Try again?'),
   ],
 };
 
@@ -549,8 +549,8 @@ const VAX_JUN: GcCheck = {
 
 const VAX: GcScenario = {
   id: 'vaccine',
-  title: 'Libreng Bakuna',
-  scene: 'Pamilya GC, Monday morning',
+  title: 'Free Vaccines',
+  scene: 'Family GC, Monday morning',
   legit: true,
   lesson: 'This one is TRUE. A named health center, a date, a clear place and nothing to sell. Calibrated trust means checking, then saying "this one is legit" and acting on it.',
   start: startWith({ tita: { believed: true }, bea: { hurt: false } }),
@@ -561,9 +561,9 @@ const VAX: GcScenario = {
     {
       id: 'vax-1',
       messages: [
-        fwd('tita', 'Barangay Sampaguita Health Center: FREE vaccines for children every Wednesday, 8 to 11 AM. Bring the vaccine card. Walk-ins welcome. Share po sa mga nanay! 🙏'),
-        say('lola', 'My apo is due for her shots! Should we go on Wednesday?'),
-        say('bea', 'Hmm, "free" and "share po"... sounds like a hoax to me.'),
+        fwd('tita', 'Barangay Sampaguita Health Center: FREE vaccines for children every Wednesday, 8 to 11 AM. Bring the vaccine card. Walk-ins welcome. Please share with the moms! 🙏'),
+        say('lola', 'My grandchild is due for her shots! Should we go on Wednesday?'),
+        say('bea', 'Hmm, "free" and "please share"... sounds like a hoax to me.'),
       ],
       prompt: 'Is this a hoax or the real thing? What do you do?',
       choices: [
@@ -579,9 +579,9 @@ const VAX: GcScenario = {
       messages: [say('bea', 'Oh. So it is real? Sorry, Tita, I guessed too fast.'), say('lola', 'So we can go on Wednesday?'), say('tita', 'I told you it was a good one! 😄')],
       prompt: 'It checks out. What now?',
       choices: [
-        pick('reply', 'vax-2v-kind', '"Salamat, Tita! I checked: it is the health center\'s own page, dated this week. Lola, let us bring the vaccine card on Wednesday. I will share it with the Barangay Moms."', 'Salamat, Tita! I checked: it is the health center\'s own page, dated this week. Lola, let us bring the vaccine card on Wednesday. I will share it with the Barangay Moms.', [2, 2], 'You thanked Tita, said what you checked, and put the good news to use. True posts are worth sharing.', 'vax-end-light', { ripple: { tita: { checked: true }, bea: { believed: true }, lola: { believed: true }, jun: { checked: true } } }),
+        pick('reply', 'vax-2v-kind', '"Thank you, Tita! I checked: it is the health center\'s own page, dated this week. Lola, let us bring the vaccine card on Wednesday. I will share it with the Barangay Moms."', 'Thank you, Tita! I checked: it is the health center\'s own page, dated this week. Lola, let us bring the vaccine card on Wednesday. I will share it with the Barangay Moms.', [2, 2], 'You thanked Tita, said what you checked, and put the good news to use. True posts are worth sharing.', 'vax-end-light', { ripple: { tita: { checked: true }, bea: { believed: true }, lola: { believed: true }, jun: { checked: true } } }),
         pick('reply', 'vax-2v-preach', '"Tita, next time please check before you share. This one happened to be okay."', 'Tita, next time please check before you share. This one happened to be okay.', [1, 0], 'Fair advice, but Tita got it right this time. A thank-you comes first.', 'vax-end-mixed', { ripple: { tita: { hurt: true }, lola: { believed: true } } }),
-        pick('reply', 'vax-2v-quiet', 'Keep it to yourself and take Lola on Wednesday', 'Okay po, see you Wednesday, Lola.', [1, 1], 'Good for Lola, but other families do not hear about the free day.', 'vax-end-mixed', { ripple: { lola: { believed: true } } }),
+        pick('reply', 'vax-2v-quiet', 'Keep it to yourself and take Lola on Wednesday', 'Okay, see you Wednesday, Lola.', [1, 1], 'Good for Lola, but other families do not hear about the free day.', 'vax-end-mixed', { ripple: { lola: { believed: true } } }),
       ],
     },
     {
@@ -596,7 +596,7 @@ const VAX: GcScenario = {
     },
     {
       id: 'vax-2f',
-      messages: [say('bea', 'Ate, you forwarded it?! What if it is fake?'), say('jun', 'Hello po! I saw the post. That one is ours!')],
+      messages: [say('bea', 'Ate, you forwarded it?! What if it is fake?'), say('jun', 'Hello! I saw the post. That one is ours!')],
       prompt: 'It was true, but you shared before checking. What now?',
       choices: [
         pick('verify', 'vax-2f-confirm', 'Check the health center page and tell the groups it is confirmed', 'I checked the health center page and Kuya Jun says it is real. See you on Wednesday!', [2, 2], 'Now your forward has a check behind it. Good job.', 'vax-end-mixed', { ripple: { you: { checked: true }, jun: { checked: true }, bea: { believed: true } }, check: VAX_JUN }),
@@ -606,7 +606,7 @@ const VAX: GcScenario = {
     },
     {
       id: 'vax-2h',
-      messages: [say('jun', 'Hello po! That post is from our health center. It is real!'), say('tita', 'Ay... and you said it was fake. 😢'), say('lola', 'So should we go or not, anak?')],
+      messages: [say('jun', 'Hello! That post is from our health center. It is real!'), say('tita', 'Oh... and you said it was fake. 😢'), say('lola', 'So should we go or not, dear?')],
       prompt: 'Oops. Kuya Jun says it is real. What now?',
       choices: [
         pick('reply', 'vax-2h-sorry', '"Sorry, Tita! I should have checked before I said that. Thank you for sharing it. Lola, let us go on Wednesday."', 'Sorry Tita! I should have checked before I said that. Thank you for sharing it. Lola, let us go on Wednesday.', [2, 2], 'A quick, honest sorry and a fix. Tita forgives you.', 'vax-end-mixed', { ripple: { tita: { hurt: false, believed: true }, lola: { believed: true }, you: { checked: true } } }),
@@ -616,9 +616,9 @@ const VAX: GcScenario = {
     },
   ],
   endings: [
-    ending('vax-end-light', 'light', 'Wednesday is on!', 'You checked, said "this one is legit", and shared it. Lola brings her apo for her shots, and three nanays from the Barangay Moms group say they will come too.', [say('lola', 'Salamat, anak! We will bring the vaccine card.'), say('jun', 'See you all on Wednesday morning! 😊')], 'Liwanag ng Pamilya! You know when to trust, too.'),
-    ending('vax-end-mixed', 'mixed', 'A little late, still good', 'The good news got through, but someone felt dismissed, or only a few families heard about it. Checking and saying "this is legit" works best when it is early and warm.', [say('jun', 'Lola, bring the vaccine card on Wednesday. We will see you!'), say('tita', 'Okay po! 🙏')], 'Muntik na! Trusting the right thing is a skill too.'),
-    ending('vax-end-rough', 'rough', 'The free day is missed', 'Doubts lingered, and Lola decided to wait. The free vaccination day passed. Kuya Jun will hold another one, and Lola will go next week.', [say('jun', 'No worries, Lola. We have another Wednesday next week.'), say('bea', 'Oops, I should have checked first. 😅')], 'Doubting everything is a trap too, Kaibigan. Check, then trust what checks out. Try again?'),
+    ending('vax-end-light', 'light', 'Wednesday is on!', 'You checked, said "this one is legit", and shared it. Lola brings her grandchild for her shots, and three moms from the Barangay Moms group say they will come too.', [say('lola', 'Thank you, dear! We will bring the vaccine card.'), say('jun', 'See you all on Wednesday morning! 😊')], "Family's Light! You know when to trust, too."),
+    ending('vax-end-mixed', 'mixed', 'A little late, still good', 'The good news got through, but someone felt dismissed, or only a few families heard about it. Checking and saying "this is legit" works best when it is early and warm.', [say('jun', 'Lola, bring the vaccine card on Wednesday. We will see you!'), say('tita', 'Okay! 🙏')], 'So close! Trusting the right thing is a skill too.'),
+    ending('vax-end-rough', 'rough', 'The free day is missed', 'Doubts lingered, and Lola decided to wait. The free vaccination day passed. Kuya Jun will hold another one, and Lola will go next week.', [say('jun', 'No worries, Lola. We have another Wednesday next week.'), say('bea', 'Oops, I should have checked first. 😅')], 'Doubting everything is a trap too, friend. Check, then trust what checks out. Try again?'),
   ],
 };
 

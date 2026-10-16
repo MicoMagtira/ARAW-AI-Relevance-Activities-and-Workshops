@@ -4,8 +4,7 @@ This is the **visual authority** for ARAW. The whole app is 8-bit, in the spirit
 pixel icons and a pixel-art Ara. The difference is the palette: TALA is night, ARAW is a warm, light daytime sunrise.
 
 - **Desktop landscape is the primary design** (1366x768 and 1920x1080 first). Tablet and phone are adaptations with the same features.
-- `design/mockup/*.dc.html` is a **content and flow reference only**: reuse its screens, copy, colours and interactions, never its
-  flat style or phone-first layout.
+- The early phone-first mockups (kept in the private planning folder) were a **content and flow reference only**; this document supersedes them.
 - Product behaviour: `docs/SPEC.md`. Words: `docs/CONTENT_GUIDE.md`.
 
 ---
@@ -478,7 +477,7 @@ Eyes: 2x3 blocks at cols 11–12 and 19–20, rows 12–14, highlight `W` top-le
 | `wow` | badge, big reveal | eyes 3x3 (cols 10–12 / 19–21) with `W` highlight; small "O" mouth (row 16 cols 15–16 `K`; row 17 col 14 `K`, 15–16 `C`, col 17 `K`; row 18 cols 15–16 `K`); every ray extended 1 cell outward |
 | `wink` | hint, "Sure ka na diyan?" | left eye closed (row 13 cols 10–12 `K`, rows 12/14 `S`); right eye normal; smile; right hand raised by the face (`S` at cols 24–25, rows 17–19) |
 | `sad` | story empathy only (never at the player) | eyes moved down one row (rows 13–15); worried brows as short `K` slants (row 10 cols 11 & 20, row 11 cols 10 & 21); mouth inverted (row 16 cols 14–17 `K`, row 17 cols 13 & 18 `K`); ray tips use `Y` instead of `G` (dimmer) |
-| `think` | wrong answer ("Muntik na!"), loading, AI moments | eyes 2x2 looking up-left (rows 11–12, cols 10–11 / 18–19); flat mouth (row 17 cols 15–16 `K`); one hand at the chin (`S` at cols 17–18, rows 19–20 with `N` sleeve below); a 3-dot thought bubble (`W` with `K` outline) at cols 26–31, rows 0–4 |
+| `think` | wrong answer ("So close!"), loading, AI moments | eyes 2x2 looking up-left (rows 11–12, cols 10–11 / 18–19); flat mouth (row 17 cols 15–16 `K`); one hand at the chin (`S` at cols 17–18, rows 19–20 with `N` sleeve below); a 3-dot thought bubble (`W` with `K` outline) at cols 26–31, rows 0–4 |
 
 ### Animation (step-based)
 - Idle: A/B alternate every 600ms (`steps(1)`), blink for 120ms at random 3.5–5s intervals.
@@ -488,7 +487,7 @@ Eyes: 2x3 blocks at cols 11–12 and 19–20, rows 12–14, highlight `W` top-le
 
 ## 8. Imagery and game art
 
-- Pixel art everywhere: scenes, villain portraits, avatars (Ara style, 32x32), Komiks panels (SVG rect scenes from descriptors), game
+- Pixel art everywhere: scenes, villain portraits, avatars (Ara style, 32x32), Comics panels (SVG rect scenes from descriptors), game
   sprites. `image-rendering: pixelated` on raster sprites and canvases.
 - Games use a **logical resolution** (default 320x240, 4:3; a game may choose 16:9 at 384x216 if play needs width) scaled to fit the
   stage with letterboxing, centered; integer scale when the scale ≥ 2, otherwise fractional with pixelated rendering; backing store
@@ -527,8 +526,8 @@ where noted, an extra column.
 ### 11.1 Splash (first visit per session)
 Full-viewport `.px-sunrise` scene: pixel sun rising behind a centered panel stack: "ARAW" wordmark (Press Start 2P, clamp 32–72px,
 navy with a 4px gold hard shadow), subtitle "AI Relevance Activities and Workshops" (Baloo 2), tagline (Nunito), Ara at 8x beside the
-panel (desktop) or above it (phone), barber-pole loading bar labelled "SUMISIKAT NA ANG ARAW...", then a large gold **SIMULAN**
-button. Footer: credit line and "Beta · Educational, not medical advice". A "Skip intro" link is the first focus. Landscape phones:
+panel (desktop) or above it (phone), barber-pole loading bar labelled "THE SUN IS RISING...", then a large gold **START**
+button with two compact Music and Sound effects switches under it (section 12). Footer: credit lines (AIKasalig project, and "Created by Mico C. Magtira — Senior Data and NLP-Geospatial Scientist, DOST-NICER"). A "Skip intro" link is the first focus. Landscape phones:
 Ara hidden, panel compact.
 
 ### 11.2 Home
@@ -558,13 +557,13 @@ Top bar: Close, module title (Press Start 2P 12px, truncated), barber progress (
   Keyboard: Enter/Space next, 1–4 choose options, ←/→ in swipe-sort.
 - **Tablet:** Ara small at the top-left of the card, card full width.
 - **Phone:** card full width; Ara 2x in the bubble header; action button sticky at the bottom above the safe area.
-- Reward step: full-stage dialog with badge medallion 96px, confetti, XP tally rows, "Unlocked: Module 4 · Komiks Episode 3".
+- Reward step: full-stage dialog with badge medallion 96px, confetti, XP tally rows, "Unlocked: Module 4 · Comics Episode 3".
 
 ### 11.5 Fact or Fake (focus mode)
 - **Desktop:** three columns: left (cols 1–3) round progress (pixel dots per item: correct/wrong/pending with icons) and Ara;
   center (cols 4–8) the item rendered as its format (feed post, GC screenshot, sponsored ad with synthetic image, chatbot answer)
   with the "ARAW GAME" watermark; below it the two large buttons **FAKE** (left) and **FACT** (right) with key hints.
-  Right (cols 9–12) the feedback card appears after answering (correct/"Muntik na!", why, how to check, trick chip, Report link,
+  Right (cols 9–12) the feedback card appears after answering (correct/"So close!", why, how to check, trick chip, Report link,
   NEXT) while the item gets its FAKE stamp. Results: Truth Radar panel (two meters + Ara tip), score, XP, PLAY AGAIN / DONE.
 - **Tablet:** item centered, feedback slides in below the item.
 - **Phone:** item card swipeable (right Fact, left Fake) with the buttons below; feedback as a bottom sheet.
@@ -593,17 +592,17 @@ XP, PLAY AGAIN, BACK TO ARCADE. Orientation change or resize mid-game re-fits wi
 Segmented tabs MYTHS · DIKSYUNARYO · KOMIKS under the banner (deep-linkable routes).
 - **Myths, desktop:** filter column (cols 1–3: search input, topic filter chips, villain filter) + flip-card grid (cols 4–12, 3 per row;
   4 at 1920). Tablet 2 per row with filters above; phone 1 per row with a filter button opening a sheet.
-- **Diksyunaryo, desktop:** A–Z index column (cols 1–2, sticky letter buttons) + search on top + card grid (cols 3–12, 3 per row):
+- **Dictionary, desktop:** A–Z index column (cols 1–2, sticky letter buttons) + search on top + card grid (cols 3–12, 3 per row):
   term (Baloo), meaning, "Halimbawa: ..." example, "Seen in Module X" link. Tablet 2 per row; phone 1 per row with the A–Z index as a
   horizontal scroller.
-- **Komiks, desktop:** episode list (cols 1–4: 10 episode rows with number tile, title, locked/new chip) + reader (cols 5–12):
+- **Comics, desktop:** episode list (cols 1–4: 10 episode rows with number tile, title, locked/new chip) + reader (cols 5–12):
   panels in a 2x3 pixel-framed grid with speech bubbles as real text, PREV / NEXT EPISODE. Tablet: list then reader stacked;
   phone: list, reader opens full screen with one panel per row.
 
 ### 11.10 Me
 - **Desktop:** three columns: profile (cols 1–4: nickname input, avatar picker grid 3x2 of 64px pixel avatars with `aria-pressed`,
   stats list), badge cabinet (cols 5–8: medallion grid with locked silhouettes and "how to earn" on focus/tap; Certificate button),
-  settings (cols 9–12: ACCESSIBILITY rows with switches, LANGUAGE row, Report, About and licences, Reset my progress).
+  settings (cols 9–12: ACCESSIBILITY rows with switches, SOUND rows (Music and Sound effects switches, each with a volume slider; section 12), LANGUAGE row, Report, About and licences, Reset my progress).
   At 1920 the columns simply widen.
 - **Tablet:** profile + stats row, then badges, then settings full width. **Phone:** single column in the same order; settings rows
   full width with switches on the right.
@@ -616,10 +615,41 @@ Segmented tabs MYTHS · DIKSYUNARYO · KOMIKS under the banner (deep-linkable ro
 ### 11.12 Certificate (focus mode)
 Desktop: left controls panel (name input "Name on certificate (not saved)", PRINT, DOWNLOAD PNG) and a right live preview at A4
 landscape ratio: sunrise pixel border, ARAW wordmark, Ara 6x, name in Baloo 2 800, "completed all 10 ARAW modules", date, badge row,
-credit line, "Educational, not medical advice". Phone: controls above, preview scaled to width. Print CSS hides everything except
+credit line. Phone: controls above, preview scaled to width. Print CSS hides everything except
 the certificate.
 
 ### 11.13 About and Not Found
 - **About:** single readable column (max 68ch) in a `.px-panel`: what ARAW is, licences (MIT code, CC BY 4.0 content, OFL fonts,
   pixelarticons MIT), credit line, beta and not-medical-advice note, content review status.
 - **Not Found:** centered Ara (think) at 4x, "Hala! This page is lost." and a HOME button.
+
+## 12. Sound
+
+ARAW sounds like an 8-bit console, the same family as TALA. Nothing is recorded: every sound is generated live with the Web Audio
+API, so the whole set costs a few KB and loads as a lazy chunk on the first tap (browsers keep audio locked until then).
+
+- **Four voices**, like the old consoles: two pulse waves (12.5, 25 and 50% duty), a triangle (bass, soft bells) and a noise channel
+  (stamps, paper, sizzles, drums). Envelopes move in 60 Hz frames, so even the fades are stepped.
+- **Level tiers** (balanced on the review sound board, `planning/sound/soundboard.html`): the **interface** is quietest (tap, select,
+  back, tab, page, toggles, dialog open and close, locked); **game actions and answers** sit in the middle (correct, rising one step
+  per answer in a row up to 5, wrong, the Fact and Fake stamps, every game's own action sounds, the timer tick and hurry); **celebrations**
+  are the loudest and longest (start, the sunrise jingle, module complete, badge, unlock, XP tally, Truth Radar, streak, countdown,
+  certificate). Celebrations are sequenced (module reward: jingle, badge, tally, unlock), never stacked.
+- **Ara's voice** is a short blip per letter, pitched by mood (happy, wink, think, wow, sad; idle Ara stays quiet), so it works in any
+  language. She speaks her reaction about 0.4 s after the answer sound, briefing pages and end-of-game lines; not every idle intro.
+- **Music per area:** the warm morning theme `umaga` on the splash, Home, Learn, Library, Me, Daily, About and Report; the calm, drum-free
+  `aral` inside lessons and Fact or Fake; the upbeat `laro` in the Arcade and games; the victory theme `panalo` on the certificate.
+  After START (and the certificate fanfare) the music waits for the jingle to ring out, then comes in from its first bar.
+- **Controls, like TALA:** Music (switch + volume) and Sound effects (switch + volume). Defaults: music **on at 25**, effects **on at 65**.
+  The full group sits on Me under the accessibility switches (sliders are 5.7 `.px-range`, disabled while their switch is off, with a
+  visible value); the splash shows the two switches beside START. Switches blip up or down; releasing the effects slider plays a tap
+  at the new volume. Audio pauses while the app is in the background.
+- **Every sound has a visual twin** already on screen (a stamp, a feedback card, a toast, a timer, Ara's bubble), so turning sound off
+  or not hearing it never hides information. The assessment forms (Fact or Fake test sets A and B) play no feedback sound at all.
+- **Rules for code:** buttons click through one app-wide listener (`data-sfx="name"` picks another sound, `data-sfx="none"` opts out
+  where the screen plays its own). Canvas games ask for sounds through the shell's `cue` callback only when their state changes, never
+  every frame, so their logic stays pure and silent in unit tests.
+- **Files:** `src/app/sound/synth.ts` (the lazy synth: effects, Ara's voice, the four songs), `src/app/sound/index.ts` (the tiny controller
+  in the main bundle: `sfx`, `araSay`, `setMusic`, `holdMusic`), `src/app/sound/prefs.ts` (saved settings), `src/app/sound/music.ts`
+  (route to track), `src/app/sound/useLater.ts` (timed sounds that stop when a screen closes), `src/ui/SoundControls.tsx` (Me and splash
+  controls), `src/games/engine/cues.ts` (game cue helpers and the countdown tick rule).

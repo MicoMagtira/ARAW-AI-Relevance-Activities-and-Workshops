@@ -53,7 +53,7 @@ test.describe('Learn path', () => {
     const details = wide ? page.locator('.learn__details') : page.getByRole('dialog');
     await expect(details.getByRole('heading', { level: 3, name: 'What Is AI, Really?' })).toBeVisible();
     await expect(details.getByText('AI or Not?')).toBeVisible();
-    await expect(details.getByText('Unang Sinag')).toBeVisible();
+    await expect(details.getByText('First Light')).toBeVisible();
     await expect(details.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '#/learn/m01');
     await settled(page);
     await noHorizontalOverflow(page);
@@ -91,7 +91,6 @@ test.describe('Module runner', () => {
     await expect(page.getByRole('link', { name: /^Close lesson/ })).toBeVisible();
     await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 1 / 12');
     await expect(page.getByRole('link', { name: 'Report this card (m01-c1)' })).toHaveAttribute('href', /item=m01-c1/);
-    await expect(page.getByText('Beta: educational, not medical advice')).toBeVisible();
 
     // 1 story hook (Enter moves on, like Next)
     await expect(page.getByText(/Is my phone listening to me/)).toBeVisible();
@@ -115,10 +114,10 @@ test.describe('Module runner', () => {
 
     // 4 choice: a wrong answer explains, then the right one unlocks Next
     await page.getByRole('button', { name: /What mangoes taste like/ }).click();
-    await expect(page.getByRole('status').filter({ hasText: 'Muntik na!' })).toContainText('It only saw pictures');
+    await expect(page.getByRole('status').filter({ hasText: 'So close!' })).toContainText('It only saw pictures');
     await expect(page.getByRole('button', { name: /^Next/ })).toBeDisabled();
     await page.getByRole('button', { name: /Patterns of shape and colour/ }).click();
-    await expect(page.getByRole('status').filter({ hasText: 'Tama!' })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'Correct!' })).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -137,7 +136,7 @@ test.describe('Module runner', () => {
 
     // 6 choice: Maps says 20 minutes
     await page.getByRole('button', { name: /A promise: the app knows the future/ }).click();
-    await expect(page.getByRole('status').filter({ hasText: 'Muntik na!' })).toContainText('Nobody knows the future');
+    await expect(page.getByRole('status').filter({ hasText: 'So close!' })).toContainText('Nobody knows the future');
     await page.getByRole('button', { name: /A guess from patterns in past traffic/ }).click();
     await next(page);
 
@@ -168,7 +167,7 @@ test.describe('Module runner', () => {
     await next(page);
 
     // takeaway
-    await expect(page.getByRole('heading', { level: 2, name: 'Kailan ako magtitiwala?' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'When should I trust it?' })).toBeVisible();
     await expect(page.locator('.bullets li')).toHaveCount(3);
     await next(page, /^Next: quick Fact or Fake round/);
 
@@ -178,9 +177,9 @@ test.describe('Module runner', () => {
     for (let i = 0; i < 5; i++) {
       await expect(page.getByText(`Fact or Fake · ${i + 1} of 5`)).toBeVisible();
       await page.getByRole('button', { name: 'Fake', exact: true }).click();
-      const feedback = page.getByRole('status').filter({ hasText: /Tama!|Muntik na!/ });
+      const feedback = page.getByRole('status').filter({ hasText: /Correct!|So close!/ });
       await expect(feedback).toBeVisible();
-      const correct = /Tama!/.test((await feedback.textContent()) ?? '');
+      const correct = /Correct!/.test((await feedback.textContent()) ?? '');
       if (correct) right++;
       await expect(page.getByText('ARAW GAME · FAKE')).toHaveCount(correct ? 1 : 0);
       await page.getByRole('button', { name: i === 4 ? 'See my reward' : 'Next' }).click();
@@ -188,11 +187,11 @@ test.describe('Module runner', () => {
     expect(right).toBeGreaterThanOrEqual(2); // 2 or 3 of the five are fakes
 
     // reward
-    await expect(page.getByRole('heading', { level: 2, name: 'Galing! You finished the module.' })).toBeVisible();
-    await expect(page.locator('.reward-badge__name')).toHaveText('Unang Sinag');
+    await expect(page.getByRole('heading', { level: 2, name: 'Great job! You finished the module.' })).toBeVisible();
+    await expect(page.locator('.reward-badge__name')).toHaveText('First Light');
     await expect(page.getByText(`+${195 + right * 10} XP`)).toBeVisible();
     await expect(page.getByText('Module 2 · How AI Learns and Makes Mistakes')).toBeVisible();
-    await expect(page.getByText('Komiks Episode 1')).toBeVisible();
+    await expect(page.getByText('Comics Episode 1')).toBeVisible();
     await expect(page.getByRole('progressbar', { name: 'Lesson progress' })).toHaveAttribute('aria-valuetext', 'Step 12 / 12');
     await settled(page);
     await noHorizontalOverflow(page);
@@ -240,7 +239,7 @@ test.describe('Module runner', () => {
       await page.getByRole('button', { name: 'Fake', exact: true }).click();
       await page.getByRole('button', { name: i === 4 ? 'See my reward' : 'Next' }).click();
     }
-    await expect(page.getByRole('heading', { level: 2, name: 'Galing! You finished the module.' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Great job! You finished the module.' })).toBeVisible();
     await expect(page.locator('.confetti-sparkle')).toBeVisible();
     await expect(page.locator('canvas.confetti')).toHaveCount(0);
   });

@@ -1,5 +1,6 @@
 import { t } from '../app/i18n';
 import { APP_VERSION } from '../app/report';
+import { hrefFor } from '../app/router';
 import { Panel } from '../ui/kit';
 
 export function About() {
@@ -10,6 +11,9 @@ export function About() {
           <h2 id="about-h">{t('about.title')}</h2>
           <p>{t('app.tagline')}</p>
           <p>{t('about.text')}</p>
+          <p>
+            <a href={hrefFor('/guide')}>{t('about.guide')}</a>
+          </p>
           <h3 id="licences-h">{t('about.licences')}</h3>
           <ul class="licence-list" aria-labelledby="licences-h">
             <li>{t('about.licenceCode')}</li>
@@ -19,7 +23,7 @@ export function About() {
           </ul>
           <p>{t('about.fictional')}</p>
           <p class="px-text-muted">{t('app.credit')}</p>
-          <p class="px-text-muted">{t('app.betaNote')}</p>
+          <p class="px-text-muted">{t('app.createdBy')}</p>
           <p class="px-text-muted">ARAW {APP_VERSION}</p>
         </div>
       </Panel>

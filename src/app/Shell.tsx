@@ -11,6 +11,7 @@ import { manilaDate } from './daily';
 import { streakNotice } from './progress';
 import { displayName, profile, streak, xp } from './state';
 import { activeStreak } from './streak';
+import { sfx } from './sound';
 import { Home } from '../screens/Home';
 import { Learn } from '../screens/Learn';
 import { Lesson } from '../screens/Lesson';
@@ -23,6 +24,7 @@ import { Certificate } from '../screens/Certificate';
 import { Me } from '../screens/Me';
 import { Report } from '../screens/Report';
 import { About } from '../screens/About';
+import { GuideRoute } from '../screens/GuideRoute';
 import { NotFound } from '../screens/NotFound';
 
 const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game' | 'certificate'>, ComponentType> = {
@@ -34,27 +36,34 @@ const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game' | 
   me: Me,
   report: Report,
   about: About,
+  guide: GuideRoute,
   notFound: NotFound,
 };
 
-/** Tell the player about a streak freeze, a fresh start or a new streak badge (set by recordActivity). */
-function useStreakToasts() {
+/**
+ * Tell the player about a streak freeze, a fresh start or a new streak badge (set by recordActivity). A streak that grows
+ * rings the streak sound where its twin is on screen: the HUD flame (not in focus mode) or a streak badge toast.
+ */
+function useStreakToasts(hudShown: boolean) {
   const notice = streakNotice.value;
   useEffect(() => {
     if (!notice) return;
     streakNotice.value = null;
+    if (notice.badges.length > 0 || (notice.event === 'next' && hudShown)) sfx('streak');
     if (notice.event === 'freeze') pushToast({ kind: 'success', title: t('streak.freeze.title'), text: t('streak.freeze.text', { n: notice.current }) });
     else if (notice.event === 'restart') pushToast({ kind: 'success', title: t('streak.restart.title'), text: t('streak.restart.text') });
     for (const id of notice.badges) {
       const badge = BADGES.find((b) => b.id === id);
-      if (badge) pushToast({ kind: 'badge', title: t('streak.badge.title', { name: badge.name }), text: badge.english });
+      if (badge) pushToast({ kind: 'badge', title: t('streak.badge.title', { name: badge.name }) }, { quiet: true });
     }
   }, [notice]);
 }
 
+const FOCUS: ReadonlySet<RouteName> = new Set<RouteName>(['lesson', 'fof', 'assess', 'game', 'certificate']);
+
 export function Shell() {
-  useStreakToasts();
   const match = matchRoute(location$.value);
+  useStreakToasts(!FOCUS.has(match.def.name));
   const lessonId = match.def.name === 'lesson' ? match.params.id : undefined;
   const focusName = match.def.name;
   const title = t(match.def.titleKey);
@@ -110,9 +119,6 @@ export function Shell() {
           <Icon name="sun" size={32} class="brand__sun" />
           <span class="brand__word">{t('app.name')}</span>
         </a>
-        <Chip class="banner__beta brand--compact">
-          {t('app.beta')}
-        </Chip>
         <h1 class="banner__title">{title}</h1>
         <svg class="banner__sun" viewBox="0 0 16 8" shape-rendering="crispEdges" aria-hidden="true">
           <path fill="currentColor" d="M5 0h6v1H5zM3 1h10v1H3zM2 2h12v1H2zM1 3h14v1H1zM0 4h16v4H0z" />
@@ -154,7 +160,6 @@ export function Shell() {
             <Icon name="sun" size={32} class="brand__sun" />
             <span class="brand__word">{t('app.name')}</span>
           </a>
-          <Chip>{t('app.beta')}</Chip>
         </div>
         <nav class="nav" aria-label={t('nav.main')}>
           <ul>
@@ -184,7 +189,7 @@ export function Shell() {
           <p class="sidebar__note">
             {t('app.credit')}
             <br />
-            {t('app.betaNote')}
+            {t('app.createdBy')}
           </p>
         </div>
       </div>
@@ -193,7 +198,7 @@ export function Shell() {
         <div class="content screen" key={screenKey}>
           <Screen />
         </div>
-        <footer class="beta-note">{t('app.betaNote')}</footer>
+        <footer class="credit-note">{t('app.createdBy')}</footer>
       </main>
 
       <ToastHost />

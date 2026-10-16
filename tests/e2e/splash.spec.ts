@@ -3,17 +3,17 @@ import { expect, test } from '@playwright/test';
 import { noHorizontalOverflow } from './fixtures';
 
 test.describe('sunrise splash', () => {
-  test('first visit shows the splash, SIMULAN goes Home', async ({ page }) => {
+  test('first visit shows the splash, START goes Home', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('ARAW');
     await expect(page.getByText('AI Relevance Activities and Workshops')).toBeVisible();
     await expect(page.getByText('An AIKasalig project')).toBeVisible();
-    await expect(page.getByText('Beta: educational, not medical advice')).toBeVisible();
+    await expect(page.getByText('Created by Mico C. Magtira')).toBeVisible();
     await expect(page.getByRole('navigation')).toHaveCount(0); // the app shell is not behind it
     await expect(page.locator('.splash__scene .ara')).toHaveAttribute('data-mood', 'happy');
     await noHorizontalOverflow(page);
 
-    const start = page.getByRole('button', { name: 'Simulan' });
+    const start = page.getByRole('button', { name: 'Start' });
     await expect(start).toBeInViewport();
     await start.click();
 
@@ -38,13 +38,34 @@ test.describe('sunrise splash', () => {
     await expect(page).toHaveURL(/#\/$/);
   });
 
-  test('SIMULAN is reachable and activated with the keyboard', async ({ page }) => {
+  test('START is reachable and activated with the keyboard', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab'); // skip link
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('button', { name: 'Simulan' })).toBeFocused();
+    await expect(page.getByRole('button', { name: 'Start' })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Home');
+  });
+
+  test('Music and Sound effects switches sit next to START, fit and are saved', async ({ page }) => {
+    await page.goto('/');
+    const group = page.getByRole('group', { name: 'Sound' });
+    const music = group.getByRole('switch', { name: 'Music' });
+    const effects = group.getByRole('switch', { name: 'Sound effects' });
+    await expect(music).toHaveAttribute('aria-checked', 'true');
+    await expect(effects).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByRole('button', { name: 'Start' })).toBeInViewport();
+    await noHorizontalOverflow(page);
+    for (const control of [music, effects]) {
+      const box = await control.boundingBox();
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+    await page.getByText('Sound effects', { exact: true }).click(); // the word is part of the tap target
+    await expect(effects).toHaveAttribute('aria-checked', 'false');
+    await page.getByRole('button', { name: 'Start' }).click();
+    await page.goto('/#/me');
+    await expect(page.getByRole('group', { name: 'Sound' }).getByRole('switch', { name: 'Sound effects' })).toHaveAttribute('aria-checked', 'false');
   });
 
   test('deep links skip the splash', async ({ page }) => {
@@ -85,17 +106,18 @@ test.describe('sunrise splash', () => {
     ] as const) {
       await page.setViewportSize({ width, height });
       await noHorizontalOverflow(page);
-      await expect(page.getByRole('button', { name: 'Simulan' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
+      await expect(page.getByRole('switch', { name: 'Sound effects' })).toBeVisible();
       await expect(page.getByRole('heading', { level: 1 })).toBeInViewport();
       const box = await page.locator('.splash__ara .ara__svg').boundingBox();
       expect((box?.width ?? 0) % 32).toBe(0);
     }
   });
 
-  test('SIMULAN is a 44px target and on screen without scrolling at 1366x768', async ({ page }) => {
+  test('START is a 44px target and on screen without scrolling at 1366x768', async ({ page }) => {
     await page.setViewportSize({ width: 1366, height: 768 });
     await page.goto('/');
-    const start = page.getByRole('button', { name: 'Simulan' });
+    const start = page.getByRole('button', { name: 'Start' });
     const box = await start.boundingBox();
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
     await expect(start).toBeInViewport({ ratio: 1 });
@@ -118,7 +140,7 @@ test.describe('sunrise splash', () => {
       });
     });
     await page.goto('/');
-    await page.getByRole('button', { name: 'Simulan' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Home');
   });
 });

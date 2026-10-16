@@ -238,7 +238,7 @@
   margin-inline: auto;
 }
 
-.beta-note {
+.credit-note {
   display: none;
   margin-top: var(--sp-6);
   text-align: center;
@@ -505,7 +505,7 @@
     box-shadow: var(--notch-flat);
   }
 
-  .beta-note {
+  .credit-note {
     display: block;
   }
 }
@@ -611,13 +611,6 @@
   }
 }
 
-/* Narrow tablet and phone: the BETA chip moves to the footer note */
-@media (width < 720px) {
-  .banner .banner__beta {
-    display: none;
-  }
-}
-
 /* Very small phones: drop the brand wordmark and the "DAYS" word */
 @media (width < 400px) {
   .brand__word,
@@ -655,7 +648,7 @@
   .sidebar,
   .banner,
   .nav,
-  .beta-note {
+  .credit-note {
     display: none !important;
   }
 }
