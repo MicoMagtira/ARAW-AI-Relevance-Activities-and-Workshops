@@ -1,6 +1,5 @@
-// Sound controller (main bundle, tiny). The synth itself is a lazy chunk that loads on the first tap.
-// Like TALA: music and sound effects each have a switch and a volume; music starts after the first interaction
-// (browsers block audio before that), and every button gives a short click unless it asks for its own sound.
+// Sound controller (main bundle, tiny). Load the synth separately and try music at startup when enabled.
+// If the browser blocks autoplay, the first tap or key press unlocks audio instead.
 import { effect } from '@preact/signals';
 import { effectiveGains, soundPrefs } from './prefs';
 import type { Mood, SfxName, TrackId } from './synth';
@@ -86,6 +85,8 @@ const CLICKABLE = 'button, a.px-btn, a.nav-item, a.tab-item, a[data-sfx], [role=
 
 /** Wire the app-wide listeners once at boot. Returns a stop function (for tests). */
 export function initSound(doc: Document = document): () => void {
+  let active = true;
+  unlocked = false;
   const onFirst = (): void => unlockAudio();
   doc.addEventListener('pointerdown', onFirst, { capture: true, once: true });
   doc.addEventListener('keydown', onFirst, { capture: true, once: true });
@@ -112,11 +113,22 @@ export function initSound(doc: Document = document): () => void {
   doc.addEventListener('visibilitychange', onVisible);
 
   const stopEffect = effect(() => {
-    void soundPrefs.value;
+    const gains = effectiveGains(soundPrefs.value);
     if (synth) sync(synth);
+    if (!unlocked && (gains.music > 0 || gains.sfx > 0)) {
+      void load().then((m) => {
+        const current = effectiveGains(soundPrefs.value);
+        if (!active || !m || doc.visibilityState === 'hidden' || (current.music === 0 && current.sfx === 0)) return;
+        if (m.tryAutoplay()) {
+          unlocked = true;
+          sync(m);
+        }
+      });
+    }
   });
 
   return () => {
+    active = false;
     doc.removeEventListener('pointerdown', onFirst, { capture: true });
     doc.removeEventListener('keydown', onFirst, { capture: true });
     doc.removeEventListener('click', onClick, { capture: true });

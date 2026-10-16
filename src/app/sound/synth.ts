@@ -121,6 +121,11 @@ function graph(): Graph | null {
   }
 }
 
+/** A new context is running immediately only when the browser permits autoplay. */
+export function tryAutoplay(): boolean {
+  return graph()?.ctx.state === 'running';
+}
+
 export function resume(): void {
   const gr = graph();
   if (gr && gr.ctx.state === 'suspended') void gr.ctx.resume().catch(() => undefined);

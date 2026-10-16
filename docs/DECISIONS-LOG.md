@@ -1,5 +1,9 @@
 # ARAW: Build Decisions Log
 
+- 2026-10-16 · START-GATE · Disable START until the splash loading bar reaches 100%, so the five-second introduction finishes before normal entry. Reduced motion completes the bar immediately and enables START immediately.
+
+- 2026-10-16 · STARTUP · Fill the splash loading bar over 5 seconds to match the sunrise, completing immediately for reduced motion. Attempt enabled audio on arrival when the browser permits it, retain the first-interaction fallback when blocked, and respect saved mute settings.
+
 - 2026-10-16 · SPLASH-MOTION · Animate the splash's happy Ara with a small stepped vertical bob while waiting for START; her happy sprite does not use the idle frame animation. Extend the one-shot sunrise to 5 seconds at the owner's request and preserve both reduced-motion preferences.
 
 Decisions made during the unattended build. One line each: `date · task · decision · why`.

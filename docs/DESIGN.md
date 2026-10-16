@@ -626,7 +626,8 @@ the certificate.
 ## 12. Sound
 
 ARAW sounds like an 8-bit console, the same family as TALA. Nothing is recorded: every sound is generated live with the Web Audio
-API, so the whole set costs a few KB and loads as a lazy chunk on the first tap (browsers keep audio locked until then).
+API, so the whole set costs a few KB and loads as a separate chunk. With sound enabled, the app attempts playback at startup;
+when the browser blocks autoplay, the first tap or key press enables it. Saved mute preferences are respected.
 
 - **Four voices**, like the old consoles: two pulse waves (12.5, 25 and 50% duty), a triangle (bass, soft bells) and a noise channel
   (stamps, paper, sizzles, drums). Envelopes move in 60 Hz frames, so even the fades are stepped.

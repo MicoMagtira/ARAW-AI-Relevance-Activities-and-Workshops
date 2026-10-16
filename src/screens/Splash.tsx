@@ -3,14 +3,13 @@ import { useEffect, useState } from 'preact/hooks';
 import { MUSIC_AFTER_START_MS, finishSplash } from '../app/boot';
 import { holdMusic } from '../app/sound';
 import { t } from '../app/i18n';
-import { settings } from '../app/settings';
 import { Icon } from '../ui/Icon';
-import { Ara } from '../ui/Ara';
+import { Ara, useReducedMotion } from '../ui/Ara';
 import { Button } from '../ui/kit';
 import { SoundSwitches } from '../ui/SoundControls';
 
 const SEGMENTS = 10;
-const SEGMENT_MS = 140;
+const SEGMENT_MS = 500;
 
 /** Rows of a half disc (`radius` in cells, centre column `cx`), bottom row first, as [x, y, w]. */
 function halfDisc(radius: number, cx: number, baseY: number): Array<[number, number, number]> {
@@ -54,7 +53,7 @@ function Cloud({ class: className }: { class: string }) {
 
 /** Fake boot progress: fills one segment at a time. Reduced motion (or a short wait) shows it complete. */
 function useBootProgress(): number {
-  const reduced = settings.value.reduceMotion;
+  const reduced = useReducedMotion();
   const [filled, setFilled] = useState(reduced ? SEGMENTS : 0);
   useEffect(() => {
     if (reduced) {
@@ -110,7 +109,7 @@ export function Splash() {
               {t('splash.loading')} {percent}%
             </p>
           </div>
-          <Button large variant="gold" class="splash__start" data-sfx="none" onPointerDown={quietMusic} onKeyDown={quietMusic} onClick={finishSplash}>
+          <Button large variant="gold" class="splash__start" disabled={filled < SEGMENTS} data-sfx="none" onPointerDown={quietMusic} onKeyDown={quietMusic} onClick={finishSplash}>
             {t('splash.start')}
             <Icon name="play" />
           </Button>

@@ -3,6 +3,27 @@ import { expect, test } from '@playwright/test';
 import { noHorizontalOverflow } from './fixtures';
 
 test.describe('sunrise splash', () => {
+  test('the loading bar fills over the same five seconds as the sunrise', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.clock.install();
+    await page.goto('/');
+    const start = page.getByRole('button', { name: 'Start' });
+    await expect(start).toBeDisabled();
+    await start.evaluate((el: HTMLButtonElement) => el.click());
+    await expect(page.locator('#splash')).toBeVisible();
+    await expect(page.locator('.splash__loading')).toContainText('0%');
+    await page.clock.runFor(2500);
+    await expect(page.locator('.splash__seg.is-on')).toHaveCount(5);
+    await expect(page.locator('.splash__loading')).toContainText('50%');
+    await expect(start).toBeDisabled();
+    await page.clock.runFor(2500);
+    await expect(page.locator('.splash__seg.is-on')).toHaveCount(10);
+    await expect(page.locator('.splash__loading')).toContainText('100%');
+    await expect(start).toBeEnabled();
+    await start.click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Home');
+  });
+
   test('the sun rises and happy Ara keeps bobbing while waiting for START', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/');
@@ -79,6 +100,7 @@ test.describe('sunrise splash', () => {
 
   test('START is reachable and activated with the keyboard', async ({ page }) => {
     await page.goto('/');
+    await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled({ timeout: 10_000 });
     await page.keyboard.press('Tab'); // skip link
     await page.keyboard.press('Tab');
     await expect(page.getByRole('button', { name: 'Start' })).toBeFocused();
@@ -127,6 +149,7 @@ test.describe('sunrise splash', () => {
     await page.goto('/');
     await expect(page.locator('.splash__loading')).toContainText('100%');
     await expect(page.locator('.splash__seg.is-on')).toHaveCount(10);
+    await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   });
 
   test('stays inside the viewport at phone, tablet, desktop and landscape sizes', async ({ page }) => {

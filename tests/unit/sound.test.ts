@@ -7,6 +7,7 @@ const synthMock = vi.hoisted(() => ({
   setTrack: vi.fn(),
   resume: vi.fn(),
   suspend: vi.fn(),
+  tryAutoplay: vi.fn(() => false),
 }));
 vi.mock('../../src/app/sound/synth', async (orig) => ({ ...(await orig<typeof import('../../src/app/sound/synth')>()), ...synthMock }));
 
@@ -73,15 +74,17 @@ describe('sound controller', () => {
   let stop: () => void = () => undefined;
   beforeEach(() => {
     Object.values(synthMock).forEach((f) => f.mockClear());
+    synthMock.tryAutoplay.mockReturnValue(false);
     soundPrefs.value = DEFAULT_SOUND;
     stop = initSound(document);
   });
   afterEach(() => stop());
 
-  it('stays silent until the first interaction, then clicks on buttons', async () => {
+  it('falls back to the first interaction when the browser blocks autoplay', async () => {
     sfx('correct');
     await flush();
     expect(synthMock.playSfx).not.toHaveBeenCalled();
+    expect(synthMock.tryAutoplay).toHaveBeenCalled();
     const b = document.createElement('button');
     document.body.append(b);
     b.dispatchEvent(new Event('pointerdown', { bubbles: true }));
@@ -90,6 +93,26 @@ describe('sound controller', () => {
     expect(synthMock.resume).toHaveBeenCalled();
     expect(synthMock.playSfx).toHaveBeenCalledWith('tap', undefined);
     b.remove();
+  });
+
+  it('starts music without a gesture when the browser allows autoplay', async () => {
+    stop();
+    synthMock.tryAutoplay.mockReturnValue(true);
+    stop = initSound(document);
+    setMusic('umaga');
+    await flush();
+    expect(synthMock.setTrack).toHaveBeenLastCalledWith('umaga');
+    expect(synthMock.resume).not.toHaveBeenCalled();
+  });
+
+  it('does not attempt autoplay when both saved sound channels are muted', async () => {
+    stop();
+    soundPrefs.value = { ...DEFAULT_SOUND, musicOn: false, sfxOn: false };
+    synthMock.tryAutoplay.mockClear();
+    stop = initSound(document);
+    await flush();
+    expect(synthMock.tryAutoplay).not.toHaveBeenCalled();
+    expect(synthMock.setTrack).toHaveBeenLastCalledWith(null);
   });
 
   it('honours data-sfx and the effects switch', async () => {
