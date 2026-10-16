@@ -63,8 +63,19 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
     intro: 'ARAW works in the web browser of any phone, tablet or computer. You do not need an account.',
     steps: [
       {
-        title: 'Open ARAW and press START',
-        text: 'The first screen shows a rising sun and Ara, your guide. When the bar is full, press START.',
+        title: 'Choose your language',
+        text: 'The very first screen asks for your language. Tap a language card, then press SELECT. ARAW is in English for now; more languages are coming.',
+        shot: 'language',
+        alt: 'The ARAW language screen: the title box with the English card picked, the gold SELECT button under it, and Ara in front of a pixel sunrise sky.',
+        callouts: [
+          { target: 'card', text: 'Tap your language. The picked card turns blue and its little box fills in.' },
+          { target: 'select', text: 'Press SELECT. The music starts and the sun begins to rise.' },
+          { target: 'later', text: 'You can change the language later in Me, under Settings.' },
+        ],
+      },
+      {
+        title: 'Wait for the sunrise, then press START',
+        text: 'Next, the sun rises behind Ara and the loading bar fills. When the bar is full, press START.',
         shot: 'splash',
         alt: 'The ARAW start screen: the title box at the top, Ara in front of a pixel sunrise, and a big gold START button at the bottom.',
         callouts: [
@@ -421,6 +432,11 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
         ],
       },
       {
+        title: 'Change the language',
+        text: 'The language you picked on the first screen is saved. To change it, open Me and find Language under the settings, then tap another language card. It changes right away.',
+        list: ['ARAW is in English for now.', 'More languages are coming. They will appear as new cards here and on the first screen.'],
+      },
+      {
         title: 'Your certificate',
         text: 'Finish all ten modules to get a certificate. Type your name on it, then print it or download it as a picture. ARAW does not save your name.',
         shot: 'certificate',
@@ -512,7 +528,7 @@ export const GUIDE_QUICKSTART = {
   title: 'ARAW quick start',
   subtitle: 'Learn when to trust AI and health info.',
   steps: [
-    { title: 'Open ARAW', text: 'Open the ARAW link or the ARAW icon on your phone. Press START.' },
+    { title: 'Open ARAW', text: 'Open the ARAW link or icon. Pick English, press SELECT, then press START.' },
     { title: 'Learn', text: 'Tap Learn, then the module where Ara stands. Read each card and tap an answer.' },
     { title: 'Try again', text: '"So close!" means read the tip and try another answer. No one loses for trying.' },
     { title: 'Fact or Fake', text: 'Read the post. Press FACT or FAKE. Read why. Every fake gets a FAKE stamp.' },

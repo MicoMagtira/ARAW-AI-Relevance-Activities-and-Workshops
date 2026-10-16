@@ -610,7 +610,8 @@ Fact or Fake feedback card (with item id), and the game pause menu.
 
 | # | Screen | Purpose |
 |---|---|---|
-| 1 | Splash (boot) | First visit per session: 8-bit sunrise, ARAW wordmark, loading bar, **START**, credit lines. Skippable, not a route. |
+| 0 | Language landing (boot) | First screen of every session, before the splash: same sunrise sky (sun below the horizon), ARAW wordmark, "Choose your language" with language cards (English only for now; none picked on a first visit, the saved one picked later), a **Select** button that unlocks once a language is picked, and credit lines. Select saves the language (`araw:v1:language`) and opens the splash; its tap is the user gesture browsers need for audio, so the music is already playing on the splash. Changeable later in Me > Settings (Language). Deep links skip it. Not a route. |
+| 1 | Splash (boot) | After the landing: 8-bit sunrise, ARAW wordmark, loading bar, **START**, credit lines. Skippable, not a route. |
 | 2 | Home | Greeting by time of day with nickname, Continue card, Daily Challenge card, path preview, Arcade and Myth-of-the-day shortcuts, badge strip, stats. |
 | 3 | Learn | The 10-module path (Core and More rows), states done/current/locked, module details panel or sheet. |
 | 4 | Module runner | Hook → cards → game → takeaway → mini Fact or Fake → reward. |

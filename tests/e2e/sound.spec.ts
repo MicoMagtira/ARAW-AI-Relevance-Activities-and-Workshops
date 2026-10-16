@@ -30,16 +30,16 @@ test.beforeEach(async ({ page }) => installProbe(page));
 test.use({ launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] } });
 
 test.describe('permitted audio autoplay', () => {
-  test('music starts on the intro before any interaction', async ({ page }) => {
+  test('music starts on the language landing before any interaction', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('#splash')).toBeVisible();
+    await expect(page.locator('#landing')).toBeVisible();
     await expect.poll(() => page.evaluate(probe).then((state) => state.oscillators)).toBeGreaterThan(0);
     await expect.poll(() => page.evaluate(() => (window as unknown as { __arawAudio: AudioProbe }).__arawAudio.contexts[0]?.state)).toBe('running');
   });
 });
 
 test.describe('blocked audio autoplay', () => {
-  test('waits silently, then starts on a tap anywhere on the intro', async ({ playwright, baseURL }, testInfo) => {
+  test('waits silently, then starts on a tap anywhere on the language landing', async ({ playwright, baseURL }, testInfo) => {
     const browser = await playwright.chromium.launch({ args: ['--autoplay-policy=document-user-activation-required', '--disable-features=PreloadMediaEngagementData,MediaEngagementBypassAutoplayPolicies'] });
     try {
       const { viewport, isMobile, hasTouch } = testInfo.project.use;
@@ -51,7 +51,7 @@ test.describe('blocked audio autoplay', () => {
       await page.locator('.splash__wordmark').click();
       await expect.poll(() => page.evaluate(() => (window as unknown as { __arawAudio: AudioProbe }).__arawAudio.contexts[0]?.state)).toBe('running');
       await expect.poll(() => page.evaluate(probe).then((state) => state.oscillators)).toBeGreaterThan(0);
-      await expect(page.locator('#splash')).toBeVisible();
+      await expect(page.locator('#landing')).toBeVisible();
     } finally {
       await browser.close();
     }

@@ -31,7 +31,7 @@ const SUN_BODY = rectPath(BODY_ROWS);
 const SUN_CORE = rectPath(halfDisc(8.5, 18, SUN_H));
 const SUN_RAYS = 'M18 0h1v3h-1zM6 5h2v2H6zM29 5h2v2h-2zM2 11h3v1H2zM32 11h3v1h-3zM1 17h4v1H1zM32 17h4v1h-4z';
 
-function Sun() {
+export function Sun() {
   return (
     <svg class="splash__sun" viewBox={`0 0 ${SUN_W} ${SUN_H}`} shape-rendering="crispEdges" aria-hidden="true" focusable="false">
       <path fill="var(--gold-deep)" d={SUN_RAYS} />
@@ -43,7 +43,7 @@ function Sun() {
 }
 
 const CLOUD = 'M4 0h4v1H4zM2 1h8v1H2zM0 2h14v1H0zM0 3h14v1H0zM12 1h2v1h-2z';
-function Cloud({ class: className }: { class: string }) {
+export function Cloud({ class: className }: { class: string }) {
   return (
     <svg class={`splash__cloud ${className}`} viewBox="0 0 14 4" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
       <path fill="var(--surface)" d={CLOUD} />
@@ -76,7 +76,7 @@ export function Splash() {
   const percent = Math.round((filled / SEGMENTS) * 100);
 
   return (
-    <main class="splash" id="splash" aria-labelledby="splash-title">
+    <main class="splash" id="splash" aria-labelledby="splash-title" tabIndex={-1}>
       <Button href="#/" class="skip-link" variant="gold" data-sfx="none" onClick={skip}>
         {t('splash.skip')}
       </Button>

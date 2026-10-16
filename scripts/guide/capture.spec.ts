@@ -41,8 +41,10 @@ interface Shot {
   /** localStorage values (merged over LIVED_IN unless `fresh`). */
   seed?: Record<string, unknown>;
   fresh?: boolean;
-  /** Show the first-visit splash instead of skipping it. */
+  /** Show the first-visit intro (language landing, then the splash) instead of skipping it. */
   splash?: boolean;
+  /** Runs right after the page loads, before `ready` (e.g. pass the language landing to reach the splash). */
+  enter?: (page: Page) => Promise<void>;
   only?: ShotVariant;
   /** Taller viewport (CSS px) for screens whose key parts do not fit 740 (phone) or 768 (desktop). Width never changes. */
   height?: Partial<Record<ShotVariant, number>>;
@@ -74,10 +76,29 @@ async function answerUntilStamp(page: Page): Promise<void> {
 
 const SHOTS: Shot[] = [
   {
+    id: 'language',
+    url: '/',
+    splash: true,
+    fresh: true,
+    ready: role('radio', 'English'),
+    prepare: async (page) => {
+      await page.getByRole('radio', { name: 'English' }).check();
+    },
+    targets: {
+      card: css('.lang-option'),
+      select: role('button', 'Select'),
+      later: css('.landing__later'),
+    },
+  },
+  {
     id: 'splash',
     url: '/',
     splash: true,
     fresh: true,
+    enter: async (page) => {
+      await page.getByRole('radio', { name: 'English' }).check();
+      await page.getByRole('button', { name: 'Select' }).click();
+    },
     ready: role('button', 'Start'),
     targets: {
       title: css('.splash__title'),
@@ -455,6 +476,7 @@ for (const shot of SHOTS) {
     await page.clock.setFixedTime(NOW);
     await seed(page, { ...(shot.fresh ? {} : LIVED_IN), ...shot.seed }, !!shot.splash);
     await page.goto(shot.url);
+    if (shot.enter) await shot.enter(page);
     await (shot.ready ?? css('h1'))(page, variant).waitFor({ state: 'visible', timeout: 20_000 });
     await page.evaluate(() => document.fonts.ready.then(() => undefined));
     await page.waitForTimeout(500);

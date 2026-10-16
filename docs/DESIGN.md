@@ -523,7 +523,17 @@ works with keyboard only, including every game.
 Grid references are for the 12-column desktop content area at 1366x768; at 1920x1080 the same layout gets wider columns and,
 where noted, an extra column.
 
-### 11.1 Splash (first visit per session)
+### 11.0 Language landing (first screen of a session, src/screens/Landing.tsx)
+"Before sunrise": the splash's sky bands, clouds, ground strip and credits, with the sun held just below the horizon (it rises on
+the splash that follows) and happy Ara one scale step smaller than on the splash. The white title panel holds the ARAW
+wordmark, the tagline, "Choose your language" (Press Start 2P), the language cards and a large gold **SELECT** button
+(disabled until a card is picked), then "You can change this later in Me, under Settings." Language cards (`src/ui/LanguagePicker.tsx`,
+also used in Me > Settings): a native radio group; each card is a pixel box (4px ink border, hard shadow) with a navy tag
+("EN"), the language name in Baloo 2 and a square mark that fills gold when picked; the picked card turns navy-tint with a navy
+border. The invisible radio covers the whole card (tap target 64px tall). Sounds: picking a card plays `select`, SELECT plays
+`open`. After SELECT the page scrolls to the top and focus moves to the splash.
+
+### 11.1 Splash (first visit per session, after the language landing)
 Full-viewport `.px-sunrise` scene: pixel sun rising behind a centered panel stack: "ARAW" wordmark (Press Start 2P, clamp 32–72px,
 navy with a 4px gold hard shadow), subtitle "AI Relevance Activities and Workshops" (Baloo 2), tagline (Nunito), Ara at 8x beside the
 panel (desktop) or above it (phone), barber-pole loading bar labelled "THE SUN IS RISING...", then a large gold **START**

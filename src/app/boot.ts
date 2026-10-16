@@ -24,8 +24,15 @@ export function markBooted(): void {
   }
 }
 
-/** True while the sunrise splash is on screen (instead of the shell). */
+/** True while the intro (language landing, then the sunrise splash) is on screen instead of the shell. */
 export const splashVisible = signal(false);
+
+/**
+ * Which intro screen shows: the language landing first (its tap also unlocks audio, so the music is already playing when
+ * the sunrise starts), then the sunrise splash with its loading bar and START.
+ */
+export type IntroStep = 'language' | 'sunrise';
+export const introStep = signal<IntroStep>('language');
 
 /** The splash is the first-visit screen of a session. Deep links (any route but Home) skip it. */
 export function initBoot(path: string): void {
@@ -34,7 +41,13 @@ export function initBoot(path: string): void {
     splashVisible.value = false;
     return;
   }
+  introStep.value = 'language';
   splashVisible.value = true;
+}
+
+/** Landing screen Select: on to the sunrise splash (the language itself is saved by the caller). */
+export function finishLanguage(): void {
+  introStep.value = 'sunrise';
 }
 
 /** The START chime, the sunrise jingle a beat later, then the morning theme comes in once the jingle has rung out. */

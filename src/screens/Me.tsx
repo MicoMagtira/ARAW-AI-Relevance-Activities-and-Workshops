@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { manilaDate } from '../app/daily';
 import { t, type StringKey } from '../app/i18n';
 import { badgesEarned, bestRadar, modulesDone } from '../app/progress';
+import { language, setLanguage } from '../app/language';
 import { hrefFor } from '../app/router';
 import { SETTING_KEYS, setSetting, settings, type SettingKey } from '../app/settings';
 import { NICKNAME_MAX, profile, setAvatar, setNickname, streak, xp, DEFAULT_NICKNAME } from '../app/state';
@@ -15,6 +16,7 @@ import { AVATARS, safeAvatarIndex } from '../ui/avatars';
 import { Medal } from '../ui/Badge';
 import { Icon } from '../ui/Icon';
 import { Button, Dialog, Panel, SrHint, SwitchRow, pushToast, srDescribedBy } from '../ui/kit';
+import { LanguagePicker } from '../ui/LanguagePicker';
 import { SoundSettings } from '../ui/SoundControls';
 
 function ProfilePanel() {
@@ -213,14 +215,11 @@ function SettingsPanel({ onReset }: { onReset: () => void }) {
             />
           ))}
         </div>
+        <LanguagePicker value={language.value ?? 'en'} onPick={setLanguage} class="me-language" />
         <SoundSettings />
         <CertificatePanel />
         <h2 class="panel-title">{t('me.more')}</h2>
         <ul class="menu-list">
-          <li class="menu-row">
-            <span class="menu-row__label">{t('me.language')}</span>
-            <span class="menu-row__value">{t('me.languageValue')}</span>
-          </li>
           <li>
             <a class="menu-row" href={hrefFor('/report', { screen: 'me' })}>
               <span class="menu-row__label">{t('report.open')}</span>

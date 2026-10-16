@@ -303,3 +303,159 @@
 :root.a11y-high-contrast .splash__cloud {
   display: none;
 }
+
+/* ---------- Landing: choose a language, "before sunrise" (src/screens/Landing.tsx) ---------- */
+/* Same sky and ground as the splash; the sun waits just below the horizon and rises on the splash that follows. */
+.landing {
+  --s: 3; /* a step smaller than the splash: the language card needs the room */
+}
+
+.landing .splash__sky {
+  gap: var(--sp-4);
+  padding-top: clamp(16px, 4vh, 48px);
+}
+
+.landing .splash__sun {
+  animation: none;
+  transform: translateY(58%); /* the top of the sun peeks over the horizon */
+}
+
+@media (min-width: 1100px) and (min-height: 1000px) {
+  .landing {
+    --s: 5;
+  }
+}
+
+.landing__panel {
+  gap: var(--sp-4);
+}
+
+.landing__prompt {
+  margin: var(--sp-2) 0 0;
+  font: var(--fs-16) / 1.5 var(--font-pixel);
+  color: var(--ink);
+}
+
+.landing__select {
+  align-self: center;
+  min-width: min(100%, 220px);
+}
+
+.landing__later {
+  margin: 0;
+  font-size: var(--fs-16);
+  color: var(--muted);
+}
+
+.landing__ground {
+  justify-content: center;
+  padding-block: var(--sp-6) var(--sp-4);
+}
+
+.landing__picker .lang-picker__options {
+  grid-template-columns: minmax(0, 320px);
+  justify-content: center;
+}
+
+.landing__picker .lang-picker__more {
+  text-align: center;
+}
+
+/* ---------- Language cards (landing and Me > Settings) ---------- */
+.lang-picker {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lang-picker__legend {
+  margin-bottom: var(--sp-3);
+  padding: 0;
+}
+
+.lang-picker__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: var(--sp-4);
+  padding: 0 var(--px) var(--px) 0; /* room for the hard shadow */
+}
+
+.lang-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 64px;
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--px) var(--px) 0 0 var(--ink);
+  cursor: pointer;
+}
+
+.lang-option:hover {
+  background: var(--soft);
+}
+
+.lang-option.is-on {
+  background: var(--navy-tint);
+  border-color: var(--navy);
+  box-shadow: var(--px) var(--px) 0 0 var(--navy);
+}
+
+/* the real radio covers the card, so the whole card is the tap target and keeps native keyboard behaviour */
+.lang-option__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lang-option:has(.lang-option__input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.lang-option__tag {
+  flex: none;
+  padding: 6px 8px;
+  font: var(--fs-12) / 1 var(--font-pixel);
+  color: #fff;
+  background: var(--navy);
+}
+
+.lang-option__name {
+  flex: 1;
+  font: 800 var(--fs-20) / 1.2 var(--font-head);
+}
+
+/* pixel radio mark: an empty square, filled gold with a white ring when picked (state is also in the radio itself) */
+.lang-option__mark {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  background: var(--surface);
+  border: var(--px) solid var(--ink);
+}
+
+.lang-option.is-on .lang-option__mark {
+  background: var(--gold-deep);
+  box-shadow: inset 0 0 0 4px var(--surface);
+}
+
+.lang-picker__more {
+  margin: 0;
+  font-size: var(--fs-14);
+}
+
+:root.a11y-high-contrast .lang-option.is-on {
+  border-width: calc(var(--px) * 1.5);
+}

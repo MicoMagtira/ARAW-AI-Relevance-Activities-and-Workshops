@@ -13,11 +13,13 @@ import { App } from './app/App';
 import { initBoot } from './app/boot';
 import { registerServiceWorker } from './app/pwa';
 import { location$, startRouter } from './app/router';
+import { initLanguage } from './app/language';
 import { initSettings } from './app/settings';
 import { initSound } from './app/sound';
 import { initMusic } from './app/sound/music';
 
 initSettings();
+initLanguage();
 initSound();
 startRouter();
 initMusic();

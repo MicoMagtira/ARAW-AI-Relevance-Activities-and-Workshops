@@ -162,7 +162,7 @@ test.describe('Me', () => {
     }
     await page.getByRole('button', { name: /AI's Teacher/ }).click();
     await expect(page.getByText('Locked: Finish Module 2: How AI Learns and Makes Mistakes')).toBeVisible();
-    await expect(page.getByText('English · more coming')).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Language' }).getByRole('radio', { name: 'English' })).toBeChecked();
     await expect(page.getByRole('link', { name: 'Report a problem' }).last()).toHaveAttribute('href', '#/report?screen=me');
     await page.getByRole('link', { name: /About and licences/ }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('About');

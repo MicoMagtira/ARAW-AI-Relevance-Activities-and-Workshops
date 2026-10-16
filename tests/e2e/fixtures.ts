@@ -27,3 +27,10 @@ export async function noHorizontalOverflow(page: Page): Promise<void> {
     })
     .toBeLessThanOrEqual(0);
 }
+
+/** The first screen of a session is the language landing: pick English and press Select to reach the sunrise splash. */
+export async function passLanding(page: Page): Promise<void> {
+  await page.getByRole('radio', { name: 'English' }).check();
+  await page.getByRole('button', { name: 'Select' }).click();
+  await expect(page.locator('#splash')).toBeFocused();
+}
