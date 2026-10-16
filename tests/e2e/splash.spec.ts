@@ -3,6 +3,45 @@ import { expect, test } from '@playwright/test';
 import { noHorizontalOverflow } from './fixtures';
 
 test.describe('sunrise splash', () => {
+  test('the sun rises and happy Ara keeps bobbing while waiting for START', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/');
+    await expect(page.locator('.splash__sun')).toBeVisible();
+    const motion = await page.evaluate(() => {
+      const sample = (selector: string, times: number[]) => {
+        const el = document.querySelector(selector) as HTMLElement;
+        const animation = el.getAnimations()[0];
+        if (!animation) throw new Error(`Missing animation: ${selector}`);
+        animation.pause();
+        return times.map((time) => {
+          animation.currentTime = time;
+          return getComputedStyle(el).transform;
+        });
+      };
+      return {
+        sunDuration: getComputedStyle(document.querySelector('.splash__sun') as Element).animationDuration,
+        sun: sample('.splash__sun', [0, 2500, 5000]),
+        ara: sample('.splash__ara', [0, 600, 1200]),
+      };
+    });
+    expect(motion.sunDuration).toBe('5s');
+    expect(motion.sun[0]).not.toBe(motion.sun[1]);
+    expect(motion.sun[1]).not.toBe(motion.sun[2]);
+    expect(motion.ara[0]).not.toBe(motion.ara[1]);
+    expect(motion.ara[0]).toBe(motion.ara[2]);
+  });
+
+  test('the splash motion respects both system and in-app reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    const duration = () => page.locator('.splash__ara').evaluate((el) => Number.parseFloat(getComputedStyle(el).animationDuration));
+    await expect.poll(duration).toBeLessThan(0.001);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await expect.poll(duration).toBe(1.2);
+    await page.evaluate(() => document.documentElement.classList.add('a11y-reduce-motion'));
+    await expect.poll(duration).toBeLessThan(0.001);
+  });
+
   test('first visit shows the splash, START goes Home', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('ARAW');

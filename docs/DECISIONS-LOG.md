@@ -1,5 +1,7 @@
 # ARAW: Build Decisions Log
 
+- 2026-10-16 · SPLASH-MOTION · Animate the splash's happy Ara with a small stepped vertical bob while waiting for START; her happy sprite does not use the idle frame animation. Extend the one-shot sunrise to 5 seconds at the owner's request and preserve both reduced-motion preferences.
+
 Decisions made during the unattended build. One line each: `date · task · decision · why`.
 Product decisions live in `docs/SPEC.md`, `docs/CONTENT_GUIDE.md` and `docs/DESIGN.md`; this log records judgement calls.
 

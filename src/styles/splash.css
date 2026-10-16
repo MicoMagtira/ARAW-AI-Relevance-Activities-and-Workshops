@@ -96,7 +96,7 @@
   height: auto;
   max-width: none;
   image-rendering: pixelated;
-  animation: splash-rise 1200ms steps(9) both;
+  animation: splash-rise 5000ms steps(9) both;
 }
 
 @keyframes splash-rise {
@@ -109,6 +109,13 @@
 .splash__ara {
   position: relative;
   z-index: 1;
+  animation: splash-ara-bob 1200ms steps(1) infinite;
+}
+
+@keyframes splash-ara-bob {
+  50% {
+    transform: translateY(calc(var(--sun-cell) * -1));
+  }
 }
 
 /* Ara scales in whole steps through --s; !important beats the inline size the component sets. */
