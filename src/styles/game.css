@@ -311,6 +311,54 @@
   }
 
   .game-side__buttons .px-btn {
-    flex: 1 1 140px;
+    flex: 1 1 auto;
   }
+}
+
+/* Text fit: panels grow with their text, nothing sticks out of the card or the side panel. */
+.game-card {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.game-card > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.game-card h2 {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.game-card__actions > .px-btn {
+  max-width: calc(100% - var(--px) * 4);
+}
+
+.game-overlay {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.game-hud {
+  grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr));
+}
+
+.game-hud__label,
+.game-hud__value {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.game-side__buttons > .px-btn {
+  max-width: calc(100% - var(--px) * 4);
+}
+
+.game-state,
+.game-state p,
+.game-state h2 {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }

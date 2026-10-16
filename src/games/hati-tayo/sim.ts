@@ -1,5 +1,6 @@
 // The Hati Tayo! day simulation: the queue, the AI lane, the human worker, the Service meter and the day-end report.
 // No input and no drawing here: the game feeds it `tick` and `place`, and reads its state.
+import { t } from '../../app/i18n';
 import { HUMAN_CAP, HUMAN_MS, QUEUE_CAP, SERVICE, SERVICE_MAX, buildDay, dayParams, judge, type DayParams, type PlannedTask, type Verdict } from './rules';
 import { TRAIT_NAME, type Lane, type Setting, type Task, type Trait } from './tasks';
 
@@ -92,11 +93,11 @@ export function dayLesson(tally: DayTally, failTraits: readonly Trait[]): string
     const counts = new Map<Trait, number>();
     for (const t of failTraits) counts.set(t, (counts.get(t) ?? 0) + 1);
     const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
-    return `AI slipped on ${top ? TRAIT_NAME[top[0]] : 'people jobs'}. Keep care and decisions for people.`;
+    return t('g.hati.lesson.slipped', { trait: top ? TRAIT_NAME[top[0]] : t('g.hati.lesson.peopleJobs') });
   }
-  if (tally.missed > 0) return 'Some tasks waited too long. Hand the repeat jobs to AI to free up your time.';
-  if (tally.slow > 0) return 'Good care. But AI could have done some jobs faster, so you had more time for people.';
-  return 'A perfect split: AI did the repeat jobs, people did the caring and deciding.';
+  if (tally.missed > 0) return t('g.hati.lesson.missed');
+  if (tally.slow > 0) return t('g.hati.lesson.slow');
+  return t('g.hati.lesson.perfect');
 }
 
 export function createSim(seed: string, setting: Setting): Sim {
@@ -145,10 +146,10 @@ export function createSim(seed: string, setting: Setting): Sim {
     if (service <= 0) phase = 'over';
   };
 
-  const missed = (head: string, line: string, delta: number) => {
+  const missed = (kind: 'full' | 'missed', head: string, line: string, delta: number) => {
     today.missed += 1;
     totals.missed += 1;
-    flash = { kind: head === 'QUEUE FULL!' ? 'full' : 'missed', head, line };
+    flash = { kind, head, line };
     changeService(delta);
   };
 
@@ -237,7 +238,7 @@ export function createSim(seed: string, setting: Setting): Sim {
         queue = queue.filter((w) => w.waitedMs < w.patienceMs);
         for (const w of gone) {
           if (isOver()) break;
-          missed('TOO SLOW!', `${w.task.short} waited too long and was dropped.`, SERVICE.expired);
+          missed('missed', t('g.hati.flash.tooSlow'), t('g.hati.flash.dropped', { task: w.task.short }), SERVICE.expired);
         }
         if (isOver()) return;
       }
@@ -247,7 +248,7 @@ export function createSim(seed: string, setting: Setting): Sim {
         const { task } = plan[nextIdx] as PlannedTask;
         nextIdx += 1;
         if (queue.length >= QUEUE_CAP) {
-          missed('QUEUE FULL!', `${task.short} arrived with no room, and was lost.`, SERVICE.overflow);
+          missed('full', t('g.hati.flash.queueFull'), t('g.hati.flash.lost', { task: task.short }), SERVICE.overflow);
           if (isOver()) return;
         } else {
           queue = [...queue, { task, waitedMs: 0, patienceMs: params.patienceMs }];
@@ -262,7 +263,7 @@ export function createSim(seed: string, setting: Setting): Sim {
       const w = queue[index];
       if (!w) return false;
       if (lane === 'human' && jobs.length >= HUMAN_CAP) {
-        flash = { kind: 'busy', head: 'WORKER IS FULL!', line: 'Wait for the person to finish, or give it to AI.' };
+        flash = { kind: 'busy', head: t('g.hati.flash.workerFull'), line: t('g.hati.flash.waitPerson') };
         return false;
       }
       const task = w.task;
@@ -284,7 +285,7 @@ export function createSim(seed: string, setting: Setting): Sim {
         const total = Math.round((slow ? HUMAN_MS.slow : HUMAN_MS.care) * params.workScale);
         jobs = [...jobs, { task, remainingMs: total, totalMs: total, slow }];
       }
-      const head = result.verdict === 'good' ? `GOOD SPLIT! +${result.points}` : result.verdict === 'slow' ? `DONE, BUT SLOW. +${result.points}` : 'AI SLIP-UP!';
+      const head = result.verdict === 'good' ? t('g.hati.flash.good', { n: result.points }) : result.verdict === 'slow' ? t('g.hati.flash.slow', { n: result.points }) : t('g.hati.flash.fail');
       flash = { kind: result.verdict, head, line: result.verdict === 'good' ? task.why : task.wrong };
       changeService(result.service);
       if (!isOver() && nextIdx >= plan.length && queue.length === 0 && jobs.length === 0) endDay();

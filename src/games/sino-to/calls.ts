@@ -5,6 +5,7 @@
 import { rngInt, rngPick, shuffle, type Rng } from '../engine/rng';
 import type { Look } from '../feed-mo-to/users';
 import type { ContentReview } from '../../content/review';
+import type { StringKey } from '../../app/i18n';
 
 export const HEARTS = 3;
 
@@ -33,8 +34,10 @@ export type Verdict = 'pass' | 'fail' | 'unclear';
 
 export interface CheckResult {
   verdict: Verdict;
-  /** One line, 38 characters at most (it is drawn on one canvas line). */
+  /** One line in English, 38 characters at most. The screen shows the catalog line `key` (with `vars`) in the player's language. */
   text: string;
+  key: StringKey;
+  vars?: Readonly<Record<string, string>>;
 }
 
 export type Kind = 'relative' | 'doctor' | 'bank';
@@ -216,6 +219,8 @@ export interface Call {
   /** The checks that give proof one way or the other. */
   decisive: readonly CheckId[];
   results: Readonly<Record<CheckId, CheckResult>>;
+  /** What filled the story's blanks, so the screen can fill the translated story text the same way. */
+  values: Readonly<Record<string, string>>;
 }
 
 const AMOUNTS_SCAM = ['P5,000', 'P8,000', 'P10,000', 'P12,000'];
@@ -223,7 +228,7 @@ const AMOUNTS_REAL = ['P1,500', 'P2,000', 'P2,500'];
 const HOSPITALS = ['San Isidro Norte Hospital', 'Masagana District Hospital', 'Liwanag General Hospital'];
 const CLINICS = ['Barangay Masagana Health Center', 'Liwanag Health Center', 'San Isidro Norte Clinic'];
 
-const fill = (template: string, values: Readonly<Record<string, string>>): string => template.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? '');
+export const fill = (template: string, values: Readonly<Record<string, string>>): string => template.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? '');
 
 /** The checks a story can settle at all. */
 function available(story: Story): CheckId[] {
@@ -240,38 +245,76 @@ function available(story: Story): CheckId[] {
 /** How many checks are decisive: three at first, then two, then only one. */
 export const decisiveCount = (index: number): number => Math.max(1, 3 - Math.floor(index / 6));
 
+/**
+ * English of the check results. The same lines live in the UI catalog (src/app/i18n.ts, keys g.sino.r.*), which the screen
+ * uses; this copy keeps the call logic free of the translation runtime (a unit test keeps the two equal).
+ */
+const RESULT_EN = {
+  'g.sino.r.secretNotFor': 'SECRET Q: Not for doctors or banks.',
+  'g.sino.r.secretBadLine': 'SECRET Q: Bad line. Cannot hear.',
+  'g.sino.r.secretRight': 'SECRET Q: "{answer}!" Right answer.',
+  'g.sino.r.secretSend': 'SECRET Q: "Um... just send it first!"',
+  'g.sino.r.secretWrong': 'SECRET Q: "Mingming?" Wrong answer.',
+  'g.sino.r.secretForgot': 'SECRET Q: "I forgot! Hurry up!"',
+  'g.sino.r.cbRings': 'CALL BACK: Rings and rings. No reply.',
+  'g.sino.r.cbBusy': 'CALL BACK: Line busy. Try again later.',
+  'g.sino.r.cbNever': 'CALL BACK: "I never called you!"',
+  'g.sino.r.cbMe': 'CALL BACK: "Yes, that was me!"',
+  'g.sino.r.cbClinicNo': 'CALL BACK: Clinic: "We never called."',
+  'g.sino.r.cbClinicYes': 'CALL BACK: Clinic: "Yes, we called."',
+  'g.sino.r.cbBankNo': 'CALL BACK: Bank: "That was not us."',
+  'g.sino.r.cbBankYes': 'CALL BACK: Bank: "Yes, we called."',
+  'g.sino.r.relBank': '{name}: "Not sure. Ask the bank."',
+  'g.sino.r.relNoReply': '{name}: No reply. Left on read.',
+  'g.sino.r.relSafe': '{name}: "Safe at home. No call."',
+  'g.sino.r.relTrue': '{name}: "Yes, it is true. I know."',
+  'g.sino.r.relNobody': '{name}: "Nobody booked that."',
+  'g.sino.r.relClinic': '{name}: "Yes, the clinic told me."',
+  'g.sino.r.hotFamily': 'HOTLINE: A hotline cannot find family.',
+  'g.sino.r.hotQueue': 'HOTLINE: Long queue. No answer yet.',
+  'g.sino.r.hotNoPatient': 'HOTLINE: "No such patient today."',
+  'g.sino.r.hotPatient': 'HOTLINE: "Yes, that patient is in."',
+  'g.sino.r.hotNoDoctor': 'HOTLINE: "No such doctor or fee."',
+  'g.sino.r.hotBooked': 'HOTLINE: "Yes, that was booked."',
+  'g.sino.r.hotNotUs': 'HOTLINE: "Not us. Never share OTP."',
+  'g.sino.r.hotCalled': 'HOTLINE: "Yes, we did call you."',
+} as const satisfies Partial<Record<StringKey, string>>;
+
+type ResultKey = keyof typeof RESULT_EN;
+
 /** Pure: what one check says for this story, truth and name. `decisive` false means it does not settle the question. */
 export function resolveCheck(check: CheckId, story: Story, other: Relative, decisive: boolean, answer: string, rng: Rng): CheckResult {
   const kind = story.kind;
-  const pass = (text: string): CheckResult => ({ verdict: 'pass', text });
-  const fail = (text: string): CheckResult => ({ verdict: 'fail', text });
-  const unclear = (text: string): CheckResult => ({ verdict: 'unclear', text });
+  const say = (verdict: Verdict, key: ResultKey, vars?: Readonly<Record<string, string>>): CheckResult => ({ verdict, key, ...(vars ? { vars } : {}), text: vars ? fill(RESULT_EN[key], vars) : RESULT_EN[key] });
+  const pass = (key: ResultKey, vars?: Readonly<Record<string, string>>) => say('pass', key, vars);
+  const fail = (key: ResultKey, vars?: Readonly<Record<string, string>>) => say('fail', key, vars);
+  const unclear = (key: ResultKey, vars?: Readonly<Record<string, string>>) => say('unclear', key, vars);
   const who = story.scam ? fail : pass;
-  const name = other.name;
+  const named = { name: other.name };
 
   if (check === 'secret') {
-    if (kind !== 'relative') return unclear('SECRET Q: Not for doctors or banks.');
-    if (!decisive) return unclear('SECRET Q: Bad line. Cannot hear.');
-    if (!story.scam) return pass(`SECRET Q: "${answer}!" Right answer.`);
-    return fail(rngPick(['SECRET Q: "Um... just send it first!"', 'SECRET Q: "Mingming?" Wrong answer.', 'SECRET Q: "I forgot! Hurry up!"'], rng));
+    if (kind !== 'relative') return unclear('g.sino.r.secretNotFor');
+    if (!decisive) return unclear('g.sino.r.secretBadLine');
+    if (!story.scam) return pass('g.sino.r.secretRight', { answer });
+    return fail(rngPick(['g.sino.r.secretSend', 'g.sino.r.secretWrong', 'g.sino.r.secretForgot'] as const, rng));
   }
   if (check === 'callback') {
-    if (!decisive) return unclear(kind === 'relative' ? 'CALL BACK: Rings and rings. No reply.' : 'CALL BACK: Line busy. Try again later.');
-    if (kind === 'relative') return who(story.scam ? 'CALL BACK: "I never called you!"' : 'CALL BACK: "Yes, that was me!"');
-    if (kind === 'doctor') return who(story.scam ? 'CALL BACK: Clinic: "We never called."' : 'CALL BACK: Clinic: "Yes, we called."');
-    return who(story.scam ? 'CALL BACK: Bank: "That was not us."' : 'CALL BACK: Bank: "Yes, we called."');
+    if (!decisive) return unclear(kind === 'relative' ? 'g.sino.r.cbRings' : 'g.sino.r.cbBusy');
+    if (kind === 'relative') return who(story.scam ? 'g.sino.r.cbNever' : 'g.sino.r.cbMe');
+    if (kind === 'doctor') return who(story.scam ? 'g.sino.r.cbClinicNo' : 'g.sino.r.cbClinicYes');
+    return who(story.scam ? 'g.sino.r.cbBankNo' : 'g.sino.r.cbBankYes');
   }
   if (check === 'relative') {
-    if (kind === 'bank') return unclear(`${name}: "Not sure. Ask the bank."`);
-    if (!decisive) return unclear(`${name}: No reply. Left on read.`);
-    if (kind === 'relative') return who(story.scam ? `${name}: "Safe at home. No call."` : `${name}: "Yes, it is true. I know."`);
-    return who(story.scam ? `${name}: "Nobody booked that."` : `${name}: "Yes, the clinic told me."`);
+    if (kind === 'bank') return unclear('g.sino.r.relBank', named);
+    if (!decisive) return unclear('g.sino.r.relNoReply', named);
+    if (kind === 'relative') return who(story.scam ? 'g.sino.r.relSafe' : 'g.sino.r.relTrue', named);
+    return who(story.scam ? 'g.sino.r.relNobody' : 'g.sino.r.relClinic', named);
   }
-  if (kind === 'relative' && !story.hospital) return unclear('HOTLINE: A hotline cannot find family.');
-  if (!decisive) return unclear('HOTLINE: Long queue. No answer yet.');
-  if (kind === 'relative') return who(story.scam ? 'HOTLINE: "No such patient today."' : 'HOTLINE: "Yes, that patient is in."');
-  if (kind === 'doctor') return who(story.scam ? 'HOTLINE: "No such doctor or fee."' : 'HOTLINE: "Yes, that was booked."');
-  return who(story.scam ? 'HOTLINE: "Not us. Never share OTP."' : 'HOTLINE: "Yes, we did call you."');
+  if (kind === 'relative' && !story.hospital) return unclear('g.sino.r.hotFamily');
+  if (!decisive) return unclear('g.sino.r.hotQueue');
+  if (kind === 'relative') return who(story.scam ? 'g.sino.r.hotNoPatient' : 'g.sino.r.hotPatient');
+  if (kind === 'doctor') return who(story.scam ? 'g.sino.r.hotNoDoctor' : 'g.sino.r.hotBooked');
+  return who(story.scam ? 'g.sino.r.hotNotUs' : 'g.sino.r.hotCalled');
 }
 
 export interface CallGenerator {
@@ -324,6 +367,7 @@ export function createCallGenerator(rng: Rng): CallGenerator {
         other,
         decisive,
         results,
+        values,
       };
     },
   };

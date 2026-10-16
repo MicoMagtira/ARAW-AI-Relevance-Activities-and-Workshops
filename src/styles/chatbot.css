@@ -32,6 +32,7 @@
 .cb-app,
 .cb-sandbox {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-3);
   padding: var(--sp-4);
   background: var(--surface);
@@ -307,4 +308,10 @@
     transform: translateY(6px);
     opacity: 0.4;
   }
+}
+
+/* long translated words and links break inside the chat app instead of spilling out */
+.cb-app p {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }

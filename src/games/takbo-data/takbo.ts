@@ -1,7 +1,9 @@
 // Takbo, Data! (data privacy): an endless runner through a procedurally generated barangay (docs/SPEC.md section 5).
 // Ara runs in three lanes. Safe freebies refill the Privacy Shield; data traps and bumps drain it. The road is a pure
 // function of the seed (the layout never depends on what the player does), so the Daily Challenge is the same for everyone.
-import { PALETTE, box, text } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
+import { PALETTE, box, lineWidth, text } from '../engine/draw';
 import { createRng, rngInt, rngPick, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
 import { silent } from '../engine/cues';
@@ -13,7 +15,7 @@ import {
   H,
   LANE_Y,
   OBSTACLE_SIZE,
-  SIGN_W,
+  SIGN_MAX_W,
   W,
   drawAra,
   drawBackdrop,
@@ -37,7 +39,8 @@ const SPAWN_AHEAD = W + 60;
 const FIRST_ROW_X = 380;
 const POP_MS = 900;
 const BACKDROP_PARALLAX = 0.5;
-const LANE_NAMES = ['top', 'middle', 'bottom'] as const;
+const LANE_KEYS = ['g.takbo.lane.top', 'g.takbo.lane.middle', 'g.takbo.lane.bottom'] as const;
+const laneName = (lane: number): string => t(LANE_KEYS[lane] ?? 'g.takbo.lane.middle');
 
 interface Item {
   x: number;
@@ -46,6 +49,8 @@ interface Item {
   decided: boolean;
 }
 interface Pop {
+  /** The points ("+10") and the word after them, drawn as two pieces so the word is translated on its own. */
+  amount: string;
   text: string;
   color: string;
   age: number;
@@ -56,9 +61,9 @@ interface Building {
 }
 
 function describeItem(cell: NonNullable<Cell>): string {
-  if (cell.type === 'safe') return `${safeByKind(cell.kind).say} (safe)`;
-  if (cell.type === 'trap') return `${trapByKind(cell.kind).say} (data trap)`;
-  return `a ${cell.kind}`;
+  if (cell.type === 'safe') return t('g.takbo.item.safe', { say: safeByKind(cell.kind).say });
+  if (cell.type === 'trap') return t('g.takbo.item.trap', { say: trapByKind(cell.kind).say });
+  return t(`g.takbo.item.${cell.kind}`);
 }
 
 function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
@@ -84,7 +89,7 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
   const gave = new Map<DataKind, number>();
 
   const lane = () => Math.round(laneF);
-  const pop = (value: string, color: string) => pops.push({ text: value, color, age: 0 });
+  const pop = (amount: string, value: string, color: string) => pops.push({ amount, text: value, color, age: 0 });
 
   function spawn(speed: number) {
     while (rowX - scroll < SPAWN_AHEAD) {
@@ -107,13 +112,13 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
       shield = refill(shield);
       cue(before < SHIELD_MAX && shield >= SHIELD_MAX ? 'shield' : 'freebie');
       safeGrabs += 1;
-      pop(`+${SAFE_POINTS} SAFE`, PALETTE.fact);
+      pop(`+${SAFE_POINTS}`, t('g.takbo.popSafe'), PALETTE.fact);
     } else if (cell.type === 'trap') {
       const trap = trapByKind(cell.kind);
       shield = drain(shield, trap.cost);
       cue('leak');
       gave.set(cell.kind, (gave.get(cell.kind) ?? 0) + 1);
-      pop(`-${trap.cost} ${trap.ask.replace('?', '')}`, PALETTE.fake);
+      pop(`-${trap.cost}`, tx(trap.ask).replace(/[?\u00bf]/g, '').trim(), PALETTE.fake);
     }
   }
 
@@ -160,7 +165,7 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
               bumps += 1;
               cue('whack');
               invulnerable = INVULNERABLE_MS;
-              pop(`-${BUMP_COST} BUMP`, PALETTE.fake);
+              pop(`-${BUMP_COST}`, t('g.takbo.popBump'), PALETTE.fake);
             }
           }
         } else if (sx <= ARA_X + 4) {
@@ -169,7 +174,7 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
           else item.decided = true;
         }
       }
-      while (items.length > 0 && (items[0] as Item).x - scroll < -SIGN_W - 20) items.shift();
+      while (items.length > 0 && (items[0] as Item).x - scroll < -SIGN_MAX_W - 20) items.shift();
       while (buildings.length > 0 && (buildings[0] as Building).x - scroll * BACKDROP_PARALLAX < -100) buildings.shift();
 
       for (const p of pops) p.age += dtMs;
@@ -191,7 +196,7 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
         for (const item of items) {
           if (item.lane !== l) continue;
           const sx = Math.round(item.x - scroll);
-          if (sx > W || sx < -SIGN_W) continue;
+          if (sx > W || sx < -SIGN_MAX_W) continue;
           const { cell } = item;
           if (cell.type === 'obstacle') drawObstacle(ctx, cell.kind, sx, y);
           else if (cell.type === 'safe') drawSign(ctx, sx, y, safeByKind(cell.kind), false);
@@ -207,15 +212,14 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
       for (const p of pops) {
         const rise = Math.round((p.age / POP_MS) * 14);
         const y = Math.round(feet - height - ARA_HEIGHT - 12 - rise);
-        text(ctx, p.text, ARA_X + 1, y + 1, { size: 8, color: PALETTE.surface, align: 'center' });
-        text(ctx, p.text, ARA_X, y, { size: 8, color: p.color, align: 'center' });
+        drawPop(ctx, p, y);
       }
       drawShieldBar(ctx, shield);
-      text(ctx, `SCORE ${scoreOf(scroll, safeGrabs)}`, W - 6, 4, { size: 8, color: PALETTE.ink, align: 'right' });
-      text(ctx, `${distanceMetres(scroll)} m`, W - 6, 14, { size: 8, color: PALETTE.muted, align: 'right' });
+      drawRightPair(ctx, t('g.takbo.score'), String(scoreOf(scroll, safeGrabs)), 4, PALETTE.ink);
+      drawRightPair(ctx, String(distanceMetres(scroll)), t('g.takbo.metresUnit'), 14, PALETTE.muted);
       if (over) {
         box(ctx, PALETTE.ink, 0, H / 2 - 14, W, 28);
-        text(ctx, 'SHIELD DOWN!', W / 2, H / 2 - 4, { size: 8, color: PALETTE.gold, align: 'center' });
+        text(ctx, t('g.takbo.shieldDown'), W / 2, H / 2 - 4, { size: 8, color: PALETTE.gold, align: 'center', maxWidth: W - 12 });
       }
     },
 
@@ -226,16 +230,21 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
         .filter((i) => !i.decided && i.x - scroll > ARA_X - 10 && i.x - scroll < W)
         .sort((a, b) => a.x - b.x)
         .slice(0, 3)
-        .map((i) => `${describeItem(i.cell)} in the ${LANE_NAMES[i.lane]} lane`);
+        .map((i) => t('g.takbo.aheadItem', { item: describeItem(i.cell), lane: laneName(i.lane) }));
       const stats: GameStats = {
         score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(score) },
-          { id: 'shield', label: 'Privacy Shield', value: `${pct}%`, meter: pct },
-          { id: 'safe', label: 'Safe grabs', value: String(safeGrabs) },
+          { id: 'score', label: t('g.takbo.hud.score'), value: String(score) },
+          { id: 'shield', label: t('g.takbo.hud.shield'), value: `${pct}%`, meter: pct },
+          { id: 'safe', label: t('g.takbo.hud.safe'), value: String(safeGrabs) },
         ],
-        description: `Takbo, Data! Score ${score}. Privacy Shield at ${pct} percent. Ara is in the ${LANE_NAMES[lane()]} lane${height > 0 ? ' and jumping' : ''}. ${ahead.length > 0 ? `Ahead: ${ahead.join('; ')}.` : 'The road ahead is clear.'}`,
+        description: t(height > 0 ? 'g.takbo.descJump' : 'g.takbo.desc', {
+          score,
+          pct,
+          lane: laneName(lane()),
+          ahead: ahead.length > 0 ? t('g.takbo.ahead', { items: ahead.join('; ') }) : t('g.takbo.clear'),
+        }),
         recap: [],
       };
       if (over) stats.recap = buildRecap(distanceMetres(scroll), safeGrabs, bumps, gave);
@@ -244,17 +253,49 @@ function createTakbo({ seed, rng, cue = silent }: { seed: string; rng: Rng; cue?
   };
 }
 
+/** A score pop-up ("+10" then its word) on a little label over Ara, kept inside the canvas. */
+function drawPop(ctx: CanvasRenderingContext2D, p: Pop, y: number): void {
+  const word = tx(p.text);
+  const room = W - 12;
+  const full = lineWidth(`${p.amount} ${word}`);
+  const size = full <= room ? 8 : Math.max(6, Math.floor((room / full) * 8));
+  const w = Math.min(room, lineWidth(`${p.amount} ${word}`, size));
+  const left = Math.round(Math.min(W - 6 - w, Math.max(6, ARA_X - w / 2)));
+  const amountW = lineWidth(`${p.amount} `, size);
+  box(ctx, p.color, left - 3, y - 3, w + 5, size + 5);
+  box(ctx, PALETTE.surface, left - 2, y - 2, w + 3, size + 3);
+  text(ctx, p.amount, left, y, { size, color: p.color, maxWidth: amountW });
+  text(ctx, word, left + amountW, y, { size, minSize: size, color: p.color, maxWidth: Math.max(size, w - amountW) });
+}
+
+/** Two pieces right-aligned at the HUD's right edge ("SCORE" "120", "120" "m"), each translated on its own. */
+function drawRightPair(ctx: CanvasRenderingContext2D, first: string, second: string, y: number, color: string): void {
+  const right = W - 6;
+  const room = W - 120; // the Privacy Shield bar takes the left side
+  const secondW = text(ctx, second, right, y, { size: 8, color, align: 'right', maxWidth: room / 2 });
+  text(ctx, first, right - secondW - 8, y, { size: 8, color, align: 'right', maxWidth: room - secondW - 8 });
+}
+
 /** The game-over recap: what happened, the data given away and why it matters, then the 3 privacy tips. */
 export function buildRecap(metres: number, safeGrabs: number, bumps: number, gave: ReadonlyMap<DataKind, number>): string[] {
-  const lines = [`You ran ${metres} ${metres === 1 ? 'metre' : 'metres'}, grabbed ${safeGrabs} safe ${safeGrabs === 1 ? 'freebie' : 'freebies'} and bumped into ${bumps} ${bumps === 1 ? 'obstacle' : 'obstacles'}.`];
+  const lines = [
+    t('g.takbo.recap.run', {
+      metres,
+      metresWord: t(metres === 1 ? 'g.takbo.recap.metre' : 'g.takbo.recap.metres'),
+      safe: safeGrabs,
+      freebiesWord: t(safeGrabs === 1 ? 'g.takbo.recap.freebie' : 'g.takbo.recap.freebies'),
+      bumps,
+      obstaclesWord: t(bumps === 1 ? 'g.takbo.recap.obstacle' : 'g.takbo.recap.obstacles'),
+    }),
+  ];
   const given = [...gave.entries()].map(([kind, n]) => ({ trap: trapByKind(kind), n })).sort((a, b) => b.trap.cost - a.trap.cost);
   if (given.length === 0) {
-    lines.push('You did not give away any data. Great job!');
+    lines.push(t('g.takbo.recap.none'));
   } else {
-    lines.push(`You gave away ${given.map(({ trap, n }) => (n > 1 ? `${trap.gave} (${n} times)` : trap.gave)).join(', ')}.`);
-    for (const { trap } of given.slice(0, 2)) lines.push(`Why it matters: ${trap.why}`);
+    lines.push(t('g.takbo.recap.gave', { list: given.map(({ trap, n }) => (n > 1 ? t('g.takbo.recap.times', { what: trap.gave, n }) : tx(trap.gave))).join(', ') }));
+    for (const { trap } of given.slice(0, 2)) lines.push(t('g.takbo.recap.why', { why: trap.why }));
   }
-  PRIVACY_TIPS.forEach((tip, i) => lines.push(`Privacy tip ${i + 1}: ${tip}`));
+  PRIVACY_TIPS.forEach((tip, i) => lines.push(t('g.takbo.recap.tip', { n: i + 1, tip })));
   return lines;
 }
 

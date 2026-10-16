@@ -5,7 +5,14 @@ import { signal } from '@preact/signals';
 
 type Pack = Record<string, string>;
 
-const LOADERS = import.meta.glob<{ default: Pack }>('./packs/*.json');
+// Vite turns the glob into loaders; outside Vite (Node-side e2e specs importing game code) there are no packs.
+const LOADERS: Record<string, () => Promise<{ default: Pack }>> = (() => {
+  try {
+    return import.meta.glob<{ default: Pack }>('./packs/*.json');
+  } catch {
+    return {};
+  }
+})();
 const loaderFor = (code: string) => LOADERS[`./packs/${code}.json`];
 
 /** Languages with a pack in this build (English is always available). */

@@ -1,5 +1,6 @@
 // Layout and pixel art for Sino 'To?: the caller card, the transcript bubble, the check log, the verification tiles and the stamps.
-import { PALETTE, box, frame, sprite, text, type SpriteRows } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { PALETTE, box, drawBlock, frame, lineWidth, measureBlock, measureLine, sprite, text, textBlock, type Block, type SpriteRows } from '../engine/draw';
 import { CHECKS, CHECK_INFO, type CheckId, type Verdict } from './calls';
 
 export const W = 320;
@@ -7,21 +8,21 @@ export const H = 180;
 
 // ---- layout (logical pixels) ------------------------------------------------------------------------------------
 export const BUBBLE = { x: 48, y: 3, w: 266, h: 58 };
-/** Characters per line in the transcript bubble, and how many lines it holds. */
-export const BUBBLE_CHARS = 31;
-export const BUBBLE_LINES = 6;
-/** Characters per line for the check log and the reveal text (a full-width line). */
-export const LINE_CHARS = 38;
 export const LOG_LINES = 5;
-export const LESSON_LINES = 3;
-/** The reveal: stamp at the left, headline (21 characters at most per line) at HEAD_X, then the lesson. */
+/** The reveal: stamp at the left, headline at HEAD_X (to the canvas edge), then the lesson. */
 export const HEAD_X = 150;
-export const HEAD_CHARS = 21;
 export const LESSON_Y = 95;
 export const STRIP_Y = 64;
 export const LOG_Y = 76;
 export const LINE_H = 9;
 export const TILE = { w: 76, h: 25, gap: 4, x: 2, y: 124 };
+/** Where the transcript goes inside the bubble (six 8px lines in English; longer translations get a smaller font). */
+export const BUBBLE_TEXT = { x: BUBBLE.x + 6, y: BUBBLE.y + 4, w: BUBBLE.w - 12, h: BUBBLE.h - 5 };
+/** The lesson on the reveal: full width, down to just above the tiles. */
+export const LESSON = { x: 6, y: LESSON_Y, w: W - 12, h: TILE.y - 2 - LESSON_Y };
+export { lineWidth };
+/** Widest a stamp may be, so it never reaches the headline. */
+const STAMP_MAX = HEAD_X - 6 - 4;
 /** Slots: 0 to 3 are the checks, 4 is HELP, 5 is HANG UP. */
 export const HELP_SLOT = CHECKS.length;
 export const HANGUP_SLOT = CHECKS.length + 1;
@@ -61,20 +62,14 @@ export function moveSlot(slot: number, action: 'left' | 'right' | 'up' | 'down')
   return slot < HELP_SLOT ? (slot < 2 ? HELP_SLOT : HANGUP_SLOT) : slot;
 }
 
-/** Split text into lines of at most `max` characters, breaking at spaces. */
-export function wrapText(value: string, max: number): string[] {
-  const lines: string[] = [];
-  let line = '';
-  for (const word of value.split(' ')) {
-    if (line === '') line = word;
-    else if (line.length + 1 + word.length <= max) line += ` ${word}`;
-    else {
-      lines.push(line);
-      line = word;
-    }
-  }
-  if (line !== '') lines.push(line);
-  return lines;
+/** The transcript laid out for the bubble (already translated text is fine: it passes through). */
+export const measureBubble = (value: string): Block => measureBlock(value, BUBBLE_TEXT.w, { lineHeight: LINE_H, maxHeight: BUBBLE_TEXT.h });
+
+/** The lesson laid out for the reveal. */
+export const measureLesson = (value: string): Block => measureBlock(value, LESSON.w, { lineHeight: LINE_H, maxHeight: LESSON.h });
+
+export function drawLesson(ctx: CanvasRenderingContext2D, block: Block): void {
+  drawBlock(ctx, block, LESSON.x, LESSON.y, { color: PALETTE.ink, maxWidth: LESSON.w });
 }
 
 // ---- the caller card --------------------------------------------------------------------------------------------
@@ -99,29 +94,43 @@ export function drawWave(ctx: CanvasRenderingContext2D, tick: number, mode: 'liv
   });
 }
 
-/** The strip under the bubble: what is calling and how. */
-export function drawStrip(ctx: CanvasRenderingContext2D, label: string): void {
+/**
+ * The strip under the bubble: what is calling and how ("CALL: MAMA, SAVED"). The parts are drawn one after another, each
+ * translated on its own, at one shared size that fits the whole line.
+ */
+export function drawStrip(ctx: CanvasRenderingContext2D, parts: readonly string[]): void {
   box(ctx, PALETTE.gold, 0, STRIP_Y - 2, W, 11);
   box(ctx, PALETTE.goldDeep, 0, STRIP_Y - 2, W, 1);
-  text(ctx, label, 6, STRIP_Y, { size: 8, color: PALETTE.navy });
+  const shown = parts.map((p) => measureLine(p).text);
+  const room = W - 12;
+  const line = measureLine(shown.join(''), room);
+  const squeeze = Math.min(1, room / lineWidth(shown.join(''), line.size));
+  let x = 6;
+  for (const part of shown) {
+    const w = lineWidth(part, line.size) * squeeze;
+    if (part.trim() !== '') text(ctx, part, x, STRIP_Y, { size: 8, minSize: line.size, maxWidth: w + 0.4, color: PALETTE.navy });
+    x += w;
+  }
 }
 
-/** The speech bubble with the transcript typed so far. */
-export function drawBubble(ctx: CanvasRenderingContext2D, lines: readonly string[], typed: number, ringing: boolean, tick: number): void {
+/** The speech bubble with the first `typed` characters of the transcript block (see measureBubble). */
+export function drawBubble(ctx: CanvasRenderingContext2D, block: Block, typed: number, ringing: boolean, tick: number): void {
   box(ctx, PALETTE.ink, BUBBLE.x - 4, BUBBLE.y + 22, 4, 8);
   box(ctx, PALETTE.surface, BUBBLE.x - 2, BUBBLE.y + 24, 3, 4);
   box(ctx, PALETTE.ink, BUBBLE.x, BUBBLE.y, BUBBLE.w, BUBBLE.h);
   box(ctx, PALETTE.surface, BUBBLE.x + 2, BUBBLE.y + 2, BUBBLE.w - 4, BUBBLE.h - 4);
   if (ringing) {
-    text(ctx, tick % 4 < 2 ? 'RING RING!' : 'RING.....', BUBBLE.x + BUBBLE.w / 2, BUBBLE.y + 24, { size: 8, color: PALETTE.navy, align: 'center' });
+    text(ctx, t(tick % 4 < 2 ? 'g.sino.ring1' : 'g.sino.ring2'), BUBBLE.x + BUBBLE.w / 2, BUBBLE.y + 24, { size: 8, color: PALETTE.navy, align: 'center' });
     return;
   }
   let left = typed;
-  lines.slice(0, BUBBLE_LINES).forEach((line, i) => {
-    if (left <= 0) return;
-    text(ctx, line.slice(0, left), BUBBLE.x + 6, BUBBLE.y + 4 + i * LINE_H, { size: 8, color: PALETTE.ink });
-    left -= line.length + 1;
-  });
+  const shown: string[] = [];
+  for (const line of block.lines) {
+    if (left <= 0) break;
+    shown.push([...line].slice(0, left).join(''));
+    left -= [...line].length + 1;
+  }
+  drawBlock(ctx, { ...block, lines: shown }, BUBBLE_TEXT.x, BUBBLE_TEXT.y, { color: PALETTE.ink, maxWidth: BUBBLE_TEXT.w });
 }
 
 // ---- the check log ----------------------------------------------------------------------------------------------
@@ -130,8 +139,8 @@ const MARK: Record<Verdict, string> = { pass: PALETTE.fact, fail: PALETTE.fake, 
 /** One line per check used so far: a coloured mark, then what it found out. */
 export function drawLog(ctx: CanvasRenderingContext2D, rows: ReadonlyArray<{ verdict: Verdict; text: string }>): void {
   if (rows.length === 0) {
-    text(ctx, 'VERIFY FIRST: PICK A CHECK BELOW,', 6, LOG_Y + 8, { size: 8, color: PALETTE.muted });
-    text(ctx, 'THEN HELP THEM OR HANG UP.', 6, LOG_Y + 17, { size: 8, color: PALETTE.muted });
+    // 300 wide: the English breaks after "BELOW," like before; translations wrap and shrink as they need
+    textBlock(ctx, t('g.sino.verifyFirst'), 6, LOG_Y + 8, 300, { lineHeight: LINE_H, maxHeight: TILE.y - 2 - (LOG_Y + 8), color: PALETTE.muted });
     return;
   }
   rows.slice(-LOG_LINES).forEach((row, i) => {
@@ -169,17 +178,17 @@ export function drawDecisionTile(ctx: CanvasRenderingContext2D, slot: number, st
   box(ctx, PALETTE.ink, r.x, r.y, r.w, r.h);
   box(ctx, state.locked ? PALETTE.soft : help ? PALETTE.coral : PALETTE.navy, r.x + 2, r.y + 2, r.w - 4, r.h - 4);
   box(ctx, state.locked ? PALETTE.line : PALETTE.ink, r.x + 2, r.y + r.h - 5, r.w - 4, 3);
-  text(ctx, help ? 'HELP THEM' : 'HANG UP+REPORT', r.x + r.w / 2, r.y + 6, { size: 8, color: state.locked ? PALETTE.muted : help ? PALETTE.ink : PALETTE.surface, align: 'center' });
+  text(ctx, t(help ? 'g.sino.help' : 'g.sino.hangup'), r.x + r.w / 2, r.y + 6, { size: 8, color: state.locked ? PALETTE.muted : help ? PALETTE.ink : PALETTE.surface, align: 'center' });
   if (state.selected) frame(ctx, state.locked ? PALETTE.muted : PALETTE.gold, r.x, r.y, r.w, r.h, 2);
 }
 
 // ---- the stamp --------------------------------------------------------------------------------------------------
 /** "ARAW GAME · FAKE" on a revealed scam, "GENUINE CALL" on a real one. */
 export function drawStamp(ctx: CanvasRenderingContext2D, scam: boolean): void {
-  const label = scam ? 'ARAW GAME · FAKE' : 'GENUINE CALL';
-  const w = label.length * 8 + 10;
+  const label = measureLine(t(scam ? 'g.sino.stampFake' : 'g.sino.stampReal'), STAMP_MAX - 10);
+  const w = label.width + 10;
   const color = scam ? PALETTE.fake : PALETTE.fact;
   box(ctx, color, 6, STRIP_Y + 12, w, 14);
   box(ctx, scam ? PALETTE.fakeTint : PALETTE.factTint, 8, STRIP_Y + 14, w - 4, 10);
-  text(ctx, label, 6 + w / 2, STRIP_Y + 15, { size: 8, color, align: 'center' });
+  text(ctx, label.text, 6 + w / 2, STRIP_Y + 15, { size: 8, color, align: 'center', maxWidth: label.width });
 }

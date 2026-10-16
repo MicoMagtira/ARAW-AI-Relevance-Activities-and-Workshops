@@ -2,11 +2,33 @@
 // Pick one of 3 posts to show the current person. Scary posts win the most clicks (Engagement) but squeeze their feed into
 // a bubble (Balanced Feed). Either meter at 0 ends the run. Everything is a pure function of the seed and the picks:
 // users and posts come only from the seeded random numbers, never from what the player chose.
+import { t, type StringKey } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
 import { PALETTE, box, text } from '../engine/draw';
 import { createRng, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
 import { silent, timerCue } from '../engine/cues';
-import { CARD_X, GRID, H, PANEL_LABEL, W, bubbleRadii, cardAt, drawBanner, drawBubble, drawCard, drawChip, drawMeter, drawPerson, layoutChips, meterColor, type Face, type Pos } from './art';
+import {
+  BANNER_TEXT_W,
+  CARD_X,
+  H,
+  PANEL_LABEL,
+  W,
+  bubbleRadii,
+  cardAt,
+  drawBanner,
+  drawBubble,
+  drawCard,
+  drawChip,
+  drawMeter,
+  drawPerson,
+  gridLayout,
+  layoutChips,
+  meterColor,
+  type BannerLine,
+  type Face,
+  type Pos,
+} from './art';
 import { makeCandidates, type Post } from './posts';
 import {
   BALANCED_BONUS,
@@ -68,14 +90,18 @@ const approach = (cur: number, target: number): number => {
   return Math.abs(d) <= step ? target : cur + Math.sign(d) * step;
 };
 
-const list = (ids: readonly TopicId[]): string => ids.map((id) => topicById(id).name).join(', ');
+/** Topic names for the descriptions, each translated before they are joined. */
+const list = (ids: readonly TopicId[]): string => ids.map((id) => tx(topicById(id).name)).join(', ');
 
 function noteFor(topic: TopicId, liked: boolean, repeated: boolean): string {
-  if (topic === 'scare' || topic === 'miracle') return 'FEAR WINS CLICKS. HER FEED SHRINKS.';
-  if (topic === 'clinic') return 'TRUSTED TIP: FEWER CLICKS, WIDER FEED.';
-  if (repeated) return 'SAME TOPIC AGAIN. SHE GETS BORED.';
-  return liked ? 'SHE LIKES THIS. A STEADY SMALL WIN.' : 'NEW TOPIC! WIDER FEED, FEWER CLICKS.';
+  if (topic === 'scare' || topic === 'miracle') return t('g.feed.note.fear');
+  if (topic === 'clinic') return t('g.feed.note.trusted');
+  if (repeated) return t('g.feed.note.same');
+  return liked ? t('g.feed.note.liked') : t('g.feed.note.new');
 }
+
+/** The crash banner's words wrap a little narrower than the banner, so the English keeps its three short lines. */
+const CRASH_TEXT_W = 168;
 
 const signed = (n: number): string => (n > 0 ? `+${n}` : String(n));
 
@@ -96,7 +122,8 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
   let timeLeft = 0;
   let outcome: Outcome | null = null;
   let pendingCrash: Crash = null;
-  let summary: string[] = [];
+  /** The "is done" lines shown on the next person's intro banner. */
+  let summary: BannerLine[] = [];
   let over = false;
   let score = 0;
   let lastPointer = '';
@@ -105,7 +132,8 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
   let crash: Crash = null;
 
   // animated bubble
-  const chipPos = new Map<TopicId, Pos>(GRID);
+  const grid = gridLayout();
+  const chipPos = new Map<TopicId, Pos>(grid);
   let rx = 120;
   let ry = 30;
 
@@ -135,7 +163,10 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
   function finishUser() {
     const balanced = isBalanced(meters);
     if (balanced) score += BALANCED_BONUS;
-    summary = [`${user.name} IS DONE!`, balanced ? `BALANCED FEED BONUS +${BALANCED_BONUS}` : 'NO BONUS: KEEP BOTH ABOVE 50'];
+    summary = [
+      { text: t('g.feed.done', { name: user.name }), color: PALETTE.navy },
+      balanced ? { text: t('g.feed.bonus', { n: BALANCED_BONUS }), color: PALETTE.fact } : { text: t('g.feed.noBonus'), color: PALETTE.muted },
+    ];
     userIndex += 1;
     meters = refreshMeters(meters);
     beginUser();
@@ -172,7 +203,7 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
     meters = result.meters;
     counts.posts += 1;
     counts.timeouts += 1;
-    outcome = { chosen: -1, engagementDelta: delta, balanceDelta: 0, points: 0, note: 'TOO SLOW! SHE SCROLLED AWAY.' };
+    outcome = { chosen: -1, engagementDelta: delta, balanceDelta: 0, points: 0, note: t('g.feed.note.slow') };
     pendingCrash = result.crash;
     cue('whiff');
     phase = 'result';
@@ -195,7 +226,7 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
     const block = layoutChips(ids);
     for (const t of TOPICS) {
       const cur = chipPos.get(t.id) as Pos;
-      const target = (ids.includes(t.id) ? block.pos.get(t.id) : GRID.get(t.id)) as Pos;
+      const target = (ids.includes(t.id) ? block.pos.get(t.id) : grid.get(t.id)) as Pos;
       chipPos.set(t.id, { x: approach(cur.x, target.x), y: approach(cur.y, target.y) });
     }
     const radii = bubbleRadii(block.w, block.h);
@@ -257,17 +288,19 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
     draw(ctx) {
       box(ctx, PALETTE.cream, 0, 0, W, H);
       box(ctx, PALETTE.navy, 0, H - 4, W, 4);
-      drawMeter(ctx, 6, 2, 148, 'ENGAGEMENT', meters.engagement, meterColor(meters.engagement));
-      drawMeter(ctx, 166, 2, 148, 'BALANCED FEED', meters.balance, meterColor(meters.balance));
+      drawMeter(ctx, 6, 2, 148, t('g.feed.engagement'), meters.engagement, meterColor(meters.engagement));
+      drawMeter(ctx, 166, 2, 148, t('g.feed.balancedFeed'), meters.balance, meterColor(meters.balance));
 
+      // the person's column, left of the bubble panel
+      const column = PANEL_LABEL.x - 4 - 48;
       drawPerson(ctx, 6, 30, user.look, face());
-      text(ctx, user.name, 48, 30, { size: 8, color: PALETTE.navy });
-      text(ctx, `POST ${Math.max(1, postNo)}/${POSTS_PER_USER}`, 48, 42, { size: 8, color: PALETTE.muted });
+      text(ctx, user.name, 48, 30, { size: 8, color: PALETTE.navy, maxWidth: column });
+      text(ctx, t('g.feed.postOf', { n: Math.max(1, postNo), total: POSTS_PER_USER }), 48, 42, { size: 8, color: PALETTE.muted, maxWidth: column });
       box(ctx, PALETTE.ink, 48, 55, 10, 10);
       box(ctx, PALETTE.gold, 49, 56, 8, 8);
-      text(ctx, '= LIKES', 62, 56, { size: 8, color: PALETTE.muted });
+      text(ctx, t('g.feed.likesKey'), 62, 56, { size: 8, color: PALETTE.muted, maxWidth: column - 14 });
 
-      text(ctx, 'FEED BUBBLE', PANEL_LABEL.x, PANEL_LABEL.y, { size: 8, color: PALETTE.ink });
+      text(ctx, t('g.feed.bubble'), PANEL_LABEL.x, PANEL_LABEL.y, { size: 8, color: PALETTE.ink, maxWidth: PANEL_LABEL.w });
       const ids = alive();
       const sensationalShare = ids.filter((id) => topicById(id).sensational).length / ids.length;
       const paint = (inside: boolean) => () => {
@@ -280,10 +313,10 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
       drawBubble(ctx, rx, ry, sensationalShare >= 0.5 && ids.length <= 3, paint(false), paint(true));
 
       if (phase === 'intro') {
-        const lines = [
-          ...summary.map((t, i) => ({ text: t, color: i === 0 ? PALETTE.navy : t.includes('BONUS +') ? PALETTE.fact : PALETTE.muted })),
-          { text: `${summary.length > 0 ? 'NEXT: ' : 'FIRST: '}${user.name}`, color: PALETTE.ink },
-          { text: `LIKES ${user.interests.map((t) => topicById(t).chip).join(' ')}`, color: PALETTE.muted },
+        const lines: BannerLine[] = [
+          ...summary,
+          { text: t(summary.length > 0 ? 'g.feed.next' : 'g.feed.first', { name: user.name }), color: PALETTE.ink },
+          { text: t('g.feed.likes', { topics: user.interests.map((id) => tx(topicById(id).chip)).join(' ') }), color: PALETTE.muted },
         ];
         drawBanner(ctx, lines);
       } else {
@@ -305,18 +338,27 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
         box(ctx, PALETTE.surface, 8, 156, w - 4, 4);
         const color = fraction > 0.5 ? PALETTE.fact : fraction > 0.25 ? PALETTE.goldDeep : PALETTE.fake;
         box(ctx, color, 8, 156, Math.round((w - 4) * fraction), 4);
-        text(ctx, `PICK A POST FOR ${user.name}`, W / 2, 166, { size: 8, color: PALETTE.ink, align: 'center' });
+        text(ctx, t('g.feed.pick', { name: user.name }), W / 2, 166, { size: 8, color: PALETTE.ink, align: 'center', maxWidth: W - 12 });
       } else if (phase === 'result' && outcome) {
         const eng = outcome.engagementDelta;
-        text(ctx, `ENGAGEMENT ${signed(eng)}`, 6, 156, { size: 8, color: eng >= 0 ? PALETTE.fact : PALETTE.fake });
-        text(ctx, `BALANCE ${signed(outcome.balanceDelta)}`, W - 6, 156, { size: 8, color: outcome.balanceDelta >= 0 ? PALETTE.fact : PALETTE.fake, align: 'right' });
-        text(ctx, outcome.note, W / 2, 168, { size: 8, color: PALETTE.ink, align: 'center' });
+        // the two deltas share the row: each keeps to its half
+        const half = (W - 12) / 2 - 4;
+        text(ctx, t('g.feed.engagementDelta', { n: signed(eng) }), 6, 156, { size: 8, color: eng >= 0 ? PALETTE.fact : PALETTE.fake, maxWidth: half });
+        text(ctx, t('g.feed.balanceDelta', { n: signed(outcome.balanceDelta) }), W - 6, 156, {
+          size: 8,
+          color: outcome.balanceDelta >= 0 ? PALETTE.fact : PALETTE.fake,
+          align: 'right',
+          maxWidth: half,
+        });
+        text(ctx, outcome.note, W / 2, 168, { size: 8, color: PALETTE.ink, align: 'center', maxWidth: W - 12 });
         if (pendingCrash) {
+          const bubble = pendingCrash === 'bubble';
           drawBanner(
             ctx,
-            pendingCrash === 'bubble'
-              ? [{ text: 'BUBBLE POPPED!', color: PALETTE.fake }, { text: `${user.name} ONLY SEES` }, { text: 'SCARY POSTS NOW' }]
-              : [{ text: 'LOGGED OFF!', color: PALETTE.fake }, { text: `${user.name} GOT BORED` }, { text: 'AND LEFT THE APP' }],
+            [
+              { text: t(bubble ? 'g.feed.popped' : 'g.feed.loggedOff'), color: PALETTE.fake },
+              { text: t(bubble ? 'g.feed.poppedText' : 'g.feed.loggedOffText', { name: user.name }), maxWidth: Math.min(BANNER_TEXT_W, CRASH_TEXT_W) },
+            ],
             'fake',
           );
         }
@@ -326,27 +368,32 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
     stats(): GameStats {
       const eng = Math.round(meters.engagement);
       const bal = Math.round(meters.balance);
-      const base = `Feed Mo 'To. Score ${score}. Engagement ${eng} percent. Balanced Feed ${bal} percent. ${user.name.toLowerCase()}, post ${Math.max(1, postNo)} of ${POSTS_PER_USER}.`;
+      const name = tx(user.name).toLowerCase();
+      const base = t('g.feed.say.base', { score, eng, bal, name, n: Math.max(1, postNo), total: POSTS_PER_USER });
       let description: string;
       if (over) {
-        description = `${base} The run is over: ${crash === 'bubble' ? 'the feed is now only scary posts' : 'she logged off, bored'}.`;
+        description = `${base} ${t(crash === 'bubble' ? 'g.feed.say.overBubble' : 'g.feed.say.overBored')}`;
       } else if (phase === 'intro') {
-        description = `${base} ${summary.length > 0 ? `${summary.join('. ').toLowerCase()}. Next up: ` : 'First up: '}${user.name.toLowerCase()}, who likes ${list(user.interests)}. Get ready.`;
+        const done = summary.length > 0 ? `${summary.map((line) => line.text).join('. ').toLowerCase()}. ` : '';
+        description = `${base} ${done}${t(summary.length > 0 ? 'g.feed.say.nextUp' : 'g.feed.say.firstUp', { name, likes: list(user.interests) })}`;
       } else if (phase === 'result' && outcome) {
         const post = candidates[outcome.chosen];
-        const said = post ? `You showed "${post.text}" ${post.fake ? 'This post is fake.' : post.topic === 'clinic' ? 'This is a trusted health tip.' : ''}` : 'You ran out of time and she scrolled away.';
-        description = `${base} ${said} Engagement ${signed(outcome.engagementDelta)}, Balanced Feed ${signed(outcome.balanceDelta)}, ${outcome.points} points. ${outcome.note.toLowerCase()}`;
+        const said = post
+          ? `${t('g.feed.say.showed', { text: post.text })} ${post.fake ? t('g.feed.say.fakePost') : post.topic === 'clinic' ? t('g.feed.say.trustedTip') : ''}`
+          : t('g.feed.say.timeout');
+        const deltas = t('g.feed.say.result', { eng: signed(outcome.engagementDelta), bal: signed(outcome.balanceDelta), points: outcome.points });
+        description = `${base} ${said} ${deltas} ${outcome.note.toLowerCase()}`;
       } else {
-        const options = candidates.map((post, i) => `Option ${i + 1}, ${topicById(post.topic).name}: "${post.text}"`).join(' ');
-        description = `${base} She likes ${list(user.interests)}. Her feed still shows ${list(alive())}. ${options} Highlighted: option ${sel + 1}.`;
+        const options = candidates.map((post, i) => t('g.feed.say.option', { n: i + 1, topic: tx(topicById(post.topic).name), text: post.text })).join(' ');
+        description = `${base} ${t('g.feed.say.feed', { likes: list(user.interests), feed: list(alive()) })} ${options} ${t('g.feed.say.highlighted', { n: sel + 1 })}`;
       }
       return {
         score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(score) },
-          { id: 'engagement', label: 'Engagement', value: `${eng}%`, meter: eng },
-          { id: 'balance', label: 'Balanced Feed', value: `${bal}%`, meter: bal },
+          { id: 'score', label: t('g.feed.hud.score'), value: String(score) },
+          { id: 'engagement', label: t('g.feed.hud.engagement'), value: `${eng}%`, meter: eng },
+          { id: 'balance', label: t('g.feed.hud.balance'), value: `${bal}%`, meter: bal },
         ],
         description,
         recap: over ? buildRecap({ users: userIndex + 1, ...counts, crash }) : [],
@@ -357,19 +404,21 @@ function createFeed({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
 
 /** The game-over recap: what happened, then how feeds work, what a filter bubble is and why scary health posts spread. */
 export function buildRecap(run: RunSummary): string[] {
-  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  const plural = (n: number, one: StringKey, many: StringKey) => t(n === 1 ? one : many, { n });
+  const counts = {
+    people: plural(run.users, 'g.feed.recap.people.one', 'g.feed.recap.people.many'),
+    posts: plural(run.posts, 'g.feed.recap.posts.one', 'g.feed.recap.posts.many'),
+    scary: run.scary,
+    tips: plural(run.trusted, 'g.feed.recap.tips.one', 'g.feed.recap.tips.many'),
+  };
   const lines = [
-    `You curated feeds for ${plural(run.users, 'person', 'people')} and showed ${plural(run.posts, 'post', 'posts')}: ${run.scary} scary or miracle-cure, ${run.trusted} trusted health ${run.trusted === 1 ? 'tip' : 'tips'}${run.timeouts > 0 ? ` and ${plural(run.timeouts, 'time', 'times')} you ran out of time` : ''}.`,
+    run.timeouts > 0
+      ? t('g.feed.recap.summaryLate', { ...counts, late: plural(run.timeouts, 'g.feed.recap.times.one', 'g.feed.recap.times.many') })
+      : t('g.feed.recap.summary', counts),
   ];
-  if (run.crash === 'bubble') lines.push('Her feed shrank into a bubble: only scary posts were left. That is a filter bubble.');
-  else if (run.crash === 'bored') lines.push('She logged off, bored. A feed nobody clicks gets dropped, so real feeds are built to keep you scrolling.');
-  lines.push(
-    'How it works: a recommendation algorithm guesses what you will click next from what you watched, liked and shared, then shows you more of the same.',
-    'A filter bubble is when a feed keeps showing the same kind of posts, so you stop seeing other views and other facts.',
-    'Why scary health posts spread: fear and shock make people click, comment and share. The algorithm counts that as good, so it shows them to more people. Spreading fast does not make a post true.',
-    'Tip: search on purpose for trusted sources, like your health center or the Department of Health, and follow a few of them.',
-    'Tip: when a health post scares you, pause before you share. Check who wrote it and ask a health worker.',
-  );
+  if (run.crash === 'bubble') lines.push(t('g.feed.recap.bubble'));
+  else if (run.crash === 'bored') lines.push(t('g.feed.recap.bored'));
+  lines.push(t('g.feed.recap.how'), t('g.feed.recap.bubbleWhat'), t('g.feed.recap.why'), t('g.feed.recap.tipSearch'), t('g.feed.recap.tipPause'));
   return lines;
 }
 

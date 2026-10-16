@@ -4089,12 +4089,6 @@
   ]
  },
  {
-  "text": "FREE",
-  "src": [
-   "content\\factOrFake\\items.ts#FOF_ITEMS"
-  ]
- },
- {
   "text": "A cough of two weeks or more should be checked for TB. TB is curable when treatment is completed, and treatment is free at health centers.",
   "src": [
    "content\\factOrFake\\items.ts#FOF_ITEMS"
@@ -19054,12 +19048,6 @@
   ]
  },
  {
-  "text": "cite sources",
-  "src": [
-   "games\\luto-ni-ara\\orders.ts#INGREDIENT_INFO"
-  ]
- },
- {
   "text": "SAY IF",
   "src": [
    "games\\luto-ni-ara\\orders.ts#INGREDIENT_INFO"
@@ -19067,12 +19055,6 @@
  },
  {
   "text": "UNSURE",
-  "src": [
-   "games\\luto-ni-ara\\orders.ts#INGREDIENT_INFO"
-  ]
- },
- {
-  "text": "say if unsure",
   "src": [
    "games\\luto-ni-ara\\orders.ts#INGREDIENT_INFO"
   ]
@@ -21299,12 +21281,6 @@
   ]
  },
  {
-  "text": "CALL",
-  "src": [
-   "games\\sino-to\\calls.ts#CHECK_INFO"
-  ]
- },
- {
   "text": "SAVED NO",
   "src": [
    "games\\sino-to\\calls.ts#CHECK_INFO"
@@ -22091,7 +22067,13 @@
   ]
  },
  {
-  "text": "WAIT",
+  "text": "g.tawid.tileWait",
+  "src": [
+   "games\\tawid-lola\\art.ts#TILES"
+  ]
+ },
+ {
+  "text": "g.tawid.tileGo",
   "src": [
    "games\\tawid-lola\\art.ts#TILES"
   ]
@@ -22100,24 +22082,6 @@
   "text": "CONTENT_GUIDE calibrated trust: check an AI guide against what you can see; road safety basics (look both ways)",
   "src": [
    "games\\tawid-lola\\lanes.ts#CONTENT_REVIEW"
-  ]
- },
- {
-  "text": "Looks clear. Step now.",
-  "src": [
-   "games\\tawid-lola\\lanes.ts#GO_LINES"
-  ]
- },
- {
-  "text": "Gap ahead. You can go.",
-  "src": [
-   "games\\tawid-lola\\lanes.ts#GO_LINES"
-  ]
- },
- {
-  "text": "No traffic. Safe to go.",
-  "src": [
-   "games\\tawid-lola\\lanes.ts#GO_LINES"
   ]
  },
  {
@@ -25052,12 +25016,6 @@
  },
  {
   "text": "Trick: Fear Monger. ALL CAPS, \"!!!\" and a deadline push you to share before you check.",
-  "src": [
-   "modules\\m04\\index.ts#default"
-  ]
- },
- {
-  "text": "Wash your hands with soap and water for at least 20 seconds. It helps stop many infections.",
   "src": [
    "modules\\m04\\index.ts#default"
   ]
@@ -29006,6 +28964,3208 @@
   ]
  },
  {
+  "text": "BREAKING!",
+  "src": [
+   "ui:g.feed.alarm.breaking"
+  ]
+ },
+ {
+  "text": "SHOCKING!",
+  "src": [
+   "ui:g.feed.alarm.shocking"
+  ]
+ },
+ {
+  "text": "URGENT!",
+  "src": [
+   "ui:g.feed.alarm.urgent"
+  ]
+ },
+ {
+  "text": "WARNING!",
+  "src": [
+   "ui:g.feed.alarm.warning"
+  ]
+ },
+ {
+  "text": "BALANCE {n}",
+  "src": [
+   "ui:g.feed.balanceDelta"
+  ]
+ },
+ {
+  "text": "BALANCED FEED",
+  "src": [
+   "ui:g.feed.balancedFeed"
+  ]
+ },
+ {
+  "text": "BALANCED FEED BONUS +{n}",
+  "src": [
+   "ui:g.feed.bonus"
+  ]
+ },
+ {
+  "text": "FEED BUBBLE",
+  "src": [
+   "ui:g.feed.bubble"
+  ]
+ },
+ {
+  "text": "CLEAN-UP DRIVE ON SATURDAY",
+  "src": [
+   "ui:g.feed.card.cleanup"
+  ]
+ },
+ {
+  "text": "FEVER AT BARANGAY",
+  "src": [
+   "ui:g.feed.card.fever.barangay"
+  ]
+ },
+ {
+  "text": "FEVER AT CANTEEN",
+  "src": [
+   "ui:g.feed.card.fever.canteen"
+  ]
+ },
+ {
+  "text": "FEVER AT MARKET",
+  "src": [
+   "ui:g.feed.card.fever.market"
+  ]
+ },
+ {
+  "text": "FEVER AT TERMINAL",
+  "src": [
+   "ui:g.feed.card.fever.terminal"
+  ]
+ },
+ {
+  "text": "FIESTA SCHEDULE IS OUT",
+  "src": [
+   "ui:g.feed.card.fiestaSchedule"
+  ]
+ },
+ {
+  "text": "SINGER AT THE FIESTA SURPRISE!",
+  "src": [
+   "ui:g.feed.card.fiestaSinger"
+  ]
+ },
+ {
+  "text": "SOAP OPERA FINALE TONIGHT!",
+  "src": [
+   "ui:g.feed.card.finale"
+  ]
+ },
+ {
+  "text": "ONE TRICK KILLS ALL GERMS!",
+  "src": [
+   "ui:g.feed.card.germs"
+  ]
+ },
+ {
+  "text": "WASH HANDS WITH SOAP 20 SECONDS",
+  "src": [
+   "ui:g.feed.card.hands"
+  ]
+ },
+ {
+  "text": "MIRACLE BERRY MIX CURES ALL!",
+  "src": [
+   "ui:g.feed.card.herb.berry"
+  ]
+ },
+ {
+  "text": "MIRACLE LEAF TEA CURES ALL!",
+  "src": [
+   "ui:g.feed.card.herb.leaf"
+  ]
+ },
+ {
+  "text": "MIRACLE ROOT JUICE CURES ALL!",
+  "src": [
+   "ui:g.feed.card.herb.root"
+  ]
+ },
+ {
+  "text": "HIDDEN ILLNESS!",
+  "src": [
+   "ui:g.feed.card.hidden"
+  ]
+ },
+ {
+  "text": "BASKETBALL HIGHLIGHTS OF THE WEEK",
+  "src": [
+   "ui:g.feed.card.highlights"
+  ]
+ },
+ {
+  "text": "BARANGAY TEAM WINS LEAGUE!",
+  "src": [
+   "ui:g.feed.card.league"
+  ]
+ },
+ {
+  "text": "LOLA TELLS OLD STORIES AT HOME",
+  "src": [
+   "ui:g.feed.card.lola"
+  ]
+ },
+ {
+  "text": "NEVER GET SICK AGAIN! DRINK THIS",
+  "src": [
+   "ui:g.feed.card.neverSick"
+  ]
+ },
+ {
+  "text": "BIRTHDAY PARTY IDEAS FOR KIDS",
+  "src": [
+   "ui:g.feed.card.party"
+  ]
+ },
+ {
+  "text": "POISON IN FISH",
+  "src": [
+   "ui:g.feed.card.poison.fish"
+  ]
+ },
+ {
+  "text": "POISON IN RICE",
+  "src": [
+   "ui:g.feed.card.poison.rice"
+  ]
+ },
+ {
+  "text": "POISON IN WATER",
+  "src": [
+   "ui:g.feed.card.poison.water"
+  ]
+ },
+ {
+  "text": "EASY ADOBO RECIPE",
+  "src": [
+   "ui:g.feed.card.recipe.adobo"
+  ]
+ },
+ {
+  "text": "EASY LECHE FLAN RECIPE",
+  "src": [
+   "ui:g.feed.card.recipe.lecheFlan"
+  ]
+ },
+ {
+  "text": "EASY PANCIT RECIPE",
+  "src": [
+   "ui:g.feed.card.recipe.pancit"
+  ]
+ },
+ {
+  "text": "EASY SINIGANG RECIPE",
+  "src": [
+   "ui:g.feed.card.recipe.sinigang"
+  ]
+ },
+ {
+  "text": "ROAD WORK THIS WEEK. GO SLOW",
+  "src": [
+   "ui:g.feed.card.road"
+  ]
+ },
+ {
+  "text": "CUTE KIDS FIRST DAY OF SCHOOL",
+  "src": [
+   "ui:g.feed.card.school"
+  ]
+ },
+ {
+  "text": "SHARE ONLY WHAT YOU CHECKED",
+  "src": [
+   "ui:g.feed.card.share"
+  ]
+ },
+ {
+  "text": "SINGING CONTEST WINNER!",
+  "src": [
+   "ui:g.feed.card.singing"
+  ]
+ },
+ {
+  "text": "TRY THIS TWIST ON ADOBO",
+  "src": [
+   "ui:g.feed.card.twist.adobo"
+  ]
+ },
+ {
+  "text": "TRY THIS TWIST ON LECHE FLAN",
+  "src": [
+   "ui:g.feed.card.twist.lecheFlan"
+  ]
+ },
+ {
+  "text": "TRY THIS TWIST ON PANCIT",
+  "src": [
+   "ui:g.feed.card.twist.pancit"
+  ]
+ },
+ {
+  "text": "TRY THIS TWIST ON SINIGANG",
+  "src": [
+   "ui:g.feed.card.twist.sinigang"
+  ]
+ },
+ {
+  "text": "NOT SURE? ASK YOUR HEALTH WORKER",
+  "src": [
+   "ui:g.feed.card.unsure"
+  ]
+ },
+ {
+  "text": "VACCINES ARE TESTED FOR SAFETY",
+  "src": [
+   "ui:g.feed.card.vaccines"
+  ]
+ },
+ {
+  "text": "COVER OR EMPTY WATER CONTAINERS",
+  "src": [
+   "ui:g.feed.card.water"
+  ]
+ },
+ {
+  "text": "MORNING ZUMBA AT COURT",
+  "src": [
+   "ui:g.feed.card.zumba"
+  ]
+ },
+ {
+  "text": "CLICKS",
+  "src": [
+   "ui:g.feed.clicks"
+  ]
+ },
+ {
+  "text": "leche flan",
+  "src": [
+   "ui:g.feed.dish.lecheFlan"
+  ]
+ },
+ {
+  "text": "{name} IS DONE!",
+  "src": [
+   "ui:g.feed.done"
+  ]
+ },
+ {
+  "text": "ENGAGEMENT",
+  "src": [
+   "ui:g.feed.engagement"
+  ]
+ },
+ {
+  "text": "ENGAGEMENT {n}",
+  "src": [
+   "ui:g.feed.engagementDelta"
+  ]
+ },
+ {
+  "text": "FIRST: {name}",
+  "src": [
+   "ui:g.feed.first"
+  ]
+ },
+ {
+  "text": "market fish",
+  "src": [
+   "ui:g.feed.food.fish"
+  ]
+ },
+ {
+  "text": "canteen rice",
+  "src": [
+   "ui:g.feed.food.rice"
+  ]
+ },
+ {
+  "text": "refill station water",
+  "src": [
+   "ui:g.feed.food.water"
+  ]
+ },
+ {
+  "text": "Super berry powder",
+  "src": [
+   "ui:g.feed.herb.berry"
+  ]
+ },
+ {
+  "text": "Magic leaf tea",
+  "src": [
+   "ui:g.feed.herb.leaf"
+  ]
+ },
+ {
+  "text": "Secret root juice",
+  "src": [
+   "ui:g.feed.herb.root"
+  ]
+ },
+ {
+  "text": "Balanced Feed",
+  "src": [
+   "ui:g.feed.hud.balance"
+  ]
+ },
+ {
+  "text": "Engagement",
+  "src": [
+   "ui:g.feed.hud.engagement"
+  ]
+ },
+ {
+  "text": "LIKES {topics}",
+  "src": [
+   "ui:g.feed.likes"
+  ]
+ },
+ {
+  "text": "= LIKES",
+  "src": [
+   "ui:g.feed.likesKey"
+  ]
+ },
+ {
+  "text": "LOGGED OFF!",
+  "src": [
+   "ui:g.feed.loggedOff"
+  ]
+ },
+ {
+  "text": "{name} GOT BORED AND LEFT THE APP",
+  "src": [
+   "ui:g.feed.loggedOffText"
+  ]
+ },
+ {
+  "text": "NEXT: {name}",
+  "src": [
+   "ui:g.feed.next"
+  ]
+ },
+ {
+  "text": "NO BONUS: KEEP BOTH ABOVE 50",
+  "src": [
+   "ui:g.feed.noBonus"
+  ]
+ },
+ {
+  "text": "FEAR WINS CLICKS. HER FEED SHRINKS.",
+  "src": [
+   "ui:g.feed.note.fear"
+  ]
+ },
+ {
+  "text": "SHE LIKES THIS. A STEADY SMALL WIN.",
+  "src": [
+   "ui:g.feed.note.liked"
+  ]
+ },
+ {
+  "text": "NEW TOPIC! WIDER FEED, FEWER CLICKS.",
+  "src": [
+   "ui:g.feed.note.new"
+  ]
+ },
+ {
+  "text": "SAME TOPIC AGAIN. SHE GETS BORED.",
+  "src": [
+   "ui:g.feed.note.same"
+  ]
+ },
+ {
+  "text": "TOO SLOW! SHE SCROLLED AWAY.",
+  "src": [
+   "ui:g.feed.note.slow"
+  ]
+ },
+ {
+  "text": "TRUSTED TIP: FEWER CLICKS, WIDER FEED.",
+  "src": [
+   "ui:g.feed.note.trusted"
+  ]
+ },
+ {
+  "text": "PICK A POST FOR {name}",
+  "src": [
+   "ui:g.feed.pick"
+  ]
+ },
+ {
+  "text": "school canteen",
+  "src": [
+   "ui:g.feed.place.canteen"
+  ]
+ },
+ {
+  "text": "wet market",
+  "src": [
+   "ui:g.feed.place.market"
+  ]
+ },
+ {
+  "text": "jeepney terminal",
+  "src": [
+   "ui:g.feed.place.terminal"
+  ]
+ },
+ {
+  "text": "BUBBLE POPPED!",
+  "src": [
+   "ui:g.feed.popped"
+  ]
+ },
+ {
+  "text": "{name} ONLY SEES SCARY POSTS NOW",
+  "src": [
+   "ui:g.feed.poppedText"
+  ]
+ },
+ {
+  "text": "POST {n}/{total}",
+  "src": [
+   "ui:g.feed.postOf"
+  ]
+ },
+ {
+  "text": "She logged off, bored. A feed nobody clicks gets dropped, so real feeds are built to keep you scrolling.",
+  "src": [
+   "ui:g.feed.recap.bored"
+  ]
+ },
+ {
+  "text": "Her feed shrank into a bubble: only scary posts were left. That is a filter bubble.",
+  "src": [
+   "ui:g.feed.recap.bubble"
+  ]
+ },
+ {
+  "text": "A filter bubble is when a feed keeps showing the same kind of posts, so you stop seeing other views and other facts.",
+  "src": [
+   "ui:g.feed.recap.bubbleWhat"
+  ]
+ },
+ {
+  "text": "How it works: a recommendation algorithm guesses what you will click next from what you watched, liked and shared, then shows you more of the same.",
+  "src": [
+   "ui:g.feed.recap.how"
+  ]
+ },
+ {
+  "text": "{n} people",
+  "src": [
+   "ui:g.feed.recap.people.many"
+  ]
+ },
+ {
+  "text": "{n} person",
+  "src": [
+   "ui:g.feed.recap.people.one"
+  ]
+ },
+ {
+  "text": "{n} posts",
+  "src": [
+   "ui:g.feed.recap.posts.many"
+  ]
+ },
+ {
+  "text": "{n} post",
+  "src": [
+   "ui:g.feed.recap.posts.one"
+  ]
+ },
+ {
+  "text": "You curated feeds for {people} and showed {posts}: {scary} scary or miracle-cure, {tips}.",
+  "src": [
+   "ui:g.feed.recap.summary"
+  ]
+ },
+ {
+  "text": "You curated feeds for {people} and showed {posts}: {scary} scary or miracle-cure, {tips} and {late} you ran out of time.",
+  "src": [
+   "ui:g.feed.recap.summaryLate"
+  ]
+ },
+ {
+  "text": "{n} times",
+  "src": [
+   "ui:g.feed.recap.times.many",
+   "ui:g.luto.recap.times",
+   "ui:g.sino.n.time.many"
+  ]
+ },
+ {
+  "text": "{n} time",
+  "src": [
+   "ui:g.feed.recap.times.one",
+   "ui:g.luto.recap.time",
+   "ui:g.sino.n.time.one"
+  ]
+ },
+ {
+  "text": "Tip: when a health post scares you, pause before you share. Check who wrote it and ask a health worker.",
+  "src": [
+   "ui:g.feed.recap.tipPause"
+  ]
+ },
+ {
+  "text": "Tip: search on purpose for trusted sources, like your health center or the Department of Health, and follow a few of them.",
+  "src": [
+   "ui:g.feed.recap.tipSearch"
+  ]
+ },
+ {
+  "text": "{n} trusted health tips",
+  "src": [
+   "ui:g.feed.recap.tips.many"
+  ]
+ },
+ {
+  "text": "{n} trusted health tip",
+  "src": [
+   "ui:g.feed.recap.tips.one"
+  ]
+ },
+ {
+  "text": "Why scary health posts spread: fear and shock make people click, comment and share. The algorithm counts that as good, so it shows them to more people. Spreading fast does not make a post true.",
+  "src": [
+   "ui:g.feed.recap.why"
+  ]
+ },
+ {
+  "text": "Feed Mo 'To. Score {score}. Engagement {eng} percent. Balanced Feed {bal} percent. {name}, post {n} of {total}.",
+  "src": [
+   "ui:g.feed.say.base"
+  ]
+ },
+ {
+  "text": "This post is fake.",
+  "src": [
+   "ui:g.feed.say.fakePost"
+  ]
+ },
+ {
+  "text": "She likes {likes}. Her feed still shows {feed}.",
+  "src": [
+   "ui:g.feed.say.feed"
+  ]
+ },
+ {
+  "text": "First up: {name}, who likes {likes}. Get ready.",
+  "src": [
+   "ui:g.feed.say.firstUp"
+  ]
+ },
+ {
+  "text": "Highlighted: option {n}.",
+  "src": [
+   "ui:g.feed.say.highlighted"
+  ]
+ },
+ {
+  "text": "Next up: {name}, who likes {likes}. Get ready.",
+  "src": [
+   "ui:g.feed.say.nextUp"
+  ]
+ },
+ {
+  "text": "Option {n}, {topic}: \"{text}\"",
+  "src": [
+   "ui:g.feed.say.option"
+  ]
+ },
+ {
+  "text": "The run is over: she logged off, bored.",
+  "src": [
+   "ui:g.feed.say.overBored"
+  ]
+ },
+ {
+  "text": "The run is over: the feed is now only scary posts.",
+  "src": [
+   "ui:g.feed.say.overBubble"
+  ]
+ },
+ {
+  "text": "Engagement {eng}, Balanced Feed {bal}, {points} points.",
+  "src": [
+   "ui:g.feed.say.result"
+  ]
+ },
+ {
+  "text": "You showed \"{text}\"",
+  "src": [
+   "ui:g.feed.say.showed"
+  ]
+ },
+ {
+  "text": "You ran out of time and she scrolled away.",
+  "src": [
+   "ui:g.feed.say.timeout"
+  ]
+ },
+ {
+  "text": "This is a trusted health tip.",
+  "src": [
+   "ui:g.feed.say.trustedTip"
+  ]
+ },
+ {
+  "text": "· FAKE ·",
+  "src": [
+   "ui:g.feed.stampFake"
+  ]
+ },
+ {
+  "text": "ARAW GAME",
+  "src": [
+   "ui:g.feed.stampGame"
+  ]
+ },
+ {
+  "text": "TRUSTED HEALTH TIP",
+  "src": [
+   "ui:g.feed.stampTrusted"
+  ]
+ },
+ {
+  "text": "Barangay clean-up drive this Saturday morning. Bring gloves and a sack.",
+  "src": [
+   "ui:g.feed.text.cleanup"
+  ]
+ },
+ {
+  "text": "{alarm} A deadly new fever is spreading at the {place}! Share before they delete this!",
+  "src": [
+   "ui:g.feed.text.fever"
+  ]
+ },
+ {
+  "text": "The barangay fiesta schedule is out. See the full list of events and times.",
+  "src": [
+   "ui:g.feed.text.fiestaSchedule"
+  ]
+ },
+ {
+  "text": "A famous singer surprised the fiesta crowd with a free show.",
+  "src": [
+   "ui:g.feed.text.fiestaSinger"
+  ]
+ },
+ {
+  "text": "The big soap opera finale airs tonight. Will the two sisters finally make up?",
+  "src": [
+   "ui:g.feed.text.finale"
+  ]
+ },
+ {
+  "text": "One weird trick kills all germs in 1 minute. No doctor and no medicine needed!",
+  "src": [
+   "ui:g.feed.text.germs"
+  ]
+ },
+ {
+  "text": "Wash your hands with soap and water for at least 20 seconds. It helps stop many infections.",
+  "src": [
+   "ui:g.feed.text.hands",
+   "modules\\m04\\index.ts#default"
+  ]
+ },
+ {
+  "text": "{herb} cures every illness in 3 days! Doctors hate it. Share if you love your family!",
+  "src": [
+   "ui:g.feed.text.herb"
+  ]
+ },
+ {
+  "text": "{alarm} The health center is hiding a scary new illness. Everyone must see this!",
+  "src": [
+   "ui:g.feed.text.hidden"
+  ]
+ },
+ {
+  "text": "Basketball highlights of the week from the town court.",
+  "src": [
+   "ui:g.feed.text.highlights"
+  ]
+ },
+ {
+  "text": "Barangay league final: our team won by two points in the last second!",
+  "src": [
+   "ui:g.feed.text.league"
+  ]
+ },
+ {
+  "text": "Lola tells old family stories at the dinner table. So heartwarming.",
+  "src": [
+   "ui:g.feed.text.lola"
+  ]
+ },
+ {
+  "text": "Drink this every morning and you will never get sick again. No checkups needed!",
+  "src": [
+   "ui:g.feed.text.neverSick"
+  ]
+ },
+ {
+  "text": "Ten easy birthday party ideas for kids, with games that cost almost nothing.",
+  "src": [
+   "ui:g.feed.text.party"
+  ]
+ },
+ {
+  "text": "{alarm} Hidden poison found in {food}! The doctors will not tell you. Send to 10 people!",
+  "src": [
+   "ui:g.feed.text.poison"
+  ]
+ },
+ {
+  "text": "Easy {dish} recipe for a busy weeknight, ready in 30 minutes.",
+  "src": [
+   "ui:g.feed.text.recipe"
+  ]
+ },
+ {
+  "text": "Road repair this week near the plaza. Please drive slowly and use the side street.",
+  "src": [
+   "ui:g.feed.text.road"
+  ]
+ },
+ {
+  "text": "Cute photos from the first day of school. Look how big they are now!",
+  "src": [
+   "ui:g.feed.text.school"
+  ]
+ },
+ {
+  "text": "Before you share a health post, check who wrote it, and ask a health worker if you are unsure.",
+  "src": [
+   "ui:g.feed.text.share"
+  ]
+ },
+ {
+  "text": "Who won the town singing contest? The crowd went wild!",
+  "src": [
+   "ui:g.feed.text.singing"
+  ]
+ },
+ {
+  "text": "Try this fun twist on {dish}: the whole family will ask for seconds.",
+  "src": [
+   "ui:g.feed.text.twist"
+  ]
+ },
+ {
+  "text": "Not sure about a health claim? Ask your barangay health worker or your health center.",
+  "src": [
+   "ui:g.feed.text.unsure"
+  ]
+ },
+ {
+  "text": "Vaccines are tested for safety before they are used. Ask your health center which ones you need.",
+  "src": [
+   "ui:g.feed.text.vaccines"
+  ]
+ },
+ {
+  "text": "Cover, clean or empty containers that hold water. Dengue mosquitoes breed in standing water.",
+  "src": [
+   "ui:g.feed.text.water"
+  ]
+ },
+ {
+  "text": "Morning zumba at the barangay court. Everyone is welcome, bring a towel!",
+  "src": [
+   "ui:g.feed.text.zumba"
+  ]
+ },
+ {
+  "text": "WAITING FOR THE NEXT TASK...",
+  "src": [
+   "ui:g.hati.card.waiting"
+  ]
+ },
+ {
+  "text": "Hati Tayo, {place}. Day {day}. Score {score}. Service {service} percent.",
+  "src": [
+   "ui:g.hati.d.base"
+  ]
+ },
+ {
+  "text": "The person is busy with {task}, {n} of 3 places taken.",
+  "src": [
+   "ui:g.hati.d.busy"
+  ]
+ },
+ {
+  "text": "The person is free.",
+  "src": [
+   "ui:g.hati.d.free"
+  ]
+ },
+ {
+  "text": "{base} A new day starts with {n} tasks. Send each task to the AI lane (left) or to the person (right).",
+  "src": [
+   "ui:g.hati.d.intro"
+  ]
+ },
+ {
+  "text": "Last result: {head}. {line}",
+  "src": [
+   "ui:g.hati.d.last"
+  ]
+ },
+ {
+  "text": "No task is waiting.",
+  "src": [
+   "ui:g.hati.d.noTask"
+  ]
+ },
+ {
+  "text": "{base} The service has collapsed. You survived {n} days.",
+  "src": [
+   "ui:g.hati.d.over.many"
+  ]
+ },
+ {
+  "text": "{base} The service has collapsed. You survived {n} day.",
+  "src": [
+   "ui:g.hati.d.over.one"
+  ]
+ },
+ {
+  "text": "{base} {left} tasks left today. Waiting tasks, oldest first. {queue} {person}{flash} Up and Down choose a task. Left sends it to the AI, Right sends it to the person.",
+  "src": [
+   "ui:g.hati.d.play"
+  ]
+ },
+ {
+  "text": "{n}: {task}",
+  "src": [
+   "ui:g.hati.d.queueItem"
+  ]
+ },
+ {
+  "text": "{n}: {task} (selected)",
+  "src": [
+   "ui:g.hati.d.queueSelected"
+  ]
+ },
+ {
+  "text": "{base} Day {day} report: {good} good splits, {slow} jobs done slowly by hand, {fail} AI slip-ups, {missed} missed tasks, clear bonus {bonus}. {lesson} Press Enter or tap for the next day.",
+  "src": [
+   "ui:g.hati.d.report"
+  ]
+ },
+ {
+  "text": "{task} waited too long and was dropped.",
+  "src": [
+   "ui:g.hati.flash.dropped"
+  ]
+ },
+ {
+  "text": "AI SLIP-UP!",
+  "src": [
+   "ui:g.hati.flash.fail"
+  ]
+ },
+ {
+  "text": "GOOD SPLIT! +{n}",
+  "src": [
+   "ui:g.hati.flash.good"
+  ]
+ },
+ {
+  "text": "{task} arrived with no room, and was lost.",
+  "src": [
+   "ui:g.hati.flash.lost"
+  ]
+ },
+ {
+  "text": "QUEUE FULL!",
+  "src": [
+   "ui:g.hati.flash.queueFull"
+  ]
+ },
+ {
+  "text": "DONE, BUT SLOW. +{n}",
+  "src": [
+   "ui:g.hati.flash.slow"
+  ]
+ },
+ {
+  "text": "TOO SLOW!",
+  "src": [
+   "ui:g.hati.flash.tooSlow"
+  ]
+ },
+ {
+  "text": "Wait for the person to finish, or give it to AI.",
+  "src": [
+   "ui:g.hati.flash.waitPerson"
+  ]
+ },
+ {
+  "text": "WORKER IS FULL!",
+  "src": [
+   "ui:g.hati.flash.workerFull"
+  ]
+ },
+ {
+  "text": "DAY {day}  {done}/{total}",
+  "src": [
+   "ui:g.hati.header.day"
+  ]
+ },
+ {
+  "text": "Tap a task, then a lane. Or drag it, or use the arrow keys.",
+  "src": [
+   "ui:g.hati.hint"
+  ]
+ },
+ {
+  "text": "Day",
+  "src": [
+   "ui:g.hati.hud.day"
+  ]
+ },
+ {
+  "text": "{n} percent",
+  "src": [
+   "ui:g.hati.hud.percent"
+  ]
+ },
+ {
+  "text": "AI: FAST AT REPEAT JOBS.",
+  "src": [
+   "ui:g.hati.intro.ai"
+  ]
+ },
+ {
+  "text": "A NEW TASK EVERY {s} SECONDS.",
+  "src": [
+   "ui:g.hati.intro.every"
+  ]
+ },
+ {
+  "text": "AI FAILS AT CARE AND JUDGEMENT.",
+  "src": [
+   "ui:g.hati.intro.fails"
+  ]
+ },
+ {
+  "text": "KEEP SERVICE ABOVE ZERO.",
+  "src": [
+   "ui:g.hati.intro.keep"
+  ]
+ },
+ {
+  "text": "{n} TASKS, A NEW MIX.",
+  "src": [
+   "ui:g.hati.intro.newMix"
+  ]
+ },
+ {
+  "text": "PERSON: SLOW, BUT KIND AND WISE.",
+  "src": [
+   "ui:g.hati.intro.person"
+  ]
+ },
+ {
+  "text": "SEND EACH ONE TO AI OR TO A PERSON.",
+  "src": [
+   "ui:g.hati.intro.send"
+  ]
+ },
+ {
+  "text": "{n} TASKS TODAY.",
+  "src": [
+   "ui:g.hati.intro.tasksToday"
+  ]
+ },
+ {
+  "text": "EACH ONE WAITS {s} SECONDS.",
+  "src": [
+   "ui:g.hati.intro.waits"
+  ]
+ },
+ {
+  "text": "AI HELPER",
+  "src": [
+   "ui:g.hati.lane.ai"
+  ]
+ },
+ {
+  "text": "DONE: {task}",
+  "src": [
+   "ui:g.hati.lane.done"
+  ]
+ },
+ {
+  "text": "FREE",
+  "src": [
+   "ui:g.hati.lane.free",
+   "content\\factOrFake\\items.ts#FOF_ITEMS"
+  ]
+ },
+ {
+  "text": "INSTANT",
+  "src": [
+   "ui:g.hati.lane.instant"
+  ]
+ },
+ {
+  "text": "LEFT KEY",
+  "src": [
+   "ui:g.hati.lane.leftKey"
+  ]
+ },
+ {
+  "text": "PERSON",
+  "src": [
+   "ui:g.hati.lane.person"
+  ]
+ },
+ {
+  "text": "READY",
+  "src": [
+   "ui:g.hati.lane.ready"
+  ]
+ },
+ {
+  "text": "RIGHT KEY",
+  "src": [
+   "ui:g.hati.lane.rightKey"
+  ]
+ },
+ {
+  "text": "SLOW, CARING",
+  "src": [
+   "ui:g.hati.lane.slowCaring"
+  ]
+ },
+ {
+  "text": "Some tasks waited too long. Hand the repeat jobs to AI to free up your time.",
+  "src": [
+   "ui:g.hati.lesson.missed"
+  ]
+ },
+ {
+  "text": "people jobs",
+  "src": [
+   "ui:g.hati.lesson.peopleJobs"
+  ]
+ },
+ {
+  "text": "A perfect split: AI did the repeat jobs, people did the caring and deciding.",
+  "src": [
+   "ui:g.hati.lesson.perfect"
+  ]
+ },
+ {
+  "text": "AI slipped on {trait}. Keep care and decisions for people.",
+  "src": [
+   "ui:g.hati.lesson.slipped"
+  ]
+ },
+ {
+  "text": "Good care. But AI could have done some jobs faster, so you had more time for people.",
+  "src": [
+   "ui:g.hati.lesson.slow"
+  ]
+ },
+ {
+  "text": "{n} days",
+  "src": [
+   "ui:g.hati.n.day.many"
+  ]
+ },
+ {
+  "text": "{n} day",
+  "src": [
+   "ui:g.hati.n.day.one"
+  ]
+ },
+ {
+  "text": "{n} good splits",
+  "src": [
+   "ui:g.hati.n.goodSplit.many"
+  ]
+ },
+ {
+  "text": "{n} good split",
+  "src": [
+   "ui:g.hati.n.goodSplit.one"
+  ]
+ },
+ {
+  "text": "{n} jobs",
+  "src": [
+   "ui:g.hati.n.job.many"
+  ]
+ },
+ {
+  "text": "{n} job",
+  "src": [
+   "ui:g.hati.n.job.one"
+  ]
+ },
+ {
+  "text": "{n} missed tasks",
+  "src": [
+   "ui:g.hati.n.missed.many"
+  ]
+ },
+ {
+  "text": "{n} missed task",
+  "src": [
+   "ui:g.hati.n.missed.one"
+  ]
+ },
+ {
+  "text": "{n} AI slip-ups",
+  "src": [
+   "ui:g.hati.n.slip.many"
+  ]
+ },
+ {
+  "text": "{n} AI slip-up",
+  "src": [
+   "ui:g.hati.n.slip.one"
+  ]
+ },
+ {
+  "text": "SERVICE HAS COLLAPSED",
+  "src": [
+   "ui:g.hati.panel.collapsed"
+  ]
+ },
+ {
+  "text": "DAY {day}",
+  "src": [
+   "ui:g.hati.panel.day"
+  ]
+ },
+ {
+  "text": "TAP FOR DAY {day}",
+  "src": [
+   "ui:g.hati.panel.next"
+  ]
+ },
+ {
+  "text": "GET READY...",
+  "src": [
+   "ui:g.hati.panel.ready"
+  ]
+ },
+ {
+  "text": "SEE YOUR RECAP",
+  "src": [
+   "ui:g.hati.panel.recap"
+  ]
+ },
+ {
+  "text": "DAY {day} REPORT",
+  "src": [
+   "ui:g.hati.panel.report"
+  ]
+ },
+ {
+  "text": "YOU SURVIVED {n} DAYS.",
+  "src": [
+   "ui:g.hati.panel.survived.many"
+  ]
+ },
+ {
+  "text": "YOU SURVIVED {n} DAY.",
+  "src": [
+   "ui:g.hati.panel.survived.one"
+  ]
+ },
+ {
+  "text": "TOO MANY TASKS WENT WRONG.",
+  "src": [
+   "ui:g.hati.panel.wrong"
+  ]
+ },
+ {
+  "text": "How it works: AI is fast and never tired at repeat jobs such as counting, sorting, drafting and scheduling. It has no feelings, and it does not know your neighbours.",
+  "src": [
+   "ui:g.hati.recap.how"
+  ]
+ },
+ {
+  "text": "You kept {place} going for {days}: {good}, {slow} done slowly by hand, {fail} and {missed}.",
+  "src": [
+   "ui:g.hati.recap.kept"
+  ]
+ },
+ {
+  "text": "Human in the loop: read and check what AI drafts, like a translated leaflet, before it goes out. A person keeps the final say.",
+  "src": [
+   "ui:g.hati.recap.loop"
+  ]
+ },
+ {
+  "text": "Someone is always responsible. If AI gets it wrong at work, the people who chose and used it answer for it.",
+  "src": [
+   "ui:g.hati.recap.responsible"
+  ]
+ },
+ {
+  "text": "The AI slipped most on {trait} ({times}).",
+  "src": [
+   "ui:g.hati.recap.slippedMost"
+  ]
+ },
+ {
+  "text": "Tip: give the repeat jobs to AI, so you have time for people. Keep care, decisions and health advice with a person or a health worker.",
+  "src": [
+   "ui:g.hati.recap.tip"
+  ]
+ },
+ {
+  "text": "CLEAR BONUS",
+  "src": [
+   "ui:g.hati.report.bonus"
+  ]
+ },
+ {
+  "text": "AI SLIP-UPS",
+  "src": [
+   "ui:g.hati.report.fail"
+  ]
+ },
+ {
+  "text": "GOOD SPLITS",
+  "src": [
+   "ui:g.hati.report.good"
+  ]
+ },
+ {
+  "text": "MISSED TASKS",
+  "src": [
+   "ui:g.hati.report.missed"
+  ]
+ },
+ {
+  "text": "POINTS TODAY",
+  "src": [
+   "ui:g.hati.report.points"
+  ]
+ },
+ {
+  "text": "SERVICE AFTER REST",
+  "src": [
+   "ui:g.hati.report.service"
+  ]
+ },
+ {
+  "text": "SLOW HAND-WORK",
+  "src": [
+   "ui:g.hati.report.slow"
+  ]
+ },
+ {
+  "text": "The AI made {boxes}, {misses}",
+  "src": [
+   "ui:g.lamok.desc.ai"
+  ]
+ },
+ {
+  "text": "The AI made no mistakes this time",
+  "src": [
+   "ui:g.lamok.desc.aiClean"
+  ]
+ },
+ {
+  "text": "Lamok Lamay. Score {score}. Hearts {hearts} of {max}. Precision {p}%. Catch rate {c}%. Scan {n}: {kind}.",
+  "src": [
+   "ui:g.lamok.desc.base"
+  ]
+ },
+ {
+  "text": "boxed by the AI as larvae {c}%",
+  "src": [
+   "ui:g.lamok.desc.boxed"
+  ]
+ },
+ {
+  "text": "You caught every larva.",
+  "src": [
+   "ui:g.lamok.desc.caughtAll"
+  ]
+ },
+ {
+  "text": "{n} false boxes",
+  "src": [
+   "ui:g.lamok.desc.falseBox.many"
+  ]
+ },
+ {
+  "text": "{n} false box",
+  "src": [
+   "ui:g.lamok.desc.falseBox.one"
+  ]
+ },
+ {
+  "text": "far left",
+  "src": [
+   "ui:g.lamok.desc.farLeft"
+  ]
+ },
+ {
+  "text": "far right",
+  "src": [
+   "ui:g.lamok.desc.farRight"
+  ]
+ },
+ {
+  "text": "Press Enter on an object to use the tool, up for Whack, down for Reject, and Done to move on.",
+  "src": [
+   "ui:g.lamok.desc.help"
+  ]
+ },
+ {
+  "text": "Highlighted: the Done button.",
+  "src": [
+   "ui:g.lamok.desc.highlightDone"
+  ]
+ },
+ {
+  "text": "Highlighted: object {n}.",
+  "src": [
+   "ui:g.lamok.desc.highlightObject"
+  ]
+ },
+ {
+  "text": "{n}, {where}: {look}, {box}",
+  "src": [
+   "ui:g.lamok.desc.item"
+  ]
+ },
+ {
+  "text": "{n} larvae left in the water became mosquitoes and you lost {n} hearts.",
+  "src": [
+   "ui:g.lamok.desc.left.many"
+  ]
+ },
+ {
+  "text": "{n} larva left in the water became a mosquito and you lost {n} heart.",
+  "src": [
+   "ui:g.lamok.desc.left.one"
+  ]
+ },
+ {
+  "text": "Less than 5 seconds left.",
+  "src": [
+   "ui:g.lamok.desc.low"
+  ]
+ },
+ {
+  "text": "{n} misses",
+  "src": [
+   "ui:g.lamok.desc.miss.many"
+  ]
+ },
+ {
+  "text": "{n} miss",
+  "src": [
+   "ui:g.lamok.desc.miss.one"
+  ]
+ },
+ {
+  "text": "no box",
+  "src": [
+   "ui:g.lamok.desc.noBox"
+  ]
+ },
+ {
+  "text": "none left",
+  "src": [
+   "ui:g.lamok.desc.noneLeft"
+  ]
+ },
+ {
+  "text": "Objects in the water: {items}.",
+  "src": [
+   "ui:g.lamok.desc.objects"
+  ]
+ },
+ {
+  "text": "Too many larvae grew into mosquitoes: no hearts left.",
+  "src": [
+   "ui:g.lamok.desc.over"
+  ]
+ },
+ {
+  "text": "The container pops up and the AI camera is scanning the water.",
+  "src": [
+   "ui:g.lamok.desc.scanning"
+  ]
+ },
+ {
+  "text": "Tip: {tip}",
+  "src": [
+   "ui:g.lamok.desc.tip"
+  ]
+ },
+ {
+  "text": "Tool: {tool}.",
+  "src": [
+   "ui:g.lamok.desc.tool"
+  ]
+ },
+ {
+  "text": "Reject",
+  "src": [
+   "ui:g.lamok.desc.toolReject"
+  ]
+ },
+ {
+  "text": "Whack",
+  "src": [
+   "ui:g.lamok.desc.toolWhack"
+  ]
+ },
+ {
+  "text": "{col}, {row}",
+  "src": [
+   "ui:g.lamok.desc.where"
+  ]
+ },
+ {
+  "text": "{n} wrong boxes stayed up.",
+  "src": [
+   "ui:g.lamok.desc.wrong.many"
+  ]
+ },
+ {
+  "text": "{n} wrong box stayed up.",
+  "src": [
+   "ui:g.lamok.desc.wrong.one"
+  ]
+ },
+ {
+  "text": "GOOD EYES! AI MISSED IT. +{n}",
+  "src": [
+   "ui:g.lamok.fb.add"
+  ]
+ },
+ {
+  "text": "OOPS! THAT WAS A REAL LARVA. -{n}",
+  "src": [
+   "ui:g.lamok.fb.badReject"
+  ]
+ },
+ {
+  "text": "OOPS! THAT IS ONLY A {what}. -{n}",
+  "src": [
+   "ui:g.lamok.fb.badSwat"
+  ]
+ },
+ {
+  "text": "NO BOX THERE: NOTHING TO REJECT.",
+  "src": [
+   "ui:g.lamok.fb.noBox"
+  ]
+ },
+ {
+  "text": "RIGHT! THAT WAS A {what}. +{n}",
+  "src": [
+   "ui:g.lamok.fb.reject"
+  ]
+ },
+ {
+  "text": "SPLASH! NOTHING THERE.",
+  "src": [
+   "ui:g.lamok.fb.splash"
+  ]
+ },
+ {
+  "text": "WHACK! LARVA CAUGHT. +{n}",
+  "src": [
+   "ui:g.lamok.fb.whack"
+  ]
+ },
+ {
+  "text": "SCAN {n}",
+  "src": [
+   "ui:g.lamok.header.scan"
+  ]
+ },
+ {
+  "text": "SCAN {n}  {s}S",
+  "src": [
+   "ui:g.lamok.header.scanTime"
+  ]
+ },
+ {
+  "text": "Catch rate",
+  "src": [
+   "ui:g.lamok.hud.catch"
+  ]
+ },
+ {
+  "text": "Precision",
+  "src": [
+   "ui:g.lamok.hud.precision"
+  ]
+ },
+ {
+  "text": "CATCH RATE {c}%: LARVAE THE AI FOUND",
+  "src": [
+   "ui:g.lamok.meter.catch"
+  ]
+ },
+ {
+  "text": "PRECISION {p}%: BOXES THAT ARE REAL",
+  "src": [
+   "ui:g.lamok.meter.precision"
+  ]
+ },
+ {
+  "text": "AI CAMERA SCANNING...",
+  "src": [
+   "ui:g.lamok.msg.scanning"
+  ]
+ },
+ {
+  "text": "AI BOXES: THE % IS HOW SURE THE AI IS.",
+  "src": [
+   "ui:g.lamok.msg.start"
+  ]
+ },
+ {
+  "text": "{n} containers",
+  "src": [
+   "ui:g.lamok.n.container.many"
+  ]
+ },
+ {
+  "text": "{n} container",
+  "src": [
+   "ui:g.lamok.n.container.one"
+  ]
+ },
+ {
+  "text": "{n} larvae",
+  "src": [
+   "ui:g.lamok.n.larva.many"
+  ]
+ },
+ {
+  "text": "{n} larva",
+  "src": [
+   "ui:g.lamok.n.larva.one"
+  ]
+ },
+ {
+  "text": "{n} wrong boxes",
+  "src": [
+   "ui:g.lamok.n.wrongBox.many"
+  ]
+ },
+ {
+  "text": "{n} wrong box",
+  "src": [
+   "ui:g.lamok.n.wrongBox.one"
+  ]
+ },
+ {
+  "text": "A confidence number is how sure the AI is, not proof. Look at the picture yourself.",
+  "src": [
+   "ui:g.lamok.recap.confidence"
+  ]
+ },
+ {
+  "text": "Dengue mosquitoes breed in clean standing water, even a small amount. Cover, clean and empty drums, buckets, tires, cans and flower-pot plates every week. Health workers call this search and destroy.",
+  "src": [
+   "ui:g.lamok.recap.dengue"
+  ]
+ },
+ {
+  "text": "The AI camera's precision was {p}%: of its boxes, that share really were larvae. Its catch rate was {c}%: of the real larvae, that share got a box. A false alarm hurts precision, and a miss hurts catch rate.",
+  "src": [
+   "ui:g.lamok.recap.grade"
+  ]
+ },
+ {
+  "text": "AI cameras can help health workers search faster, but people still check the result. If a fever starts, see a health worker early.",
+  "src": [
+   "ui:g.lamok.recap.help"
+  ]
+ },
+ {
+  "text": "You checked {containers}: {larvae} whacked ({added} the AI missed), {wrong} rejected and {escaped} grew into mosquitoes. Best streak: {streak}.",
+  "src": [
+   "ui:g.lamok.recap.run"
+  ]
+ },
+ {
+  "text": "Its most confident wrong box said {n}%. A high number is still only a guess, so look at the picture yourself.",
+  "src": [
+   "ui:g.lamok.recap.topWrong"
+  ]
+ },
+ {
+  "text": "The AI camera made too few boxes to grade this time.",
+  "src": [
+   "ui:g.lamok.recap.ungraded"
+  ]
+ },
+ {
+  "text": "AI: {boxes}, {misses}",
+  "src": [
+   "ui:g.lamok.res.ai"
+  ]
+ },
+ {
+  "text": "AI: NO MISTAKES THIS TIME",
+  "src": [
+   "ui:g.lamok.res.aiClean"
+  ]
+ },
+ {
+  "text": "ALL LARVAE CAUGHT!",
+  "src": [
+   "ui:g.lamok.res.all"
+  ]
+ },
+ {
+  "text": "ALL LARVAE CAUGHT! TIME +{n}",
+  "src": [
+   "ui:g.lamok.res.allBonus"
+  ]
+ },
+ {
+  "text": "NO LARVAE HERE. KEEP IT COVERED!",
+  "src": [
+   "ui:g.lamok.res.empty"
+  ]
+ },
+ {
+  "text": "{n} LARVAE ESCAPED AS MOSQUITOES!",
+  "src": [
+   "ui:g.lamok.res.escaped.many"
+  ]
+ },
+ {
+  "text": "{n} LARVA ESCAPED AS A MOSQUITO!",
+  "src": [
+   "ui:g.lamok.res.escaped.one"
+  ]
+ },
+ {
+  "text": "{n} FALSE BOXES",
+  "src": [
+   "ui:g.lamok.res.falseBox.many"
+  ]
+ },
+ {
+  "text": "{n} FALSE BOX",
+  "src": [
+   "ui:g.lamok.res.falseBox.one"
+  ]
+ },
+ {
+  "text": "{n} MISSES",
+  "src": [
+   "ui:g.lamok.res.miss.many"
+  ]
+ },
+ {
+  "text": "{n} MISS",
+  "src": [
+   "ui:g.lamok.res.miss.one"
+  ]
+ },
+ {
+  "text": "MISSED",
+  "src": [
+   "ui:g.lamok.tab.missed"
+  ]
+ },
+ {
+  "text": "WRONG",
+  "src": [
+   "ui:g.lamok.tab.wrong"
+  ]
+ },
+ {
+  "text": "DONE",
+  "src": [
+   "ui:g.lamok.tile.done1"
+  ]
+ },
+ {
+  "text": "NEXT ONE",
+  "src": [
+   "ui:g.lamok.tile.done2"
+  ]
+ },
+ {
+  "text": "REJECT",
+  "src": [
+   "ui:g.lamok.tile.reject1"
+  ]
+ },
+ {
+  "text": "WRONG BOX",
+  "src": [
+   "ui:g.lamok.tile.reject2"
+  ]
+ },
+ {
+  "text": "WHACK",
+  "src": [
+   "ui:g.lamok.tile.whack1"
+  ]
+ },
+ {
+  "text": "A LARVA",
+  "src": [
+   "ui:g.lamok.tile.whack2"
+  ]
+ },
+ {
+  "text": "ANY ASK",
+  "src": [
+   "ui:g.luto.anyAsk"
+  ]
+ },
+ {
+  "text": "COOK!",
+  "src": [
+   "ui:g.luto.cook"
+  ]
+ },
+ {
+  "text": "Luto ni Ara. Score {score}. Hearts {hearts} of {max}. Order {n} from {name}: \"{order}\"",
+  "src": [
+   "ui:g.luto.desc.base"
+  ]
+ },
+ {
+  "text": "Ingredients on the shelf: {shelf}. In the pot: {pot}. Highlighted: {slot}. Press Enter on an ingredient to add or remove it, then on Cook.",
+  "src": [
+   "ui:g.luto.desc.choose"
+  ]
+ },
+ {
+  "text": "The kitchen is closed: no hearts left.",
+  "src": [
+   "ui:g.luto.desc.closed"
+  ]
+ },
+ {
+  "text": "Cooking with: {list}.",
+  "src": [
+   "ui:g.luto.desc.cooking"
+  ]
+ },
+ {
+  "text": "Good dish, {points} points.",
+  "src": [
+   "ui:g.luto.desc.good"
+  ]
+ },
+ {
+  "text": "This is a health question.",
+  "src": [
+   "ui:g.luto.desc.healthAsk"
+  ]
+ },
+ {
+  "text": "nothing yet",
+  "src": [
+   "ui:g.luto.desc.nothing"
+  ]
+ },
+ {
+  "text": "You served: {dish}.",
+  "src": [
+   "ui:g.luto.desc.served"
+  ]
+ },
+ {
+  "text": "the Cook button",
+  "src": [
+   "ui:g.luto.desc.slotCook"
+  ]
+ },
+ {
+  "text": "{name} ingredient",
+  "src": [
+   "ui:g.luto.desc.slotIngredient"
+  ]
+ },
+ {
+  "text": "Too slow: the customer left hungry and you lost a heart.",
+  "src": [
+   "ui:g.luto.desc.tooSlow"
+  ]
+ },
+ {
+  "text": "Wrong dish, you lost a heart.",
+  "src": [
+   "ui:g.luto.desc.wrong"
+  ]
+ },
+ {
+  "text": "A doctor's lecture on {subject}, full of big words",
+  "src": [
+   "ui:g.luto.dish.audience"
+  ]
+ },
+ {
+  "text": "Mystery meat: a health claim from nowhere",
+  "src": [
+   "ui:g.luto.dish.cite"
+  ]
+ },
+ {
+  "text": "A wall-of-text spaghetti, with no steps or list",
+  "src": [
+   "ui:g.luto.dish.format"
+  ]
+ },
+ {
+  "text": "{subject} for {audience}",
+  "src": [
+   "ui:g.luto.dish.good"
+  ]
+ },
+ {
+  "text": "{subject} for {audience}, {language}",
+  "src": [
+   "ui:g.luto.dish.goodLang"
+  ]
+ },
+ {
+  "text": "Deep English soup, but {who} asked for {language}",
+  "src": [
+   "ui:g.luto.dish.language"
+  ]
+ },
+ {
+  "text": "A 3-page essay on {subject} nobody had time to read",
+  "src": [
+   "ui:g.luto.dish.length"
+  ]
+ },
+ {
+  "text": "Kitchen-sink soup: too many orders at once",
+  "src": [
+   "ui:g.luto.dish.muddled"
+  ]
+ },
+ {
+  "text": "A robot with no job: a bland, same-for-everyone answer",
+  "src": [
+   "ui:g.luto.dish.role"
+  ]
+ },
+ {
+  "text": "Overconfident adobo: very sure, very made up",
+  "src": [
+   "ui:g.luto.dish.unsure"
+  ]
+ },
+ {
+  "text": "EMPTY POT",
+  "src": [
+   "ui:g.luto.emptyPot"
+  ]
+ },
+ {
+  "text": "HEALTH",
+  "src": [
+   "ui:g.luto.health"
+  ]
+ },
+ {
+  "text": "Hearts",
+  "src": [
+   "ui:g.luto.hud.hearts",
+   "ui:g.sino.hud.hearts",
+   "ui:g.lamok.hud.hearts"
+  ]
+ },
+ {
+  "text": "{n} of {max}",
+  "src": [
+   "ui:g.luto.hud.heartsValue",
+   "ui:g.sino.hud.heartsValue",
+   "ui:g.lamok.hud.heartsValue"
+  ]
+ },
+ {
+  "text": "Served",
+  "src": [
+   "ui:g.luto.hud.served"
+  ]
+ },
+ {
+  "text": "cite sources",
+  "src": [
+   "ui:g.luto.ing.cite",
+   "games\\luto-ni-ara\\orders.ts#INGREDIENT_INFO"
+  ]
+ },
+ {
+  "text": "say if unsure",
+  "src": [
+   "ui:g.luto.ing.unsure",
+   "games\\luto-ni-ara\\orders.ts#INGREDIENT_INFO"
+  ]
+ },
+ {
+  "text": "Say who the answer is for, so it matches their level.",
+  "src": [
+   "ui:g.luto.lesson.audience"
+  ]
+ },
+ {
+  "text": "For health questions, ask it to cite sources you can check.",
+  "src": [
+   "ui:g.luto.lesson.cite"
+  ]
+ },
+ {
+  "text": "Served, but extra instructions nobody asked for slow the answer down.",
+  "src": [
+   "ui:g.luto.lesson.cluttered"
+  ]
+ },
+ {
+  "text": "Ask for a format, like 3 steps, a list or a table.",
+  "src": [
+   "ui:g.luto.lesson.format"
+  ]
+ },
+ {
+  "text": "Name the language you want, or the AI will pick one for you.",
+  "src": [
+   "ui:g.luto.lesson.language"
+  ]
+ },
+ {
+  "text": "Say how long: short, 3 sentences, one paragraph.",
+  "src": [
+   "ui:g.luto.lesson.length"
+  ]
+ },
+ {
+  "text": "Only add what the customer asked for. Extra rules confuse the AI.",
+  "src": [
+   "ui:g.luto.lesson.muddled"
+  ]
+ },
+ {
+  "text": "A good prompt is a good recipe: clear parts, clear dish.",
+  "src": [
+   "ui:g.luto.lesson.perfect"
+  ]
+ },
+ {
+  "text": "A clear prompt, with sources and honesty, still needs a check with a health worker.",
+  "src": [
+   "ui:g.luto.lesson.perfectHealth"
+  ]
+ },
+ {
+  "text": "Give it a role, like nurse or teacher, to set the tone.",
+  "src": [
+   "ui:g.luto.lesson.role"
+  ]
+ },
+ {
+  "text": "Ask it to say if it is unsure, so guesses do not sound like facts.",
+  "src": [
+   "ui:g.luto.lesson.unsure"
+  ]
+ },
+ {
+  "text": "NO DISH: THE CUSTOMER LEFT HUNGRY",
+  "src": [
+   "ui:g.luto.noDish"
+  ]
+ },
+ {
+  "text": "THINK OF THE PARTS FIRST: WHO, LANGUAGE, LENGTH, FORMAT.",
+  "src": [
+   "ui:g.luto.noDishLesson"
+  ]
+ },
+ {
+  "text": "{task} {audience}.",
+  "src": [
+   "ui:g.luto.order.ask"
+  ]
+ },
+ {
+  "text": "{task} {audience} {language}.",
+  "src": [
+   "ui:g.luto.order.askLang"
+  ]
+ },
+ {
+  "text": "+{total}  BASE {base} SPEED {speed}",
+  "src": [
+   "ui:g.luto.pay"
+  ]
+ },
+ {
+  "text": "+{total}  BASE {base} SPEED {speed} TIPS {tips}",
+  "src": [
+   "ui:g.luto.payTips"
+  ]
+ },
+ {
+  "text": "You cooked for {orders}: {served}, {wrong} and {timeouts} who gave up waiting.",
+  "src": [
+   "ui:g.luto.recap.cooked"
+  ]
+ },
+ {
+  "text": "{n} customer",
+  "src": [
+   "ui:g.luto.recap.customer"
+  ]
+ },
+ {
+  "text": "{n} customers",
+  "src": [
+   "ui:g.luto.recap.customers"
+  ]
+ },
+ {
+  "text": "{n} good dish",
+  "src": [
+   "ui:g.luto.recap.goodDish"
+  ]
+ },
+ {
+  "text": "{n} good dishes",
+  "src": [
+   "ui:g.luto.recap.goodDishes"
+  ]
+ },
+ {
+  "text": "For health questions, ask it to cite sources and to say if it is unsure. That makes its answer easier to check.",
+  "src": [
+   "ui:g.luto.recap.health"
+  ]
+ },
+ {
+  "text": "How it works: an AI chatbot answers exactly what you ask. A clearer prompt (who it is for, which language, how long, what format, what role) gets a clearer answer.",
+  "src": [
+   "ui:g.luto.recap.how"
+  ]
+ },
+ {
+  "text": "The ingredient you missed most: {name} ({times}).",
+  "src": [
+   "ui:g.luto.recap.missed"
+  ]
+ },
+ {
+  "text": "{n} order",
+  "src": [
+   "ui:g.luto.recap.order"
+  ]
+ },
+ {
+  "text": "{n} orders",
+  "src": [
+   "ui:g.luto.recap.orders"
+  ]
+ },
+ {
+  "text": "Tip: take health answers from a chatbot to a health worker or your health center before you act on them.",
+  "src": [
+   "ui:g.luto.recap.tip"
+  ]
+ },
+ {
+  "text": "{n} wrong dish",
+  "src": [
+   "ui:g.luto.recap.wrongDish"
+  ]
+ },
+ {
+  "text": "{n} wrong dishes",
+  "src": [
+   "ui:g.luto.recap.wrongDishes"
+  ]
+ },
+ {
+  "text": "A chatbot can still be wrong, even when it sounds sure, and the sources it names can be made up. Always check them.",
+  "src": [
+   "ui:g.luto.recap.wrongToo"
+  ]
+ },
+ {
+  "text": "the right language",
+  "src": [
+   "ui:g.luto.rightLanguage"
+  ]
+ },
+ {
+  "text": "TOO SLOW! LOST A HEART.",
+  "src": [
+   "ui:g.luto.tooSlow"
+  ]
+ },
+ {
+  "text": "WRONG DISH! LOST A HEART.",
+  "src": [
+   "ui:g.luto.wrongDish"
+  ]
+ },
+ {
+  "text": "CALL",
+  "src": [
+   "ui:g.sino.ch.call",
+   "games\\sino-to\\calls.ts#CHECK_INFO"
+  ]
+ },
+ {
+  "text": "VOICE NOTE",
+  "src": [
+   "ui:g.sino.ch.voice"
+  ]
+ },
+ {
+  "text": "Sino 'To?. Score {score}. Hearts {hearts} of {max}. Streak {streak}. Call {n}, {caller}: \"{text}\"",
+  "src": [
+   "ui:g.sino.d.base"
+  ]
+ },
+ {
+  "text": "a call from {name} ({tag})",
+  "src": [
+   "ui:g.sino.d.call"
+  ]
+ },
+ {
+  "text": "Checks left: {left}.",
+  "src": [
+   "ui:g.sino.d.checksLeft"
+  ]
+ },
+ {
+  "text": "Checks made: {found}",
+  "src": [
+   "ui:g.sino.d.checksMade"
+  ]
+ },
+ {
+  "text": "You helped. A lucky guess, {n} points.",
+  "src": [
+   "ui:g.sino.d.helpedGuess"
+  ]
+ },
+ {
+  "text": "You helped. Real call helped, {n} points.",
+  "src": [
+   "ui:g.sino.d.helpedVerified"
+  ]
+ },
+ {
+  "text": "Highlighted: {slot}.",
+  "src": [
+   "ui:g.sino.d.highlighted"
+  ]
+ },
+ {
+  "text": "Press Enter on a check to make it, then choose Help them or Hang up and report.",
+  "src": [
+   "ui:g.sino.d.howTo"
+  ]
+ },
+ {
+  "text": "You hung up on a real call and lost a heart.",
+  "src": [
+   "ui:g.sino.d.hungUp"
+  ]
+ },
+ {
+  "text": "new number",
+  "src": [
+   "ui:g.sino.d.newNumber"
+  ]
+ },
+ {
+  "text": "none yet.",
+  "src": [
+   "ui:g.sino.d.noneYet"
+  ]
+ },
+ {
+  "text": "The switchboard is closed: no hearts left.",
+  "src": [
+   "ui:g.sino.d.over"
+  ]
+ },
+ {
+  "text": "You helped a scammer and lost a heart.",
+  "src": [
+   "ui:g.sino.d.paid"
+  ]
+ },
+ {
+  "text": "saved contact",
+  "src": [
+   "ui:g.sino.d.saved"
+  ]
+ },
+ {
+  "text": "That settles it.",
+  "src": [
+   "ui:g.sino.d.settles"
+  ]
+ },
+ {
+  "text": "the check to {check}",
+  "src": [
+   "ui:g.sino.d.slotCheck"
+  ]
+ },
+ {
+  "text": "the Hang up and report button",
+  "src": [
+   "ui:g.sino.d.slotHangup"
+  ]
+ },
+ {
+  "text": "the Help them button",
+  "src": [
+   "ui:g.sino.d.slotHelp"
+  ]
+ },
+ {
+  "text": "ARAW GAME FAKE stamp: this was an AI voice-clone scam.",
+  "src": [
+   "ui:g.sino.d.stampFake"
+  ]
+ },
+ {
+  "text": "Genuine call stamp: this call was real.",
+  "src": [
+   "ui:g.sino.d.stampReal"
+  ]
+ },
+ {
+  "text": "You hung up and reported it. A lucky guess, {n} points.",
+  "src": [
+   "ui:g.sino.d.stoppedGuess"
+  ]
+ },
+ {
+  "text": "You hung up and reported it. Scam stopped, {n} points.",
+  "src": [
+   "ui:g.sino.d.stoppedVerified"
+  ]
+ },
+ {
+  "text": "unknown number",
+  "src": [
+   "ui:g.sino.d.unknown"
+  ]
+ },
+ {
+  "text": "a voice note from {name} ({tag})",
+  "src": [
+   "ui:g.sino.d.voice"
+  ]
+ },
+ {
+  "text": "+{n}. CHECK NEXT TIME",
+  "src": [
+   "ui:g.sino.h.checkNext"
+  ]
+ },
+ {
+  "text": "REAL CALL HELPED!",
+  "src": [
+   "ui:g.sino.h.helped"
+  ]
+ },
+ {
+  "text": "THAT WAS A REAL CALL",
+  "src": [
+   "ui:g.sino.h.hungUp"
+  ]
+ },
+ {
+  "text": "LOST A HEART",
+  "src": [
+   "ui:g.sino.h.lostHeart"
+  ]
+ },
+ {
+  "text": "LUCKY GUESS!",
+  "src": [
+   "ui:g.sino.h.lucky"
+  ]
+ },
+ {
+  "text": "YOU HELPED A SCAM!",
+  "src": [
+   "ui:g.sino.h.paid"
+  ]
+ },
+ {
+  "text": "+{n} (X{mult})",
+  "src": [
+   "ui:g.sino.h.points"
+  ]
+ },
+ {
+  "text": "SCAM STOPPED!",
+  "src": [
+   "ui:g.sino.h.stopped"
+  ]
+ },
+ {
+  "text": "HANG UP+REPORT",
+  "src": [
+   "ui:g.sino.hangup"
+  ]
+ },
+ {
+  "text": "HELP THEM",
+  "src": [
+   "ui:g.sino.help"
+  ]
+ },
+ {
+  "text": "{n} (x{mult})",
+  "src": [
+   "ui:g.sino.hud.streakValue"
+  ]
+ },
+ {
+  "text": "{n} calls",
+  "src": [
+   "ui:g.sino.n.call.many"
+  ]
+ },
+ {
+  "text": "{n} call",
+  "src": [
+   "ui:g.sino.n.call.one"
+  ]
+ },
+ {
+  "text": "{n} real calls",
+  "src": [
+   "ui:g.sino.n.realCall.many"
+  ]
+ },
+ {
+  "text": "{n} real call",
+  "src": [
+   "ui:g.sino.n.realCall.one"
+  ]
+ },
+ {
+  "text": "{n} scams",
+  "src": [
+   "ui:g.sino.n.scam.many"
+  ]
+ },
+ {
+  "text": "{n} scam",
+  "src": [
+   "ui:g.sino.n.scam.one"
+  ]
+ },
+ {
+  "text": "CALL BACK: Bank: \"That was not us.\"",
+  "src": [
+   "ui:g.sino.r.cbBankNo"
+  ]
+ },
+ {
+  "text": "CALL BACK: Bank: \"Yes, we called.\"",
+  "src": [
+   "ui:g.sino.r.cbBankYes"
+  ]
+ },
+ {
+  "text": "CALL BACK: Line busy. Try again later.",
+  "src": [
+   "ui:g.sino.r.cbBusy"
+  ]
+ },
+ {
+  "text": "CALL BACK: Clinic: \"We never called.\"",
+  "src": [
+   "ui:g.sino.r.cbClinicNo"
+  ]
+ },
+ {
+  "text": "CALL BACK: Clinic: \"Yes, we called.\"",
+  "src": [
+   "ui:g.sino.r.cbClinicYes"
+  ]
+ },
+ {
+  "text": "CALL BACK: \"Yes, that was me!\"",
+  "src": [
+   "ui:g.sino.r.cbMe"
+  ]
+ },
+ {
+  "text": "CALL BACK: \"I never called you!\"",
+  "src": [
+   "ui:g.sino.r.cbNever"
+  ]
+ },
+ {
+  "text": "CALL BACK: Rings and rings. No reply.",
+  "src": [
+   "ui:g.sino.r.cbRings"
+  ]
+ },
+ {
+  "text": "HOTLINE: \"Yes, that was booked.\"",
+  "src": [
+   "ui:g.sino.r.hotBooked"
+  ]
+ },
+ {
+  "text": "HOTLINE: \"Yes, we did call you.\"",
+  "src": [
+   "ui:g.sino.r.hotCalled"
+  ]
+ },
+ {
+  "text": "HOTLINE: A hotline cannot find family.",
+  "src": [
+   "ui:g.sino.r.hotFamily"
+  ]
+ },
+ {
+  "text": "HOTLINE: \"No such doctor or fee.\"",
+  "src": [
+   "ui:g.sino.r.hotNoDoctor"
+  ]
+ },
+ {
+  "text": "HOTLINE: \"No such patient today.\"",
+  "src": [
+   "ui:g.sino.r.hotNoPatient"
+  ]
+ },
+ {
+  "text": "HOTLINE: \"Not us. Never share OTP.\"",
+  "src": [
+   "ui:g.sino.r.hotNotUs"
+  ]
+ },
+ {
+  "text": "HOTLINE: \"Yes, that patient is in.\"",
+  "src": [
+   "ui:g.sino.r.hotPatient"
+  ]
+ },
+ {
+  "text": "HOTLINE: Long queue. No answer yet.",
+  "src": [
+   "ui:g.sino.r.hotQueue"
+  ]
+ },
+ {
+  "text": "{name}: \"Not sure. Ask the bank.\"",
+  "src": [
+   "ui:g.sino.r.relBank"
+  ]
+ },
+ {
+  "text": "{name}: \"Yes, the clinic told me.\"",
+  "src": [
+   "ui:g.sino.r.relClinic"
+  ]
+ },
+ {
+  "text": "{name}: No reply. Left on read.",
+  "src": [
+   "ui:g.sino.r.relNoReply"
+  ]
+ },
+ {
+  "text": "{name}: \"Nobody booked that.\"",
+  "src": [
+   "ui:g.sino.r.relNobody"
+  ]
+ },
+ {
+  "text": "{name}: \"Safe at home. No call.\"",
+  "src": [
+   "ui:g.sino.r.relSafe"
+  ]
+ },
+ {
+  "text": "{name}: \"Yes, it is true. I know.\"",
+  "src": [
+   "ui:g.sino.r.relTrue"
+  ]
+ },
+ {
+  "text": "SECRET Q: Bad line. Cannot hear.",
+  "src": [
+   "ui:g.sino.r.secretBadLine"
+  ]
+ },
+ {
+  "text": "SECRET Q: \"I forgot! Hurry up!\"",
+  "src": [
+   "ui:g.sino.r.secretForgot"
+  ]
+ },
+ {
+  "text": "SECRET Q: Not for doctors or banks.",
+  "src": [
+   "ui:g.sino.r.secretNotFor"
+  ]
+ },
+ {
+  "text": "SECRET Q: \"{answer}!\" Right answer.",
+  "src": [
+   "ui:g.sino.r.secretRight"
+  ]
+ },
+ {
+  "text": "SECRET Q: \"Um... just send it first!\"",
+  "src": [
+   "ui:g.sino.r.secretSend"
+  ]
+ },
+ {
+  "text": "SECRET Q: \"Mingming?\" Wrong answer.",
+  "src": [
+   "ui:g.sino.r.secretWrong"
+  ]
+ },
+ {
+  "text": "You decided {times} without proof from a check. A guess can be right, but it is still a guess: a clone sounds just like family.",
+  "src": [
+   "ui:g.sino.recap.guesses"
+  ]
+ },
+ {
+  "text": "How it works: AI can copy a voice from a short clip, so a voice that sounds like family is not proof. Scammers fake hospital emergencies, a doctor or a bank to rush you.",
+  "src": [
+   "ui:g.sino.recap.how"
+  ]
+ },
+ {
+  "text": "Never share an OTP or PIN, and never stop prescribed medicine because of a call or an ad. Real emergencies can wait for a two-minute check, and real family will understand.",
+  "src": [
+   "ui:g.sino.recap.otp"
+  ]
+ },
+ {
+  "text": "Every decision had proof from a check. That is the habit that protects you.",
+  "src": [
+   "ui:g.sino.recap.proof"
+  ]
+ },
+ {
+  "text": "Tip: set up a family secret question today. Only your family should know the answer.",
+  "src": [
+   "ui:g.sino.recap.tip"
+  ]
+ },
+ {
+  "text": "You took {calls}: {stopped} stopped, {helped} helped, {paid} you helped and {hungUp} you hung up on. Best streak: {best}.",
+  "src": [
+   "ui:g.sino.recap.took"
+  ]
+ },
+ {
+  "text": "Verify through a number or a person you already know: call back the saved number, ask another relative, use the official hotline. Never use a number the caller gives you.",
+  "src": [
+   "ui:g.sino.recap.verify"
+  ]
+ },
+ {
+  "text": "RING RING!",
+  "src": [
+   "ui:g.sino.ring1"
+  ]
+ },
+ {
+  "text": "RING.....",
+  "src": [
+   "ui:g.sino.ring2"
+  ]
+ },
+ {
+  "text": "GENUINE CALL",
+  "src": [
+   "ui:g.sino.stampReal"
+  ]
+ },
+ {
+  "text": "NEW NO.",
+  "src": [
+   "ui:g.sino.tag.new"
+  ]
+ },
+ {
+  "text": "SAVED",
+  "src": [
+   "ui:g.sino.tag.saved"
+  ]
+ },
+ {
+  "text": "UNKNOWN",
+  "src": [
+   "ui:g.sino.tag.unknown"
+  ]
+ },
+ {
+  "text": "VERIFY FIRST: PICK A CHECK BELOW, THEN HELP THEM OR HANG UP.",
+  "src": [
+   "ui:g.sino.verifyFirst"
+  ]
+ },
+ {
+  "text": "Ahead: {items}.",
+  "src": [
+   "ui:g.takbo.ahead"
+  ]
+ },
+ {
+  "text": "{item} in the {lane} lane",
+  "src": [
+   "ui:g.takbo.aheadItem"
+  ]
+ },
+ {
+  "text": "The road ahead is clear.",
+  "src": [
+   "ui:g.takbo.clear"
+  ]
+ },
+ {
+  "text": "Takbo, Data! Score {score}. Privacy Shield at {pct} percent. Ara is in the {lane} lane. {ahead}",
+  "src": [
+   "ui:g.takbo.desc"
+  ]
+ },
+ {
+  "text": "Takbo, Data! Score {score}. Privacy Shield at {pct} percent. Ara is in the {lane} lane and jumping. {ahead}",
+  "src": [
+   "ui:g.takbo.descJump"
+  ]
+ },
+ {
+  "text": "Safe grabs",
+  "src": [
+   "ui:g.takbo.hud.safe"
+  ]
+ },
+ {
+  "text": "Privacy Shield",
+  "src": [
+   "ui:g.takbo.hud.shield"
+  ]
+ },
+ {
+  "text": "a chicken",
+  "src": [
+   "ui:g.takbo.item.chicken"
+  ]
+ },
+ {
+  "text": "a pothole",
+  "src": [
+   "ui:g.takbo.item.pothole"
+  ]
+ },
+ {
+  "text": "a puddle",
+  "src": [
+   "ui:g.takbo.item.puddle"
+  ]
+ },
+ {
+  "text": "{say} (safe)",
+  "src": [
+   "ui:g.takbo.item.safe"
+  ]
+ },
+ {
+  "text": "{say} (data trap)",
+  "src": [
+   "ui:g.takbo.item.trap"
+  ]
+ },
+ {
+  "text": "BUMP",
+  "src": [
+   "ui:g.takbo.popBump"
+  ]
+ },
+ {
+  "text": "SAFE",
+  "src": [
+   "ui:g.takbo.popSafe"
+  ]
+ },
+ {
+  "text": "You gave away {list}.",
+  "src": [
+   "ui:g.takbo.recap.gave"
+  ]
+ },
+ {
+  "text": "You did not give away any data. Great job!",
+  "src": [
+   "ui:g.takbo.recap.none"
+  ]
+ },
+ {
+  "text": "You ran {metres} {metresWord}, grabbed {safe} safe {freebiesWord} and bumped into {bumps} {obstaclesWord}.",
+  "src": [
+   "ui:g.takbo.recap.run"
+  ]
+ },
+ {
+  "text": "{what} ({n} times)",
+  "src": [
+   "ui:g.takbo.recap.times"
+  ]
+ },
+ {
+  "text": "Privacy tip {n}: {tip}",
+  "src": [
+   "ui:g.takbo.recap.tip"
+  ]
+ },
+ {
+  "text": "Why it matters: {why}",
+  "src": [
+   "ui:g.takbo.recap.why"
+  ]
+ },
+ {
+  "text": "SCORE",
+  "src": [
+   "ui:g.takbo.score"
+  ]
+ },
+ {
+  "text": "SHIELD",
+  "src": [
+   "ui:g.takbo.shield"
+  ]
+ },
+ {
+  "text": "SHIELD DOWN!",
+  "src": [
+   "ui:g.takbo.shieldDown"
+  ]
+ },
+ {
+  "text": "Ara walks Lola the rest.",
+  "src": [
+   "ui:g.tawid.araWalks"
+  ]
+ },
+ {
+  "text": "BEEP!",
+  "src": [
+   "ui:g.tawid.beep"
+  ]
+ },
+ {
+  "text": "BEEP! LOST A HEART",
+  "src": [
+   "ui:g.tawid.beepLost"
+  ]
+ },
+ {
+  "text": "The next street is busier!",
+  "src": [
+   "ui:g.tawid.busier"
+  ]
+ },
+ {
+  "text": "The health center is ahead!",
+  "src": [
+   "ui:g.tawid.calmClinic"
+  ]
+ },
+ {
+  "text": "Grass ahead. No traffic here.",
+  "src": [
+   "ui:g.tawid.calmGrass"
+  ]
+ },
+ {
+  "text": "HEALTH CENTER",
+  "src": [
+   "ui:g.tawid.clinic"
+  ]
+ },
+ {
+  "text": "{vehicle} coming. Hold on.",
+  "src": [
+   "ui:g.tawid.coming"
+  ]
+ },
+ {
+  "text": "{base} Lola reached the health center! {lines}",
+  "src": [
+   "ui:g.tawid.d.arrived"
+  ]
+ },
+ {
+  "text": "at the health center",
+  "src": [
+   "ui:g.tawid.d.atClinic"
+  ]
+ },
+ {
+  "text": "Tawid, Lola!. Score {score}. Hearts {hearts} of {max}. Trust Meter {trust} percent, score multiplier x{mult}. Trip {trip}: Lola is {where}, lane {lane} of {lanes}, column {col} of {cols}.",
+  "src": [
+   "ui:g.tawid.d.base"
+  ]
+ },
+ {
+  "text": "{base} The horn beeped and Lola has no hearts left.",
+  "src": [
+   "ui:g.tawid.d.ending"
+  ]
+ },
+ {
+  "text": "Your own view of the next lane, a {vehicle} lane with traffic moving {dir}: {when}.",
+  "src": [
+   "ui:g.tawid.d.eyes"
+  ]
+ },
+ {
+  "text": "The AI guide says {headline}, {n} percent sure: {reason}",
+  "src": [
+   "ui:g.tawid.d.guide"
+  ]
+ },
+ {
+  "text": "The AI guide says GO: {line}",
+  "src": [
+   "ui:g.tawid.d.guideCalm"
+  ]
+ },
+ {
+  "text": "a {vehicle} is in your column right now",
+  "src": [
+   "ui:g.tawid.d.inColumn"
+  ]
+ },
+ {
+  "text": "Last: {message}.",
+  "src": [
+   "ui:g.tawid.d.last"
+  ]
+ },
+ {
+  "text": "The next row has no traffic.",
+  "src": [
+   "ui:g.tawid.d.noTraffic"
+  ]
+ },
+ {
+  "text": "no vehicle reaches your column in the next 3 seconds",
+  "src": [
+   "ui:g.tawid.d.noneSoon"
+  ]
+ },
+ {
+  "text": "There is nothing ahead.",
+  "src": [
+   "ui:g.tawid.d.nothing"
+  ]
+ },
+ {
+  "text": "on the grass",
+  "src": [
+   "ui:g.tawid.d.onGrass"
+  ]
+ },
+ {
+  "text": "on a road",
+  "src": [
+   "ui:g.tawid.d.onRoad"
+  ]
+ },
+ {
+  "text": "{base} Lola is out of hearts and the run is over.",
+  "src": [
+   "ui:g.tawid.d.over"
+  ]
+ },
+ {
+  "text": "{base} {guide} {eyes}{last} Move with the arrow keys or tap above, left or right of Lola. Space or tap Lola to wait. {road} road lanes this trip.",
+  "src": [
+   "ui:g.tawid.d.play"
+  ]
+ },
+ {
+  "text": "a {vehicle} reaches your column in about {n} seconds",
+  "src": [
+   "ui:g.tawid.d.reaches.many"
+  ]
+ },
+ {
+  "text": "a {vehicle} reaches your column in about {n} second",
+  "src": [
+   "ui:g.tawid.d.reaches.one"
+  ]
+ },
+ {
+  "text": "GO!",
+  "src": [
+   "ui:g.tawid.go"
+  ]
+ },
+ {
+  "text": "Looks clear. Step now.",
+  "src": [
+   "ui:g.tawid.goLine1",
+   "games\\tawid-lola\\lanes.ts#GO_LINES"
+  ]
+ },
+ {
+  "text": "Gap ahead. You can go.",
+  "src": [
+   "ui:g.tawid.goLine2",
+   "games\\tawid-lola\\lanes.ts#GO_LINES"
+  ]
+ },
+ {
+  "text": "No traffic. Safe to go.",
+  "src": [
+   "ui:g.tawid.goLine3",
+   "games\\tawid-lola\\lanes.ts#GO_LINES"
+  ]
+ },
+ {
+  "text": "AI GUIDE",
+  "src": [
+   "ui:g.tawid.guide"
+  ]
+ },
+ {
+  "text": "Trip",
+  "src": [
+   "ui:g.tawid.hud.trip"
+  ]
+ },
+ {
+  "text": "Trust Meter",
+  "src": [
+   "ui:g.tawid.hud.trust"
+  ]
+ },
+ {
+  "text": "LOLA MADE IT!",
+  "src": [
+   "ui:g.tawid.madeIt"
+  ]
+ },
+ {
+  "text": "GOOD CALL! {d}",
+  "src": [
+   "ui:g.tawid.msg.overrideRight"
+  ]
+ },
+ {
+  "text": "AI SAID GO {d}",
+  "src": [
+   "ui:g.tawid.msg.saidGo"
+  ]
+ },
+ {
+  "text": "AI SAID WAIT {d}",
+  "src": [
+   "ui:g.tawid.msg.saidWait"
+  ]
+ },
+ {
+  "text": "AI WAS RIGHT {d}",
+  "src": [
+   "ui:g.tawid.msg.trustRight"
+  ]
+ },
+ {
+  "text": "AI WAS WRONG! {d}",
+  "src": [
+   "ui:g.tawid.msg.trustWrong"
+  ]
+ },
+ {
+  "text": "X{m} SCORE",
+  "src": [
+   "ui:g.tawid.multiplier"
+  ]
+ },
+ {
+  "text": "NO HEARTS LEFT",
+  "src": [
+   "ui:g.tawid.noHearts"
+  ]
+ },
+ {
+  "text": "Health apps and chatbots are the same: helpful, but they can be wrong about your body, your medicines or your situation. Your health worker knows your case.",
+  "src": [
+   "ui:g.tawid.r.apps"
+  ]
+ },
+ {
+  "text": "The guide only knows what its data shows. You can see the whole street. Follow it when it matches what you see, and speak up when it does not.",
+  "src": [
+   "ui:g.tawid.r.data"
+  ]
+ },
+ {
+  "text": "How it works: automation bias is trusting a computer over your own eyes because it sounds sure or is usually right. A confident voice or a high percentage is not proof.",
+  "src": [
+   "ui:g.tawid.r.how"
+  ]
+ },
+ {
+  "text": "{n} lanes",
+  "src": [
+   "ui:g.tawid.r.lane.many"
+  ]
+ },
+ {
+  "text": "{n} lane",
+  "src": [
+   "ui:g.tawid.r.lane.one"
+  ]
+ },
+ {
+  "text": "You never followed a wrong call. Your own eyes stayed in charge.",
+  "src": [
+   "ui:g.tawid.r.neverWrong"
+  ]
+ },
+ {
+  "text": "You went against the guide {times} when it was right. Doubting everything is not the answer either: look first, then decide.",
+  "src": [
+   "ui:g.tawid.r.overrideWrong"
+  ]
+ },
+ {
+  "text": "You made {trips} to the health center and crossed {lanes}. The AI guide was wrong on {wrong} you decided on, and you overrode it {overrides} when your own eyes disagreed. The horn beeped {horns}.",
+  "src": [
+   "ui:g.tawid.r.summary"
+  ]
+ },
+ {
+  "text": "Tip: when an app disagrees with how you feel or what you see, pause and ask a health worker before you act.",
+  "src": [
+   "ui:g.tawid.r.tip"
+  ]
+ },
+ {
+  "text": "{n} trips",
+  "src": [
+   "ui:g.tawid.r.trip.many"
+  ]
+ },
+ {
+  "text": "{n} trip",
+  "src": [
+   "ui:g.tawid.r.trip.one"
+  ]
+ },
+ {
+  "text": "You followed a wrong call {times}. The guide sounded just as sure when it was wrong, and that is how over-relying on AI catches people.",
+  "src": [
+   "ui:g.tawid.r.trustWrong"
+  ]
+ },
+ {
+  "text": "START",
+  "src": [
+   "ui:g.tawid.start"
+  ]
+ },
+ {
+  "text": "{n}% SURE",
+  "src": [
+   "ui:g.tawid.sure"
+  ]
+ },
+ {
+  "text": "WAIT",
+  "src": [
+   "ui:g.tawid.tileWait"
+  ]
+ },
+ {
+  "text": "Ask a health worker about meds.",
+  "src": [
+   "ui:g.tawid.tip1"
+  ]
+ },
+ {
+  "text": "Health workers know YOUR case.",
+  "src": [
+   "ui:g.tawid.tip2"
+  ]
+ },
+ {
+  "text": "Check health apps with a person.",
+  "src": [
+   "ui:g.tawid.tip3"
+  ]
+ },
+ {
+  "text": "Your body and eyes count too.",
+  "src": [
+   "ui:g.tawid.tip4"
+  ]
+ },
+ {
+  "text": "+{points} POINTS. TRIP {trip} DONE",
+  "src": [
+   "ui:g.tawid.tripDone"
+  ]
+ },
+ {
+  "text": "TRUST",
+  "src": [
+   "ui:g.tawid.trust"
+  ]
+ },
+ {
+  "text": "WAIT!",
+  "src": [
+   "ui:g.tawid.wait"
+  ]
+ },
+ {
   "text": "Play again",
   "src": [
    "ui:game.again",
@@ -29260,7 +32420,9 @@
  {
   "text": "Score",
   "src": [
-   "ui:game.score"
+   "ui:game.score",
+   "ui:g.takbo.hud.score",
+   "ui:g.feed.hud.score"
   ]
  },
  {
@@ -30185,7 +33347,8 @@
  {
   "text": "Service",
   "src": [
-   "ui:hati.service"
+   "ui:hati.service",
+   "ui:g.hati.hud.service"
   ]
  },
  {
@@ -30487,7 +33650,8 @@
  {
   "text": "Streak",
   "src": [
-   "ui:home.streak"
+   "ui:home.streak",
+   "ui:g.sino.hud.streak"
   ]
  },
  {
@@ -33557,7 +36721,8 @@
   "text": "ARAW GAME · FAKE",
   "src": [
    "ui:tt.stamp",
-   "ui:gc.stamp"
+   "ui:gc.stamp",
+   "ui:g.sino.stampFake"
   ]
  },
  {

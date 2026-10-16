@@ -26,6 +26,7 @@ const isText = (s) => {
   if (/^#[0-9a-fA-F]{3,8}$/.test(s)) return false; // colours
   if (/^[a-z0-9_.:-]+$/.test(s)) return false; // ids, slugs, keys, file names
   if (/^[a-z]+([A-Z][a-z0-9]*)+$/.test(s)) return false; // camelCase keys (sfxVolume)
+  if (/^[a-z]+(\.[a-zA-Z0-9]+)+$/.test(s)) return false; // i18n keys stored in data (g.tawid.tileGo)
   if (/^[A-Z0-9_]+$/.test(s) && s.length <= 3) return false; // tiny codes (EN, OK) stay
   if (/^[MmHhVvLlZz0-9 .,-]+$/.test(s) && /\d/.test(s)) return false; // svg paths
   if (/^[.KYGSsNnWC]+$/.test(s)) return false; // sprite rows

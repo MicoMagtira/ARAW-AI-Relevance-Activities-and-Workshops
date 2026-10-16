@@ -498,7 +498,7 @@ function Hud({ stats }: { stats: readonly HudStat[] }) {
   return (
     <ul class="game-hud px-box" aria-label={t('game.hud')}>
       {stats.map((s) => (
-        <li key={s.id} class="game-hud__item">
+        <li key={s.id} class="game-hud__item" data-fit>
           {s.meter !== undefined ? (
             <Meter value={s.meter} label={s.label} />
           ) : s.hearts ? (

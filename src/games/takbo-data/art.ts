@@ -1,5 +1,7 @@
 // Pixel art for Takbo, Data!: Ara the runner, road obstacles, offer signs and the barangay backdrop.
-import { PALETTE, box, disc, frame, sprite, text, type SpriteRows } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { PALETTE, box, disc, frame, lineWidth, sprite, text, type SpriteRows } from '../engine/draw';
+import { tx } from '../../i18n/runtime';
 import type { DataTrap, SafeOffer } from './offers';
 import type { ObstacleKind } from './rules';
 
@@ -8,7 +10,9 @@ export const H = 180;
 export const ARA_X = 56;
 /** Feet line of each lane, top lane first. */
 export const LANE_Y = [94, 130, 166] as const;
+/** Narrowest sign (every English offer fits it); a longer translation widens the sign up to SIGN_MAX_W. */
 export const SIGN_W = 88;
+export const SIGN_MAX_W = 140;
 export const SIGN_H = 26;
 export const ROAD_TOP = 62;
 
@@ -72,21 +76,30 @@ export function drawObstacle(ctx: CanvasRenderingContext2D, kind: ObstacleKind, 
   }
 }
 
+const signLine = (offer: SafeOffer | DataTrap): string => ('ask' in offer ? offer.ask : offer.line);
+
+/** Width of an offer's sign: wide enough for its translated lines at full size, between SIGN_W and SIGN_MAX_W. */
+export function signWidth(offer: SafeOffer | DataTrap): number {
+  const widest = Math.max(lineWidth(tx(offer.lure)), lineWidth(tx(signLine(offer))));
+  return Math.min(SIGN_MAX_W, Math.max(SIGN_W, widest + 8));
+}
+
 /** An offer sign on two posts. Data traps carry a form field with what they ask for; safe offers do not. */
 export function drawSign(ctx: CanvasRenderingContext2D, x: number, feetY: number, offer: SafeOffer | DataTrap, trap: boolean): void {
   const top = feetY - SIGN_H - 4;
+  const w = signWidth(offer);
+  const inner = w - 8; // past the 2px frame, with 2px to spare on each side
   box(ctx, PALETTE.ink, x + 8, top + SIGN_H, 3, 4);
-  box(ctx, PALETTE.ink, x + SIGN_W - 11, top + SIGN_H, 3, 4);
-  box(ctx, PALETTE.surface, x, top, SIGN_W, SIGN_H);
-  frame(ctx, PALETTE.ink, x, top, SIGN_W, SIGN_H, 2);
-  text(ctx, offer.lure, x + SIGN_W / 2, top + 4, { size: 8, color: PALETTE.navy, align: 'center' });
+  box(ctx, PALETTE.ink, x + w - 11, top + SIGN_H, 3, 4);
+  box(ctx, PALETTE.surface, x, top, w, SIGN_H);
+  frame(ctx, PALETTE.ink, x, top, w, SIGN_H, 2);
+  text(ctx, offer.lure, x + w / 2, top + 4, { size: 8, color: PALETTE.navy, align: 'center', maxWidth: inner });
   if (trap) {
-    const t = offer as DataTrap;
-    box(ctx, PALETTE.fakeTint, x + 4, top + 14, SIGN_W - 8, 9);
-    frame(ctx, PALETTE.fake, x + 4, top + 14, SIGN_W - 8, 9, 1);
-    text(ctx, t.ask, x + SIGN_W / 2, top + 15, { size: 8, color: PALETTE.fake, align: 'center' });
+    box(ctx, PALETTE.fakeTint, x + 4, top + 14, inner, 9);
+    frame(ctx, PALETTE.fake, x + 4, top + 14, inner, 9, 1);
+    text(ctx, signLine(offer), x + w / 2, top + 15, { size: 8, color: PALETTE.fake, align: 'center', maxWidth: inner });
   } else {
-    text(ctx, (offer as SafeOffer).line, x + SIGN_W / 2, top + 15, { size: 8, color: PALETTE.fact, align: 'center' });
+    text(ctx, signLine(offer), x + w / 2, top + 15, { size: 8, color: PALETTE.fact, align: 'center', maxWidth: inner });
   }
 }
 
@@ -144,7 +157,7 @@ export function drawBackdrop(ctx: CanvasRenderingContext2D, scroll: number): voi
 }
 
 export function drawShieldBar(ctx: CanvasRenderingContext2D, shield: number): void {
-  text(ctx, 'SHIELD', 6, 4, { size: 8, color: PALETTE.ink });
+  text(ctx, t('g.takbo.shield'), 6, 4, { size: 8, color: PALETTE.ink, maxWidth: 102 });
   box(ctx, PALETTE.ink, 6, 14, 102, 10);
   box(ctx, PALETTE.surface, 8, 16, 98, 6);
   const color = shield > 50 ? PALETTE.fact : shield > 25 ? PALETTE.goldDeep : PALETTE.fake;

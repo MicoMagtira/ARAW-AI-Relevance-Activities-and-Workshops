@@ -2,14 +2,14 @@
 // A customer orders an answer. Tap or drag prompt ingredients into the pot before the customer's patience runs out, then COOK.
 // The dish is "the AI's answer": the right ingredients serve a good dish, missing ones serve a funny wrong dish with a lesson.
 // Orders come only from the seeded generator and never depend on the player's choices, so the Daily Challenge matches.
-import { PALETTE, box, text } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { PALETTE, box, drawBlock, measureBlock, text } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
 import { silent, timerCue } from '../engine/cues';
 import { drawPerson, type Face } from '../feed-mo-to/art';
 import {
-  BUBBLE_CHARS,
   COOK_SLOT,
   DROP,
   H,
@@ -17,6 +17,7 @@ import {
   W,
   chipAt,
   chipRect,
+  chipWidth,
   drawBubble,
   drawChip,
   drawCookButton,
@@ -28,15 +29,14 @@ import {
   inside,
   moveSlot,
   slotAt,
-  wrapText,
 } from './art';
 import {
   HEARTS,
   INGREDIENTS,
-  INGREDIENT_INFO,
   cook,
   createOrderGenerator,
   isServed,
+  orderText,
   patienceMs,
   payFor,
   type Dish,
@@ -73,7 +73,11 @@ export interface RunSummary {
   missed: Readonly<Partial<Record<Ingredient, number>>>;
 }
 
-const list = (ids: readonly Ingredient[]): string => (ids.length > 0 ? ids.map((i) => INGREDIENT_INFO[i].name).join(', ') : 'nothing yet');
+/** An ingredient's plain-words name in the active language (the screen-reader description and the recap). */
+const ingName = (id: Ingredient): string => t(`g.luto.ing.${id}`);
+const list = (ids: readonly Ingredient[]): string => (ids.length > 0 ? ids.map(ingName).join(', ') : t('g.luto.desc.nothing'));
+/** Result text area right of the dish: x 76 to 312, y 76 down to the shelf rule at 122. */
+const RESULT = { x: 76, y: 76, w: RESULT_CHARS * 8 + 4, bottom: 122 };
 
 function createLuto({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const orders = createOrderGenerator(createRng(`${rng()}:luto-orders`));
@@ -260,60 +264,69 @@ function createLuto({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
       box(ctx, PALETTE.goldDeep, 0, 72, W, 2);
       box(ctx, PALETTE.ink, 0, 122, W, 2);
       drawPerson(ctx, 6, 6, order.customer.look, face());
-      text(ctx, order.customer.name, 24, 47, { size: 8, color: PALETTE.navy, align: 'center' });
-      drawBubble(ctx, wrapText(order.text, BUBBLE_CHARS));
+      text(ctx, order.customer.name, 24, 47, { size: 8, color: PALETTE.navy, align: 'center', maxWidth: 46 });
+      drawBubble(ctx, orderText(order));
       drawKindChip(ctx, order.health);
 
       const locked = phase !== 'choose';
       if (phase === 'result' && outcome) {
         const dish = outcome.dish;
         const pay = outcome.pay;
-        if (!dish) text(ctx, 'TOO SLOW! LOST A HEART.', TIMER_TEXT_X, 62, { size: 8, color: PALETTE.fake });
-        else if (isServed(dish)) text(ctx, `+${pay.total}  BASE ${pay.base} SPEED ${pay.speed}${pay.tips > 0 ? ` TIPS ${pay.tips}` : ''}`, TIMER_TEXT_X, 62, { size: 8, color: PALETTE.fact });
-        else text(ctx, 'WRONG DISH! LOST A HEART.', TIMER_TEXT_X, 62, { size: 8, color: PALETTE.fake });
+        // the result line runs up to the kind chip (it starts at x 248 at the most)
+        const line = { size: 8, maxWidth: 248 - TIMER_TEXT_X };
+        if (!dish) text(ctx, t('g.luto.tooSlow'), TIMER_TEXT_X, 62, { ...line, color: PALETTE.fake });
+        else if (isServed(dish)) text(ctx, pay.tips > 0 ? t('g.luto.payTips', { total: pay.total, base: pay.base, speed: pay.speed, tips: pay.tips }) : t('g.luto.pay', { total: pay.total, base: pay.base, speed: pay.speed }), TIMER_TEXT_X, 62, { ...line, color: PALETTE.fact });
+        else text(ctx, t('g.luto.wrongDish'), TIMER_TEXT_X, 62, { ...line, color: PALETTE.fake });
         drawDish(ctx, dish?.quality ?? 'none', 6, 88, tick);
-        const name = wrapText(dish ? dish.name.toUpperCase() : 'NO DISH: THE CUSTOMER LEFT HUNGRY', RESULT_CHARS);
-        const lesson = wrapText(dish ? dish.lesson.toUpperCase() : 'THINK OF THE PARTS FIRST: WHO, LANGUAGE, LENGTH, FORMAT.', RESULT_CHARS);
+        // dish names and lessons are already in the active language: upper-case after translating
         const good = dish ? isServed(dish) : false;
-        name.slice(0, 2).forEach((line, i) => text(ctx, line, 76, 76 + i * 9, { size: 8, color: good ? PALETTE.fact : PALETTE.fake }));
-        lesson.slice(0, 3).forEach((line, i) => text(ctx, line, 76, 96 + i * 9, { size: 8, color: PALETTE.ink }));
+        const name = measureBlock(dish ? dish.name.toUpperCase() : t('g.luto.noDish'), RESULT.w, { size: 8, lineHeight: 9, maxLines: 2 });
+        drawBlock(ctx, name, RESULT.x, RESULT.y, { color: good ? PALETTE.fact : PALETTE.fake, maxWidth: RESULT.w });
+        const lessonTop = RESULT.y + Math.max(17, name.height) + 3;
+        const lesson = measureBlock(dish ? dish.lesson.toUpperCase() : t('g.luto.noDishLesson'), RESULT.w, { size: 8, lineHeight: 9, maxHeight: RESULT.bottom - lessonTop });
+        drawBlock(ctx, lesson, RESULT.x, lessonTop, { color: PALETTE.ink, maxWidth: RESULT.w });
       } else {
         drawTimer(ctx, timeLeft / patience);
         drawPot(ctx, pot.length, tick, phase === 'cooking', dragging?.moved === true && inside(DROP, dragging.x, dragging.y));
         pot.forEach((id, k) => drawChip(ctx, chipRect(k, id), id));
-        if (pot.length === 0 && phase === 'choose') text(ctx, 'EMPTY POT', POT_LABEL_X, 108, { size: 8, color: PALETTE.muted, align: 'center' });
+        if (pot.length === 0 && phase === 'choose') text(ctx, t('g.luto.emptyPot'), POT_LABEL_X, 108, { size: 8, color: PALETTE.muted, align: 'center', maxWidth: 100 });
       }
 
       for (let s = 0; s < INGREDIENTS.length; s++) {
         drawTile(ctx, s, { selected: sel === s && !locked, inPot: pot.includes(INGREDIENTS[s] as Ingredient), locked });
       }
       drawCookButton(ctx, { selected: sel === COOK_SLOT && !locked, ready: pot.length > 0 && !locked });
-      if (dragging?.moved) drawChip(ctx, { x: dragging.x - 24, y: dragging.y - 6, w: INGREDIENT_INFO[dragging.id].chip.length * 8 + 8, h: 11 }, dragging.id, true);
+      if (dragging?.moved) drawChip(ctx, { x: dragging.x - 24, y: dragging.y - 6, w: chipWidth(dragging.id), h: 11 }, dragging.id, true);
     },
 
     stats(): GameStats {
-      const base = `Luto ni Ara. Score ${score}. Hearts ${hearts} of ${HEARTS}. Order ${index + 1} from ${order.customer.name.toLowerCase()}: "${order.text}"${order.health ? ' This is a health question.' : ''}`;
-      let description: string;
+      const shown = orderText(order);
+      const base = [
+        t('g.luto.desc.base', { score, hearts, max: HEARTS, n: index + 1, name: order.customer.name.toLowerCase(), order: shown }),
+        ...(order.health ? [t('g.luto.desc.healthAsk')] : []),
+      ].join(' ');
+      let parts: string[];
       if (over) {
-        description = `${base} The kitchen is closed: no hearts left.`;
+        parts = [t('g.luto.desc.closed')];
       } else if (phase === 'cooking') {
-        description = `${base} Cooking with: ${list(pot)}.`;
+        parts = [t('g.luto.desc.cooking', { list: list(pot) })];
       } else if (phase === 'result' && outcome) {
         const dish = outcome.dish;
-        description = dish
-          ? `${base} You served: ${dish.name}. ${isServed(dish) ? `Good dish, ${outcome.pay.total} points.` : 'Wrong dish, you lost a heart.'} ${dish.lesson}`
-          : `${base} Too slow: the customer left hungry and you lost a heart.`;
+        parts = dish
+          ? [t('g.luto.desc.served', { dish: dish.name }), isServed(dish) ? t('g.luto.desc.good', { points: outcome.pay.total }) : t('g.luto.desc.wrong'), dish.lesson]
+          : [t('g.luto.desc.tooSlow')];
       } else {
-        const slotName = sel === COOK_SLOT ? 'the Cook button' : `${INGREDIENT_INFO[INGREDIENTS[sel] as Ingredient].name} ingredient`;
-        description = `${base} Ingredients on the shelf: ${list(INGREDIENTS)}. In the pot: ${list(pot)}. Highlighted: ${slotName}. Press Enter on an ingredient to add or remove it, then on Cook.`;
+        const slotName = sel === COOK_SLOT ? t('g.luto.desc.slotCook') : t('g.luto.desc.slotIngredient', { name: ingName(INGREDIENTS[sel] as Ingredient) });
+        parts = [t('g.luto.desc.choose', { shelf: list(INGREDIENTS), pot: list(pot), slot: slotName })];
       }
+      const description = [base, ...parts].join(' ');
       return {
         score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(score) },
-          { id: 'hearts', label: 'Hearts', value: `${hearts} of ${HEARTS}`, hearts: { n: hearts, max: HEARTS } },
-          { id: 'served', label: 'Served', value: String(counts.served) },
+          { id: 'score', label: t('g.luto.hud.score'), value: String(score) },
+          { id: 'hearts', label: t('g.luto.hud.hearts'), value: t('g.luto.hud.heartsValue', { n: hearts, max: HEARTS }), hearts: { n: hearts, max: HEARTS } },
+          { id: 'served', label: t('g.luto.hud.served'), value: String(counts.served) },
         ],
         description,
         recap: over ? buildRecap({ orders: index + 1, ...counts, missed }) : [],
@@ -324,18 +337,17 @@ function createLuto({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
 
 /** The game-over recap: what happened, then how a good prompt works and how to ask health questions. */
 export function buildRecap(run: RunSummary): string[] {
-  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
   const lines = [
-    `You cooked for ${plural(run.orders, 'order', 'orders')}: ${plural(run.served, 'good dish', 'good dishes')}, ${plural(run.wrong, 'wrong dish', 'wrong dishes')} and ${plural(run.timeouts, 'customer', 'customers')} who gave up waiting.`,
+    t('g.luto.recap.cooked', {
+      orders: t(run.orders === 1 ? 'g.luto.recap.order' : 'g.luto.recap.orders', { n: run.orders }),
+      served: t(run.served === 1 ? 'g.luto.recap.goodDish' : 'g.luto.recap.goodDishes', { n: run.served }),
+      wrong: t(run.wrong === 1 ? 'g.luto.recap.wrongDish' : 'g.luto.recap.wrongDishes', { n: run.wrong }),
+      timeouts: t(run.timeouts === 1 ? 'g.luto.recap.customer' : 'g.luto.recap.customers', { n: run.timeouts }),
+    }),
   ];
   const top = (Object.entries(run.missed) as Array<[Ingredient, number]>).sort((a, b) => b[1] - a[1] || INGREDIENTS.indexOf(a[0]) - INGREDIENTS.indexOf(b[0]))[0];
-  if (top) lines.push(`The ingredient you missed most: ${INGREDIENT_INFO[top[0]].name} (${plural(top[1], 'time', 'times')}).`);
-  lines.push(
-    'How it works: an AI chatbot answers exactly what you ask. A clearer prompt (who it is for, which language, how long, what format, what role) gets a clearer answer.',
-    'For health questions, ask it to cite sources and to say if it is unsure. That makes its answer easier to check.',
-    'A chatbot can still be wrong, even when it sounds sure, and the sources it names can be made up. Always check them.',
-    'Tip: take health answers from a chatbot to a health worker or your health center before you act on them.',
-  );
+  if (top) lines.push(t('g.luto.recap.missed', { name: ingName(top[0]), times: t(top[1] === 1 ? 'g.luto.recap.time' : 'g.luto.recap.times', { n: top[1] }) }));
+  lines.push(t('g.luto.recap.how'), t('g.luto.recap.health'), t('g.luto.recap.wrongToo'), t('g.luto.recap.tip'));
   return lines;
 }
 

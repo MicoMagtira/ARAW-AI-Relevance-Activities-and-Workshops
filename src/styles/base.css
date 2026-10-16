@@ -768,3 +768,85 @@ textarea.px-input {
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
 }
+
+/* ---------- Text fit (translations run 20-60% longer than English): everything grows and wraps with its text ---------- */
+:where(h1, h2, h3, h4, p, li, dt, dd, figcaption, legend, summary) {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+:where(label, button, a, span, td, th) {
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.px-box,
+.px-panel,
+.px-bubble {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.px-btn {
+  max-width: calc(100% - var(--px) * 4);
+  text-wrap: balance;
+  white-space: normal;
+  height: auto;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  padding-inline: clamp(var(--sp-3), 5vw, var(--sp-5));
+}
+
+.px-btn--lg {
+  padding-inline: clamp(var(--sp-3), 5vw, var(--sp-6));
+}
+
+.px-chip {
+  white-space: normal;
+  max-width: 100%;
+  height: auto;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.px-stamp {
+  max-width: min(100% - 24px, 22ch);
+  text-align: center;
+  white-space: normal;
+}
+
+.px-label,
+.px-tab,
+.px-toast__title {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.px-tabs {
+  flex-wrap: wrap;
+}
+
+/* Opt-in runtime safety net (src/ui/autoFit.ts): a fixed-size element steps its font down until the text fits. */
+[data-fit] {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* Grid and flex buttons/cards: the content track may shrink to the box so long words wrap instead of spilling. */
+button.px-box:not(.option),
+.tile,
+.sapatos-fix {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+button.option {
+  min-width: 0;
+}
+
+.sapatos-fix__head {
+  flex-wrap: wrap;
+}

@@ -1,6 +1,7 @@
 // Layout and pixel art for Tawid, Lola!: the AI guide's bubble, the Trust Meter strip, the street, Lola, the vehicles, the
 // health center and the four control tiles. Everything is drawn from whole-pixel boxes and sprites.
-import { PALETTE, box, sprite, text, type SpriteRows } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { PALETTE, box, drawBlock, measureBlock, measureLine, sprite, text, type SpriteRows } from '../engine/draw';
 import { COLS, COL_W, VEHICLES, type Advice, type LaneKind, type VehicleId } from './lanes';
 
 export const W = 320;
@@ -8,7 +9,6 @@ export const H = 180;
 
 // ---- layout (logical pixels) ------------------------------------------------------------------------------------
 export const BUBBLE = { x: 32, y: 2, w: 286, h: 30 };
-export const BUBBLE_CHARS = 33;
 export const STATUS_Y = 35;
 export const METER = { x: 50, y: 37, w: 56, h: 7 };
 export const MSG_X = 112;
@@ -22,11 +22,11 @@ export const TILE = { y: 147, h: 31 };
 
 export type Command = 'left' | 'back' | 'go' | 'right' | 'wait';
 /** The four control tiles, left to right. */
-export const TILES: ReadonlyArray<{ command: Command; label: string; x: number; w: number }> = [
-  { command: 'left', label: '', x: 3, w: 40 },
-  { command: 'wait', label: 'WAIT', x: 47, w: 110 },
-  { command: 'go', label: 'GO', x: 161, w: 110 },
-  { command: 'right', label: '', x: 275, w: 42 },
+export const TILES: ReadonlyArray<{ command: Command; label: 'g.tawid.tileWait' | 'g.tawid.tileGo' | null; x: number; w: number }> = [
+  { command: 'left', label: null, x: 3, w: 40 },
+  { command: 'wait', label: 'g.tawid.tileWait', x: 47, w: 110 },
+  { command: 'go', label: 'g.tawid.tileGo', x: 161, w: 110 },
+  { command: 'right', label: null, x: 275, w: 42 },
 ];
 
 export const tileAt = (x: number, y: number): number => (y < TILE.y || y >= TILE.y + TILE.h ? -1 : TILES.findIndex((t) => x >= t.x && x < t.x + t.w));
@@ -46,22 +46,6 @@ export function commandAt(x: number, y: number, lola: { x: number; y: number }):
 /** Screen y of the top of a lane, `rel` lanes ahead of the camera lane (the one Lola's row shows). */
 export const rowY = (rel: number): number => Math.round(FIELD_Y + (LOLA_ROW - rel) * ROW_H);
 
-/** Split text into lines of at most `max` characters, breaking at spaces. */
-export function wrapText(value: string, max: number): string[] {
-  const lines: string[] = [];
-  let line = '';
-  for (const word of value.split(' ')) {
-    if (line === '') line = word;
-    else if (line.length + 1 + word.length <= max) line += ` ${word}`;
-    else {
-      lines.push(line);
-      line = word;
-    }
-  }
-  if (line !== '') lines.push(line);
-  return lines;
-}
-
 // ---- the street -------------------------------------------------------------------------------------------------
 export function drawLane(ctx: CanvasRenderingContext2D, kind: LaneKind, y: number): void {
   if (kind === 'road') {
@@ -75,9 +59,12 @@ export function drawLane(ctx: CanvasRenderingContext2D, kind: LaneKind, y: numbe
   // little tufts, the same on every redraw
   for (let x = 5; x < W; x += 19) box(ctx, PALETTE.fact, x + ((y >> 4) % 3) * 4, y + 3 + ((x >> 3) % 3) * 4, 2, 1);
   if (kind === 'start') {
-    box(ctx, PALETTE.ink, 6, y + 2, 46, 12);
-    box(ctx, PALETTE.goldDeep, 7, y + 3, 44, 10);
-    text(ctx, 'START', 10, y + 4, { size: 8, color: PALETTE.ink });
+    // the sign grows with its word (46 wide for the English START)
+    const label = measureLine(t('g.tawid.start'), 120);
+    const w = Math.max(46, label.width + 8);
+    box(ctx, PALETTE.ink, 6, y + 2, w, 12);
+    box(ctx, PALETTE.goldDeep, 7, y + 3, w - 2, 10);
+    text(ctx, label.text, 10, y + 4, { size: 8, color: PALETTE.ink, maxWidth: w - 7 });
   }
 }
 
@@ -124,7 +111,7 @@ export function drawClinic(ctx: CanvasRenderingContext2D, y: number): void {
   const x = 96;
   box(ctx, PALETTE.ink, x - 1, y - 21, 130, 38);
   box(ctx, PALETTE.navy, x, y - 20, 128, 10);
-  text(ctx, 'HEALTH CENTER', x + 12, y - 18, { size: 8, color: PALETTE.cream });
+  text(ctx, t('g.tawid.clinic'), x + 12, y - 18, { size: 8, color: PALETTE.cream, maxWidth: 128 - 14 });
   box(ctx, PALETTE.surface, x, y - 10, 128, 26);
   box(ctx, PALETTE.fake, x + 12, y - 8, 12, 4);
   box(ctx, PALETTE.fake, x + 16, y - 12 + 2, 4, 12);
@@ -152,20 +139,18 @@ export function drawBubble(ctx: CanvasRenderingContext2D, advice: Advice | null,
   // the pointer toward the robot
   box(ctx, PALETTE.ink, x - 4, y + 12, 4, 6);
   box(ctx, PALETTE.surface, x - 3, y + 13, 4, 4);
-  text(ctx, 'AI GUIDE', x + 6, y + 3, { size: 8, color: PALETTE.muted });
-  if (advice) {
-    const color = advice.go ? PALETTE.fact : PALETTE.fake;
-    const label = advice.headline;
-    const chipW = label.length * 8 + 6;
-    box(ctx, color, x + 78, y + 1, chipW, 11);
-    text(ctx, label, x + 81, y + 3, { size: 8, color: PALETTE.surface });
-    text(ctx, `${advice.confidence}% SURE`, x + 78 + chipW + 6, y + 3, { size: 8, color: PALETTE.ink });
-    text(ctx, advice.reason, x + 6, y + 17, { size: 8, color: PALETTE.ink });
-  } else {
-    box(ctx, PALETTE.fact, x + 78, y + 1, 30, 11);
-    text(ctx, 'GO!', x + 81, y + 3, { size: 8, color: PALETTE.surface });
-    text(ctx, calm, x + 6, y + 17, { size: 8, color: PALETTE.ink });
-  }
+  text(ctx, t('g.tawid.guide'), x + 6, y + 3, { size: 8, color: PALETTE.muted, maxWidth: 70 });
+  // the GO/WAIT chip sizes to its word; the confidence takes the rest of the top row
+  const right = x + w - 4;
+  const label = measureLine(advice ? advice.headline : t('g.tawid.go'), 112);
+  const chipW = Math.max(30, label.width + 6);
+  box(ctx, advice && !advice.go ? PALETTE.fake : PALETTE.fact, x + 78, y + 1, chipW, 11);
+  text(ctx, label.text, x + 81, y + 3, { size: 8, color: PALETTE.surface, maxWidth: chipW - 4 });
+  if (advice) text(ctx, t('g.tawid.sure', { n: advice.confidence }), x + 78 + chipW + 6, y + 3, { size: 8, color: PALETTE.ink, maxWidth: right - (x + 78 + chipW + 6) });
+  // the reason: one 8px line in English; longer translations shrink and may take two smaller lines
+  const reason = measureBlock(advice ? advice.reason : calm, w - 12, { size: 8, lineHeight: 9, maxHeight: 13 });
+  const top = reason.size === 8 ? y + 17 : y + 15 + Math.floor((14 - reason.height) / 2);
+  drawBlock(ctx, reason, x + 6, top, { color: PALETTE.ink, maxWidth: w - 12 });
   drawRobot(ctx, tick);
 }
 
@@ -175,15 +160,16 @@ export const meterColor = (value: number): string => (value >= 60 ? PALETTE.fact
 export function drawStatus(ctx: CanvasRenderingContext2D, trust: number, multiplier: number, message: { text: string; good: boolean } | null): void {
   box(ctx, PALETTE.gold, 0, STATUS_Y, W, 11);
   box(ctx, PALETTE.goldDeep, 0, STATUS_Y + 10, W, 1);
-  text(ctx, 'TRUST', 3, STATUS_Y + 2, { size: 8, color: PALETTE.navy });
+  text(ctx, t('g.tawid.trust'), 3, STATUS_Y + 2, { size: 8, color: PALETTE.navy, maxWidth: METER.x - 6 });
   const { x, y, w, h } = METER;
   box(ctx, PALETTE.ink, x, y, w, h);
   box(ctx, PALETTE.surface, x + 1, y + 1, w - 2, h - 2);
   const fill = Math.round(((w - 2) * trust) / 100);
   box(ctx, meterColor(trust), x + 1, y + 1, fill, h - 2);
   for (let sx = x + 4; sx < x + 1 + fill; sx += 6) box(ctx, PALETTE.surface, sx, y + 1, 1, h - 2);
-  if (message) text(ctx, message.text, MSG_X, STATUS_Y + 2, { size: 8, color: message.good ? PALETTE.fact : PALETTE.fake });
-  else text(ctx, `X${multiplier.toFixed(1)} SCORE`, MSG_X, STATUS_Y + 2, { size: 8, color: PALETTE.navy });
+  const room = W - MSG_X - 2;
+  if (message) text(ctx, message.text, MSG_X, STATUS_Y + 2, { size: 8, color: message.good ? PALETTE.fact : PALETTE.fake, maxWidth: room });
+  else text(ctx, t('g.tawid.multiplier', { m: multiplier.toFixed(1) }), MSG_X, STATUS_Y + 2, { size: 8, color: PALETTE.navy, maxWidth: room });
 }
 
 function drawArrow(ctx: CanvasRenderingContext2D, cx: number, cy: number, dir: 'left' | 'right' | 'up', color: string): void {
@@ -193,6 +179,9 @@ function drawArrow(ctx: CanvasRenderingContext2D, cx: number, cy: number, dir: '
     else box(ctx, color, dir === 'left' ? cx - 4 + i : cx + 4 - i, cy - half, 1, half * 2 + 1);
   }
 }
+
+/** t() under another name: drawTile's tile is called `t`. */
+const tt = t;
 
 export function drawTile(ctx: CanvasRenderingContext2D, slot: number, pressed: boolean): void {
   const t = TILES[slot] as (typeof TILES)[number];
@@ -204,7 +193,8 @@ export function drawTile(ctx: CanvasRenderingContext2D, slot: number, pressed: b
   box(ctx, PALETTE.ink, t.x, y, t.w, TILE.h - 2);
   box(ctx, isGo ? PALETTE.fact : isWait ? PALETTE.goldDeep : PALETTE.surface, t.x + 2, y + 2, t.w - 4, TILE.h - 6);
   const fg = isGo ? PALETTE.surface : PALETTE.ink;
-  if (t.label) text(ctx, t.label, t.x + t.w / 2, y + 11, { size: 8, color: fg, align: 'center' });
+  // centred between the icon on the left and the same margin on the right
+  if (t.label) text(ctx, tt(t.label), t.x + t.w / 2, y + 11, { size: 8, color: fg, align: 'center', maxWidth: t.w - 52 });
   if (isGo) drawArrow(ctx, t.x + 18, y + 14, 'up', fg);
   else if (isWait) {
     box(ctx, fg, t.x + 14, y + 9, 3, 9);
@@ -213,14 +203,38 @@ export function drawTile(ctx: CanvasRenderingContext2D, slot: number, pressed: b
   else drawArrow(ctx, t.x + t.w / 2, y + 14, t.command === 'left' ? 'left' : 'right', fg);
 }
 
-/** A banner across the street (trip finished, run over). */
+/** A banner across the street (trip finished, run over). Each line wraps to the banner, which grows to fit them. */
 export function drawBanner(ctx: CanvasRenderingContext2D, lines: readonly string[], tone: 'good' | 'bad'): void {
-  const h = 8 + lines.length * 11;
+  const inner = W - 36 - 12;
+  // the whole banner must stay inside the street: lines shrink together until it does
+  const fieldH = ROWS * ROW_H - 4;
+  let size = 8;
+  let blocks = lines.map((line) => measureBlock(line, inner, { size, minSize: size }));
+  const total = () => 8 + blocks.reduce((sum, b) => sum + b.height + 3, 0);
+  while (total() > fieldH && size > 6) {
+    size -= 1;
+    blocks = lines.map((line) => measureBlock(line, inner, { size, minSize: size }));
+  }
+  if (total() > fieldH) blocks = lines.map((line) => measureBlock(line, inner, { size, minSize: size, maxLines: 2 }));
+  const h = total();
   const y = FIELD_Y + Math.round((ROWS * ROW_H - h) / 2);
   box(ctx, PALETTE.ink, 20, y + 3, W - 36, h);
   box(ctx, PALETTE.ink, 17, y - 1, W - 34, h + 2);
   box(ctx, tone === 'good' ? PALETTE.gold : PALETTE.fakeTint, 18, y, W - 36, h);
-  lines.forEach((line, i) => text(ctx, line, W / 2, y + 5 + i * 11, { size: 8, color: i === 0 ? (tone === 'good' ? PALETTE.navy : PALETTE.fake) : PALETTE.ink, align: 'center' }));
+  let top = y + 5;
+  blocks.forEach((b, i) => {
+    drawBlock(ctx, b, W / 2, top, { color: i === 0 ? (tone === 'good' ? PALETTE.navy : PALETTE.fake) : PALETTE.ink, align: 'center', maxWidth: inner });
+    top += b.height + 3;
+  });
+}
+
+/** The horn's label over the lane where Lola was bumped, on its own dark tag so it reads over any vehicle. */
+export function drawHorn(ctx: CanvasRenderingContext2D, x: number, y: number): void {
+  const label = measureLine(t('g.tawid.beep'), 80);
+  const w = label.width + 4;
+  const left = Math.max(2, Math.min(W - 2 - w, x));
+  box(ctx, PALETTE.ink, left, y - 2, w, 11);
+  text(ctx, label.text, left + 2, y, { size: 8, color: PALETTE.surface, maxWidth: w - 3 });
 }
 
 export const COLUMN_X = (col: number): number => col * COL_W;

@@ -18,12 +18,14 @@ import { installTranslation } from './i18n/dom';
 import { loadPack, packVersion } from './i18n/runtime';
 import { initSettings } from './app/settings';
 import { initSound } from './app/sound';
+import { startAutoFit } from './ui/autoFit';
 import { initMusic } from './app/sound/music';
 
 installTranslation();
 initSettings();
 initLanguage();
 initSound();
+startAutoFit();
 startRouter();
 initMusic();
 initBoot(location$.value.path);

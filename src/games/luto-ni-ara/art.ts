@@ -1,5 +1,7 @@
 // Layout and pixel art for Luto ni Ara: the order bubble, the pot, the ingredient shelf and the dishes.
-import { PALETTE, box, frame, sprite, text, type SpriteRows } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
+import { MIN_TEXT_SIZE, PALETTE, box, drawBlock, frame, lineWidth, measureBlock, measureLine, sprite, text, wrapLines, type SpriteRows } from '../engine/draw';
 import { INGREDIENTS, INGREDIENT_INFO, type Ingredient, type Quality } from './orders';
 
 export const W = 320;
@@ -7,6 +9,8 @@ export const H = 180;
 
 // ---- layout (logical pixels) ------------------------------------------------------------------------------------
 export const BUBBLE = { x: 48, y: 4, w: 266, h: 54 };
+/** The bubble may grow to here (the timer and the kind chip start at y 60). */
+const BUBBLE_MAX_H = 56;
 /** Characters per line in the order bubble and in the result text. */
 export const BUBBLE_CHARS = 31;
 export const BUBBLE_LINES = 5;
@@ -52,7 +56,11 @@ export function moveSlot(slot: number, action: 'left' | 'right' | 'up' | 'down')
   return next < 0 || next >= SLOTS ? slot : next;
 }
 
-export const chipWidth = (id: Ingredient): number => INGREDIENT_INFO[id].chip.length * 8 + 8;
+/** Widest chip text: a chip beside the pot must not reach the pot (chips sit at x 6 or end at W - 6). */
+const CHIP_TEXT_MAX = 104;
+/** The chip's label in the active language, fitted to the chip. */
+const chipLabel = (id: Ingredient) => measureLine(INGREDIENT_INFO[id].chip, CHIP_TEXT_MAX);
+export const chipWidth = (id: Ingredient): number => chipLabel(id).width + 8;
 const CHIP_H = 11;
 
 /** Where the chip of the k-th ingredient in the pot sits: they alternate left and right of the pot. */
@@ -67,11 +75,11 @@ export function chipAt(pot: readonly Ingredient[], x: number, y: number): number
   return pot.findIndex((id, k) => inside(chipRect(k, id), x, y));
 }
 
-/** Split text into lines of at most `max` characters, breaking at spaces. */
+/** Split text into lines of at most `max` characters, breaking at spaces. The text is translated first. */
 export function wrapText(value: string, max: number): string[] {
   const lines: string[] = [];
   let line = '';
-  for (const word of value.split(' ')) {
+  for (const word of tx(value).split(' ')) {
     if (line === '') line = word;
     else if (line.length + 1 + word.length <= max) line += ` ${word}`;
     else {
@@ -84,12 +92,15 @@ export function wrapText(value: string, max: number): string[] {
 }
 
 // ---- the order bubble and timer ---------------------------------------------------------------------------------
-export function drawBubble(ctx: CanvasRenderingContext2D, lines: readonly string[]): void {
+/** The order bubble: the whole order is measured first (translated, wrapped), and the bubble grows or the font steps down to hold it. */
+export function drawBubble(ctx: CanvasRenderingContext2D, order: string): void {
+  const block = measureBlock(order, BUBBLE.w - 12, { size: 8, lineHeight: 10, maxHeight: BUBBLE_MAX_H - 8 });
+  const h = Math.min(BUBBLE_MAX_H, Math.max(BUBBLE.h, block.height + 8));
   box(ctx, PALETTE.ink, BUBBLE.x - 4, BUBBLE.y + 22, 4, 8);
   box(ctx, PALETTE.surface, BUBBLE.x - 2, BUBBLE.y + 24, 3, 4);
-  box(ctx, PALETTE.ink, BUBBLE.x, BUBBLE.y, BUBBLE.w, BUBBLE.h);
-  box(ctx, PALETTE.surface, BUBBLE.x + 2, BUBBLE.y + 2, BUBBLE.w - 4, BUBBLE.h - 4);
-  lines.slice(0, BUBBLE_LINES).forEach((line, i) => text(ctx, line, BUBBLE.x + 6, BUBBLE.y + 5 + i * 10, { size: 8, color: PALETTE.ink }));
+  box(ctx, PALETTE.ink, BUBBLE.x, BUBBLE.y, BUBBLE.w, h);
+  box(ctx, PALETTE.surface, BUBBLE.x + 2, BUBBLE.y + 2, BUBBLE.w - 4, h - 4);
+  drawBlock(ctx, block, BUBBLE.x + 6, BUBBLE.y + 5, { color: PALETTE.ink, maxWidth: BUBBLE.w - 12 });
 }
 
 export function drawTimer(ctx: CanvasRenderingContext2D, fraction: number): void {
@@ -101,12 +112,14 @@ export function drawTimer(ctx: CanvasRenderingContext2D, fraction: number): void
   for (let sx = TIMER.x + 5; sx < TIMER.x + 2 + fill; sx += 7) box(ctx, PALETTE.surface, sx, TIMER.y + 2, 2, TIMER.h - 4);
 }
 
+/** The kind chip right of the timer: 62 wide, wider for a longer label (up to 66, then the label shrinks). */
 export function drawKindChip(ctx: CanvasRenderingContext2D, health: boolean): void {
-  const x = 252;
-  const w = 62;
+  const label = measureLine(health ? t('g.luto.health') : t('g.luto.anyAsk'), 58);
+  const w = Math.max(62, label.width + 8);
+  const x = 314 - w;
   box(ctx, health ? PALETTE.fake : PALETTE.muted, x, 60, w, 12);
   box(ctx, health ? PALETTE.fakeTint : PALETTE.soft, x + 2, 62, w - 4, 8);
-  text(ctx, health ? 'HEALTH' : 'ANY ASK', x + w / 2, 62, { size: 8, color: health ? PALETTE.fake : PALETTE.muted, align: 'center' });
+  text(ctx, label.text, x + w / 2, 62, { size: 8, minSize: label.size, maxWidth: w - 4, color: health ? PALETTE.fake : PALETTE.muted, align: 'center' });
 }
 
 // ---- the pot ------------------------------------------------------------------------------------------------------
@@ -155,15 +168,57 @@ export function drawTile(ctx: CanvasRenderingContext2D, slot: number, state: { s
   const id = INGREDIENTS[slot];
   if (!id) return;
   const r = slotRect(slot);
-  const info = INGREDIENT_INFO[id];
   box(ctx, state.selected ? PALETTE.navy : PALETTE.ink, r.x, r.y, r.w, r.h);
   box(ctx, state.inPot ? PALETTE.factTint : state.selected ? PALETTE.gold : PALETTE.surface, r.x + 2, r.y + 2, r.w - 4, r.h - 4);
   box(ctx, STRIPE[id], r.x + 2, r.y + 2, 4, r.h - 4);
   const ink = state.locked ? PALETTE.muted : PALETTE.ink;
-  text(ctx, info.line1, r.x + 10, r.y + 4, { size: 8, color: ink });
-  text(ctx, info.line2, r.x + 10, r.y + 14, { size: 8, color: PALETTE.muted });
-  if (state.inPot) sprite(ctx, CHECK, { X: PALETTE.fact }, r.x + r.w - 9, r.y + 15, 1);
+  const label = tileLabel(id, r.w);
+  label.rows.forEach((row, i) => {
+    text(ctx, row.text, r.x + label.x, r.y + label.top + i * label.pitch, { size: label.size, minSize: label.size, maxWidth: label.width, color: row.first ? ink : PALETTE.muted });
+  });
+  if (state.inPot) {
+    // beside the second line; a tile that needed small text has its check over the stripe instead
+    if (label.size === 8) sprite(ctx, CHECK, { X: PALETTE.fact }, r.x + r.w - 9, r.y + 15, 1);
+    else sprite(ctx, CHECK, { X: PALETTE.fact }, r.x + 1, r.y + r.h - 8, 1);
+  }
   if (state.selected) frame(ctx, PALETTE.surface, r.x + 2, r.y + 2, r.w - 4, r.h - 4, 1);
+}
+
+interface TileLabel {
+  rows: Array<{ text: string; first: boolean }>;
+  size: number;
+  pitch: number;
+  /** Text start and width inside the tile, and the first row's top. */
+  x: number;
+  width: number;
+  top: number;
+}
+
+/**
+ * The shelf tile's two labels in the active language. In English (or any language where they fit) they keep the
+ * classic layout: two 8px lines, the second beside the check mark. Otherwise each label may wrap and the size steps
+ * down until all rows fit the tile (at 6px three rows fit), with the text starting right after the colour stripe.
+ */
+export function tileLabel(id: Ingredient, tileW = TILE.w): TileLabel {
+  const info = INGREDIENT_INFO[id];
+  const line1 = tx(info.line1);
+  const line2 = tx(info.line2);
+  if (lineWidth(line1, 8) <= tileW - 12 && lineWidth(line2, 8) <= tileW - 20) {
+    return { rows: [{ text: line1, first: true }, { text: line2, first: false }], size: 8, pitch: 10, x: 10, width: tileW - 12, top: 4 };
+  }
+  const width = tileW - 10;
+  const inner = TILE.h - 4;
+  for (let px = 7; px >= MIN_TEXT_SIZE; px--) {
+    const pitch = px + 1;
+    const rows = [...wrapLines(line1, width, px).map((text) => ({ text, first: true })), ...wrapLines(line2, width, px).map((text) => ({ text, first: false }))];
+    const height = (rows.length - 1) * pitch + px;
+    if ((height <= inner && rows.every((row) => lineWidth(row.text, px) <= width)) || px === MIN_TEXT_SIZE) {
+      const shown = rows.slice(0, Math.floor((inner - px) / pitch) + 1);
+      const used = (shown.length - 1) * pitch + px;
+      return { rows: shown, size: px, pitch, x: 8, width, top: 2 + Math.floor((inner - used) / 2) };
+    }
+  }
+  return { rows: [], size: MIN_TEXT_SIZE, pitch: MIN_TEXT_SIZE + 1, x: 8, width, top: 2 };
 }
 
 export function drawCookButton(ctx: CanvasRenderingContext2D, state: { selected: boolean; ready: boolean }): void {
@@ -171,7 +226,7 @@ export function drawCookButton(ctx: CanvasRenderingContext2D, state: { selected:
   box(ctx, PALETTE.ink, r.x, r.y, r.w, r.h);
   box(ctx, state.ready ? PALETTE.coral : PALETTE.soft, r.x + 2, r.y + 2, r.w - 4, r.h - 4);
   box(ctx, state.ready ? PALETTE.ink : PALETTE.line, r.x + 2, r.y + r.h - 5, r.w - 4, 3);
-  text(ctx, 'COOK!', r.x + r.w / 2, r.y + 6, { size: 8, color: state.ready ? PALETTE.ink : PALETTE.muted, align: 'center' });
+  text(ctx, t('g.luto.cook'), r.x + r.w / 2, r.y + 6, { size: 8, color: state.ready ? PALETTE.ink : PALETTE.muted, align: 'center', maxWidth: r.w - 6 });
   if (state.selected) frame(ctx, state.ready ? PALETTE.navy : PALETTE.muted, r.x, r.y, r.w, r.h, 2);
 }
 
@@ -179,7 +234,8 @@ export function drawChip(ctx: CanvasRenderingContext2D, rect: Rect, id: Ingredie
   box(ctx, PALETTE.ink, rect.x, rect.y, rect.w, rect.h);
   box(ctx, lifted ? PALETTE.gold : PALETTE.surface, rect.x + 1, rect.y + 1, rect.w - 2, rect.h - 2);
   box(ctx, STRIPE[id], rect.x + 1, rect.y + 1, 3, rect.h - 2);
-  text(ctx, INGREDIENT_INFO[id].chip, rect.x + 6, rect.y + 2, { size: 8, color: PALETTE.ink });
+  const label = chipLabel(id);
+  text(ctx, label.text, rect.x + 6, rect.y + 2, { size: 8, minSize: label.size, maxWidth: rect.w - 6, color: PALETTE.ink });
 }
 
 // ---- dishes -------------------------------------------------------------------------------------------------------

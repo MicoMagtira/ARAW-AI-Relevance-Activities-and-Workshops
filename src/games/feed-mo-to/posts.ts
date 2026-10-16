@@ -1,6 +1,9 @@
 // Posts for Feed Mo 'To, generated from templates. Scary and miracle-cure posts are fake (the game stamps them
 // "ARAW GAME · FAKE" when revealed); the health center tips are curated true facts and are never generated.
-// Each post has up to 4 short lines (11 characters at most) for the canvas card and a full text for the screen-reader panel.
+// Each post has a short headline for the canvas card (an optional kicker line such as "URGENT!" and the card text, wrapped
+// to the card width after translation) and a full text for the screen-reader panel. The words live in src/app/i18n.ts
+// (g.feed.*) so every language pack translates them; a post is built in the active language.
+import { t, type StringKey } from '../../app/i18n';
 import { rngPick, shuffle, type Rng } from '../engine/rng';
 import { LIKEABLE, type TopicId } from './rules';
 import type { Persona } from './users';
@@ -10,7 +13,10 @@ export interface Post {
   /** Template and slot choice, so the same post is not offered twice in a row. */
   key: string;
   topic: TopicId;
-  lines: readonly string[];
+  /** One short line above the card text (an alarm word), or none. */
+  kicker?: string;
+  /** The card headline, wrapped to the card when drawn (about 11 characters a line in English, 4 lines at most). */
+  card: string;
   text: string;
   /** True for the generated scary and miracle posts (they get the FAKE stamp). */
   fake: boolean;
@@ -18,152 +24,114 @@ export interface Post {
 
 interface Made {
   key: string;
-  lines: readonly string[];
+  kicker?: string;
+  card: string;
   text: string;
 }
 type Template = (rng: Rng) => Made;
 
 interface Slot {
+  /** Short id, part of the post key. */
   s: string;
-  l: string;
+  /** The long words used in the full text. */
+  l: StringKey;
 }
 
-const ALARMS = ['URGENT!', 'WARNING!', 'SHOCKING!', 'BREAKING!'] as const;
-const PLACES: readonly Slot[] = [
-  { s: 'MARKET', l: 'wet market' },
-  { s: 'CANTEEN', l: 'school canteen' },
-  { s: 'TERMINAL', l: 'jeepney terminal' },
-  { s: 'BARANGAY', l: 'barangay' },
+const ALARMS: readonly StringKey[] = ['g.feed.alarm.urgent', 'g.feed.alarm.warning', 'g.feed.alarm.shocking', 'g.feed.alarm.breaking'];
+const PLACES: ReadonlyArray<Slot & { card: StringKey }> = [
+  { s: 'MARKET', l: 'g.feed.place.market', card: 'g.feed.card.fever.market' },
+  { s: 'CANTEEN', l: 'g.feed.place.canteen', card: 'g.feed.card.fever.canteen' },
+  { s: 'TERMINAL', l: 'g.feed.place.terminal', card: 'g.feed.card.fever.terminal' },
+  { s: 'BARANGAY', l: 'g.feed.place.barangay', card: 'g.feed.card.fever.barangay' },
 ];
-const FOODS_AT_RISK: readonly Slot[] = [
-  { s: 'FISH', l: 'market fish' },
-  { s: 'RICE', l: 'canteen rice' },
-  { s: 'WATER', l: 'refill station water' },
+const FOODS_AT_RISK: ReadonlyArray<Slot & { card: StringKey }> = [
+  { s: 'FISH', l: 'g.feed.food.fish', card: 'g.feed.card.poison.fish' },
+  { s: 'RICE', l: 'g.feed.food.rice', card: 'g.feed.card.poison.rice' },
+  { s: 'WATER', l: 'g.feed.food.water', card: 'g.feed.card.poison.water' },
 ];
-const HERBS: readonly Slot[] = [
-  { s: 'LEAF TEA', l: 'Magic leaf tea' },
-  { s: 'ROOT JUICE', l: 'Secret root juice' },
-  { s: 'BERRY MIX', l: 'Super berry powder' },
+const HERBS: ReadonlyArray<Slot & { card: StringKey }> = [
+  { s: 'LEAF TEA', l: 'g.feed.herb.leaf', card: 'g.feed.card.herb.leaf' },
+  { s: 'ROOT JUICE', l: 'g.feed.herb.root', card: 'g.feed.card.herb.root' },
+  { s: 'BERRY MIX', l: 'g.feed.herb.berry', card: 'g.feed.card.herb.berry' },
 ];
-const DISHES: readonly Slot[] = [
-  { s: 'ADOBO', l: 'adobo' },
-  { s: 'SINIGANG', l: 'sinigang' },
-  { s: 'LECHE FLAN', l: 'leche flan' },
-  { s: 'PANCIT', l: 'pancit' },
+const DISHES: ReadonlyArray<Slot & { recipe: StringKey; twist: StringKey }> = [
+  { s: 'ADOBO', l: 'g.feed.dish.adobo', recipe: 'g.feed.card.recipe.adobo', twist: 'g.feed.card.twist.adobo' },
+  { s: 'SINIGANG', l: 'g.feed.dish.sinigang', recipe: 'g.feed.card.recipe.sinigang', twist: 'g.feed.card.twist.sinigang' },
+  { s: 'LECHE FLAN', l: 'g.feed.dish.lecheFlan', recipe: 'g.feed.card.recipe.lecheFlan', twist: 'g.feed.card.twist.lecheFlan' },
+  { s: 'PANCIT', l: 'g.feed.dish.pancit', recipe: 'g.feed.card.recipe.pancit', twist: 'g.feed.card.twist.pancit' },
 ];
+
+/** A post with a fixed headline and text (no slots). */
+const fixed = (key: string, card: StringKey, text: StringKey): Template => () => ({ key, card: t(card), text: t(text) });
 
 const SCARE: readonly Template[] = [
   (rng) => {
-    const alarm = rngPick(ALARMS, rng);
+    const alarm = t(rngPick(ALARMS, rng));
     const place = rngPick(PLACES, rng);
-    return {
-      key: `scare-fever-${place.s}`,
-      lines: [alarm, 'FEVER AT', place.s],
-      text: `${alarm} A deadly new fever is spreading at the ${place.l}! Share before they delete this!`,
-    };
+    return { key: `scare-fever-${place.s}`, kicker: alarm, card: t(place.card), text: t('g.feed.text.fever', { alarm, place: t(place.l) }) };
   },
   (rng) => {
-    const alarm = rngPick(ALARMS, rng);
+    const alarm = t(rngPick(ALARMS, rng));
     const food = rngPick(FOODS_AT_RISK, rng);
-    return {
-      key: `scare-poison-${food.s}`,
-      lines: [alarm, 'POISON IN', food.s],
-      text: `${alarm} Hidden poison found in ${food.l}! The doctors will not tell you. Send to 10 people!`,
-    };
+    return { key: `scare-poison-${food.s}`, kicker: alarm, card: t(food.card), text: t('g.feed.text.poison', { alarm, food: t(food.l) }) };
   },
   (rng) => {
-    const alarm = rngPick(ALARMS, rng);
-    return {
-      key: `scare-hidden-${alarm}`,
-      lines: [alarm, 'HIDDEN', 'ILLNESS!'],
-      text: `${alarm} The health center is hiding a scary new illness. Everyone must see this!`,
-    };
+    const alarm = t(rngPick(ALARMS, rng));
+    return { key: `scare-hidden-${alarm}`, kicker: alarm, card: t('g.feed.card.hidden'), text: t('g.feed.text.hidden', { alarm }) };
   },
 ];
 
 const MIRACLE: readonly Template[] = [
   (rng) => {
     const herb = rngPick(HERBS, rng);
-    return {
-      key: `miracle-herb-${herb.s}`,
-      lines: ['MIRACLE', herb.s, 'CURES ALL!'],
-      text: `${herb.l} cures every illness in 3 days! Doctors hate it. Share if you love your family!`,
-    };
+    return { key: `miracle-herb-${herb.s}`, card: t(herb.card), text: t('g.feed.text.herb', { herb: t(herb.l) }) };
   },
-  () => ({
-    key: 'miracle-germs',
-    lines: ['ONE TRICK', 'KILLS ALL', 'GERMS!'],
-    text: 'One weird trick kills all germs in 1 minute. No doctor and no medicine needed!',
-  }),
-  () => ({
-    key: 'miracle-never-sick',
-    lines: ['NEVER GET', 'SICK AGAIN!', 'DRINK THIS'],
-    text: 'Drink this every morning and you will never get sick again. No checkups needed!',
-  }),
+  fixed('miracle-germs', 'g.feed.card.germs', 'g.feed.text.germs'),
+  fixed('miracle-never-sick', 'g.feed.card.neverSick', 'g.feed.text.neverSick'),
 ];
 
 const FOOD: readonly Template[] = [
   (rng) => {
     const dish = rngPick(DISHES, rng);
-    return { key: `food-recipe-${dish.s}`, lines: ['EASY', dish.s, 'RECIPE'], text: `Easy ${dish.l} recipe for a busy weeknight, ready in 30 minutes.` };
+    return { key: `food-recipe-${dish.s}`, card: t(dish.recipe), text: t('g.feed.text.recipe', { dish: t(dish.l) }) };
   },
   (rng) => {
     const dish = rngPick(DISHES, rng);
-    return { key: `food-twist-${dish.s}`, lines: ['TRY THIS', 'TWIST ON', dish.s], text: `Try this fun twist on ${dish.l}: the whole family will ask for seconds.` };
+    return { key: `food-twist-${dish.s}`, card: t(dish.twist), text: t('g.feed.text.twist', { dish: t(dish.l) }) };
   },
 ];
 
 const FAMILY: readonly Template[] = [
-  () => ({ key: 'family-school', lines: ['CUTE KIDS', 'FIRST DAY', 'OF SCHOOL'], text: 'Cute photos from the first day of school. Look how big they are now!' }),
-  () => ({ key: 'family-lola', lines: ['LOLA TELLS', 'OLD STORIES', 'AT HOME'], text: 'Lola tells old family stories at the dinner table. So heartwarming.' }),
-  () => ({ key: 'family-party', lines: ['BIRTHDAY', 'PARTY IDEAS', 'FOR KIDS'], text: 'Ten easy birthday party ideas for kids, with games that cost almost nothing.' }),
+  fixed('family-school', 'g.feed.card.school', 'g.feed.text.school'),
+  fixed('family-lola', 'g.feed.card.lola', 'g.feed.text.lola'),
+  fixed('family-party', 'g.feed.card.party', 'g.feed.text.party'),
 ];
 
 const SHOWBIZ: readonly Template[] = [
-  () => ({ key: 'showbiz-finale', lines: ['SOAP OPERA', 'FINALE', 'TONIGHT!'], text: 'The big soap opera finale airs tonight. Will the two sisters finally make up?' }),
-  () => ({ key: 'showbiz-singing', lines: ['SINGING', 'CONTEST', 'WINNER!'], text: 'Who won the town singing contest? The crowd went wild!' }),
-  () => ({ key: 'showbiz-fiesta', lines: ['SINGER AT', 'THE FIESTA', 'SURPRISE!'], text: 'A famous singer surprised the fiesta crowd with a free show.' }),
+  fixed('showbiz-finale', 'g.feed.card.finale', 'g.feed.text.finale'),
+  fixed('showbiz-singing', 'g.feed.card.singing', 'g.feed.text.singing'),
+  fixed('showbiz-fiesta', 'g.feed.card.fiestaSinger', 'g.feed.text.fiestaSinger'),
 ];
 
 const SPORTS: readonly Template[] = [
-  () => ({ key: 'sports-league', lines: ['BARANGAY', 'LEAGUE:', 'WE WON!'], text: 'Barangay league final: our team won by two points in the last second!' }),
-  () => ({ key: 'sports-highlights', lines: ['BASKETBALL', 'HIGHLIGHTS', 'OF THE WEEK'], text: 'Basketball highlights of the week from the town court.' }),
-  () => ({ key: 'sports-zumba', lines: ['MORNING', 'ZUMBA', 'AT COURT'], text: 'Morning zumba at the barangay court. Everyone is welcome, bring a towel!' }),
+  fixed('sports-league', 'g.feed.card.league', 'g.feed.text.league'),
+  fixed('sports-highlights', 'g.feed.card.highlights', 'g.feed.text.highlights'),
+  fixed('sports-zumba', 'g.feed.card.zumba', 'g.feed.text.zumba'),
 ];
 
 const NEWS: readonly Template[] = [
-  () => ({ key: 'news-fiesta', lines: ['FIESTA', 'SCHEDULE', 'IS OUT'], text: 'The barangay fiesta schedule is out. See the full list of events and times.' }),
-  () => ({ key: 'news-road', lines: ['ROAD WORK', 'THIS WEEK', 'GO SLOW'], text: 'Road repair this week near the plaza. Please drive slowly and use the side street.' }),
-  () => ({ key: 'news-cleanup', lines: ['CLEAN-UP', 'DRIVE ON', 'SATURDAY'], text: 'Barangay clean-up drive this Saturday morning. Bring gloves and a sack.' }),
+  fixed('news-fiesta', 'g.feed.card.fiestaSchedule', 'g.feed.text.fiestaSchedule'),
+  fixed('news-road', 'g.feed.card.road', 'g.feed.text.road'),
+  fixed('news-cleanup', 'g.feed.card.cleanup', 'g.feed.text.cleanup'),
 ];
 
 /** Curated true tips (basic, well-established public health advice). Never generated. */
 const CLINIC: readonly Template[] = [
-  () => ({
-    key: 'clinic-hands',
-    lines: ['WASH HANDS', 'WITH SOAP', '20 SECONDS'],
-    text: 'Wash your hands with soap and water for at least 20 seconds. It helps stop many infections.',
-  }),
-  () => ({
-    key: 'clinic-water',
-    lines: ['COVER OR', 'EMPTY WATER', 'CONTAINERS'],
-    text: 'Cover, clean or empty containers that hold water. Dengue mosquitoes breed in standing water.',
-  }),
-  () => ({
-    key: 'clinic-unsure',
-    lines: ['NOT SURE?', 'ASK YOUR', 'HEALTH', 'WORKER'],
-    text: 'Not sure about a health claim? Ask your barangay health worker or your health center.',
-  }),
-  () => ({
-    key: 'clinic-vaccines',
-    lines: ['VACCINES', 'ARE TESTED', 'FOR SAFETY'],
-    text: 'Vaccines are tested for safety before they are used. Ask your health center which ones you need.',
-  }),
-  () => ({
-    key: 'clinic-share',
-    lines: ['SHARE ONLY', 'WHAT YOU', 'CHECKED'],
-    text: 'Before you share a health post, check who wrote it, and ask a health worker if you are unsure.',
-  }),
+  fixed('clinic-hands', 'g.feed.card.hands', 'g.feed.text.hands'),
+  fixed('clinic-water', 'g.feed.card.water', 'g.feed.text.water'),
+  fixed('clinic-unsure', 'g.feed.card.unsure', 'g.feed.text.unsure'),
+  fixed('clinic-vaccines', 'g.feed.card.vaccines', 'g.feed.text.vaccines'),
+  fixed('clinic-share', 'g.feed.card.share', 'g.feed.text.share'),
 ];
 
 export const TEMPLATES: Readonly<Record<TopicId, readonly Template[]>> = {

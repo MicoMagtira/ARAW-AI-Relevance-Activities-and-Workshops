@@ -2,13 +2,14 @@
 // clinic work or Aling Nena's sari-sari store. Send each one to the AI lane or to the person: AI is instant at repeat jobs
 // but fails at empathy and judgement, and the person is slow and busy. Days go on until the Service meter is empty.
 // Every day comes from the run's seed alone, never from the player's choices, so the Daily Challenge matches.
+import { t, type StringKey } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
 import { PALETTE, box } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
 import { silent } from '../engine/cues';
 import { CARD, H, W, drawCard, drawGhost, drawHeader, drawLane, drawPanel, drawStrip, drawTile, inside, laneAt, tileAt, type PanelRow } from './art';
-import { wrapText } from '../luto-ni-ara/art';
 import { QUEUE_CAP, pickSetting } from './rules';
 import { createSim, type Sim, type Totals } from './sim';
 import { SETTINGS, TRAIT_NAME, type Lane, type Trait } from './tasks';
@@ -17,8 +18,8 @@ import { SETTINGS, TRAIT_NAME, type Lane, type Trait } from './tasks';
 const DRAG_MIN = 6;
 /** The report and intro can be skipped with a press after this long. */
 const SKIP_AFTER_MS = 700;
-const PANEL_CHARS = 34;
-const HINT = 'Tap a task, then a lane. Or drag it, or use the arrow keys.';
+/** Wrap width of the lesson under the day report (34 characters of the 8 px font). */
+const LESSON_W = 34 * 8;
 
 interface Drag {
   index: number;
@@ -36,22 +37,25 @@ export interface RunSummary {
   totals: Totals;
 }
 
-const plural = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
+/** "1 day" or "3 days": a catalog pair `<key>.one` / `<key>.many`, each with {n}. */
+const plural = (n: number, key: string): string => t(`${key}.${n === 1 ? 'one' : 'many'}` as StringKey, { n });
 
 /** The game-over recap: what happened, then how AI at work really behaves. */
 export function buildRecap(run: RunSummary): string[] {
   const { good, slow, fail, missed, failTraits } = run.totals;
   const lines = [
-    `You kept ${SETTINGS[run.setting].place} going for ${plural(run.days, 'day', 'days')}: ${plural(good, 'good split', 'good splits')}, ${plural(slow, 'job', 'jobs')} done slowly by hand, ${plural(fail, 'AI slip-up', 'AI slip-ups')} and ${plural(missed, 'missed task', 'missed tasks')}.`,
+    t('g.hati.recap.kept', {
+      place: SETTINGS[run.setting].place,
+      days: plural(run.days, 'g.hati.n.day'),
+      good: plural(good, 'g.hati.n.goodSplit'),
+      slow: plural(slow, 'g.hati.n.job'),
+      fail: plural(fail, 'g.hati.n.slip'),
+      missed: plural(missed, 'g.hati.n.missed'),
+    }),
   ];
   const top = (Object.entries(failTraits) as Array<[Trait, number]>).sort((a, b) => b[1] - a[1])[0];
-  if (top) lines.push(`The AI slipped most on ${TRAIT_NAME[top[0]]} (${plural(top[1], 'time', 'times')}).`);
-  lines.push(
-    'How it works: AI is fast and never tired at repeat jobs such as counting, sorting, drafting and scheduling. It has no feelings, and it does not know your neighbours.',
-    'Human in the loop: read and check what AI drafts, like a translated leaflet, before it goes out. A person keeps the final say.',
-    'Someone is always responsible. If AI gets it wrong at work, the people who chose and used it answer for it.',
-    'Tip: give the repeat jobs to AI, so you have time for people. Keep care, decisions and health advice with a person or a health worker.',
-  );
+  if (top) lines.push(t('g.hati.recap.slippedMost', { trait: TRAIT_NAME[top[0]], times: plural(top[1], 'g.hati.n.time') }));
+  lines.push(t('g.hati.recap.how'), t('g.hati.recap.loop'), t('g.hati.recap.responsible'), t('g.hati.recap.tip'));
   return lines;
 }
 
@@ -130,17 +134,16 @@ function createHati({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
   const reportRows = (): PanelRow[] => {
     const r = sim.report;
     if (!r) return [];
-    const pad = (label: string, value: string) => `${label}${' '.repeat(Math.max(1, PANEL_CHARS - label.length - value.length))}${value}`;
     return [
-      { text: pad('GOOD SPLITS', String(r.good)), color: PALETTE.fact },
-      { text: pad('SLOW HAND-WORK', String(r.slow)) },
-      { text: pad('AI SLIP-UPS', String(r.fail)), color: r.fail > 0 ? PALETTE.fake : PALETTE.ink },
-      { text: pad('MISSED TASKS', String(r.missed)), color: r.missed > 0 ? PALETTE.fake : PALETTE.ink },
-      { text: pad('POINTS TODAY', String(r.points)) },
-      { text: pad('CLEAR BONUS', `+${r.clearBonus}`), color: r.clearBonus > 0 ? PALETTE.fact : PALETTE.muted },
-      { text: pad('SERVICE AFTER REST', `${r.service}%`) },
+      { text: t('g.hati.report.good'), value: String(r.good), color: PALETTE.fact },
+      { text: t('g.hati.report.slow'), value: String(r.slow) },
+      { text: t('g.hati.report.fail'), value: String(r.fail), color: r.fail > 0 ? PALETTE.fake : PALETTE.ink },
+      { text: t('g.hati.report.missed'), value: String(r.missed), color: r.missed > 0 ? PALETTE.fake : PALETTE.ink },
+      { text: t('g.hati.report.points'), value: String(r.points) },
+      { text: t('g.hati.report.bonus'), value: `+${r.clearBonus}`, color: r.clearBonus > 0 ? PALETTE.fact : PALETTE.muted },
+      { text: t('g.hati.report.service'), value: `${r.service}%` },
       { text: '' },
-      ...wrapText(r.lesson, PANEL_CHARS).map((line) => ({ text: line, color: PALETTE.navy })),
+      { text: r.lesson, color: PALETTE.navy, width: LESSON_W },
     ];
   };
 
@@ -149,20 +152,20 @@ function createHati({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
     const gap = (p.gapMs / 1000).toFixed(1);
     if (sim.day === 1) {
       return [
-        { text: `${p.tasks} TASKS TODAY.` },
-        { text: 'SEND EACH ONE TO AI OR TO A PERSON.' },
+        { text: t('g.hati.intro.tasksToday', { n: p.tasks }) },
+        { text: t('g.hati.intro.send') },
         { text: '' },
-        { text: 'AI: FAST AT REPEAT JOBS.', color: PALETTE.navy },
-        { text: 'PERSON: SLOW, BUT KIND AND WISE.', color: PALETTE.navy },
-        { text: 'AI FAILS AT CARE AND JUDGEMENT.', color: PALETTE.fake },
+        { text: t('g.hati.intro.ai'), color: PALETTE.navy },
+        { text: t('g.hati.intro.person'), color: PALETTE.navy },
+        { text: t('g.hati.intro.fails'), color: PALETTE.fake },
       ];
     }
     return [
-      { text: `${p.tasks} TASKS, A NEW MIX.` },
-      { text: `A NEW TASK EVERY ${gap} SECONDS.` },
-      { text: `EACH ONE WAITS ${Math.round(p.patienceMs / 1000)} SECONDS.` },
+      { text: t('g.hati.intro.newMix', { n: p.tasks }) },
+      { text: t('g.hati.intro.every', { s: gap }) },
+      { text: t('g.hati.intro.waits', { s: Math.round(p.patienceMs / 1000) }) },
       { text: '' },
-      { text: 'KEEP SERVICE ABOVE ZERO.', color: PALETTE.navy },
+      { text: t('g.hati.intro.keep'), color: PALETTE.navy },
     ];
   };
 
@@ -197,45 +200,51 @@ function createHati({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
       drawHeader(ctx, SETTINGS[setting].header, sim.day, sim.left, sim.dayTotal);
       const showQueue = sim.phase === 'play' || sim.phase === 'over';
       for (let i = 0; i < QUEUE_CAP; i++) drawTile(ctx, i, showQueue ? sim.queue[i] : undefined, showQueue && i === sel && sim.queue.length > 0);
-      drawCard(ctx, showQueue ? sim.queue[sel] : undefined, sim.phase === 'play' ? 'WAITING FOR THE NEXT TASK...' : '');
-      drawStrip(ctx, sim.flash, HINT);
+      drawCard(ctx, showQueue ? sim.queue[sel] : undefined, sim.phase === 'play' ? t('g.hati.card.waiting') : '');
+      drawStrip(ctx, sim.flash, t('g.hati.hint'));
       const state = { aiMs: sim.aiMs, aiTask: sim.aiTask, jobs: sim.jobs, setting, tick };
       drawLane(ctx, 'ai', { ...state, hover: hover === 'ai' });
       drawLane(ctx, 'human', { ...state, hover: hover === 'human' });
       const dragged = dragging?.moved ? sim.queue[dragging.index] : undefined;
       if (dragging && dragged) drawGhost(ctx, dragged.task, dragging.x, dragging.y);
 
-      if (sim.phase === 'intro') drawPanel(ctx, `DAY ${sim.day}`, introRows(), 'GET READY...');
-      else if (sim.phase === 'report' && sim.report) drawPanel(ctx, `DAY ${sim.day} REPORT`, reportRows(), sim.phaseMs >= SKIP_AFTER_MS ? `TAP FOR DAY ${sim.day + 1}` : '');
-      else if (sim.phase === 'over') drawPanel(ctx, 'SERVICE HAS COLLAPSED', [{ text: 'TOO MANY TASKS WENT WRONG.' }, { text: `YOU SURVIVED ${sim.day - 1} DAYS.` }], 'SEE YOUR RECAP');
+      if (sim.phase === 'intro') drawPanel(ctx, t('g.hati.panel.day', { day: sim.day }), introRows(), t('g.hati.panel.ready'));
+      else if (sim.phase === 'report' && sim.report) drawPanel(ctx, t('g.hati.panel.report', { day: sim.day }), reportRows(), sim.phaseMs >= SKIP_AFTER_MS ? t('g.hati.panel.next', { day: sim.day + 1 }) : '');
+      else if (sim.phase === 'over') {
+        const survived = sim.day - 1;
+        drawPanel(ctx, t('g.hati.panel.collapsed'), [{ text: t('g.hati.panel.wrong') }, { text: t(survived === 1 ? 'g.hati.panel.survived.one' : 'g.hati.panel.survived.many', { n: survived }) }], t('g.hati.panel.recap'));
+      }
     },
 
     stats(): GameStats {
       const over = sim.phase === 'over';
       const place = SETTINGS[setting].place;
-      const base = `Hati Tayo, ${place}. Day ${sim.day}. Score ${sim.score}. Service ${sim.service} percent.`;
+      const base = t('g.hati.d.base', { place, day: sim.day, score: sim.score, service: sim.service });
       let description: string;
       if (over) {
-        description = `${base} The service has collapsed. You survived ${sim.day - 1} ${sim.day - 1 === 1 ? 'day' : 'days'}.`;
+        description = t(sim.day - 1 === 1 ? 'g.hati.d.over.one' : 'g.hati.d.over.many', { base, n: sim.day - 1 });
       } else if (sim.phase === 'intro') {
-        description = `${base} A new day starts with ${sim.params.tasks} tasks. Send each task to the AI lane (left) or to the person (right).`;
+        description = t('g.hati.d.intro', { base, n: sim.params.tasks });
       } else if (sim.phase === 'report' && sim.report) {
         const r = sim.report;
-        description = `${base} Day ${r.day} report: ${r.good} good splits, ${r.slow} jobs done slowly by hand, ${r.fail} AI slip-ups, ${r.missed} missed tasks, clear bonus ${r.clearBonus}. ${r.lesson} Press Enter or tap for the next day.`;
+        description = t('g.hati.d.report', { base, day: r.day, good: r.good, slow: r.slow, fail: r.fail, missed: r.missed, bonus: r.clearBonus, lesson: r.lesson });
       } else {
-        const queue = sim.queue.length > 0 ? sim.queue.map((w, i) => `${i + 1}: ${w.task.text}${i === sel ? ' (selected)' : ''}`).join(' ') : 'No task is waiting.';
+        const queue =
+          sim.queue.length > 0
+            ? sim.queue.map((w, i) => t(i === sel ? 'g.hati.d.queueSelected' : 'g.hati.d.queueItem', { n: i + 1, task: w.task.text })).join(' ')
+            : t('g.hati.d.noTask');
         const job = sim.jobs[0];
-        const person = job ? `The person is busy with ${job.task.short.toLowerCase()}, ${sim.jobs.length} of 3 places taken.` : 'The person is free.';
-        const flash = sim.flash ? ` Last result: ${sim.flash.head}. ${sim.flash.line}` : '';
-        description = `${base} ${sim.left} tasks left today. Waiting tasks, oldest first. ${queue} ${person}${flash} Up and Down choose a task. Left sends it to the AI, Right sends it to the person.`;
+        const person = job ? t('g.hati.d.busy', { task: tx(job.task.short).toLowerCase(), n: sim.jobs.length }) : t('g.hati.d.free');
+        const flash = sim.flash ? ` ${t('g.hati.d.last', { head: sim.flash.head, line: sim.flash.line })}` : '';
+        description = t('g.hati.d.play', { base, left: sim.left, queue, person, flash });
       }
       return {
         score: sim.score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(sim.score) },
-          { id: 'service', label: 'Service', value: `${sim.service} percent`, meter: sim.service },
-          { id: 'day', label: 'Day', value: String(sim.day) },
+          { id: 'score', label: t('g.hati.hud.score'), value: String(sim.score) },
+          { id: 'service', label: t('g.hati.hud.service'), value: t('g.hati.hud.percent', { n: sim.service }), meter: sim.service },
+          { id: 'day', label: t('g.hati.hud.day'), value: String(sim.day) },
         ],
         description,
         recap: over ? buildRecap({ setting, days: sim.day - 1, totals: sim.totals }) : [],

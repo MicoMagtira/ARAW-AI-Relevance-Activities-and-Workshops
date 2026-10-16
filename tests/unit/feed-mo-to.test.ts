@@ -3,7 +3,8 @@ import { STEP_MS } from '../../src/games/engine/loop';
 import type { Action, InputFrame } from '../../src/games/engine/input';
 import { createRng } from '../../src/games/engine/rng';
 import type { GameInstance } from '../../src/games/engine/types';
-import { CARD_X, CARD_Y, bubbleRadii, cardAt, layoutChips } from '../../src/games/feed-mo-to/art';
+import { wrapLines } from '../../src/games/engine/draw';
+import { CARD_TEXT_W, CARD_X, CARD_Y, bubbleRadii, cardAt, layoutChips } from '../../src/games/feed-mo-to/art';
 import feed, { buildRecap } from '../../src/games/feed-mo-to/feed';
 import { TEMPLATES, buildPost, makeCandidates } from '../../src/games/feed-mo-to/posts';
 import {
@@ -157,15 +158,16 @@ describe('the bubble', () => {
 });
 
 describe('posts', () => {
-  it('every template fits the card (4 lines of 11 characters) and has a full text', () => {
+  it('every template fits the card in English (kicker and wrapped text: 2 to 4 lines of 11 characters) and has a full text', () => {
     for (const topic of TOPICS) {
       for (let seed = 0; seed < 40; seed++) {
         const rng = createRng(`t-${seed}`);
         TEMPLATES[topic.id].forEach((template) => {
           const made = template(rng);
-          expect(made.lines.length).toBeGreaterThanOrEqual(3);
-          expect(made.lines.length).toBeLessThanOrEqual(4);
-          for (const line of made.lines) expect(line.length).toBeLessThanOrEqual(11);
+          const lines = [...(made.kicker ? [made.kicker] : []), ...wrapLines(made.card, CARD_TEXT_W)];
+          expect(lines.length).toBeGreaterThanOrEqual(2);
+          expect(lines.length).toBeLessThanOrEqual(4);
+          for (const line of lines) expect(line.length).toBeLessThanOrEqual(11);
           expect(made.text.length).toBeGreaterThan(30);
         });
       }

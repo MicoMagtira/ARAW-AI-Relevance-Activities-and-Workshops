@@ -44,14 +44,14 @@ export function Button(props: ButtonProps | LinkProps) {
   if (props.href !== undefined) {
     const { href, ...anchor } = rest as Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'role'>;
     return (
-      <a {...anchor} href={href as string} class={cls}>
+      <a data-fit {...anchor} href={href as string} class={cls}>
         {children}
       </a>
     );
   }
   const { type = 'button', ...btn } = rest as ButtonHTMLAttributes<HTMLButtonElement>;
   return (
-    <button {...btn} type={type} class={cls}>
+    <button data-fit {...btn} type={type} class={cls}>
       {children}
     </button>
   );
@@ -331,7 +331,7 @@ export function Bubble({ children, live }: { children: ComponentChildren; live?:
 
 /** Reveal stamp for generated fakes. */
 export function Stamp({ children = 'ARAW GAME · FAKE' }: { children?: ComponentChildren }) {
-  return <span class="px-stamp">{children}</span>;
+  return <span class="px-stamp" data-fit>{children}</span>;
 }
 
 export function Watermark() {

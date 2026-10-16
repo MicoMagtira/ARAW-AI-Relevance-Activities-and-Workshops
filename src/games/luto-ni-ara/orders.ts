@@ -2,6 +2,8 @@
 // An order is built from parts (task, audience, language, length, format, role). Each part that the customer says out loud
 // is an ingredient the pot must contain; health questions also need "cite sources" and "say if unsure".
 // All customers are fictional. Health tasks are general education only: no dosing, no diagnosis.
+import { t } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
 import { rngInt, rngPick, shuffle, type Rng } from '../engine/rng';
 import type { Look } from '../feed-mo-to/users';
 import type { ContentReview } from '../../content/review';
@@ -144,6 +146,17 @@ export const PER_INGREDIENT_S = 2;
 export const patienceMs = (index: number, needs: number): number =>
   Math.round((Math.max(MIN_BASE_PATIENCE_S, BASE_PATIENCE_S - PATIENCE_STEP_S * index) + PER_INGREDIENT_S * needs) * 1000);
 
+/** The order as the customer says it, in the active language: every part is translated on its own, then joined. */
+export function orderText(order: Order): string {
+  const ask = order.language
+    ? t('g.luto.order.askLang', { task: order.task.text, audience: order.audience.text, language: order.language.text })
+    : t('g.luto.order.ask', { task: order.task.text, audience: order.audience.text });
+  return [ask, order.length?.text, order.format?.text, order.role?.text]
+    .filter((part): part is string => !!part)
+    .map((part, i) => (i === 0 ? part : tx(part)))
+    .join(' ');
+}
+
 export interface OrderGenerator {
   /** The next order. Never returns the same order twice; the same seed gives the same orders. */
   next(index: number): Order;
@@ -205,27 +218,30 @@ export interface Dish {
 /** Three or more unneeded ingredients muddle the answer. */
 export const MUDDLED_EXTRAS = 3;
 
-/** The funny wrong dish for the first missing ingredient. */
+/** The funny wrong dish for the first missing ingredient (in the active language: t() also translates the inserted words). */
 function wrongDish(order: Order, first: Ingredient): { name: string; lesson: string } {
+  const subject = order.task.subject;
   const who = order.audience.word;
-  const lang = order.language?.word ?? 'the right language';
+  const language = order.language?.word ?? t('g.luto.rightLanguage');
   switch (first) {
     case 'audience':
-      return { name: `A doctor's lecture on ${order.task.subject}, full of big words`, lesson: 'Say who the answer is for, so it matches their level.' };
+      return { name: t('g.luto.dish.audience', { subject }), lesson: t('g.luto.lesson.audience') };
     case 'language':
-      return { name: `Deep English soup, but ${who} asked for ${lang}`, lesson: 'Name the language you want, or the AI will pick one for you.' };
+      return { name: t('g.luto.dish.language', { who, language }), lesson: t('g.luto.lesson.language') };
     case 'length':
-      return { name: `A 3-page essay on ${order.task.subject} nobody had time to read`, lesson: 'Say how long: short, 3 sentences, one paragraph.' };
+      return { name: t('g.luto.dish.length', { subject }), lesson: t('g.luto.lesson.length') };
     case 'format':
-      return { name: 'A wall-of-text spaghetti, with no steps or list', lesson: 'Ask for a format, like 3 steps, a list or a table.' };
+      return { name: t('g.luto.dish.format'), lesson: t('g.luto.lesson.format') };
     case 'role':
-      return { name: 'A robot with no job: a bland, same-for-everyone answer', lesson: 'Give it a role, like nurse or teacher, to set the tone.' };
+      return { name: t('g.luto.dish.role'), lesson: t('g.luto.lesson.role') };
     case 'cite':
-      return { name: 'Mystery meat: a health claim from nowhere', lesson: 'For health questions, ask it to cite sources you can check.' };
+      return { name: t('g.luto.dish.cite'), lesson: t('g.luto.lesson.cite') };
     case 'unsure':
-      return { name: 'Overconfident adobo: very sure, very made up', lesson: 'Ask it to say if it is unsure, so guesses do not sound like facts.' };
+      return { name: t('g.luto.dish.unsure'), lesson: t('g.luto.lesson.unsure') };
   }
 }
+
+const capitalize = (v: string): string => `${v.charAt(0).toUpperCase()}${v.slice(1)}`;
 
 /** What the AI "cooks" from the pot. Pure: the same order and pot always give the same dish. */
 export function cook(order: Order, pot: readonly Ingredient[]): Dish {
@@ -238,16 +254,17 @@ export function cook(order: Order, pot: readonly Ingredient[]): Dish {
     return { quality: 'missing', name: wrong.name, lesson: wrong.lesson, missing, extra };
   }
   if (extra.length >= MUDDLED_EXTRAS) {
-    return { quality: 'muddled', name: 'Kitchen-sink soup: too many orders at once', lesson: 'Only add what the customer asked for. Extra rules confuse the AI.', missing, extra };
+    return { quality: 'muddled', name: t('g.luto.dish.muddled'), lesson: t('g.luto.lesson.muddled'), missing, extra };
   }
-  const name = `${order.task.subject.charAt(0).toUpperCase()}${order.task.subject.slice(1)} for ${order.audience.word}${order.language ? `, ${order.language.word}` : ''}`;
+  const vars = { subject: order.task.subject, audience: order.audience.word };
+  const name = capitalize(order.language ? t('g.luto.dish.goodLang', { ...vars, language: order.language.word }) : t('g.luto.dish.good', vars));
   if (extra.length > 0) {
-    return { quality: 'cluttered', name, lesson: 'Served, but extra instructions nobody asked for slow the answer down.', missing, extra };
+    return { quality: 'cluttered', name, lesson: t('g.luto.lesson.cluttered'), missing, extra };
   }
   return {
     quality: 'perfect',
     name,
-    lesson: order.health ? 'A clear prompt, with sources and honesty, still needs a check with a health worker.' : 'A good prompt is a good recipe: clear parts, clear dish.',
+    lesson: order.health ? t('g.luto.lesson.perfectHealth') : t('g.luto.lesson.perfect'),
     missing,
     extra,
   };

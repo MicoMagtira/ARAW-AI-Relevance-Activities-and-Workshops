@@ -4,20 +4,18 @@ import type { Action, InputFrame } from '../../src/games/engine/input';
 import { createRng } from '../../src/games/engine/rng';
 import type { GameInstance } from '../../src/games/engine/types';
 import {
-  BUBBLE_CHARS,
-  BUBBLE_LINES,
   H,
   HANGUP_SLOT,
-  HEAD_CHARS,
+  HEAD_X,
   HELP_SLOT,
-  LESSON_LINES,
-  LINE_CHARS,
   SLOTS,
   W,
+  lineWidth,
+  measureBubble,
+  measureLesson,
   moveSlot,
   slotAt,
   slotRect,
-  wrapText,
 } from '../../src/games/sino-to/art';
 import {
   BASE_POINTS,
@@ -35,7 +33,7 @@ import {
   type Call,
   type CheckId,
 } from '../../src/games/sino-to/calls';
-import sino, { buildRecap, headlineFor } from '../../src/games/sino-to/sino';
+import sino, { buildRecap, headlineFor, resultText, transcript } from '../../src/games/sino-to/sino';
 
 const NONE: InputFrame = { actions: [], held: new Set(), taps: [], pointer: null };
 const press = (...actions: Action[]): InputFrame => ({ ...NONE, actions });
@@ -101,15 +99,19 @@ describe('call generator', () => {
     for (const c of calls) expect(c.text).not.toMatch(/[{}]/);
   });
 
-  it('every transcript fits the bubble, every check result fits one line, every lesson and name fits the reveal', () => {
+  it('in English every transcript, check result, lesson and name fits at the full 8px size', () => {
     for (const seed of ['fit1', 'fit2', 'fit3']) {
       for (const c of callsOf(seed, 300)) {
-        expect(wrapText(c.text, BUBBLE_CHARS).length).toBeLessThanOrEqual(BUBBLE_LINES);
-        for (const id of CHECKS) expect(c.results[id].text.length).toBeLessThanOrEqual(LINE_CHARS);
-        expect(`${c.channel}: ${c.callerName}, ${c.tag}`.length).toBeLessThanOrEqual(LINE_CHARS);
+        expect(transcript(c)).toBe(c.text);
+        expect(measureBubble(c.text).size).toBe(8);
+        for (const id of CHECKS) {
+          expect(resultText(c.results[id])).toBe(c.results[id].text); // the catalog lines match the call logic's English
+          expect(lineWidth(c.results[id].text)).toBeLessThanOrEqual(W - 9);
+        }
+        expect(lineWidth(`${c.channel}: ${c.callerName}, ${c.tag}`)).toBeLessThanOrEqual(W - 6);
       }
     }
-    for (const s of STORIES) expect(wrapText(s.lesson, LINE_CHARS).length).toBeLessThanOrEqual(LESSON_LINES);
+    for (const s of STORIES) expect(measureLesson(s.lesson).size).toBe(8);
     for (const f of FAMILY) expect(f.name.length).toBeLessThanOrEqual(9);
   });
 
@@ -220,7 +222,7 @@ describe('judging a decision', () => {
     for (const choice of ['help', 'hangup'] as const) {
       for (const c of [scam, real]) {
         for (const used of [[], [decisive(c)]]) {
-          for (const line of headlineFor(judge(c, choice, used, 4))) expect(line.length).toBeLessThanOrEqual(HEAD_CHARS);
+          for (const line of headlineFor(judge(c, choice, used, 4))) expect(lineWidth(line)).toBeLessThanOrEqual(W - HEAD_X);
         }
       }
     }

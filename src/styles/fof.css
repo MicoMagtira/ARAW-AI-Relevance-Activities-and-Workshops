@@ -532,6 +532,7 @@
 /* ---------- Feedback card ---------- */
 .fof-feedback {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-3);
   padding: var(--sp-5);
   animation: px-enter var(--step) steps(4);
@@ -581,7 +582,7 @@
 
 @media (width < 600px) {
   .fof-feedback__actions .px-btn {
-    flex: 1;
+    flex: 1 1 auto;
   }
 
   .fof-feedback {
@@ -677,14 +678,17 @@
 }
 
 .radar__ends {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--sp-1) var(--sp-3);
   font: var(--fs-12) / 1.5 var(--font-pixel);
   text-transform: uppercase;
 }
 
 .radar__ends span:nth-child(2) {
   text-align: center;
+  flex: 1 1 auto;
   color: var(--fact-ink);
 }
 
@@ -705,4 +709,15 @@
   .fof-swipe {
     transform: translateX(var(--dx, 0px));
   }
+}
+
+/* translated labels: the feedback actions wrap onto a second row on phones instead of spilling out */
+.fof-feedback__actions {
+  flex-wrap: wrap;
+}
+
+.fof-feedback__actions .px-btn {
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
 }

@@ -2,7 +2,9 @@
 // Help Lola cross the lanes to the health center. An AI guide says GO or WAIT for the next lane. It is usually right and
 // sometimes confidently wrong, so the player checks the traffic with their own eyes. The Trust Meter rewards following the
 // guide when it is right and overriding it when it is wrong. The streets come only from the seeded generator.
-import { PALETTE, box, text } from '../engine/draw';
+import { t, type StringKey } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
+import { PALETTE, box } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
@@ -12,7 +14,6 @@ import {
   FIELD_Y,
   H,
   MAX_COL,
-  MSG_CHARS,
   ROWS,
   ROW_H,
   TILES,
@@ -21,6 +22,7 @@ import {
   drawBanner,
   drawBubble,
   drawClinic,
+  drawHorn,
   drawLane,
   drawLola,
   drawStatus,
@@ -81,7 +83,7 @@ export interface RunSummary {
   aiWrong: number;
 }
 
-const TIPS = ['Ask a health worker about meds.', 'Health workers know YOUR case.', 'Check health apps with a person.', 'Your body and eyes count too.'] as const;
+const TIPS: readonly StringKey[] = ['g.tawid.tip1', 'g.tawid.tip2', 'g.tawid.tip3', 'g.tawid.tip4'];
 
 const COMMAND_OF = { left: 'left', right: 'right', up: 'go', down: 'back', act: 'wait' } as const;
 
@@ -90,8 +92,6 @@ export const restLane = (lanes: readonly Lane[], lane: number): number => {
   for (let i = Math.min(lane, lanes.length - 1); i > 0; i--) if ((lanes[i] as Lane).kind !== 'road') return i;
   return 0;
 };
-
-const fitText = (value: string, max: number): string => (value.length > max ? value.slice(0, max) : value);
 
 function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const gen = createTripGenerator(createRng(`${rng()}:tawid-lanes`));
@@ -137,7 +137,7 @@ function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
   const next = (): Lane | undefined => laneAt(lane + 1);
   const mult = () => multiplierFor(trust);
   const say = (text: string, good: boolean) => {
-    message = { text: fitText(text, MSG_CHARS), good, ms: MESSAGE_MS };
+    message = { text, good, ms: MESSAGE_MS };
   };
   let spoken = ''; // the guide's last GO / WAIT: its voice only plays when the advice changes
   const refreshAdvice = () => {
@@ -180,7 +180,7 @@ function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
     const points = Math.round(TRIP_POINTS * mult());
     score += points;
     cue('arrive');
-    arrivedLines = ['LOLA MADE IT!', `+${points} POINTS. TRIP ${tripNo + 1} DONE`, 'The next street is busier!', TIPS[tripNo % TIPS.length] as string];
+    arrivedLines = [t('g.tawid.madeIt'), t('g.tawid.tripDone', { points, trip: tripNo + 1 }), t('g.tawid.busier'), t(TIPS[tripNo % TIPS.length] as StringKey)];
     message = null;
   }
 
@@ -213,7 +213,7 @@ function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
     invuln = INVULNERABLE_MS;
     pending = [];
     assessed.clear();
-    say('BEEP! LOST A HEART', false);
+    say(t('g.tawid.beepLost'), false);
     if (hearts <= 0) {
       phase = 'ending';
       phaseMs = 0;
@@ -332,7 +332,7 @@ function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
         if (kind === 'clinic') drawClinic(ctx, y);
         if (l && l.kind === 'road') for (const x of carsAt(l, tMs)) drawVehicle(ctx, l.vehicle, x, y, l.dir);
       }
-      if (horn) text(ctx, 'BEEP!', Math.max(2, Math.min(W - 42, horn.x - 14)), rowY(horn.lane - cam) + 4, { size: 8, color: PALETTE.surface });
+      if (horn) drawHorn(ctx, horn.x - 14, rowY(horn.lane - cam) + 4);
 
       if (phase !== 'ending' || tick % 2 === 0) {
         const p = Math.min(1, hopMs / HOP_MS);
@@ -350,38 +350,43 @@ function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
       drawStatus(ctx, trust, mult(), message);
       TILES.forEach((_, slot) => drawTile(ctx, slot, pressed?.slot === slot));
       if (phase === 'arrived') drawBanner(ctx, arrivedLines, 'good');
-      if (phase === 'ending') drawBanner(ctx, ['NO HEARTS LEFT', 'Ara walks Lola the rest.'], 'bad');
+      if (phase === 'ending') drawBanner(ctx, [t('g.tawid.noHearts'), t('g.tawid.araWalks')], 'bad');
     },
 
     stats(): GameStats {
       const ahead = next();
       const l = laneAt(lane) as Lane;
       const road = roadsInTrip(tripNo);
-      const base = `Tawid, Lola!. Score ${score}. Hearts ${hearts} of ${HEARTS}. Trust Meter ${trust} percent, score multiplier x${mult().toFixed(1)}. Trip ${tripNo + 1}: Lola is ${l.kind === 'road' ? 'on a road' : l.kind === 'clinic' ? 'at the health center' : 'on the grass'}, lane ${lane} of ${trip.lanes.length - 1}, column ${col + 1} of ${MAX_COL + 1}.`;
+      const where = t(l.kind === 'road' ? 'g.tawid.d.onRoad' : l.kind === 'clinic' ? 'g.tawid.d.atClinic' : 'g.tawid.d.onGrass');
+      const base = t('g.tawid.d.base', { score, hearts, max: HEARTS, trust, mult: mult().toFixed(1), trip: tripNo + 1, where, lane, lanes: trip.lanes.length - 1, col: col + 1, cols: MAX_COL + 1 });
       let description: string;
-      if (over) description = `${base} Lola is out of hearts and the run is over.`;
-      else if (phase === 'arrived') description = `${base} Lola reached the health center! ${arrivedLines.slice(1).join(' ')}`;
-      else if (phase === 'ending') description = `${base} The horn beeped and Lola has no hearts left.`;
+      if (over) description = t('g.tawid.d.over', { base });
+      else if (phase === 'arrived') description = t('g.tawid.d.arrived', { base, lines: arrivedLines.slice(1).join(' ') });
+      else if (phase === 'ending') description = t('g.tawid.d.ending', { base });
       else {
         let eyes: string;
         if (ahead && ahead.kind === 'road') {
           const secs = secondsToHit(ahead, col, tMs);
-          const v = VEHICLES[ahead.vehicle].name.toLowerCase();
-          eyes = `Your own view of the next lane, a ${v} lane with traffic moving ${ahead.dir > 0 ? 'right' : 'left'}: ${secs === null ? 'no vehicle reaches your column in the next 3 seconds' : secs === 0 ? `a ${v} is in your column right now` : `a ${v} reaches your column in about ${Math.max(1, Math.round(secs))} second${Math.round(secs) > 1 ? 's' : ''}`}.`;
-        } else eyes = ahead ? 'The next row has no traffic.' : 'There is nothing ahead.';
+          const vehicle = tx(VEHICLES[ahead.vehicle].name).toLowerCase(); // translated, then lower-cased
+          const n = Math.max(1, Math.round(secs ?? 0));
+          const when =
+            secs === null ? t('g.tawid.d.noneSoon') : secs === 0 ? t('g.tawid.d.inColumn', { vehicle }) : t(n > 1 ? 'g.tawid.d.reaches.many' : 'g.tawid.d.reaches.one', { vehicle, n });
+          eyes = t('g.tawid.d.eyes', { vehicle, dir: t(ahead.dir > 0 ? 'g.tawid.d.right' : 'g.tawid.d.left'), when });
+        } else eyes = t(ahead ? 'g.tawid.d.noTraffic' : 'g.tawid.d.nothing');
         const guide = advice
-          ? `The AI guide says ${advice.headline.replace('!', '')}, ${advice.confidence} percent sure: ${advice.reason}`
-          : `The AI guide says GO: ${calmLine(ahead)}`;
-        description = `${base} ${guide} ${eyes}${message ? ` Last: ${message.text}.` : ''} Move with the arrow keys or tap above, left or right of Lola. Space or tap Lola to wait. ${road} road lanes this trip.`;
+          ? t('g.tawid.d.guide', { headline: t(advice.go ? 'g.tawid.tileGo' : 'g.tawid.tileWait'), n: advice.confidence, reason: advice.reason })
+          : t('g.tawid.d.guideCalm', { line: calmLine(ahead) });
+        const last = message ? ` ${t('g.tawid.d.last', { message: message.text })}` : '';
+        description = t('g.tawid.d.play', { base, guide, eyes, last, road });
       }
       return {
         score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(score) },
-          { id: 'hearts', label: 'Hearts', value: `${hearts} of ${HEARTS}`, hearts: { n: hearts, max: HEARTS } },
-          { id: 'trust', label: 'Trust Meter', value: `${trust}%`, meter: trust },
-          { id: 'trip', label: 'Trip', value: String(tripNo + 1) },
+          { id: 'score', label: t('g.tawid.hud.score'), value: String(score) },
+          { id: 'hearts', label: t('g.tawid.hud.hearts'), value: t('g.tawid.hud.heartsValue', { n: hearts, max: HEARTS }), hearts: { n: hearts, max: HEARTS } },
+          { id: 'trust', label: t('g.tawid.hud.trust'), value: `${trust}%`, meter: trust },
+          { id: 'trip', label: t('g.tawid.hud.trip'), value: String(tripNo + 1) },
         ],
         description,
         recap: over ? buildRecap({ ...counts, trust }) : [],
@@ -392,19 +397,16 @@ function createTawid({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
 
 /** The game-over recap: what happened, then automation bias and keeping human judgment. */
 export function buildRecap(run: RunSummary & { trust?: number }): string[] {
-  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  const trips = (n: number) => t(n === 1 ? 'g.tawid.r.trip.one' : 'g.tawid.r.trip.many', { n });
+  const lanes = (n: number) => t(n === 1 ? 'g.tawid.r.lane.one' : 'g.tawid.r.lane.many', { n });
+  const times = (n: number) => t(n === 1 ? 'g.tawid.r.time.one' : 'g.tawid.r.time.many', { n });
   const lines = [
-    `You made ${plural(run.trips, 'trip', 'trips')} to the health center and crossed ${plural(run.lanes, 'lane', 'lanes')}. The AI guide was wrong on ${plural(run.aiWrong, 'lane', 'lanes')} you decided on, and you overrode it ${plural(run.overrideRight, 'time', 'times')} when your own eyes disagreed. The horn beeped ${plural(run.horns, 'time', 'times')}.`,
+    t('g.tawid.r.summary', { trips: trips(run.trips), lanes: lanes(run.lanes), wrong: lanes(run.aiWrong), overrides: times(run.overrideRight), horns: times(run.horns) }),
   ];
-  if (run.trustWrong > 0) lines.push(`You followed a wrong call ${plural(run.trustWrong, 'time', 'times')}. The guide sounded just as sure when it was wrong, and that is how over-relying on AI catches people.`);
-  else lines.push('You never followed a wrong call. Your own eyes stayed in charge.');
-  if (run.overrideWrong > 0) lines.push(`You went against the guide ${plural(run.overrideWrong, 'time', 'times')} when it was right. Doubting everything is not the answer either: look first, then decide.`);
-  lines.push(
-    'How it works: automation bias is trusting a computer over your own eyes because it sounds sure or is usually right. A confident voice or a high percentage is not proof.',
-    'The guide only knows what its data shows. You can see the whole street. Follow it when it matches what you see, and speak up when it does not.',
-    'Health apps and chatbots are the same: helpful, but they can be wrong about your body, your medicines or your situation. Your health worker knows your case.',
-    'Tip: when an app disagrees with how you feel or what you see, pause and ask a health worker before you act.',
-  );
+  if (run.trustWrong > 0) lines.push(t('g.tawid.r.trustWrong', { times: times(run.trustWrong) }));
+  else lines.push(t('g.tawid.r.neverWrong'));
+  if (run.overrideWrong > 0) lines.push(t('g.tawid.r.overrideWrong', { times: times(run.overrideWrong) }));
+  lines.push(t('g.tawid.r.how'), t('g.tawid.r.data'), t('g.tawid.r.apps'), t('g.tawid.r.tip'));
   return lines;
 }
 

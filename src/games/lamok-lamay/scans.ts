@@ -1,6 +1,8 @@
 // Lamok Lamay rules: the water containers (scans), what floats in them, what the "AI camera" boxes, how a tap is judged and
 // how precision and catch rate are worked out. Everything here is pure and seeded: a scan depends only on the seed and its
 // number, never on what the player did, so the Daily Challenge is the same for everyone.
+import { t } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
 import { rngInt, rngPick, shuffle, type Rng } from '../engine/rng';
 import type { ContentReview } from '../../content/review';
 
@@ -176,22 +178,23 @@ export const multiplierFor = (streak: number): number => Math.min(2, Math.round(
 
 /** The line shown after a tap (38 characters at most). */
 export function feedback(result: TapResult, item: ScanItem | null, points: number): string {
-  const what = item ? OBJECTS[item.kind].name.toUpperCase() : '';
+  // translated before it is upper-cased, so the pack still finds the object's name
+  const what = item ? tx(OBJECTS[item.kind].name).toUpperCase() : '';
   switch (result) {
     case 'whack':
-      return `WHACK! LARVA CAUGHT. +${points}`;
+      return t('g.lamok.fb.whack', { n: points });
     case 'add':
-      return `GOOD EYES! AI MISSED IT. +${points}`;
+      return t('g.lamok.fb.add', { n: points });
     case 'reject':
-      return `RIGHT! THAT WAS A ${what}. +${points}`;
+      return t('g.lamok.fb.reject', { what, n: points });
     case 'bad-reject':
-      return `OOPS! THAT WAS A REAL LARVA. -${MISTAKE_POINTS}`;
+      return t('g.lamok.fb.badReject', { n: MISTAKE_POINTS });
     case 'bad-swat':
-      return `OOPS! THAT IS ONLY A ${what}. -${MISTAKE_POINTS}`;
+      return t('g.lamok.fb.badSwat', { what, n: MISTAKE_POINTS });
     case 'no-box':
-      return 'NO BOX THERE: NOTHING TO REJECT.';
+      return t('g.lamok.fb.noBox');
     default:
-      return 'SPLASH! NOTHING THERE.';
+      return t('g.lamok.fb.splash');
   }
 }
 

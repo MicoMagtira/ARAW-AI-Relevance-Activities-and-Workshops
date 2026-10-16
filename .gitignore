@@ -13,3 +13,7 @@ shots-out/
 .DS_Store
 Thumbs.db
 .env.*.local
+tests/e2e/out/
+dist-dom/
+errors/
+dist-canvas*/

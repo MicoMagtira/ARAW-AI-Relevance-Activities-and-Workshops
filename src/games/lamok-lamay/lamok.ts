@@ -3,7 +3,9 @@
 // seeds and leaf bits (false alarms), and larvae with no box (misses). WHACK real larvae, REJECT wrong boxes, and tap a
 // larva with no box to add it. Whatever is left when the time is up becomes a mosquito. Scans come only from the seeded
 // generator and never depend on the player, so the Daily Challenge is the same for everyone.
-import { PALETTE, box, text } from '../engine/draw';
+import { t } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
+import { PALETTE, box, measureLine, text } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
@@ -71,6 +73,8 @@ const REVEAL_MS = 1400;
 const GOOD_RESULT_MS = 3200;
 const BAD_RESULT_MS = 4200;
 const FX_MS = 700;
+/** Score popups float up, but no higher than just inside the container's rim. */
+const POPUP_TOP = 26;
 
 type Phase = 'live' | 'result';
 
@@ -91,28 +95,41 @@ export interface RunSummary {
   topWrongConfidence: number;
 }
 
-const plural = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
+type PluralKey = 'container' | 'larva' | 'wrongBox';
+const plural = (n: number, key: PluralKey): string => t(n === 1 ? `g.lamok.n.${key}.one` : `g.lamok.n.${key}.many`, { n });
 
 /** The result panel text: a headline, the AI's mistakes in this container, then the dengue tip (each line fits the panel). */
 export function resultLines(scan: Scan, s: Settlement, bonus: number): { lines: string[]; good: boolean } {
   const good = s.escaped === 0;
   const headline = good
     ? larvaeIn(scan) === 0
-      ? 'NO LARVAE HERE. KEEP IT COVERED!'
+      ? t('g.lamok.res.empty')
       : bonus > 0
-        ? `ALL LARVAE CAUGHT! TIME +${bonus}`
-        : 'ALL LARVAE CAUGHT!'
-    : `${s.escaped} ${s.escaped === 1 ? 'LARVA ESCAPED AS A MOSQUITO' : 'LARVAE ESCAPED AS MOSQUITOES'}!`;
+        ? t('g.lamok.res.allBonus', { n: bonus })
+        : t('g.lamok.res.all')
+    : t(s.escaped === 1 ? 'g.lamok.res.escaped.one' : 'g.lamok.res.escaped.many', { n: s.escaped });
   const fp = falseBoxesIn(scan);
   const fn = missesIn(scan);
-  const ai = fp + fn === 0 ? 'AI: NO MISTAKES THIS TIME' : `AI: ${fp} FALSE ${fp === 1 ? 'BOX' : 'BOXES'}, ${fn} ${fn === 1 ? 'MISS' : 'MISSES'}`;
-  return { lines: [headline, ai, ...CONTAINERS[scan.container].tip], good };
+  const ai =
+    fp + fn === 0
+      ? t('g.lamok.res.aiClean')
+      : t('g.lamok.res.ai', { boxes: t(fp === 1 ? 'g.lamok.res.falseBox.one' : 'g.lamok.res.falseBox.many', { n: fp }), misses: t(fn === 1 ? 'g.lamok.res.miss.one' : 'g.lamok.res.miss.many', { n: fn }) });
+  return { lines: [headline, ai, ...CONTAINERS[scan.container].tip.map(tx)], good };
+}
+
+/** The AI's mistakes in a container, as a sentence for the text description. */
+function aiSentence(scan: Scan): string {
+  const fp = falseBoxesIn(scan);
+  const fn = missesIn(scan);
+  if (fp + fn === 0) return t('g.lamok.desc.aiClean');
+  return t('g.lamok.desc.ai', { boxes: t(fp === 1 ? 'g.lamok.desc.falseBox.one' : 'g.lamok.desc.falseBox.many', { n: fp }), misses: t(fn === 1 ? 'g.lamok.desc.miss.one' : 'g.lamok.desc.miss.many', { n: fn }) });
 }
 
 /** Where an item sits in the water, in words, for the text description. */
 function where(item: ScanItem): string {
   const col = Math.min(COLS - 1, Math.max(0, Math.floor(((item.x - WATER.x) / WATER.w) * COLS)));
-  return `${['far left', 'left', 'right', 'far right'][col]}, ${item.y < WATER.y + WATER.h / 2 ? 'top' : 'bottom'}`;
+  const cols = ['g.lamok.desc.farLeft', 'g.lamok.desc.left', 'g.lamok.desc.right', 'g.lamok.desc.farRight'] as const;
+  return t('g.lamok.desc.where', { col: t(cols[col] ?? 'g.lamok.desc.left'), row: t(item.y < WATER.y + WATER.h / 2 ? 'g.lamok.desc.top' : 'g.lamok.desc.bottom') });
 }
 
 function createLamok({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
@@ -135,7 +152,7 @@ function createLamok({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
   let tick = 0;
   let tickMs = 0;
   let lastPointer = '';
-  let message = { text: 'AI BOXES: THE % IS HOW SURE THE AI IS.', tone: 'plain' as 'plain' | 'good' | 'bad' };
+  let message = { text: t('g.lamok.msg.start'), tone: 'plain' as 'plain' | 'good' | 'bad' };
   let fx: Array<{ x: number; y: number; ms: number; label: string; color: string; burst: boolean }> = [];
   let tally: AiTally = { tp: 0, fp: 0, fn: 0 };
   let topWrong = 0;
@@ -166,7 +183,7 @@ function createLamok({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
     settlement = null;
     panel = null;
     swept = false;
-    message = { text: 'AI BOXES: THE % IS HOW SURE THE AI IS.', tone: 'plain' };
+    message = { text: t('g.lamok.msg.start'), tone: 'plain' };
   }
 
   function finish(early: boolean) {
@@ -351,16 +368,21 @@ function createLamok({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
       if (phase === 'live' && phaseMs >= POP_MS && !ready()) box(ctx, PALETTE.navy, sweepX, WATER.y, 2, WATER.h);
       for (const f of fx) {
         if (f.burst) drawBurst(ctx, f.x, f.y, Math.min(2, Math.floor(f.ms / 120)), PALETTE.coral);
-        text(ctx, f.label, f.x, f.y - 22 - Math.floor(f.ms / 100) * 2, { size: 8, color: f.color, align: 'center' });
+        // on its own little card, so it reads over the water, the objects and the AI's tabs alike
+        const label = measureLine(f.label, W - 8);
+        const ly = Math.max(POPUP_TOP, f.y - 22 - Math.floor(f.ms / 100) * 2);
+        const lx = Math.max(4 + label.width / 2, Math.min(W - 4 - label.width / 2, f.x));
+        box(ctx, PALETTE.surface, lx - label.width / 2 - 1, ly - 1, label.width + 2, label.size + 2);
+        text(ctx, label.text, lx, ly, { size: label.size, color: f.color, align: 'center', maxWidth: label.width });
       }
       ctx.restore();
 
       const p = precisionOf(tally);
       const c = catchRateOf(tally);
-      drawMeterRow(ctx, 0, `PRECISION ${p}%: BOXES THAT ARE REAL`, p);
-      drawMeterRow(ctx, 1, `CATCH RATE ${c}%: LARVAE THE AI FOUND`, c);
+      drawMeterRow(ctx, 0, t('g.lamok.meter.precision', { p }), p);
+      drawMeterRow(ctx, 1, t('g.lamok.meter.catch', { c }), c);
       const scanning = phase === 'live' && !ready();
-      text(ctx, scanning ? 'AI CAMERA SCANNING...' : message.text, 4, MSG_Y, { size: 8, color: scanning ? PALETTE.navy : message.tone === 'good' ? PALETTE.fact : message.tone === 'bad' ? PALETTE.fake : PALETTE.muted });
+      text(ctx, scanning ? t('g.lamok.msg.scanning') : message.text, 4, MSG_Y, { maxWidth: W - 8, size: 8, color: scanning ? PALETTE.navy : message.tone === 'good' ? PALETTE.fact : message.tone === 'bad' ? PALETTE.fake : PALETTE.muted });
 
       const locked = phase !== 'live' || !ready();
       drawToolTile(ctx, WHACK_SLOT, { active: tool === 'whack', cursor: false, locked });
@@ -376,38 +398,40 @@ function createLamok({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue 
       const p = precisionOf(tally);
       const c = catchRateOf(tally);
       const kind = CONTAINERS[scan.container];
-      const base = `Lamok Lamay. Score ${score}. Hearts ${hearts} of ${HEARTS}. Precision ${p}%. Catch rate ${c}%. Scan ${index + 1}: ${kind.plain}.`;
+      const base = t('g.lamok.desc.base', { score, hearts, max: HEARTS, p, c, n: index + 1, kind: kind.plain });
       let description: string;
       if (over) {
-        description = `${base} Too many larvae grew into mosquitoes: no hearts left.`;
+        description = `${base} ${t('g.lamok.desc.over')}`;
       } else if (phase === 'result' && settlement && panel) {
-        const left = settlement.escaped > 0 ? `${plural(settlement.escaped, 'larva', 'larvae')} left in the water became ${settlement.escaped === 1 ? 'a mosquito' : 'mosquitoes'} and you lost ${plural(settlement.escaped, 'heart', 'hearts')}.` : 'You caught every larva.';
-        const wrong = settlement.falseLeft > 0 ? ` ${plural(settlement.falseLeft, 'wrong box', 'wrong boxes')} stayed up.` : '';
-        const ai = panel.lines[1] ?? '';
-        description = `${base} ${left}${wrong} ${ai.toLowerCase().replace('ai:', 'The AI made')}. Tip: ${kind.tip.join(' ').toLowerCase()}`;
+        const n = settlement.escaped;
+        const left = n > 0 ? t(n === 1 ? 'g.lamok.desc.left.one' : 'g.lamok.desc.left.many', { n }) : t('g.lamok.desc.caughtAll');
+        const w = settlement.falseLeft;
+        const wrong = w > 0 ? ` ${t(w === 1 ? 'g.lamok.desc.wrong.one' : 'g.lamok.desc.wrong.many', { n: w })}` : '';
+        description = `${base} ${left}${wrong} ${aiSentence(scan)}. ${t('g.lamok.desc.tip', { tip: kind.tip.map(tx).join(' ').toLowerCase() })}`;
       } else if (!ready()) {
-        description = `${base} The container pops up and the AI camera is scanning the water.`;
+        description = `${base} ${t('g.lamok.desc.scanning')}`;
       } else {
         const list = targets();
         const items = list
           .map((item, i) => {
-            const box = item.boxed ? `boxed by the AI as larvae ${item.confidence}%` : 'no box';
-            return `${i + 1}, ${where(item)}: ${OBJECTS[item.kind].look}, ${box}`;
+            const box = item.boxed ? t('g.lamok.desc.boxed', { c: item.confidence }) : t('g.lamok.desc.noBox');
+            return t('g.lamok.desc.item', { n: i + 1, where: where(item), look: OBJECTS[item.kind].look, box });
           })
           .join('; ');
         const spot = list[cur];
-        const highlight = !showCursor ? '' : spot ? ` Highlighted: object ${cur + 1}.` : ' Highlighted: the Done button.';
-        const low = timeLeft() <= 5000 ? ' Less than 5 seconds left.' : '';
-        description = `${base} Tool: ${tool === 'whack' ? 'Whack' : 'Reject'}.${low} Objects in the water: ${items === '' ? 'none left' : items}.${highlight} Press Enter on an object to use the tool, up for Whack, down for Reject, and Done to move on.`;
+        const highlight = !showCursor ? '' : spot ? ` ${t('g.lamok.desc.highlightObject', { n: cur + 1 })}` : ` ${t('g.lamok.desc.highlightDone')}`;
+        const low = timeLeft() <= 5000 ? ` ${t('g.lamok.desc.low')}` : '';
+        const toolName = t(tool === 'whack' ? 'g.lamok.desc.toolWhack' : 'g.lamok.desc.toolReject');
+        description = `${base} ${t('g.lamok.desc.tool', { tool: toolName })}${low} ${t('g.lamok.desc.objects', { items: items === '' ? t('g.lamok.desc.noneLeft') : items })}${highlight} ${t('g.lamok.desc.help')}`;
       }
       return {
         score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(score) },
-          { id: 'hearts', label: 'Hearts', value: `${hearts} of ${HEARTS}`, hearts: { n: hearts, max: HEARTS } },
-          { id: 'precision', label: 'Precision', value: `${p}%`, meter: p },
-          { id: 'catch', label: 'Catch rate', value: `${c}%`, meter: c },
+          { id: 'score', label: t('g.lamok.hud.score'), value: String(score) },
+          { id: 'hearts', label: t('g.lamok.hud.hearts'), value: t('g.lamok.hud.heartsValue', { n: hearts, max: HEARTS }), hearts: { n: hearts, max: HEARTS } },
+          { id: 'precision', label: t('g.lamok.hud.precision'), value: `${p}%`, meter: p },
+          { id: 'catch', label: t('g.lamok.hud.catch'), value: `${c}%`, meter: c },
         ],
         description,
         recap: over ? buildRecap({ ...counts, bestStreak, tally, topWrongConfidence: topWrong }) : [],
@@ -422,15 +446,18 @@ export function buildRecap(run: RunSummary): string[] {
   const c = catchRateOf(run.tally);
   const seen = run.tally.tp + run.tally.fp + run.tally.fn > 0;
   return [
-    `You checked ${plural(run.scans, 'container', 'containers')}: ${plural(run.whacked + run.added, 'larva', 'larvae')} whacked (${run.added} the AI missed), ${plural(run.rejected, 'wrong box', 'wrong boxes')} rejected and ${plural(run.escaped, 'larva', 'larvae')} grew into mosquitoes. Best streak: ${run.bestStreak}.`,
-    seen
-      ? `The AI camera's precision was ${p}%: of its boxes, that share really were larvae. Its catch rate was ${c}%: of the real larvae, that share got a box. A false alarm hurts precision, and a miss hurts catch rate.`
-      : 'The AI camera made too few boxes to grade this time.',
-    run.topWrongConfidence > 0
-      ? `Its most confident wrong box said ${run.topWrongConfidence}%. A high number is still only a guess, so look at the picture yourself.`
-      : 'A confidence number is how sure the AI is, not proof. Look at the picture yourself.',
-    'Dengue mosquitoes breed in clean standing water, even a small amount. Cover, clean and empty drums, buckets, tires, cans and flower-pot plates every week. Health workers call this search and destroy.',
-    'AI cameras can help health workers search faster, but people still check the result. If a fever starts, see a health worker early.',
+    t('g.lamok.recap.run', {
+      containers: plural(run.scans, 'container'),
+      larvae: plural(run.whacked + run.added, 'larva'),
+      added: run.added,
+      wrong: plural(run.rejected, 'wrongBox'),
+      escaped: plural(run.escaped, 'larva'),
+      streak: run.bestStreak,
+    }),
+    seen ? t('g.lamok.recap.grade', { p, c }) : t('g.lamok.recap.ungraded'),
+    run.topWrongConfidence > 0 ? t('g.lamok.recap.topWrong', { n: run.topWrongConfidence }) : t('g.lamok.recap.confidence'),
+    t('g.lamok.recap.dengue'),
+    t('g.lamok.recap.help'),
   ];
 }
 

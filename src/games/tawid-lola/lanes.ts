@@ -1,6 +1,7 @@
 // Tawid, Lola! logic (no drawing): the seeded streets, where the traffic is at any moment, the AI guide's advice and how the
 // Trust Meter judges a decision. Traffic is a pure function of the lane and the trip clock, so the same seed always plays
 // the same streets and the guide always knows exactly what it is (wrongly) saying.
+import { t, type StringKey } from '../../app/i18n';
 import { rngInt, rngPick, type Rng } from '../engine/rng';
 import type { ContentReview } from '../../content/review';
 
@@ -172,6 +173,7 @@ export interface Advice {
 }
 
 export const GO_LINES = ['Looks clear. Step now.', 'Gap ahead. You can go.', 'No traffic. Safe to go.'] as const;
+const GO_LINE_KEYS = ['g.tawid.goLine1', 'g.tawid.goLine2', 'g.tawid.goLine3'] as const;
 
 /** What the guide says about stepping into `next` from column `col`. Returns null for grass and the health center. */
 export function adviceFor(next: Lane | undefined, col: number, tMs: number): Advice | null {
@@ -183,13 +185,13 @@ export function adviceFor(next: Lane | undefined, col: number, tMs: number): Adv
     go,
     correct: !next.wrong,
     confidence: next.confidence,
-    headline: go ? 'GO!' : 'WAIT!',
-    reason: go ? (GO_LINES[next.line] as string) : `${VEHICLES[next.vehicle].name} coming. Hold on.`,
+    headline: go ? t('g.tawid.go') : t('g.tawid.wait'),
+    reason: go ? t(GO_LINE_KEYS[next.line] ?? 'g.tawid.goLine1') : t('g.tawid.coming', { vehicle: VEHICLES[next.vehicle].name }),
   };
 }
 
 /** What the guide says when the next row is grass or the health center. */
-export const calmLine = (next: Lane | undefined): string => (next?.kind === 'clinic' ? 'The health center is ahead!' : 'Grass ahead. No traffic here.');
+export const calmLine = (next: Lane | undefined): string => (next?.kind === 'clinic' ? t('g.tawid.calmClinic') : t('g.tawid.calmGrass'));
 
 // ---- the Trust Meter ----------------------------------------------------------------------------------------------
 export type Decision = 'go' | 'wait';
@@ -226,12 +228,13 @@ export function assess(advice: Pick<Advice, 'go' | 'correct'>, decision: Decisio
     'override-wrong': decision === 'go' ? -8 : -3,
   }[verdict];
   const sign = (n: number) => (n > 0 ? `+${n}` : `${n}`);
-  const message = {
-    'trust-right': `AI WAS RIGHT ${sign(delta)}`,
-    'trust-wrong': `AI WAS WRONG! ${sign(delta)}`,
-    'override-right': `GOOD CALL! ${sign(delta)}`,
-    'override-wrong': decision === 'go' ? `AI SAID WAIT ${sign(delta)}` : `AI SAID GO ${sign(delta)}`,
-  }[verdict];
+  const key = {
+    'trust-right': 'g.tawid.msg.trustRight',
+    'trust-wrong': 'g.tawid.msg.trustWrong',
+    'override-right': 'g.tawid.msg.overrideRight',
+    'override-wrong': decision === 'go' ? 'g.tawid.msg.saidWait' : 'g.tawid.msg.saidGo',
+  }[verdict] as StringKey;
+  const message = t(key, { d: sign(delta) });
   return { verdict, delta, bonus: verdict === 'override-right' ? OVERRIDE_BONUS : 0, message, good: delta > 0 };
 }
 

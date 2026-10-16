@@ -220,7 +220,7 @@
   }
 
   .lesson-actions .px-btn--lg {
-    flex: 1;
+    flex: 1 1 auto;
   }
 }
 
@@ -456,7 +456,7 @@
 }
 
 .sort-bins .px-btn {
-  flex: 1 1 100px;
+  flex: 1 1 auto;
   padding-inline: var(--sp-3);
 }
 

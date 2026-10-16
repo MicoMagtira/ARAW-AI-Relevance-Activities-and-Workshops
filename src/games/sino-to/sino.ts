@@ -2,34 +2,32 @@
 // A call or voice note comes in as a transcript on a caller card. Verify it with the family secret question, a call back to the
 // saved number, another relative or the official hotline, then HELP THEM or HANG UP + REPORT. Some callers are AI voice clones.
 // Calls come only from the seeded generator and never depend on the player's choices, so the Daily Challenge matches.
-import { PALETTE, box, text } from '../engine/draw';
+import { t, type StringKey } from '../../app/i18n';
+import { tx } from '../../i18n/runtime';
+import { PALETTE, box, text, type Block } from '../engine/draw';
 import type { InputFrame } from '../engine/input';
 import { createRng, type Rng } from '../engine/rng';
 import type { Cue, GameDef, GameInstance, GameStats } from '../engine/types';
 import { silent } from '../engine/cues';
 import { drawPerson, type Face } from '../feed-mo-to/art';
 import {
-  BUBBLE_CHARS,
   HANGUP_SLOT,
-  HEAD_CHARS,
   HEAD_X,
   H,
   HELP_SLOT,
-  LESSON_LINES,
-  LESSON_Y,
-  LINE_CHARS,
-  LINE_H,
   W,
   drawBubble,
   drawCheckTile,
   drawDecisionTile,
+  drawLesson,
   drawLog,
   drawStamp,
   drawStrip,
   drawWave,
+  measureBubble,
+  measureLesson,
   moveSlot,
   slotAt,
-  wrapText,
 } from './art';
 import {
   CHECKS,
@@ -37,10 +35,12 @@ import {
   HEARTS,
   createCallGenerator,
   evidence,
+  fill,
   judge,
   multiplierFor,
   type Call,
   type CheckId,
+  type CheckResult,
   type Choice,
   type Judgement,
 } from './calls';
@@ -70,15 +70,33 @@ export interface RunSummary {
   bestStreak: number;
 }
 
-/** The headline and sub-line of the reveal (21 characters at most each). */
+/** The headline and sub-line of the reveal, in the player's language (each fits beside the stamp; long ones shrink). */
 export function headlineFor(j: Judgement): [string, string] {
-  if (j.result === 'stopped') return j.verified ? ['SCAM STOPPED!', `+${j.total} (X${j.multiplier})`] : ['LUCKY GUESS!', `+${j.total}. CHECK NEXT TIME`.slice(0, HEAD_CHARS)];
-  if (j.result === 'helped') return j.verified ? ['REAL CALL HELPED!', `+${j.total} (X${j.multiplier})`] : ['LUCKY GUESS!', `+${j.total}. CHECK NEXT TIME`.slice(0, HEAD_CHARS)];
-  if (j.result === 'paid') return ['YOU HELPED A SCAM!', 'LOST A HEART'];
-  return ['THAT WAS A REAL CALL', 'LOST A HEART'];
+  const points = t('g.sino.h.points', { n: j.total, mult: j.multiplier });
+  const lucky: [string, string] = [t('g.sino.h.lucky'), t('g.sino.h.checkNext', { n: j.total })];
+  if (j.result === 'stopped') return j.verified ? [t('g.sino.h.stopped'), points] : lucky;
+  if (j.result === 'helped') return j.verified ? [t('g.sino.h.helped'), points] : lucky;
+  if (j.result === 'paid') return [t('g.sino.h.paid'), t('g.sino.h.lostHeart')];
+  return [t('g.sino.h.hungUp'), t('g.sino.h.lostHeart')];
 }
 
-const plain = (call: Call): string => `${call.channel === 'CALL' ? 'a call' : 'a voice note'} from ${call.callerName.toLowerCase()} (${call.tag === 'NEW NO.' ? 'new number' : call.tag === 'SAVED' ? 'saved contact' : 'unknown number'})`;
+/** What a check found, in the player's language. */
+export const resultText = (r: CheckResult): string => t(r.key, r.vars);
+
+/** The transcript in the player's language: the story's translated text with the same blanks filled in. */
+export const transcript = (call: Call): string =>
+  fill(tx(call.story.text), Object.fromEntries(Object.entries(call.values).map(([k, v]) => [k, tx(v)])));
+
+const CHANNEL: Record<string, StringKey> = { CALL: 'g.sino.ch.call', 'VOICE NOTE': 'g.sino.ch.voice' };
+const TAG: Record<string, StringKey> = { UNKNOWN: 'g.sino.tag.unknown', 'NEW NO.': 'g.sino.tag.new', SAVED: 'g.sino.tag.saved' };
+const TAG_SAID: Record<string, StringKey> = { UNKNOWN: 'g.sino.d.unknown', 'NEW NO.': 'g.sino.d.newNumber', SAVED: 'g.sino.d.saved' };
+const label = (keys: Record<string, StringKey>, code: string): string => (keys[code] ? t(keys[code]) : code);
+
+/** The strip under the bubble, in parts: "CALL" ": " "MAMA" ", " "SAVED". */
+const stripFor = (call: Call): string[] => [label(CHANNEL, call.channel), ': ', call.callerName, ', ', label(TAG, call.tag)];
+
+const plain = (call: Call): string =>
+  t(call.channel === 'CALL' ? 'g.sino.d.call' : 'g.sino.d.voice', { name: call.callerName.toLowerCase(), tag: label(TAG_SAID, call.tag) });
 
 function createSino({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }): GameInstance {
   const calls = createCallGenerator(createRng(`${rng()}:sino-calls`));
@@ -100,12 +118,19 @@ function createSino({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
   let lastPointer = '';
   const counts = { stopped: 0, helped: 0, paid: 0, hungUp: 0, guesses: 0 };
   let ringing = true; // the phone rings once as each call starts (on the next step)
+  // the transcript as shown: translated, then laid out once per call
+  let said = transcript(call);
+  let bubble: Block = measureBubble(said);
+  let lesson: Block | null = null;
 
-  const fullMs = () => RING_MS + (call.text.length / TYPE_CPS) * 1000;
+  const fullMs = () => RING_MS + ([...said].length / TYPE_CPS) * 1000;
 
   function nextCall() {
     index += 1;
     call = calls.next(index);
+    said = transcript(call);
+    bubble = measureBubble(said);
+    lesson = null;
     phase = 'call';
     phaseMs = 0;
     used = [];
@@ -201,22 +226,20 @@ function createSino({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
       const revealed = phase === 'result';
       drawWave(ctx, tick, revealed ? (call.scam ? 'fake' : 'real') : phaseMs < RING_MS ? 'quiet' : 'live');
       const typed = Math.floor(Math.max(0, phaseMs - RING_MS) * (TYPE_CPS / 1000));
-      drawBubble(ctx, wrapText(call.text, BUBBLE_CHARS), revealed ? call.text.length : typed, !revealed && phaseMs < RING_MS, tick);
+      drawBubble(ctx, bubble, revealed ? Infinity : typed, !revealed && phaseMs < RING_MS, tick);
 
+      drawStrip(ctx, stripFor(call));
       if (revealed && judgement) {
         const j = judgement;
         const [head, sub] = headlineFor(j);
-        drawStrip(ctx, `${call.channel}: ${call.callerName}, ${call.tag}`);
         drawStamp(ctx, call.scam);
         const color = j.heartLost ? PALETTE.fake : PALETTE.fact;
         text(ctx, head, HEAD_X, 76, { size: 8, color });
         text(ctx, sub, HEAD_X, 86, { size: 8, color: PALETTE.ink });
-        wrapText(call.story.lesson, LINE_CHARS)
-          .slice(0, LESSON_LINES)
-          .forEach((line, i) => text(ctx, line, 6, LESSON_Y + i * LINE_H, { size: 8, color: PALETTE.ink }));
+        lesson ??= measureLesson(call.story.lesson);
+        drawLesson(ctx, lesson);
       } else {
-        drawStrip(ctx, `${call.channel}: ${call.callerName}, ${call.tag}`);
-        drawLog(ctx, used.map((c) => call.results[c]));
+        drawLog(ctx, used.map((c) => ({ verdict: call.results[c].verdict, text: resultText(call.results[c]) })));
       }
 
       const locked = phase !== 'call';
@@ -229,35 +252,43 @@ function createSino({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
     },
 
     stats(): GameStats {
-      const base = `Sino 'To?. Score ${score}. Hearts ${hearts} of ${HEARTS}. Streak ${streak}. Call ${index + 1}, ${plain(call)}: "${call.text}"`;
-      const found = `${used.map((c) => call.results[c].text).join(' ')}`;
+      const base = t('g.sino.d.base', { score, hearts, max: HEARTS, streak, n: index + 1, caller: plain(call), text: said });
+      const found = used.map((c) => resultText(call.results[c])).join(' ');
       let description: string;
       if (over) {
-        description = `${base} The switchboard is closed: no hearts left.`;
+        description = `${base} ${t('g.sino.d.over')}`;
       } else if (phase === 'result' && judgement) {
         const j = judgement;
         const outcome =
           j.result === 'stopped'
-            ? `You hung up and reported it. ${j.verified ? `Scam stopped, ${j.total} points.` : `A lucky guess, ${j.total} points.`}`
+            ? t(j.verified ? 'g.sino.d.stoppedVerified' : 'g.sino.d.stoppedGuess', { n: j.total })
             : j.result === 'helped'
-              ? `You helped. ${j.verified ? `Real call helped, ${j.total} points.` : `A lucky guess, ${j.total} points.`}`
+              ? t(j.verified ? 'g.sino.d.helpedVerified' : 'g.sino.d.helpedGuess', { n: j.total })
               : j.result === 'paid'
-                ? 'You helped a scammer and lost a heart.'
-                : 'You hung up on a real call and lost a heart.';
-        const stamp = call.scam ? 'ARAW GAME FAKE stamp: this was an AI voice-clone scam.' : 'Genuine call stamp: this call was real.';
-        description = `${base} ${outcome} ${stamp} ${call.story.lesson}`;
+                ? t('g.sino.d.paid')
+                : t('g.sino.d.hungUp');
+        const stamp = t(call.scam ? 'g.sino.d.stampFake' : 'g.sino.d.stampReal');
+        description = `${base} ${outcome} ${stamp} ${tx(call.story.lesson)}`;
       } else {
-        const left = CHECKS.filter((c) => !used.includes(c)).map((c) => CHECK_INFO[c].name);
-        const slotName = sel === HELP_SLOT ? 'the Help them button' : sel === HANGUP_SLOT ? 'the Hang up and report button' : `the check to ${CHECK_INFO[CHECKS[sel] as CheckId].name}`;
-        description = `${base} Checks made: ${used.length === 0 ? 'none yet.' : found}${evidence(call, used) === 'unclear' ? '' : ' That settles it.'} Checks left: ${left.length > 0 ? left.join(', ') : 'none'}. Highlighted: ${slotName}. Press Enter on a check to make it, then choose Help them or Hang up and report.`;
+        const left = CHECKS.filter((c) => !used.includes(c)).map((c) => tx(CHECK_INFO[c].name));
+        const slotName =
+          sel === HELP_SLOT
+            ? t('g.sino.d.slotHelp')
+            : sel === HANGUP_SLOT
+              ? t('g.sino.d.slotHangup')
+              : t('g.sino.d.slotCheck', { check: CHECK_INFO[CHECKS[sel] as CheckId].name });
+        const made = t('g.sino.d.checksMade', { found: used.length === 0 ? t('g.sino.d.noneYet') : found });
+        const settles = evidence(call, used) === 'unclear' ? '' : ` ${t('g.sino.d.settles')}`;
+        const checksLeft = t('g.sino.d.checksLeft', { left: left.length > 0 ? left.join(', ') : t('g.sino.d.none') });
+        description = `${base} ${made}${settles} ${checksLeft} ${t('g.sino.d.highlighted', { slot: slotName })} ${t('g.sino.d.howTo')}`;
       }
       return {
         score,
         over,
         hud: [
-          { id: 'score', label: 'Score', value: String(score) },
-          { id: 'hearts', label: 'Hearts', value: `${hearts} of ${HEARTS}`, hearts: { n: hearts, max: HEARTS } },
-          { id: 'streak', label: 'Streak', value: streak > 0 ? `${streak} (x${multiplierFor(streak)})` : '0' },
+          { id: 'score', label: t('g.sino.hud.score'), value: String(score) },
+          { id: 'hearts', label: t('g.sino.hud.hearts'), value: t('g.sino.hud.heartsValue', { n: hearts, max: HEARTS }), hearts: { n: hearts, max: HEARTS } },
+          { id: 'streak', label: t('g.sino.hud.streak'), value: streak > 0 ? t('g.sino.hud.streakValue', { n: streak, mult: multiplierFor(streak) }) : '0' },
         ],
         description,
         recap: over ? buildRecap({ calls: index + 1, ...counts, bestStreak }) : [],
@@ -268,18 +299,24 @@ function createSino({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
 
 /** The game-over recap: what happened, then how voice clones work and how to verify a call. */
 export function buildRecap(run: RunSummary): string[] {
-  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-  const lines = [
-    `You took ${plural(run.calls, 'call', 'calls')}: ${plural(run.stopped, 'scam', 'scams')} stopped, ${plural(run.helped, 'real call', 'real calls')} helped, ${plural(run.paid, 'scam', 'scams')} you helped and ${plural(run.hungUp, 'real call', 'real calls')} you hung up on. Best streak: ${run.bestStreak}.`,
-    run.guesses > 0
-      ? `You decided ${plural(run.guesses, 'time', 'times')} without proof from a check. A guess can be right, but it is still a guess: a clone sounds just like family.`
-      : 'Every decision had proof from a check. That is the habit that protects you.',
-    'How it works: AI can copy a voice from a short clip, so a voice that sounds like family is not proof. Scammers fake hospital emergencies, a doctor or a bank to rush you.',
-    'Verify through a number or a person you already know: call back the saved number, ask another relative, use the official hotline. Never use a number the caller gives you.',
-    'Never share an OTP or PIN, and never stop prescribed medicine because of a call or an ad. Real emergencies can wait for a two-minute check, and real family will understand.',
-    'Tip: set up a family secret question today. Only your family should know the answer.',
+  const plural = (n: number, one: StringKey, many: StringKey) => t(n === 1 ? one : many, { n });
+  const scams = (n: number) => plural(n, 'g.sino.n.scam.one', 'g.sino.n.scam.many');
+  const realCalls = (n: number) => plural(n, 'g.sino.n.realCall.one', 'g.sino.n.realCall.many');
+  return [
+    t('g.sino.recap.took', {
+      calls: plural(run.calls, 'g.sino.n.call.one', 'g.sino.n.call.many'),
+      stopped: scams(run.stopped),
+      helped: realCalls(run.helped),
+      paid: scams(run.paid),
+      hungUp: realCalls(run.hungUp),
+      best: run.bestStreak,
+    }),
+    run.guesses > 0 ? t('g.sino.recap.guesses', { times: plural(run.guesses, 'g.sino.n.time.one', 'g.sino.n.time.many') }) : t('g.sino.recap.proof'),
+    t('g.sino.recap.how'),
+    t('g.sino.recap.verify'),
+    t('g.sino.recap.otp'),
+    t('g.sino.recap.tip'),
   ];
-  return lines;
 }
 
 const sinoTo: GameDef = {
