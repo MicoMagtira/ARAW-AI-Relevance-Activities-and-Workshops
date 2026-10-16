@@ -3,6 +3,7 @@ import { manilaDate } from '../app/daily';
 import { t, type StringKey } from '../app/i18n';
 import { badgesEarned, bestRadar, modulesDone } from '../app/progress';
 import { language, setLanguage } from '../app/language';
+import { tx } from '../i18n/runtime';
 import { hrefFor } from '../app/router';
 import { SETTING_KEYS, setSetting, settings, type SettingKey } from '../app/settings';
 import { NICKNAME_MAX, profile, setAvatar, setNickname, streak, xp, DEFAULT_NICKNAME } from '../app/state';
@@ -155,7 +156,7 @@ function CabinetPanel() {
             <p class="badge-info__name">
               {badge.name}
             </p>
-            <p>{has ? t('me.badgeEarned') : `${t('me.badgeLocked')}: ${badge.howTo}`}</p>
+            <p>{has ? t('me.badgeEarned') : `${t('me.badgeLocked')}: ${tx(badge.howTo)}`}</p>
           </div>
         )}
       </div>

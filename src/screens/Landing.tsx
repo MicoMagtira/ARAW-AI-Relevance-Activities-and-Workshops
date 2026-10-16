@@ -5,7 +5,7 @@
 import { useState } from 'preact/hooks';
 import { finishLanguage } from '../app/boot';
 import { t } from '../app/i18n';
-import { language, setLanguage, type LanguageCode } from '../app/language';
+import { LANGUAGES, language, setLanguage, type LanguageCode } from '../app/language';
 import { Ara } from '../ui/Ara';
 import { Icon } from '../ui/Icon';
 import { LanguagePicker } from '../ui/LanguagePicker';
@@ -18,8 +18,8 @@ export function Landing() {
 
   const select = (): void => {
     if (!choice) return;
-    setLanguage(choice);
-    finishLanguage();
+    // the pack loads, then the splash comes up already in the chosen language
+    void setLanguage(choice, false).then(finishLanguage);
   };
 
   return (
@@ -35,6 +35,16 @@ export function Landing() {
           <h2 class="landing__prompt" id="landing-prompt">
             {t('lang.title')}
           </h2>
+          {LANGUAGES.length > 1 && (
+            <p class="landing__prompts">
+              {LANGUAGES.filter((l) => l.code !== 'en').map((l, i) => (
+                <span key={l.code} lang={l.code}>
+                  {i > 0 && ' · '}
+                  {l.prompt}
+                </span>
+              ))}
+            </p>
+          )}
           <LanguagePicker value={choice} onPick={setChoice} label={t('lang.title')} hideLabel class="landing__picker" />
           <Button large variant="gold" class="landing__select" disabled={!choice} data-sfx="open" onClick={select}>
             {t('lang.select')}

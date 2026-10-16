@@ -32,7 +32,7 @@ export function LanguagePicker({ value, onPick, label = t('lang.group'), hideLab
                 checked={on}
                 onChange={() => {
                   sfx('select');
-                  onPick(lang.code);
+                  onPick(lang.code as LanguageCode);
                 }}
               />
               <span class="lang-option__tag" aria-hidden="true">

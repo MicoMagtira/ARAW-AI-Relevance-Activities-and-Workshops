@@ -10,7 +10,12 @@ export function pwaPlugin(version: string): Plugin {
     name: 'araw-pwa',
     apply: 'build',
     generateBundle(_options, bundle) {
-      const files = Object.keys(bundle).filter((name) => !name.endsWith('.woff'));
+      // language packs (src/i18n/packs) are left out: only the chosen one is fetched, then kept by the runtime cache
+      const isPack = (name: string): boolean => {
+        const chunk = bundle[name];
+        return !!chunk && chunk.type === 'chunk' && !!chunk.facadeModuleId && /[\/]i18n[\/]packs[\/]/.test(chunk.facadeModuleId);
+      };
+      const files = Object.keys(bundle).filter((name) => !name.endsWith('.woff') && !isPack(name));
       // index.html is added by hand: Vite emits it after this hook runs, so it is not in the bundle yet
       const precache = ['./', 'index.html', ...files, 'favicon.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/icon.svg', 'icons/apple-touch-icon.png'];
       const list = JSON.stringify([...new Set(precache)]);

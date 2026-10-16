@@ -1,13 +1,28 @@
 import { describe, expect, it } from 'vitest';
 import { finishLanguage, initBoot, introStep, splashVisible } from '../../src/app/boot';
 import { LANGUAGES, initLanguage, isLanguageCode, language, setLanguage } from '../../src/app/language';
+import { t } from '../../src/app/i18n';
+import { hasPack, loadPack, tx } from '../../src/i18n/runtime';
 
 describe('language setting', () => {
-  it('offers English for now and validates codes', () => {
-    expect(LANGUAGES.map((l) => l.code)).toEqual(['en']);
+  it('offers English plus every language that has a pack, and validates codes', () => {
+    const codes = LANGUAGES.map((l) => l.code);
+    expect(codes[0]).toBe('en');
+    for (const c of codes) expect(hasPack(c)).toBe(true);
     expect(isLanguageCode('en')).toBe(true);
-    expect(isLanguageCode('fil')).toBe(false);
+    expect(isLanguageCode('xx')).toBe(false);
     expect(isLanguageCode(null)).toBe(false);
+  });
+
+  it('a pack translates UI strings, inserted words and quoted lines, and falls back to English', async () => {
+    if (!hasPack('fil')) return;
+    await loadPack('fil', false);
+    expect(t('nav.learn')).not.toBe('Learn');
+    expect(tx('A sentence that is not in any pack.')).toBe('A sentence that is not in any pack.');
+    const learn = tx('Learn');
+    expect(tx('"Learn"')).toBe(`"${learn}"`);
+    await loadPack('en', false);
+    expect(t('nav.learn')).toBe('Learn');
   });
 
   it('starts unpicked, saves the choice and keeps <html lang> in step', () => {

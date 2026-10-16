@@ -56,7 +56,7 @@ Real buttons/links/labels, focus-visible rings, tap targets >= 44px, alt text/AR
 Reduce motion. Settings apply app-wide via root classes.
 
 ## Content rules (summary; full rules in docs/CONTENT_GUIDE.md)
-- All player-visible text is English; only proper names (game titles, characters, ARAW) stay Filipino. Strings go through `src/app/i18n.ts` (en only now).
+- English is the source language; Filipino, Cebuano, Ilokano and Hiligaynon come from runtime packs (scripts/i18n/README.md). Proper names (game titles, characters, ARAW) stay as they are in every language. Strings go through `src/app/i18n.ts`.
 - Health facts must be well established (WHO/DOH-level consensus). Never give dosing or diagnosis. Point to health workers.
 - All people, pages and brands are fictional. No real names. Synthetic personas only.
 - Every content entry has `review_status: "unreviewed"`. No beta or "not medical advice" banner (dropped 2026-10-16: the proposal already frames ARAW as educational).

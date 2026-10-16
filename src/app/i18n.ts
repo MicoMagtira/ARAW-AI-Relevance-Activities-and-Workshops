@@ -1,4 +1,6 @@
-// String catalog. English only for now; every user-facing string goes through t().
+// String catalog: English is the source. Every user-facing string goes through t(), which applies the active language pack.
+import { tx } from '../i18n/runtime';
+
 const en = {
   'app.name': 'ARAW',
   'app.tagline': 'AI Relevance Activities and Workshops',
@@ -1254,9 +1256,17 @@ const en = {
 
 export type StringKey = keyof typeof en;
 
+/** The English catalog (source language for the translation packs, see scripts/i18n). */
+export const EN_STRINGS: Readonly<Record<StringKey, string>> = en;
+
 /** Look up a string, replacing {name} placeholders. Falls back to the key itself. */
 export function t(key: StringKey, vars?: Record<string, string | number>): string {
-  const raw: string = en[key] ?? key;
+  const raw: string = tx(en[key] ?? key); // the active language pack, keyed by the English text (src/i18n/runtime.ts)
   if (!vars) return raw;
-  return raw.replace(/\{(\w+)\}/g, (m, name: string) => (name in vars ? String(vars[name]) : m));
+  // inserted words (a game title, a module title, an avatar, a topic) come from English content too, so translate them
+  return raw.replace(/\{(\w+)\}/g, (m, name: string) => {
+    if (!(name in vars)) return m;
+    const v = vars[name];
+    return typeof v === 'string' ? tx(v) : String(v);
+  });
 }

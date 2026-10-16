@@ -459,3 +459,26 @@
 :root.a11y-high-contrast .lang-option.is-on {
   border-width: calc(var(--px) * 1.5);
 }
+
+/* "Choose your language" in every other available language, under the heading */
+.landing__prompts {
+  margin: calc(var(--sp-2) * -1) 0 0;
+  font-size: var(--fs-16);
+  color: var(--muted);
+  text-wrap: balance;
+}
+
+/* the cards never outgrow a narrow settings column (1024px with Larger text on) */
+.lang-picker,
+.lang-picker__options {
+  max-width: 100%;
+}
+
+.lang-option,
+.lang-option__name {
+  min-width: 0;
+}
+
+.lang-option__name {
+  overflow-wrap: anywhere;
+}
