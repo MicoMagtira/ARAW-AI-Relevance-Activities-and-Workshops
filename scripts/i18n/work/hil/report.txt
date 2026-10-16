@@ -1,0 +1,2 @@
+hil: 5675 of 5674 strings translated (38 batches done, 0 pending)
+(info) harmonized 136 lines that kept an English title or phrase

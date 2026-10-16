@@ -45,6 +45,36 @@ for (const name of readdirSync(join(WORK, 'in')).filter((f) => /^b\d+\.json$/.te
   }
 }
 
+// Accuracy-review corrections (scripts/i18n/review.mjs): only the lines a reviewer fixed
+const reviewIn = join(WORK, 'review', 'in');
+let corrected = 0;
+if (existsSync(reviewIn)) {
+  for (const name of readdirSync(reviewIn).filter((f) => /^r\d+\.json$/.test(f))) {
+    const outPath = join(WORK, 'review', 'out', name);
+    if (!existsSync(outPath)) continue;
+    let fixes;
+    try {
+      fixes = JSON.parse(readFileSync(outPath, 'utf8'));
+    } catch (err) {
+      problems.push(`review ${name}: unreadable JSON (${err.message})`);
+      continue;
+    }
+    for (const { i, text } of JSON.parse(readFileSync(join(reviewIn, name), 'utf8'))) {
+      const fix = fixes[String(i)];
+      if (typeof fix !== 'string' || !fix.trim() || !(text in pack)) continue;
+      if (holes(fix) !== holes(text)) {
+        problems.push(`review ${name}#${i} placeholders differ, kept the earlier translation`);
+        continue;
+      }
+      if (fix !== pack[text]) {
+        pack[text] = fix;
+        corrected++;
+      }
+    }
+  }
+}
+if (corrected) problems.push(`(info) applied ${corrected} review corrections`);
+
 // Hand-made additions for words the extractor cannot see (e.g. the default nickname): work/<code>/extra.json
 const extraPath = join(WORK, 'extra.json');
 if (existsSync(extraPath)) Object.assign(pack, JSON.parse(readFileSync(extraPath, 'utf8')));

@@ -45,7 +45,7 @@ test.describe('language landing', () => {
     await next.reload();
     const group = next.getByRole('group', { name: 'Language' });
     await expect(group.getByRole('radio', { name: 'English' })).toBeChecked();
-    await expect(next.getByText('More languages are coming soon.').first()).toBeVisible();
+    await expect(group.getByRole('radio')).toHaveCount(5); // English, Filipino, Cebuano, Ilokano, Hiligaynon
   });
 
   test('works with the keyboard alone', async ({ page }) => {

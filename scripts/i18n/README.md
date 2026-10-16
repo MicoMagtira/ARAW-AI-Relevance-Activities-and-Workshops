@@ -20,10 +20,10 @@ After content changes, repeat 1, 3, 4 and 5: only the new or changed strings bec
 ## Status
 | Code | Language | Translated | Native review |
 |---|---|---|---|
-| fil | Filipino | 100% (2026-10-16, Claude Sonnet, glossary by Claude Opus) | needed |
-| ceb | Cebuano | translating | needed |
-| ilo | Ilokano | not started | needed |
-| hil | Hiligaynon | not started | needed |
+| fil | Filipino | 100% (2026-10-16, Claude Sonnet; Opus review of health lines pending) | needed |
+| ceb | Cebuano | 100% (2026-10-16, Claude Sonnet; Opus review of health lines pending) | needed |
+| ilo | Ilokano | 100% (2026-10-16, Claude Opus) | needed |
+| hil | Hiligaynon | 100% (2026-10-16, Claude Opus) | needed |
 
 Machine translation of health content must be checked by a native speaker and the health reviewer before a public launch
 (see docs/CONTENT_REVIEW.md), especially numbers, ages, time spans and warnings.

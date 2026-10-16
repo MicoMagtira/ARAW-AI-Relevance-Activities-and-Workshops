@@ -462,6 +462,10 @@
 
 /* "Choose your language" in every other available language, under the heading */
 .landing__prompts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 var(--sp-4);
   margin: calc(var(--sp-2) * -1) 0 0;
   font-size: var(--fs-16);
   color: var(--muted);
@@ -480,5 +484,23 @@
 }
 
 .lang-option__name {
-  overflow-wrap: anywhere;
+  font-size: var(--fs-18);
+  overflow-wrap: break-word;
+}
+
+.lang-option__tag {
+  padding-inline: 6px;
+}
+
+/* five languages: two columns of compact cards on wider screens, so SELECT stays on screen at 1366x768 */
+@media (min-width: 520px) {
+  .landing__picker .lang-picker__options {
+    grid-template-columns: repeat(2, minmax(0, 236px));
+    gap: var(--sp-3);
+  }
+}
+
+.landing__picker .lang-option {
+  min-height: 52px;
+  padding-block: var(--sp-2);
 }

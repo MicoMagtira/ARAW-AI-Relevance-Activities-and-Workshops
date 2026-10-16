@@ -2,7 +2,7 @@
 // Picking a card plays the "select" blip; the landing screen confirms with its Select button, Me saves at once.
 import { useId } from 'preact/hooks';
 import { t } from '../app/i18n';
-import { LANGUAGES, type LanguageCode } from '../app/language';
+import { ALL_LANGUAGES, LANGUAGES, type LanguageCode } from '../app/language';
 import { sfx } from '../app/sound';
 
 interface Props {
@@ -44,7 +44,7 @@ export function LanguagePicker({ value, onPick, label = t('lang.group'), hideLab
           );
         })}
       </div>
-      <p class="lang-picker__more px-text-muted">{t('lang.more')}</p>
+      {LANGUAGES.length < ALL_LANGUAGES.length && <p class="lang-picker__more px-text-muted">{t('lang.more')}</p>}
     </fieldset>
   );
 }

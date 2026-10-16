@@ -37,9 +37,8 @@ export function Landing() {
           </h2>
           {LANGUAGES.length > 1 && (
             <p class="landing__prompts">
-              {LANGUAGES.filter((l) => l.code !== 'en').map((l, i) => (
+              {LANGUAGES.filter((l) => l.code !== 'en').map((l) => (
                 <span key={l.code} lang={l.code}>
-                  {i > 0 && ' · '}
                   {l.prompt}
                 </span>
               ))}
