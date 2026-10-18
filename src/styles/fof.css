@@ -721,3 +721,8 @@
   white-space: normal;
   text-align: center;
 }
+
+/* Answer buttons fill their grid cell (minus the 4px shadow): base.css keeps 16px free, which squeezes long words on phones */
+.fof-buttons .px-btn {
+  max-width: calc(100% - var(--px));
+}

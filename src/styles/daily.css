@@ -95,3 +95,10 @@
     grid-column: 1 / -1;
   }
 }
+
+/* Phones: the step card sits inside a panel, so give the game inside it more of the width */
+@media (width < 600px) {
+  .daily-step {
+    padding: var(--sp-2);
+  }
+}
