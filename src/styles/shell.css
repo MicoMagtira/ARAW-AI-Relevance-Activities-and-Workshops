@@ -105,6 +105,7 @@
 
 .avatar-link__name {
   max-width: 14ch;
+  line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -629,7 +630,8 @@
     grid-column: auto;
   }
 
-  .grid-12 > .span-12 {
+  .grid-12 > .span-12,
+  .arcade.grid-12 > .arcade__main {
     grid-column: 1 / -1;
   }
 }

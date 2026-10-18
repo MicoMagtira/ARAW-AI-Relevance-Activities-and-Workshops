@@ -38,7 +38,7 @@
   width: 100%;
   aspect-ratio: var(--ar, 16 / 9);
   min-height: 180px;
-  max-height: calc(100dvh - 64px - var(--gutter) * 2 - 56px);
+  max-height: calc(100dvh - var(--banner-h) - var(--gutter) * 2 - 56px);
   background: var(--ink);
   overflow: hidden;
 }
@@ -361,4 +361,52 @@
   min-width: 0;
   max-width: 100%;
   overflow-wrap: break-word;
+}
+
+/* Short landscape screens (phones on their side): tighter chrome so the briefing and stage fit without scrolling. */
+@media (height < 520px) and (orientation: landscape) {
+  :root {
+    --banner-h: 48px;
+    --gutter: 12px;
+  }
+
+  /* Ara beside the text instead of above it */
+  .game-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    align-items: center;
+    width: min(100%, 600px);
+    padding: var(--sp-2) var(--sp-3);
+    gap: var(--sp-1) var(--sp-4);
+    text-align: left;
+  }
+
+  .game-card > .ara {
+    grid-column: 1;
+    grid-row: 1 / span 12;
+  }
+
+  .game-card > :not(.ara) {
+    grid-column: 2;
+  }
+
+  .game-card__actions {
+    justify-content: flex-start;
+  }
+
+  .briefing__body {
+    gap: var(--sp-2);
+  }
+
+  .briefing__actions {
+    margin-top: var(--sp-2);
+  }
+
+  .briefing__page {
+    display: none;
+  }
+
+  .game-stage[data-overlay] {
+    min-height: min(calc(100cqw * var(--arh, 9) / var(--arw, 16)), calc(100dvh - var(--banner-h) - var(--gutter) * 2 - 24px));
+  }
 }

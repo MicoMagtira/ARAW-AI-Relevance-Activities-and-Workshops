@@ -13,6 +13,7 @@ import { Ara } from '../../ui/Ara';
 import { Confetti } from '../../ui/Confetti';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, Dialog, Meter, Panel } from '../../ui/kit';
+import { useMediaQuery } from '../../ui/useMediaQuery';
 import '../../styles/game.css';
 import { Briefing } from './Briefing';
 import { PALETTE, loadPixelFont, sunrise, text } from './draw';
@@ -52,6 +53,8 @@ const formatScore = (n: number): string => n.toLocaleString('en-US');
 
 export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props) {
   const [phase, setPhaseState] = useState<Phase>(() => (briefingsSeen.value.includes(game.slug) ? 'intro' : 'briefing'));
+  // Phones on their side have little height: a smaller Ara keeps the cards inside the stage
+  const short = useMediaQuery('(height < 520px) and (orientation: landscape)');
   const [view, setView] = useState<View>(EMPTY_VIEW);
   const [result, setResult] = useState<RunResult | null>(null);
   const [howOpen, setHowOpen] = useState(false);
@@ -304,7 +307,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
               {phase === 'intro' && (
                 <Overlay>
                   <Panel class="game-card" aria-labelledby="game-card-h">
-                    <Ara mood="happy" scale={5} decorative />
+                    <Ara mood="happy" scale={short ? 3 : 5} decorative />
                     <h2 id="game-card-h">{game.name}</h2>
                     {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
                     {best > 0 ? <p class="px-text-muted">{t('game.bestLine', { n: formatScore(best) })}</p> : <p class="px-text-muted">{t('game.noBest')}</p>}
@@ -345,7 +348,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
               {phase === 'break' && (
                 <Overlay>
                   <Panel class="game-card game-card--break" aria-labelledby="game-card-h">
-                    <Ara mood="happy" scale={5} decorative />
+                    <Ara mood="happy" scale={short ? 3 : 5} decorative />
                     <h2 id="game-card-h">{t('game.break.title')}</h2>
                     <p>{t('game.break.recap', { min: breakMinutes, score: formatScore(view.score) })}</p>
                     <p>{t('game.break.stretch')}</p>
@@ -364,7 +367,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                 <Overlay>
                   {result.newBest && <Confetti />}
                   <Panel class="game-card game-card--over" aria-labelledby="game-card-h">
-                    <Ara mood={result.goodRun ? 'wow' : 'think'} scale={4} decorative />
+                    <Ara mood={result.goodRun ? 'wow' : 'think'} scale={short ? 3 : 4} decorative />
                     <h2 id="game-card-h">{result.goodRun ? t('game.goodRun') : t('game.over')}</h2>
                     <p class="game-card__score">
                       <span class="px-label">{t('game.score')}</span> {formatScore(result.score)}

@@ -61,9 +61,10 @@
 }
 
 /* ---------- Tile ---------- */
-.arcade-tile {
+/* .px-box beats base.css button.px-box (single column): the icon keeps its 72px, the text takes the rest */
+button.arcade-tile.px-box {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: 72px minmax(0, 1fr);
   grid-template-areas:
     'icon text'
     'icon status';

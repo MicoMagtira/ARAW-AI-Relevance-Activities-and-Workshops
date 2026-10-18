@@ -802,6 +802,11 @@ textarea.px-input {
   padding-inline: clamp(var(--sp-3), 5vw, var(--sp-6));
 }
 
+/* after the responsive padding above: icon-only buttons keep the whole box for the glyph */
+.px-btn.px-btn--icon {
+  padding-inline: 0;
+}
+
 .px-chip {
   white-space: normal;
   max-width: 100%;

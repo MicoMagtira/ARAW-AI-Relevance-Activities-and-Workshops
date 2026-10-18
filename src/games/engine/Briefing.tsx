@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { araSay, sfx } from '../../app/sound';
 import { AraSays } from '../../ui/AraBubble';
+import { useMediaQuery } from '../../ui/useMediaQuery';
 import { Button, Panel } from '../../ui/kit';
 import type { BriefingPage } from './types';
 
@@ -21,6 +22,7 @@ export function Briefing({ pages, onStart, onSkip, startLabel }: Props) {
   const heading = useRef<HTMLHeadingElement>(null);
   const page = pages[Math.min(index, pages.length - 1)];
   const last = index >= pages.length - 1;
+  const short = useMediaQuery('(height < 520px) and (orientation: landscape)');
 
   // Each new page: move focus to its heading so keyboard and screen-reader users hear it
   useEffect(() => {
@@ -45,7 +47,7 @@ export function Briefing({ pages, onStart, onSkip, startLabel }: Props) {
   return (
     <Panel class="briefing" aria-labelledby="briefing-h">
       <div class="briefing__body" onKeyDown={onKey}>
-        <AraSays mood={page.mood ?? 'happy'} scale={5} class="briefing__ara">
+        <AraSays mood={page.mood ?? 'happy'} scale={short ? 3 : 5} class="briefing__ara">
           <h2 id="briefing-h" tabIndex={-1} ref={heading}>
             {page.title}
           </h2>
