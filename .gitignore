@@ -6,6 +6,7 @@ test-results/
 playwright-report/
 blob-report/
 .vite/
+.claude/
 *.log
 shots-out/
 .env
