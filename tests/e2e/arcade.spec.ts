@@ -95,7 +95,8 @@ test.describe('GameShell with the demo game', () => {
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
     for (let i = 1; i < 5; i++) {
-      await expect(page.getByText(`Page ${i} of 5`).first()).toBeVisible();
+      // the page dots carry "Page n of 5" on every screen (phones hide the repeated text line)
+      await expect(page.getByRole('img', { name: `Page ${i} of 5` })).toBeVisible();
       await page.getByRole('button', { name: 'Next' }).click();
     }
     await expect(page.getByRole('heading', { level: 2, name: 'When should I trust it?' })).toBeVisible();

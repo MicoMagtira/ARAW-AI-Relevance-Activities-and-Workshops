@@ -1,0 +1,32 @@
+{
+ "01_dost": {
+  "w": 117,
+  "h": 128,
+  "bytes": 7278
+ },
+ "02_dost_pchrd": {
+  "w": 363,
+  "h": 128,
+  "bytes": 10580
+ },
+ "03_national_university": {
+  "w": 164,
+  "h": 128,
+  "bytes": 9412
+ },
+ "04_nicer_dost": {
+  "w": 366,
+  "h": 128,
+  "bytes": 14664
+ },
+ "05_nicer_rdc_nlpha": {
+  "w": 240,
+  "h": 128,
+  "bytes": 12772
+ },
+ "06_aikasalig": {
+  "w": 122,
+  "h": 128,
+  "bytes": 10860
+ }
+}

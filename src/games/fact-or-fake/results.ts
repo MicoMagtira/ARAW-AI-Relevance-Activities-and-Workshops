@@ -36,3 +36,15 @@ export function payCorrect(): number {
   addXp(XP_PER_CORRECT);
   return XP_PER_CORRECT;
 }
+
+/**
+ * The public sources behind an item, for the "Based on" line: WHO, DOH, FDA, laws. The internal writing rules
+ * (CONTENT_GUIDE, SPEC) stay in the data for reviewers but are not shown to players. Null when nothing public is left.
+ */
+export function publicBasis(basis: string): string | null {
+  const parts = basis
+    .split(';')
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0 && !/^(CONTENT_GUIDE|SPEC)\b/i.test(part));
+  return parts.length > 0 ? parts.join('; ') : null;
+}

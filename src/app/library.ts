@@ -4,7 +4,7 @@ import type { KomiksEpisode } from '../content/library/komiks';
 import type { Myth, MythTopic } from '../content/library/myths';
 import type { VillainId } from '../content/tactics';
 
-export const LIBRARY_TABS = ['myths', 'glossary', 'komiks'] as const;
+export const LIBRARY_TABS = ['myths', 'glossary', 'komiks', 'videos'] as const;
 export type LibraryTab = (typeof LIBRARY_TABS)[number];
 
 /** `#/library/<tab>`; anything unknown (or no tab) opens Myths. */

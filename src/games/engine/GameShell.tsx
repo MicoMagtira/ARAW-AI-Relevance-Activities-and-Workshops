@@ -14,6 +14,9 @@ import { Confetti } from '../../ui/Confetti';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, Dialog, Meter, Panel } from '../../ui/kit';
 import { useMediaQuery } from '../../ui/useMediaQuery';
+import { LazyTutorialPlayer } from '../../ui/tutorial/Tutorial';
+import { hasTutorial } from '../../app/tutorials';
+import { tutorialById, type TutorialId } from '../../content/tutorials';
 import '../../styles/game.css';
 import { Briefing } from './Briefing';
 import { PALETTE, loadPixelFont, sunrise, text } from './draw';
@@ -58,6 +61,8 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
   const [view, setView] = useState<View>(EMPTY_VIEW);
   const [result, setResult] = useState<RunResult | null>(null);
   const [howOpen, setHowOpen] = useState(false);
+  // the how-to video plays at once when it was asked for (the briefing's Watch button), not on every How to play
+  const [howAutoplay, setHowAutoplay] = useState(false);
   const [quitAsk, setQuitAsk] = useState(false);
   const [status, setStatus] = useState('');
 
@@ -79,10 +84,13 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
     inputRef.current?.setEnabled(next === 'playing'); // right away, so no key press right after Start is lost
     setPhaseState(next);
   };
-  const openHow = (open: boolean) => {
+  const openHow = (open: boolean, autoplay = false) => {
     howOpenRef.current = open;
+    setHowAutoplay(open && autoplay);
     setHowOpen(open);
   };
+  // the game's how-to clip, when one was recorded (the hidden demo game has none)
+  const tutorial = tutorialById(game.slug) && hasTutorial(game.slug as TutorialId) ? (game.slug as TutorialId) : null;
 
   /** Draw the current frame (or the title backdrop when no run exists). Safe to call any time. */
   const paint = () => {
@@ -300,6 +308,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
                     pages={game.briefing}
                     onStart={() => finishBriefing(true)}
                     onSkip={() => finishBriefing(false)}
+                    onWatch={tutorial ? () => openHow(true, true) : undefined}
                     startLabel={returnTo.current === 'paused' || returnTo.current === 'break' ? t('game.resume') : undefined}
                   />
                 </Overlay>
@@ -438,6 +447,7 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
         open={howOpen}
         title={t('game.howTo')}
         onClose={() => openHow(false)}
+        class={tutorial ? 'px-dialog--video' : undefined}
         actions={
           <>
             <Button variant="secondary" onClick={watchBriefing}>
@@ -449,6 +459,8 @@ export function GameShell({ game, seed: fixedSeed, daily, breakAfterMs }: Props)
           </>
         }
       >
+        {/* the How to play list below already holds the caption lines, so no transcript here */}
+        {tutorial && howOpen && <LazyTutorialPlayer id={tutorial} autoplay={howAutoplay} transcript={false} />}
         <ul class="game-howto">
           {game.howTo.map((line) => (
             <li key={line}>{line}</li>

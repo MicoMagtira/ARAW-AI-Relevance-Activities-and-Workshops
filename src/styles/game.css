@@ -207,6 +207,31 @@
   text-align: center;
 }
 
+.briefing__watch {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  padding: 0 var(--sp-3);
+  font: 800 var(--fs-16) / 1.3 var(--font-head);
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.briefing__watch:hover {
+  background: var(--soft);
+}
+
+.briefing__watch:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 2px;
+}
+
 .briefing__actions {
   display: flex;
   flex-wrap: wrap;
@@ -408,5 +433,29 @@
 
   .game-stage[data-overlay] {
     min-height: min(calc(100cqw * var(--arh, 9) / var(--arw, 16)), calc(100dvh - var(--banner-h) - var(--gutter) * 2 - 24px));
+  }
+}
+
+/* Phones: the briefing keeps Skip, Back and Next on one row (longer translations shrink the labels, never wrap them below
+   the screen), and drops the "Page 1 of 5" line, which repeats the page dots (they carry the same words for screen readers). */
+@media (width < 600px) {
+  .briefing__actions {
+    flex-wrap: nowrap;
+    gap: var(--sp-2);
+  }
+
+  .briefing__nav {
+    flex-wrap: nowrap;
+    gap: var(--sp-2);
+  }
+
+  .briefing__actions .px-btn {
+    min-width: 0;
+    padding-inline: var(--sp-3);
+    font-size: var(--fs-12);
+  }
+
+  .briefing__page {
+    display: none;
   }
 }

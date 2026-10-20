@@ -1,7 +1,7 @@
 // The finished poster as an SVG (240 x 320 units, pixel art with crisp edges). It redraws from the Poster state, so what the
 // player builds is exactly what is checked. Colours come from the CSS tokens; text sizes and fonts live in gawa.css.
 import { ARTIST, DOCTOR, NEIGHBOR, PICTURES, PLACE, topicById, type Motif, type PictureId } from './parts';
-import { factOf, sloganOf, wrap, type Brief, type Poster } from './rules';
+import { factOf, replyFor, sloganOf, wrap, type Brief, type Poster } from './rules';
 
 const C = {
   cream: 'var(--cream)',
@@ -92,7 +92,7 @@ function Scene({ picture, motif }: { picture: PictureId; motif: Motif }) {
           <path d="M16 140h208v24H16z" fill={C.factTint} />
           <path d="M16 140h24v4H16zM64 144h32v4H64zM120 140h40v4h-40zM180 144h44v4h-44z" fill={C.fact} />
           <Bits motif={motif} x={cx - 40} y={PX.y + 26} s={10} fill={C.ink} />
-          <text x="200" y="158" class="poster-script">
+          <text x="218" y="158" class="poster-script" text-anchor="end">
             ~Dani
           </text>
         </g>
@@ -155,7 +155,8 @@ export function PosterSvg({ poster, brief, id = 'poster', reported, fake }: Post
   const factLines = fact ? wrap(fact.text, 38) : [];
   const footer: string[] = [];
   if (poster.credit) footer.push(`Art: ${ARTIST}`);
-  if (poster.picture === 'neighbor' && poster.asked) footer.push(`${NEIGHBOR}: with permission`);
+  // only a yes is permission: asking and hearing no must not print "with permission" on the poster
+  if (poster.picture === 'neighbor' && poster.asked && replyFor('neighbor', brief)?.yes) footer.push(`${NEIGHBOR}: with permission`);
 
   return (
     <svg class="gawa-poster" viewBox="0 0 240 320" role="img" aria-labelledby={`${id}-t`} shape-rendering="crispEdges">

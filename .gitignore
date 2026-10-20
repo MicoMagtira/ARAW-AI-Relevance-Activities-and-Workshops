@@ -18,3 +18,6 @@ tests/e2e/out/
 dist-dom/
 errors/
 dist-canvas*/
+
+# raw partner logos and private project paperwork (scripts/logos/build_logos.py builds the shipped WebPs)
+/logos/

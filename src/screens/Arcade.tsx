@@ -12,6 +12,8 @@ import { hasContent } from '../modules/registry';
 import { AraSays } from '../ui/AraBubble';
 import { Icon } from '../ui/Icon';
 import { Button, Chip, Dialog, Panel } from '../ui/kit';
+import { WatchButton } from '../ui/tutorial/Tutorial';
+import type { TutorialId } from '../content/tutorials';
 import { useMediaQuery } from '../ui/useMediaQuery';
 import '../styles/arcade.css';
 
@@ -111,11 +113,12 @@ function Details({ game, headingId }: { game: GameInfo; headingId: string }) {
               <p>{t('arcade.briefing')}</p>
             </AraSays>
           </div>
-          <div>
+          <div class="arcade-details__go">
             <Button href={hrefFor(`/arcade/${game.slug}`)} variant="gold" large>
               <Icon name="play" />
               {t('arcade.play')}
             </Button>
+            <WatchButton id={game.slug as TutorialId} />
           </div>
         </>
       )}
@@ -141,10 +144,11 @@ function Practice() {
             <h3>{t('arcade.fof')}</h3>
             <p>{t('arcade.fofText')}</p>
           </div>
-          <div>
+          <div class="arcade-fof__go">
             <Button href={hrefFor('/play/fact-or-fake')} variant="gold">
               {t('arcade.fofPlay')}
             </Button>
+            <WatchButton id="fact-or-fake" />
           </div>
         </div>
         <ul class="arcade-replays" aria-label={t('arcade.replays')}>

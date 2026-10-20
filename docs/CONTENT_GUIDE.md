@@ -198,3 +198,13 @@ appear in docs and code, not in player-facing text.
   testing is voluntary, confidential (RA 11166) and free at government treatment hubs.
 - Point to DOH treatment hubs and social hygiene clinics, never to a named person or private clinic.
 - A unit test (`tests/unit/library-content.test.ts`) rejects the stigmatising words above in HIV cards.
+
+## 11. How-to video captions
+
+- Captions are short, plain sentences that say what the picture shows while it shows it (4 to 6 seconds each; a clip lasts
+  20 to 40 seconds, the tour about a minute). The videos are silent, so the captions carry everything.
+- Reuse lines the game already says (its How to play lines): they are reviewed and translated. New lines go in
+  `TUTORIAL_CAPTIONS` (`src/content/tutorials.ts`) and are translated like any other string before a clip is recorded.
+- The same rules as everywhere: fictional people and pages only, no dosing or diagnosis, calibrated trust (show good choices,
+  and at most one deliberate mistake when the caption is about that mistake).
+- Each language is its own recording, so the screen and the captions are always in the same language.

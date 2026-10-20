@@ -10,6 +10,7 @@ import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import type { IconName } from '../../ui/icons';
 import { Button, Chip, ProgressBar } from '../../ui/kit';
+import { WatchButton } from '../../ui/tutorial/Tutorial';
 import '../../styles/objection.css';
 import type { Evidence, EvidenceKind } from './data';
 import { Hall } from './Hall';
@@ -180,11 +181,12 @@ export function Objection({ mode, seed, daily, endActions }: ObjectionProps) {
           </h3>
           {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
           <p>{t(arcade ? 'objection.introArcade' : 'objection.introModule')}</p>
-          <div>
+          <div class="intro-actions">
             <Button variant="gold" large onClick={() => openCase(game)}>
               {t('objection.start')}
               <Icon name="arrow-right" />
             </Button>
+            <WatchButton id="objection" />
           </div>
           <details>
             <summary>{t('objection.how.title')}</summary>

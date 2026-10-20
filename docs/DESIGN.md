@@ -361,6 +361,17 @@ Bubbles are `aria-live="polite"` only when they change in response to an answer.
 - **Inputs (nickname, search, details):** `.px-box` style with no shadow, 48px tall, Nunito 18px, 4px ink border; focus = 3px ink
   outline offset 2px plus `--navy-tint` fill. Labels always visible (Press Start 2P 12px above the field).
 - **Skip link:** "Skip to content", first focusable element, visible on focus as a gold `.px-btn`.
+- **Partner logos** (`src/ui/PartnerLogos.tsx`, `src/styles/brand.css`): the one exception to "pixel art only". The six
+  project logos stay full colour and smooth, always on white (a white pixel panel or a white band with a `--line` rule), in
+  the fixed order DOST, DOST-PCHRD, National University, NICER-DOST, NICER RDC-NLPHA, AIKasalig. Each surface sets only
+  `--logo-h`; each logo's height is `--logo-h` times its optical factor so they read as one size. One row on desktop, a
+  3 x 2 grid under 600px. Surfaces: splash and landing title panel, the Home project banner's band, the About wall.
+- **Project banner** (top of Home): 8-bit sunrise sky with clouds and the stepped sun on a navy horizon, the
+  "AIKasalig · DOST-NICER" chip, the ARAW wordmark in Press Start 2P with a hard gold-then-ink offset shadow, the full name,
+  the tagline and the tour button; the white partner band below it links to About.
+- **How-to video player** (`src/ui/tutorial/`): 16:9 picture in an ink frame, native controls, then the captions as a cream
+  bar of bold Nunito 20px (never over the picture), a Captions switch, the video-language chips (pressed = navy) and a
+  transcript disclosure. Watch buttons carry the pixel video icon and the clip length in a small pixel chip.
 
 ### 5.16 Motifs
 - **8-bit sunrise bands** (splash, home hero, certificate border, game title cards):

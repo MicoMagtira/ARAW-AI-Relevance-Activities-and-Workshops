@@ -7,6 +7,12 @@ non-technical Filipinos (seniors, parents, students, health workers) AI literacy
 - The early phone-first mockups (kept in the private planning folder) were a content and flow reference only, never a style or layout reference.
 - App version shown in the app and in reports: `0.1.0 beta` (read from `package.json`).
 - Credit line (splash, sidebar footer, About, certificate): **An AIKasalig project · DOST-PCHRD · National University**.
+- Project identity: ARAW is the AI literacy app of **AIKasalig** (Project 4 of the DOST-NICER R&D Center on Natural Language
+  Processing for Health Applications, National University, Manila; February 2026 to January 2029). The six partner logos show
+  on the splash and language landing, the Home project banner and the About the project page (see `docs/DESIGN.md` 5.15).
+- How-to videos: a one-minute tour plus a how-to-play clip for Fact or Fake and every arcade game, silent and captioned, in all
+  five languages; offered in How to play, the first-run briefing, Arcade details, page-game intro cards, Library > Videos, the
+  Home banner and the desktop sidebar. Recorded from the app (`README.md`, "Tutorial videos").
 - Licences: MIT for code, CC BY 4.0 for content (lessons, items, Comics, art), credited to AIKasalig, NU and DOST.
 
 ---

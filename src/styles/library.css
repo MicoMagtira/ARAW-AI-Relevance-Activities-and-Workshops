@@ -8,7 +8,7 @@
   padding-bottom: var(--px);
 }
 
-/* the segmented tabs stretch across, and shrink their labels on small phones */
+/* the segmented tabs stretch across; on phones the four of them sit two by two, at full label size */
 .library .px-tabs {
   display: flex;
 }
@@ -19,8 +19,12 @@
 }
 
 @media (width < 520px) {
+  .library .px-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .library .px-tab {
-    font-size: var(--fs-10);
     padding-inline: var(--sp-1);
   }
 }

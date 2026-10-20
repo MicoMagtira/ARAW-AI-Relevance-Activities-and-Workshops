@@ -10,7 +10,7 @@ import { Ara } from '../ui/Ara';
 import { Icon } from '../ui/Icon';
 import { LanguagePicker } from '../ui/LanguagePicker';
 import { Button } from '../ui/kit';
-import { Cloud, Sun } from './Splash';
+import { Cloud, SplashPartners, Sun } from './Splash';
 
 export function Landing() {
   // a returning player sees their saved language already picked; a first visit starts with none
@@ -50,6 +50,7 @@ export function Landing() {
             <Icon name="play" />
           </Button>
           <p class="landing__later">{t('lang.later')}</p>
+          <SplashPartners />
         </div>
         <div class="splash__scene landing__scene" aria-hidden="true">
           <Sun />
@@ -58,11 +59,7 @@ export function Landing() {
       </div>
 
       <div class="splash__ground landing__ground">
-        <p class="splash__credit">
-          {t('app.credit')}
-          <br />
-          {t('app.createdBy')}
-        </p>
+        <p class="splash__credit">{t('app.createdBy')}</p>
       </div>
     </main>
   );

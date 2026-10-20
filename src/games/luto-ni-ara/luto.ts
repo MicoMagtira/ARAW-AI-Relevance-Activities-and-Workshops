@@ -289,7 +289,7 @@ function createLuto({ rng, cue = silent }: { seed: string; rng: Rng; cue?: Cue }
         drawTimer(ctx, timeLeft / patience);
         drawPot(ctx, pot.length, tick, phase === 'cooking', dragging?.moved === true && inside(DROP, dragging.x, dragging.y));
         pot.forEach((id, k) => drawChip(ctx, chipRect(k, id), id));
-        if (pot.length === 0 && phase === 'choose') text(ctx, t('g.luto.emptyPot'), POT_LABEL_X, 108, { size: 8, color: PALETTE.muted, align: 'center', maxWidth: 100 });
+        if (pot.length === 0 && phase === 'choose') text(ctx, t('g.luto.emptyPot'), POT_LABEL_X, 108, { size: 8, color: PALETTE.cream, align: 'center', maxWidth: 100 });
       }
 
       for (let s = 0; s < INGREDIENTS.length; s++) {

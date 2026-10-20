@@ -62,7 +62,8 @@ function stepText(step, n) {
 }
 
 /* ---------- page plan ---------- */
-// Every step with a picture gets its own page. Steps without one are packed two to a page.
+// Every step with a picture gets its own page. Steps without one are packed up to two to a page, while they fit: a
+// section's first page also carries its title and intro, so it holds less text.
 const pages = []; // { kind, html(pageNo) , section? }
 const tocEntries = [];
 
@@ -83,9 +84,13 @@ GUIDE_SECTIONS.forEach((section, si) => {
     first = false;
     pages.push({ section: section.id, first: isFirst, html: () => `${sectionHead(section, si, isFirst)}<div class="text-steps">${group.map(([s, n]) => `<article class="text-step">${stepText(s, n)}</article>`).join('')}</div>` });
   };
+  /** Rough amount of text a step puts on the page, in characters (each list item and the tip start a new line). */
+  const weight = (step) => step.text.length + (step.list ?? []).reduce((n, li) => n + li.length + 40, 0) + (step.tip ? step.tip.length + 60 : 0);
+  const room = () => (first ? 1000 : 1500);
   section.steps.forEach((step, i) => {
     const pic = pictureFor(step);
     if (!pic) {
+      if (pending.length > 0 && pending.reduce((n, [s]) => n + weight(s), 0) + weight(step) > room()) flushText();
       pending.push([step, i + 1]);
       if (pending.length === 2) flushText();
       return;
@@ -114,6 +119,26 @@ GUIDE_SECTIONS.forEach((section, si) => {
 });
 const quickPage = FIRST_TOPIC_PAGE + pages.length;
 const totalPages = quickPage;
+
+/* ---------- partner logos (same files, order and optical sizing as src/ui/PartnerLogos.tsx) ---------- */
+/** TALA's optical sizing, as in PartnerLogos.tsx (that file needs Vite, so the few lines are repeated here). */
+function opticalFactor(aspect, slug) {
+  let factor = Math.max(0.62, Math.min(1.15, aspect ** -0.38));
+  if (aspect < 1.3) factor *= 1.2;
+  return factor * (slug === '05_nicer_rdc_nlpha' ? 1.3 : 1);
+}
+const LOGO_SIZES = JSON.parse(readFileSync(join(ROOT, 'src', 'assets', 'logos', 'logos.json'), 'utf8'));
+const PARTNER_LOGOS = [
+  ['01_dost', 'Department of Science and Technology (DOST)'],
+  ['02_dost_pchrd', 'DOST-PCHRD'],
+  ['03_national_university', 'National University'],
+  ['04_nicer_dost', 'NICER'],
+  ['05_nicer_rdc_nlpha', 'RDC-NLPHA'],
+  ['06_aikasalig', 'AIKasalig'],
+].map(([slug, name]) => {
+  const { w, h } = LOGO_SIZES[slug];
+  return { slug, name, f: opticalFactor(w / h, slug) };
+});
 
 /* ---------- pixel art ---------- */
 function halfDisc(radius, cx, baseY) {
@@ -145,6 +170,10 @@ const cover = `<section class="page cover">
       <p class="cover-name">${esc(GUIDE_COVER.name)}</p>
       <p class="cover-sub">${esc(GUIDE_COVER.subtitle)}</p>
       <p class="cover-tag">${esc(GUIDE_COVER.tagline)}</p>
+      <div class="cover-partners">
+        <p class="cover-partners-label">${esc(GUIDE_COVER.partnersLabel)}</p>
+        <div class="cover-logos">${PARTNER_LOGOS.map((l) => `<img src="${fileUrl(join(ROOT, 'src', 'assets', 'logos', `${l.slug}.webp`))}" alt="${esc(l.name)}" style="height:${(9 * l.f).toFixed(2)}mm">`).join('')}</div>
+      </div>
     </div>
     <div class="bands"><i></i><i></i><i></i><i></i></div>
     ${sunSvg('cover-sun')}
@@ -213,6 +242,10 @@ p { margin: 0; }
 .cover-name { font: 800 19pt/1.2 var(--head); color: var(--navy); }
 .cover-sub { justify-self: center; font: 15pt/1.4 var(--pixel); color: var(--ink); background: var(--gold-deep); padding: 3mm 6mm; box-shadow: 1.2mm 1.2mm 0 var(--ink); text-transform: uppercase; margin-top: 2mm; }
 .cover-tag { font-size: 13pt; color: var(--muted); }
+.cover-partners { display: grid; gap: 3mm; margin-top: 3mm; padding-top: 4mm; border-top: 1mm dashed #EADFC8; }
+.cover-partners-label { font: 8pt/1.5 var(--pixel); text-transform: uppercase; color: var(--muted); }
+.cover-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 3mm 6mm; }
+.cover-logos img { display: block; width: auto; }
 .ground { background: var(--navy); color: #fff; padding: 12mm 16mm 16mm; text-align: center; display: grid; gap: 4mm; border-top: 1.6mm solid var(--ink); box-shadow: inset 0 3mm 0 #5560A8; }
 .cover-project { font: 9pt/1.6 var(--pixel); text-transform: uppercase; color: var(--gold); padding-top: 3mm; }
 .cover-credit { font: 700 12pt/1.5 var(--body); }

@@ -28,7 +28,11 @@ conversations) and the **Mosquito Density and Disease Outbreak Prediction** proj
 - **Arcade:** 11 pixel-art Canvas games (Takbo, Data!, Feed Mo 'To, Luto ni Ara, Sino 'To?, Lamok Lamay, Tawid, Lola!,
   Hati Tayo!, Gawa Ko 'To!, Tulog na, Bea!, Sa Sapatos Nila, OBJECTION!) plus Fact or Fake, with touch, mouse and keyboard.
 - **Daily challenge, streaks, badges and a report card** to keep practice going.
-- **Library:** myth cards, glossary and the Comics series.
+- **Library:** myth cards, glossary, the Comics series and the how-to videos.
+- **How-to videos:** a one-minute tour and a how-to-play clip for every arcade game and Fact or Fake, short, silent and
+  captioned, in all five languages (see "Tutorial videos" below).
+- **Project identity:** an AIKasalig project of the DOST-NICER R&D Center on NLP for Health Applications at National
+  University; partner logos on the splash, Home and the About page.
 - **Accessibility:** WCAG 2.2 AA baseline; settings for larger text, high contrast, extra-large buttons, screen-reader
   hints and reduced motion (all off by default).
 - **8-bit sound:** chiptune music per area and sound effects generated live (no audio files), with TALA-style Music and Sound
@@ -65,6 +69,23 @@ npm run preview    # serves dist/ at http://localhost:4173
 ```
 
 The build uses a relative base path (`base: './'`) and a hash router, so `dist/` works from any static host or sub-path.
+
+## Tutorial videos
+
+The how-to videos in `public/videos/<id>/<lang>.webm` (+ `.vtt` captions) are recorded from the app itself, one storyboard
+per clip in `scripts/tutorials/boards/` (format and tips: `scripts/tutorials/boards/README.md`):
+
+```bash
+npm run build
+node scripts/tutorials/record.mjs                       # every clip in every language (about 30 minutes)
+node scripts/tutorials/record.mjs takbo-data --langs=en # one clip, one language
+node scripts/tutorials/probe.mjs takbo-data             # plan a canvas game's key timeline
+```
+
+The recorder serves `dist/` on port 4173, encodes with Playwright's bundled ffmpeg and updates
+`src/content/tutorialManifest.json`, which is what shows the Watch buttons; rebuild after recording. Re-record a clip when its
+screen or its translation changes. Partner logos are built the same way, from the git-ignored `logos/` folder:
+`python scripts/logos/build_logos.py` (needs Pillow and numpy).
 
 ## Report relay (optional, set before deploying)
 

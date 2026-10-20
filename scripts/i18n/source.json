@@ -5134,6 +5134,7 @@
   "text": "Takbo, Data!",
   "src": [
    "content\\games.ts#ARCADE_GAMES",
+   "content\\tutorials.ts#TUTORIALS",
    "games\\takbo-data\\takbo.ts#default"
   ]
  },
@@ -5154,6 +5155,7 @@
   "text": "Feed Mo 'To",
   "src": [
    "content\\games.ts#ARCADE_GAMES",
+   "content\\tutorials.ts#TUTORIALS",
    "games\\feed-mo-to\\feed.ts#default"
   ]
  },
@@ -5173,6 +5175,7 @@
   "text": "Luto ni Ara",
   "src": [
    "content\\games.ts#ARCADE_GAMES",
+   "content\\tutorials.ts#TUTORIALS",
    "games\\luto-ni-ara\\luto.ts#default"
   ]
  },
@@ -5192,6 +5195,7 @@
   "text": "Sino 'To?",
   "src": [
    "content\\games.ts#ARCADE_GAMES",
+   "content\\tutorials.ts#TUTORIALS",
    "games\\sino-to\\sino.ts#default"
   ]
  },
@@ -5211,6 +5215,7 @@
   "text": "Lamok Lamay",
   "src": [
    "content\\games.ts#ARCADE_GAMES",
+   "content\\tutorials.ts#TUTORIALS",
    "games\\lamok-lamay\\lamok.ts#default"
   ]
  },
@@ -5230,6 +5235,7 @@
   "text": "Tawid, Lola!",
   "src": [
    "content\\games.ts#ARCADE_GAMES",
+   "content\\tutorials.ts#TUTORIALS",
    "games\\tawid-lola\\tawid.ts#default"
   ]
  },
@@ -8391,7 +8397,7 @@
   ]
  },
  {
-  "text": "Open the ARAW link or icon. Pick English, press SELECT, then press START.",
+  "text": "Open the ARAW link or icon. Pick your language, press SELECT, then press START.",
   "src": [
    "content\\guide.ts#GUIDE_QUICKSTART"
   ]
@@ -8415,7 +8421,7 @@
   ]
  },
  {
-  "text": "Tap Arcade for short games. Tap, click, or use the arrow keys.",
+  "text": "Tap Arcade for short games. Not sure how? Watch the game's video. Tap, click, or use the arrow keys.",
   "src": [
    "content\\guide.ts#GUIDE_QUICKSTART"
   ]
@@ -8463,7 +8469,7 @@
   ]
  },
  {
-  "text": "The very first screen asks for your language. Tap a language card, then press SELECT. ARAW is in English for now; more languages are coming.",
+  "text": "The very first screen asks for your language. ARAW speaks English, Filipino, Cebuano, Ilokano and Hiligaynon. Tap a language card, then press SELECT.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -8512,6 +8518,12 @@
  },
  {
   "text": "The name of the app and what it is for.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "ARAW is an AIKasalig project. These are the project partners: DOST, DOST-PCHRD, National University, NICER and AIKasalig.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -8608,6 +8620,48 @@
  },
  {
   "text": "Home shows what to do next. Use the buttons at the bottom (on a phone) or on the left (on a computer) to move around.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The ARAW banner",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The top of Home shows what ARAW is and who made it. New here? Watch the one-minute tour first.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The top of Home: a pixel sunrise banner with the big ARAW name and a gold Watch the 1-minute tour button, and a white band of partner logos with an About the project link.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "ARAW: AI Relevance Activities and Workshops, an AIKasalig project.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Watch a one-minute video tour of the app, with captions.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The project partners.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Read about the project, its partners and the team.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9039,6 +9093,12 @@
   ]
  },
  {
+  "text": "Watch a short video of how the game is played.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
   "text": "Play Fact or Fake from the Arcade",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
@@ -9105,6 +9165,12 @@
   ]
  },
  {
+  "text": "Watch a short video of the game instead.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
   "text": "Start the game",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
@@ -9130,6 +9196,54 @@
  },
  {
   "text": "Start playing.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Every game has a short video that shows how it is played. Open it from How to play, the game details, or Library > Videos. The videos have no sound: read the captions under the picture.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "A how-to video for Takbo, Data!: the game picture, a big caption bar under it, a Captions switch, and language buttons EN, FIL, CEB, ILO and HIL.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The video. Press play, or make it full screen.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The captions say what is happening.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Turn the captions on or off.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Watch the video in another language. This changes only the video, not the app.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Read all the captions at once.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The videos play from the internet. They are not saved for offline use.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9285,13 +9399,13 @@
   ]
  },
  {
-  "text": "Library: myths, words and comics",
+  "text": "Library: myths, words, comics and videos",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "The Library is for reading at your own pace. It has three parts: Myths, Dictionary and Comics.",
+  "text": "The Library is for reading and watching at your own pace. It has four parts: Myths, Dictionary, Comics and Videos.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9309,7 +9423,7 @@
   ]
  },
  {
-  "text": "Switch between Myths, Dictionary and Comics.",
+  "text": "Switch between Myths, Dictionary, Comics and Videos.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9459,6 +9573,30 @@
   ]
  },
  {
+  "text": "All the how-to videos in one place: the one-minute tour of ARAW and a video for every game. Each one is in five languages.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Videos tab: video cards for ARAW in one minute and for each game, with their length and languages.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Videos tab.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "A video, its length and its languages. Tap it to watch.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
   "text": "Me: your profile and settings",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
@@ -9603,13 +9741,43 @@
   ]
  },
  {
-  "text": "ARAW is in English for now.",
+  "text": "ARAW speaks English, Filipino, Cebuano, Ilokano and Hiligaynon.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "More languages are coming. They will appear as new cards here and on the first screen.",
+  "text": "The translations are new. If a word looks wrong, use Report to tell us.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "ARAW is part of AIKasalig, a project on responsible AI in Philippine health care, under the DOST-NICER R&D Center on Natural Language Processing for Health Applications at National University. Open About the project from Me (or from the left side on a computer) to read more.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The About the project page: the partner logos, the story of the AIKasalig project, an At a glance card with the dates, and the credits.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "What AIKasalig is, and where ARAW fits.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "At a glance: who runs it and for how long (February 2026 to January 2029).",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The people behind the project and the app.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9748,6 +9916,12 @@
  },
  {
   "text": "Print the quick-start sheet at the end of this guide, one per pair.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Start with the one-minute tour on a big screen (Home > Watch the 1-minute tour). Pick the group's language with the buttons under the video.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -14191,12 +14365,6 @@
   ]
  },
  {
-  "text": "AIKasalig",
-  "src": [
-   "content\\library\\myths.ts#MYTH_PROGRAM_LABELS"
-  ]
- },
- {
   "text": "Dengue and mosquitoes",
   "src": [
    "content\\library\\myths.ts#MYTH_TOPIC_LABELS"
@@ -16430,6 +16598,78 @@
   "text": "Real: it explains a fact and points to your health worker.",
   "src": [
    "content\\turuan.ts#TRAIN_POSTS"
+  ]
+ },
+ {
+  "text": "Now it is your turn. Have fun!",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Welcome to ARAW! Here is the app in one minute.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "First, pick your language. You can change it later in Me.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Press Start when the sun has risen.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Home shows your next lesson, the daily challenge and the myth of the day.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Learn has ten short modules. Go step by step, starting with Module 1.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Each module has short cards, quick questions and a game. Ara helps you along.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "The Arcade has quick games to practise what you learned.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "The Library has myths and facts, a glossary, comics and these videos.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "In Me, see your badges and turn on helpers like Larger text.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "See something wrong? Press the flag to tell us.",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Learn when to trust AI and health info. Let us begin!",
+  "src": [
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
   ]
  },
  {
@@ -20219,7 +20459,7 @@
   ]
  },
  {
-  "text": "{org} clinic manager",
+  "text": "{org} manager",
   "src": [
    "games\\objection\\data.ts#TEMPLATES"
   ]
@@ -20729,12 +20969,6 @@
   ]
  },
  {
-  "text": "Captions",
-  "src": [
-   "games\\sa-sapatos-nila\\data.ts#FIXES"
-  ]
- },
- {
   "text": "Every sound also appears as words on the screen.",
   "src": [
    "games\\sa-sapatos-nila\\data.ts#FIXES"
@@ -20927,7 +21161,7 @@
   ]
  },
  {
-  "text": "Thank you! Now I understand every word.",
+  "text": "Thank you! Now I have my queue number.",
   "src": [
    "games\\sa-sapatos-nila\\data.ts#PERSONAS"
   ]
@@ -22064,18 +22298,6 @@
   "text": "When should I trust it? When an offer doesn't ask for more of my data than it needs.",
   "src": [
    "games\\takbo-data\\takbo.ts#default"
-  ]
- },
- {
-  "text": "g.tawid.tileWait",
-  "src": [
-   "games\\tawid-lola\\art.ts#TILES"
-  ]
- },
- {
-  "text": "g.tawid.tileGo",
-  "src": [
-   "games\\tawid-lola\\art.ts#TILES"
   ]
  },
  {
@@ -27570,15 +27792,163 @@
   ]
  },
  {
+  "text": "ARAW comes from AIKasalig, the project \"Advancing Responsible AI in Philippine Healthcare: A Multi-Year NLP-Driven Roadmap for Trust, Transparency, and Ethical AI\".",
+  "src": [
+   "ui:about.aikasalig.p1"
+  ]
+ },
+ {
+  "text": "Its goal is an AI Trust Toolkit, multilingual and informed by communities. The toolkit uses natural language processing (NLP) in five languages (Filipino, Cebuano, Ilocano, Hiligaynon and English) to bring out what people say about AI in health care: signs of trust, feelings, and health misinformation.",
+  "src": [
+   "ui:about.aikasalig.p2"
+  ]
+ },
+ {
+  "text": "The project's outputs include annotated text collections, classifiers, dashboards, an AI Trust Index, and AI literacy modules for health workers and communities. The work is aligned with the digital health priorities of DOST-PCHRD.",
+  "src": [
+   "ui:about.aikasalig.p3"
+  ]
+ },
+ {
+  "text": "About the app",
+  "src": [
+   "ui:about.app"
+  ]
+ },
+ {
+  "text": "ARAW carries the project's AI literacy modules: short lessons and games that teach calibrated trust in AI and health information, in the same five languages as the project. It is made for community members and health workers, including people who are new to AI.",
+  "src": [
+   "ui:about.araw.p1"
+  ]
+ },
+ {
+  "text": "In community workshops, facilitators give the two matched Fact or Fake tests before and after the lessons, to see how much people's skills grew.",
+  "src": [
+   "ui:about.araw.p2"
+  ]
+ },
+ {
+  "text": "Where ARAW fits",
+  "src": [
+   "ui:about.araw.title"
+  ]
+ },
+ {
+  "text": "ARAW developer",
+  "src": [
+   "ui:about.credit.dev"
+  ]
+ },
+ {
+  "text": "Mico C. Magtira, Senior Data and NLP-Geospatial Scientist, DOST-NICER",
+  "src": [
+   "ui:about.credit.devValue"
+  ]
+ },
+ {
+  "text": "Project Leader, AIKasalig",
+  "src": [
+   "ui:about.credit.leader"
+  ]
+ },
+ {
+  "text": "Dr. Mideth B. Abisado",
+  "src": [
+   "ui:about.credit.leaderValue"
+  ]
+ },
+ {
+  "text": "Credits",
+  "src": [
+   "ui:about.credits"
+  ]
+ },
+ {
   "text": "All people, pages and brands in ARAW are fictional.",
   "src": [
    "ui:about.fictional"
   ]
  },
  {
+  "text": "At a glance",
+  "src": [
+   "ui:about.glance"
+  ]
+ },
+ {
+  "text": "Implementing agency",
+  "src": [
+   "ui:about.glance.agency"
+  ]
+ },
+ {
+  "text": "National University, Manila",
+  "src": [
+   "ui:about.glance.agencyValue"
+  ]
+ },
+ {
+  "text": "Duration",
+  "src": [
+   "ui:about.glance.duration"
+  ]
+ },
+ {
+  "text": "February 2026 to January 2029 (36 months)",
+  "src": [
+   "ui:about.glance.durationValue"
+  ]
+ },
+ {
+  "text": "Program",
+  "src": [
+   "ui:about.glance.program"
+  ]
+ },
+ {
+  "text": "DOST-NICER R&D Center on Natural Language Processing for Health Applications (RDC-NLPHA)",
+  "src": [
+   "ui:about.glance.programValue"
+  ]
+ },
+ {
+  "text": "Project",
+  "src": [
+   "ui:about.glance.project"
+  ]
+ },
+ {
+  "text": "AIKasalig (Project 4)",
+  "src": [
+   "ui:about.glance.projectValue"
+  ]
+ },
+ {
   "text": "New here? Read the picture guide: How to use ARAW.",
   "src": [
    "ui:about.guide"
+  ]
+ },
+ {
+  "text": "About the project",
+  "src": [
+   "ui:about.heading",
+   "ui:brand.about",
+   "ui:nav.about"
+  ]
+ },
+ {
+  "text": "AIKasalig",
+  "src": [
+   "ui:about.kicker",
+   "ui:about.aikasalig.title",
+   "content\\library\\myths.ts#MYTH_PROGRAM_LABELS"
+  ]
+ },
+ {
+  "text": "ARAW is the hands-on AI literacy app of AIKasalig, a project on responsible AI in Philippine health care.",
+  "src": [
+   "ui:about.lead"
   ]
  },
  {
@@ -27612,6 +27982,48 @@
   ]
  },
  {
+  "text": "AIKasalig is Project 4 of the program Research and Development Center on Natural Language Processing for Health Applications (RDC-NLPHA). The program is part of DOST's NICER (Niche Centers in the Regions for R&D) and is implemented by National University, Manila.",
+  "src": [
+   "ui:about.program.p1"
+  ]
+ },
+ {
+  "text": "Part of a DOST-NICER program",
+  "src": [
+   "ui:about.program.title"
+  ]
+ },
+ {
+  "text": "AdvocAid PH: geospatial AI for HIV public health surveillance",
+  "src": [
+   "ui:about.sister.advocaid"
+  ]
+ },
+ {
+  "text": "Bantay Lamok PH: mosquito density and outbreak prediction",
+  "src": [
+   "ui:about.sister.bantay"
+  ]
+ },
+ {
+  "text": "HealthPH+: multilingual public health surveillance",
+  "src": [
+   "ui:about.sister.healthph"
+  ]
+ },
+ {
+  "text": "TALA: a learning module on text and location analytics, also from AIKasalig",
+  "src": [
+   "ui:about.sister.tala"
+  ]
+ },
+ {
+  "text": "Sister projects in the program",
+  "src": [
+   "ui:about.sisters"
+  ]
+ },
+ {
   "text": "ARAW teaches AI literacy and how to resist health misinformation, with calibrated trust: not \"trust less\", but \"trust wisely\".",
   "src": [
    "ui:about.text"
@@ -27621,6 +28033,12 @@
   "text": "About ARAW",
   "src": [
    "ui:about.title"
+  ]
+ },
+ {
+  "text": "Version",
+  "src": [
+   "ui:about.version"
   ]
  },
  {
@@ -28052,6 +28470,18 @@
   "text": "Villain badges",
   "src": [
    "ui:badges.group.villain"
+  ]
+ },
+ {
+  "text": "AIKasalig · DOST-NICER",
+  "src": [
+   "ui:brand.eyebrow"
+  ]
+ },
+ {
+  "text": "An AIKasalig project",
+  "src": [
+   "ui:brand.project"
   ]
  },
  {
@@ -34474,9 +34904,34 @@
   ]
  },
  {
+  "text": "Videos",
+  "src": [
+   "ui:library.tab.videos",
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
   "text": "Library sections",
   "src": [
    "ui:library.tabs"
+  ]
+ },
+ {
+  "text": "The videos are not ready yet.",
+  "src": [
+   "ui:library.videos.none"
+  ]
+ },
+ {
+  "text": "Short videos with captions, in five languages. They play from the internet, so they are not saved for offline use.",
+  "src": [
+   "ui:library.videos.text"
+  ]
+ },
+ {
+  "text": "How-to videos",
+  "src": [
+   "ui:library.videos.title"
   ]
  },
  {
@@ -34554,7 +35009,8 @@
  {
   "text": "More",
   "src": [
-   "ui:me.more"
+   "ui:me.more",
+   "ui:nav.more"
   ]
  },
  {
@@ -35239,6 +35695,12 @@
   ]
  },
  {
+  "text": "Project partners",
+  "src": [
+   "ui:partners.label"
+  ]
+ },
+ {
   "text": "There are no practice items for this module yet. Let us move on to your reward.",
   "src": [
    "ui:practice.empty"
@@ -35685,6 +36147,12 @@
   "text": "People served: {n}",
   "src": [
    "ui:sapatos.end.served"
+  ]
+ },
+ {
+  "text": "A short run, and no one left without help. Keep the kiosk open longer to serve more visitors.",
+  "src": [
+   "ui:sapatos.end.short"
   ]
  },
  {
@@ -37388,6 +37856,93 @@
   "text": "Part {n} of {total}: {part}, {time}",
   "src": [
    "ui:tulog.when"
+  ]
+ },
+ {
+  "text": "Watch a short video",
+  "src": [
+   "ui:tutorial.briefingWatch"
+  ]
+ },
+ {
+  "text": "This video cannot play here. Check your internet, or try another browser. You can still read the captions below.",
+  "src": [
+   "ui:tutorial.cantPlay"
+  ]
+ },
+ {
+  "text": "Captions",
+  "src": [
+   "ui:tutorial.captions",
+   "games\\sa-sapatos-nila\\data.ts#FIXES"
+  ]
+ },
+ {
+  "text": "How to play: {game}",
+  "src": [
+   "ui:tutorial.gameTitle",
+   "content\\tutorials.ts#TUTORIAL_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Video language",
+  "src": [
+   "ui:tutorial.language"
+  ]
+ },
+ {
+  "text": "This changes only the video, not the app.",
+  "src": [
+   "ui:tutorial.languageHint"
+  ]
+ },
+ {
+  "text": "{time} min",
+  "src": [
+   "ui:tutorial.length"
+  ]
+ },
+ {
+  "text": "Loading the video...",
+  "src": [
+   "ui:tutorial.loading"
+  ]
+ },
+ {
+  "text": "{time} · {size} MB · Captioned, no sound",
+  "src": [
+   "ui:tutorial.meta"
+  ]
+ },
+ {
+  "text": "Watch the tour",
+  "src": [
+   "ui:tutorial.tourNav"
+  ]
+ },
+ {
+  "text": "ARAW in one minute",
+  "src": [
+   "ui:tutorial.tourTitle"
+  ]
+ },
+ {
+  "text": "Read all the captions",
+  "src": [
+   "ui:tutorial.transcript"
+  ]
+ },
+ {
+  "text": "Watch how to play",
+  "src": [
+   "ui:tutorial.watch",
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Watch the 1-minute tour",
+  "src": [
+   "ui:tutorial.watchTour"
   ]
  },
  {

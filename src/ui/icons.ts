@@ -37,11 +37,13 @@ import eye from 'pixelarticons/svg/eye.svg?raw';
 import scale from 'pixelarticons/svg/scale.svg?raw';
 import printer from 'pixelarticons/svg/printer.svg?raw';
 import download from 'pixelarticons/svg/download.svg?raw';
+import video from 'pixelarticons/svg/video.svg?raw';
+import captions from 'pixelarticons/svg/badge-captions.svg?raw';
 
 /** Extract the path data from a pixelarticons SVG file. */
 const paths = (svg: string): string[] => [...svg.matchAll(/\sd="([^"]+)"/g)].map((m) => m[1] as string);
 
-const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, clock, search, forward, reply: messageReply, 'thumbs-up': thumbsUp, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight, shield, article, cake, 'phone-call': phoneCall, 'ai-scan': aiScan, bus, briefcase, brush, moon, eye, scale, print: printer, download };
+const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, clock, search, forward, reply: messageReply, 'thumbs-up': thumbsUp, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight, shield, article, cake, 'phone-call': phoneCall, 'ai-scan': aiScan, bus, briefcase, brush, moon, eye, scale, print: printer, download, video, captions };
 
 /** Hand-made 24-cell icons (single colour, crisp edges). */
 const handMade = {

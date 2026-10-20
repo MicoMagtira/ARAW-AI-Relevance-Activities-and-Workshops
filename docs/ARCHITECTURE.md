@@ -11,6 +11,12 @@
 - **Content (`src/content`):** typed banks with validators; every entry has `review_status` and a `basis`. Fact or Fake test forms
   (`assessment.ts`) are a separate chunk and never appear in practice, the arcade or the daily challenge.
 - **Styling:** `src/styles/tokens.css` (design tokens) and `base.css`; the 8-bit rules are in `docs/DESIGN.md`.
+- **Project identity:** `src/ui/PartnerLogos.tsx` (the six partner logos, built from the git-ignored `logos/` folder by
+  `scripts/logos/build_logos.py` into `src/assets/logos/`), the Home project banner and the About page; styles in `src/styles/brand.css`.
+- **How-to videos:** `src/content/tutorials.ts` (clip list and caption lines), `src/content/tutorialManifest.json` (which clips
+  and languages exist, written by the recorder), `src/app/tutorials.ts` (manifest helpers, the shared dialog signal, VTT
+  transcript parser) and `src/ui/tutorial/` (Watch button, dialog host, lazy player chunk). Files: `public/videos/<id>/<lang>.webm|vtt`,
+  recorded by `scripts/tutorials/record.mjs` from `scripts/tutorials/boards/` (canvas games on a paused fake clock, so runs repeat).
 - **PWA:** `scripts/pwa-plugin.ts` and `sw-template.js` generate the service worker and precache list at build time.
 - **Quality gates:** `npm run verify` = type-check + build, `scripts/check-budget.mjs` (initial JS <= 200 KB gzip), Vitest, and
   Playwright on phone/tablet/desktop with axe and no-horizontal-overflow checks.

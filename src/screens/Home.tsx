@@ -14,8 +14,39 @@ import { AraSays } from '../ui/AraBubble';
 import { Medal } from '../ui/Badge';
 import { Icon } from '../ui/Icon';
 import { Button, Panel, ProgressBar, SrHint, srDescribedBy } from '../ui/kit';
+import { PartnerLogos } from '../ui/PartnerLogos';
+import { WatchButton } from '../ui/tutorial/Tutorial';
+import { Cloud, Sun } from './Splash';
 
 const STATE_KEY = { done: 'home.pathDone', current: 'home.pathCurrent', locked: 'home.pathLocked' } as const satisfies Record<NodeState, StringKey>;
+
+/** The project banner: an 8-bit sunrise with the ARAW wordmark, then the white partner band that links to About. */
+function ProjectBanner() {
+  return (
+    <section class="home-banner px-box" aria-labelledby="brand-h">
+      <div class="home-banner__sky">
+        <Cloud class="home-banner__cloud" />
+        <div class="home-banner__text">
+          <p class="px-chip px-notch home-banner__eyebrow">{t('brand.eyebrow')}</p>
+          <h2 class="home-banner__word" id="brand-h">
+            {t('app.name')}
+          </h2>
+          <p class="home-banner__name">{t('app.tagline')}</p>
+          <p class="home-banner__lead">{t('splash.blurb')}</p>
+          <WatchButton id="tour" label={t('tutorial.watchTour')} variant="gold" class="home-banner__tour" />
+        </div>
+        <Sun class="home-banner__sun" />
+      </div>
+      <div class="home-banner__band">
+        <PartnerLogos variant="band" />
+        <a class="home-banner__about text-link" href={hrefFor('/about')}>
+          {t('brand.about')}
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
+    </section>
+  );
+}
 
 function Hero() {
   const done = modulesDone.value;
@@ -276,14 +307,17 @@ function BadgeStrip() {
 export function Home() {
   const now = new Date();
   return (
-    <div class="home-grid">
-      <Hero />
-      <Stats />
-      <Daily now={now} />
-      <Myth now={now} />
-      <ArcadeCard />
-      <Path />
-      <BadgeStrip />
+    <div class="home">
+      <ProjectBanner />
+      <div class="home-grid">
+        <Hero />
+        <Stats />
+        <Daily now={now} />
+        <Myth now={now} />
+        <ArcadeCard />
+        <Path />
+        <BadgeStrip />
+      </div>
     </div>
   );
 }

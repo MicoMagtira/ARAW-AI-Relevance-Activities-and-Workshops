@@ -11,6 +11,7 @@ import { Icon } from '../../ui/Icon';
 import { Button, Chip } from '../../ui/kit';
 import { useWindowKey } from '../../ui/useWindowKey';
 import { ItemCard } from './ItemCard';
+import { publicBasis } from './results';
 import type { FofMode } from './rounds';
 
 export interface RoundAnswer {
@@ -264,7 +265,7 @@ export function FofRound({ items, mode, compact, finishLabel, onAnswer, onFinish
             <p>
               <strong>{t('fof.check')}:</strong> {item.how_to_check}
             </p>
-            <p class="fof-feedback__basis">{t('fof.basis', { basis: item.basis })}</p>
+            {publicBasis(item.basis) && <p class="fof-feedback__basis">{t('fof.basis', { basis: publicBasis(item.basis) ?? '' })}</p>}
             <div class="fof-feedback__actions">
               <span class="fof-feedback__id">{item.id}</span>
               <Button variant="gold" large data-sfx={last ? undefined : 'page'} onClick={next}>

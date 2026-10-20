@@ -9,6 +9,7 @@ import { useLater } from '../../app/sound/useLater';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, ProgressBar } from '../../ui/kit';
+import { WatchButton } from '../../ui/tutorial/Tutorial';
 import '../../styles/sapatos.css';
 import { FIXES, LANGS, barrierById, fixById, type BarrierId, type Fix, type FixId, type Persona } from './data';
 import { FeelList, Kiosk } from './Kiosk';
@@ -118,7 +119,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
     if (phase !== 'end') return;
     const r = result();
     const line = rootRef.current?.querySelector('.ara-says__bubble p')?.textContent ?? '';
-    later(1400, () => araSay(line, r.served >= 3 ? (r.stars === 3 ? 'wow' : 'happy') : 'sad'));
+    later(1400, () => araSay(line, r.served >= 3 ? (r.stars === 3 ? 'wow' : 'happy') : r.left === 0 ? 'happy' : 'sad'));
   }, [phase]);
 
   const resolveLeft = (g: Game, why: 'fails' | 'let-go' | 'queue') => {
@@ -199,7 +200,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
           </h3>
           {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
           <p>{t(arcade ? 'sapatos.introArcade' : 'sapatos.introModule')}</p>
-          <div>
+          <div class="intro-actions">
             <Button
               variant="gold"
               large
@@ -211,6 +212,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
               {t('sapatos.start')}
               <Icon name="arrow-right" />
             </Button>
+            <WatchButton id="sa-sapatos-nila" />
           </div>
           <details>
             <summary>{t('sapatos.how.title')}</summary>
@@ -233,6 +235,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
     const lines: string[] = [];
     if (r.served >= MODULE_VISITS && !arcade) lines.push(t('sapatos.end.great'));
     else if (r.served >= 3) lines.push(t('sapatos.end.good'));
+    else if (r.left === 0) lines.push(t('sapatos.end.short')); // a short run: no one was turned away
     else lines.push(t('sapatos.end.some'));
     return (
       <div class="sapatos" ref={rootRef}>
@@ -240,7 +243,7 @@ export function Sapatos({ mode, seed, daily, endActions }: SapatosProps) {
           <h3 class="sapatos-title" id="sapatos-end-title" tabIndex={-1} data-sapatos-focus>
             {t(isOver(game) ? 'sapatos.end.closed' : arcade ? 'sapatos.end.arcade' : 'sapatos.end.module')}
           </h3>
-          <AraSays mood={r.served >= 3 ? (r.stars === 3 ? 'wow' : 'happy') : 'sad'}>
+          <AraSays mood={r.served >= 3 ? (r.stars === 3 ? 'wow' : 'happy') : r.left === 0 ? 'happy' : 'sad'}>
             <p>{lines[0]}</p>
           </AraSays>
           <ul class="sapatos-stats">

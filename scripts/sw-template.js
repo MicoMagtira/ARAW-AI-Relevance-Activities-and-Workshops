@@ -24,7 +24,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  // how-to videos stream straight from the network (range requests, a few MB each): never cached for offline
+  if (url.pathname.includes('/videos/')) return;
 
   if (request.mode === 'navigate') {
     // network first so a new version shows up; the cached shell answers when offline

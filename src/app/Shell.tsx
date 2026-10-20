@@ -26,6 +26,8 @@ import { Report } from '../screens/Report';
 import { About } from '../screens/About';
 import { GuideRoute } from '../screens/GuideRoute';
 import { NotFound } from '../screens/NotFound';
+import { TutorialHost } from '../ui/tutorial/Tutorial';
+import { hasTutorial, openTutorial } from './tutorials';
 
 const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game' | 'certificate'>, ComponentType> = {
   home: Home,
@@ -98,6 +100,7 @@ export function Shell() {
         ) : (
           <LazyFactOrFake mode="assess" form={match.params.form} key={match.location.path} />
         )}
+        <TutorialHost />
         <ToastHost />
       </div>
     );
@@ -181,6 +184,18 @@ export function Shell() {
             ))}
           </ul>
         </nav>
+        <nav class="sidebar__more" aria-label={t('nav.more')}>
+          <a class="more-item" href={hrefFor('/about')} aria-current={match.def.name === 'about' ? 'page' : undefined}>
+            <Icon name="info" size={20} />
+            <span>{t('nav.about')}</span>
+          </a>
+          {hasTutorial('tour') && (
+            <button type="button" class="more-item" onClick={() => openTutorial('tour')}>
+              <Icon name="video" size={20} />
+              <span>{t('tutorial.tourNav')}</span>
+            </button>
+          )}
+        </nav>
         <div class="sidebar__foot">
           <Button href={reportHref} variant="secondary">
             <Icon name="flag" />
@@ -201,6 +216,7 @@ export function Shell() {
         <footer class="credit-note">{t('app.createdBy')}</footer>
       </main>
 
+      <TutorialHost />
       <ToastHost />
     </div>
   );

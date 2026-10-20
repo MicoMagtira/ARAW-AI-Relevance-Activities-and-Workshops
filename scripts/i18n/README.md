@@ -25,5 +25,8 @@ After content changes, repeat 1, 3, 4 and 5: only the new or changed strings bec
 | ilo | Ilokano | 100% (2026-10-16, Claude Opus) | needed |
 | hil | Hiligaynon | 100% (2026-10-16, Claude Opus) | needed |
 
+2026-10-20: project identity (About, partners, Home banner), the how-to video captions and player, and the guide updates
+were added (batches b043, b044; Claude Opus, native review needed like the rest).
+
 Machine translation of health content must be checked by a native speaker and the health reviewer before a public launch
 (see docs/CONTENT_REVIEW.md), especially numbers, ages, time spans and warnings.

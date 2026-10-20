@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../app/i18n';
 import { araSay, sfx } from '../../app/sound';
 import { AraSays } from '../../ui/AraBubble';
+import { Icon } from '../../ui/Icon';
 import { useMediaQuery } from '../../ui/useMediaQuery';
 import { Button, Panel } from '../../ui/kit';
 import type { BriefingPage } from './types';
@@ -15,9 +16,11 @@ interface Props {
   onSkip: () => void;
   /** Last page's button label (defaults to Start). */
   startLabel?: string;
+  /** "Watch a short video": shown when the game has a how-to clip. */
+  onWatch?: () => void;
 }
 
-export function Briefing({ pages, onStart, onSkip, startLabel }: Props) {
+export function Briefing({ pages, onStart, onSkip, startLabel, onWatch }: Props) {
   const [index, setIndex] = useState(0);
   const heading = useRef<HTMLHeadingElement>(null);
   const page = pages[Math.min(index, pages.length - 1)];
@@ -59,6 +62,13 @@ export function Briefing({ pages, onStart, onSkip, startLabel }: Props) {
           ))}
         </div>
         <p class="briefing__page px-label">{t('game.briefing.page', { n: index + 1, total: pages.length })}</p>
+        {onWatch && (
+          // a quiet link-style button under the page count, so Skip / Back / Next keep their row on every screen
+          <button type="button" class="briefing__watch" onClick={onWatch}>
+            <Icon name="video" size={20} />
+            {t('tutorial.briefingWatch')}
+          </button>
+        )}
       </div>
       <div class="briefing__actions">
         <Button variant="secondary" onClick={onSkip}>

@@ -242,7 +242,8 @@
   }
 }
 
-@media (min-width: 700px) and (min-height: 760px) {
+/* 860, not 760: the partner logos in the title panel need the room at 1366x768 */
+@media (min-width: 700px) and (min-height: 860px) {
   .splash {
     --s: 5;
   }

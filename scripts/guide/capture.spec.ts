@@ -102,13 +102,27 @@ const SHOTS: Shot[] = [
     ready: role('button', 'Start'),
     targets: {
       title: css('.splash__title'),
+      partners: css('.splash__partners'),
       sound: (p) => p.locator('.splash').getByRole('switch').filter({ visible: true }).first(),
       start: role('button', 'Start'),
     },
   },
   {
+    id: 'home-banner',
+    height: { phone: 900 },
+    url: '/#/',
+    ready: css('.home-banner'),
+    targets: {
+      word: css('.home-banner__word'),
+      tour: css('.home-banner__tour'),
+      partners: css('.home-banner__band .partners'),
+      about: css('.home-banner__about'),
+    },
+  },
+  {
     id: 'home',
     url: '/#/',
+    scrollTo: css('.home-grid'),
     targets: {
       hud: css('.banner__hud'),
       continue: css('.continue .px-btn, .continue a'),
@@ -225,11 +239,12 @@ const SHOTS: Shot[] = [
   },
   {
     id: 'arcade',
-    height: { phone: 1000, desktop: 900 },
+    height: { phone: 1000, desktop: 1100 },
     url: '/#/arcade',
     targets: {
       featured: css('.arcade-featured'),
       tile: css('.arcade-tile'),
+      watch: css('.arcade-details .watch-btn'),
     },
   },
   {
@@ -250,6 +265,7 @@ const SHOTS: Shot[] = [
       page: css('.briefing__dots'),
       next: role('button', 'Next', true),
       skip: role('button', /^Skip/),
+      watch: css('.briefing__watch'),
     },
   },
   {
@@ -259,6 +275,38 @@ const SHOTS: Shot[] = [
     targets: {
       howto: role('button', 'How to play'),
       start: role('button', 'Start', true),
+    },
+  },
+  {
+    id: 'video',
+    height: { phone: 900 },
+    url: '/#/library/videos',
+    ready: css('.video-card'),
+    prepare: async (page) => {
+      await page.locator('.video-card').nth(2).click();
+      const video = page.locator('.tutorial__video');
+      await video.waitFor();
+      // a frame from the middle of the clip, with its caption in the bar
+      await video.evaluate(
+        (v: HTMLVideoElement) =>
+          new Promise<void>((done) => {
+            const seek = () => {
+              v.pause();
+              v.addEventListener('seeked', () => setTimeout(done, 400), { once: true });
+              v.currentTime = 8.5;
+            };
+            if (v.readyState >= 1) seek();
+            else v.addEventListener('loadedmetadata', seek, { once: true });
+          }),
+      );
+      await page.waitForTimeout(600);
+    },
+    targets: {
+      video: css('.tutorial__video'),
+      caption: css('.tutorial__caption'),
+      cc: css('.tutorial__cc'),
+      langs: css('.tutorial__langs'),
+      transcript: css('.tutorial__transcript summary'),
     },
   },
   {
@@ -360,6 +408,27 @@ const SHOTS: Shot[] = [
       stage: css('.reader__stage'),
       steps: css('.reader__steps, .reader__nav'),
       next: role('button', 'Next', true),
+    },
+  },
+  {
+    id: 'library-videos',
+    url: '/#/library/videos',
+    ready: css('.video-card'),
+    targets: {
+      tab: (p) => p.getByRole('tab').nth(3),
+      card: css('.video-card'),
+    },
+  },
+  {
+    id: 'about',
+    height: { phone: 1400, desktop: 1600 },
+    url: '/#/about',
+    ready: css('.partners--wall'),
+    targets: {
+      wall: css('.partners--wall'),
+      story: css('.about-story'),
+      glance: (p) => p.locator('.about-card').nth(0),
+      credits: (p) => p.locator('.about-card').nth(2),
     },
   },
   {

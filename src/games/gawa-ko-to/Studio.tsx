@@ -10,6 +10,7 @@ import { timerCue } from '../engine/cues';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, ProgressBar } from '../../ui/kit';
+import { WatchButton } from '../../ui/tutorial/Tutorial';
 import '../../styles/gawa.css';
 import { ARTIST, PICTURES, topicById, type PictureId } from './parts';
 import { PosterSvg, describePoster } from './Poster';
@@ -208,11 +209,12 @@ export function Studio({ mode, seed, daily, endActions }: StudioProps) {
           </h3>
           {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
           <p>{t(arcade ? 'gawa.introArcade' : 'gawa.introModule')}</p>
-          <div>
+          <div class="intro-actions">
             <Button variant="gold" large onClick={() => startBrief(1)}>
               {t('gawa.start')}
               <Icon name="arrow-right" />
             </Button>
+            <WatchButton id="gawa-ko-to" />
           </div>
           <details>
             <summary>{t('gawa.how.title')}</summary>

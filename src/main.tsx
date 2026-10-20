@@ -9,6 +9,7 @@ import './styles/lesson.css';
 import './styles/fof.css';
 import './styles/ara.css';
 import './styles/splash.css';
+import './styles/brand.css';
 import { App } from './app/App';
 import { initBoot } from './app/boot';
 import { registerServiceWorker } from './app/pwa';

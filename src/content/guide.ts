@@ -1,5 +1,5 @@
 // "How to use ARAW": the user guide, shared by the in-app Guide screen (src/screens/guide/Guide.tsx) and the printable PDF
-// (scripts/guide/build-pdf.mjs). English only for now (i18n.ts was off-limits when this was written); plain, short sentences.
+// (scripts/guide/build-pdf.mjs). English source, shown translated through the language packs; plain, short sentences.
 // No imports on purpose: build-pdf.mjs loads this file straight from Node (type stripping).
 //
 // Each step can show one screenshot (`shot`, an id from scripts/guide/capture.spec.ts). Its callouts are numbered in order:
@@ -53,6 +53,7 @@ export const GUIDE_COVER = {
   project: 'An AIKasalig project · DOST-PCHRD · National University',
   credit: 'Created by Mico C. Magtira — Senior Data and NLP-Geospatial Scientist, DOST-NICER',
   tagline: 'Learn when to trust AI and health info, one fun game at a time.',
+  partnersLabel: 'An AIKasalig project',
 } as const;
 
 export const GUIDE_SECTIONS: readonly GuideSection[] = [
@@ -64,7 +65,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
     steps: [
       {
         title: 'Choose your language',
-        text: 'The very first screen asks for your language. Tap a language card, then press SELECT. ARAW is in English for now; more languages are coming.',
+        text: 'The very first screen asks for your language. ARAW speaks English, Filipino, Cebuano, Ilokano and Hiligaynon. Tap a language card, then press SELECT.',
         shot: 'language',
         alt: 'The ARAW language screen: the title box with the English card picked, the gold SELECT button under it, and Ara in front of a pixel sunrise sky.',
         callouts: [
@@ -80,6 +81,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
         alt: 'The ARAW start screen: the title box at the top, Ara in front of a pixel sunrise, and a big gold START button at the bottom.',
         callouts: [
           { target: 'title', text: 'The name of the app and what it is for.' },
+          { target: 'partners', text: 'ARAW is an AIKasalig project. These are the project partners: DOST, DOST-PCHRD, National University, NICER and AIKasalig.' },
           { target: 'sound', text: 'Sound switches. Turn music or sound effects on or off before you start.' },
           { target: 'start', text: 'Press START to go to the Home screen.' },
         ],
@@ -112,6 +114,18 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
     title: 'The Home screen',
     intro: 'Home shows what to do next. Use the buttons at the bottom (on a phone) or on the left (on a computer) to move around.',
     steps: [
+      {
+        title: 'The ARAW banner',
+        text: 'The top of Home shows what ARAW is and who made it. New here? Watch the one-minute tour first.',
+        shot: 'home-banner',
+        alt: 'The top of Home: a pixel sunrise banner with the big ARAW name and a gold Watch the 1-minute tour button, and a white band of partner logos with an About the project link.',
+        callouts: [
+          { target: 'word', text: 'ARAW: AI Relevance Activities and Workshops, an AIKasalig project.' },
+          { target: 'tour', text: 'Watch a one-minute video tour of the app, with captions.' },
+          { target: 'partners', text: 'The project partners.' },
+          { target: 'about', text: 'Read about the project, its partners and the team.' },
+        ],
+      },
       {
         title: 'See your next lesson',
         text: 'Ara greets you and shows the next lesson. Press CONTINUE to keep learning where you stopped.',
@@ -249,6 +263,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
         callouts: [
           { target: 'featured', text: "Today's featured game. Everyone plays the same run today." },
           { target: 'tile', text: 'A game tile with its topic and your best score.' },
+          { target: 'watch', text: 'Watch a short video of how the game is played.' },
         ],
       },
       {
@@ -268,6 +283,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
           { target: 'page', text: 'Which page of the briefing you are on.' },
           { target: 'next', text: 'Go to the next page.' },
           { target: 'skip', text: 'Skip the briefing.' },
+          { target: 'watch', text: 'Watch a short video of the game instead.' },
         ],
       },
       {
@@ -279,6 +295,20 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
           { target: 'howto', text: 'How to play: the controls and the goal.' },
           { target: 'start', text: 'Start playing.' },
         ],
+      },
+      {
+        title: 'Watch how to play',
+        text: 'Every game has a short video that shows how it is played. Open it from How to play, the game details, or Library > Videos. The videos have no sound: read the captions under the picture.',
+        shot: 'video',
+        alt: 'A how-to video for Takbo, Data!: the game picture, a big caption bar under it, a Captions switch, and language buttons EN, FIL, CEB, ILO and HIL.',
+        callouts: [
+          { target: 'video', text: 'The video. Press play, or make it full screen.' },
+          { target: 'caption', text: 'The captions say what is happening.' },
+          { target: 'cc', text: 'Turn the captions on or off.' },
+          { target: 'langs', text: 'Watch the video in another language. This changes only the video, not the app.' },
+          { target: 'transcript', text: 'Read all the captions at once.' },
+        ],
+        tip: 'The videos play from the internet. They are not saved for offline use.',
       },
       {
         title: 'Play with tap, mouse or keyboard',
@@ -332,8 +362,8 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
   {
     id: 'library',
     label: 'Library',
-    title: 'Library: myths, words and comics',
-    intro: 'The Library is for reading at your own pace. It has three parts: Myths, Dictionary and Comics.',
+    title: 'Library: myths, words, comics and videos',
+    intro: 'The Library is for reading and watching at your own pace. It has four parts: Myths, Dictionary, Comics and Videos.',
     steps: [
       {
         title: 'Myths',
@@ -341,7 +371,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
         shot: 'library-myths',
         alt: 'The Myths tab: the three Library tabs, a search box, topic filters, and myth cards.',
         callouts: [
-          { target: 'tabs', text: 'Switch between Myths, Dictionary and Comics.' },
+          { target: 'tabs', text: 'Switch between Myths, Dictionary, Comics and Videos.' },
           { target: 'search', text: 'Search for a myth by a word.' },
           { target: 'chips', text: 'Topic chips: show only one topic, like dengue. On a phone, tap Filters first.' },
           { target: 'card', text: 'A myth card. Tap to flip it.' },
@@ -386,6 +416,16 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
           { target: 'stage', text: 'The comic panel.' },
           { target: 'steps', text: 'Go to any panel.' },
           { target: 'next', text: 'Go to the next panel.' },
+        ],
+      },
+      {
+        title: 'Videos',
+        text: 'All the how-to videos in one place: the one-minute tour of ARAW and a video for every game. Each one is in five languages.',
+        shot: 'library-videos',
+        alt: 'The Videos tab: video cards for ARAW in one minute and for each game, with their length and languages.',
+        callouts: [
+          { target: 'tab', text: 'The Videos tab.' },
+          { target: 'card', text: 'A video, its length and its languages. Tap it to watch.' },
         ],
       },
     ],
@@ -434,7 +474,19 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
       {
         title: 'Change the language',
         text: 'The language you picked on the first screen is saved. To change it, open Me and find Language under the settings, then tap another language card. It changes right away.',
-        list: ['ARAW is in English for now.', 'More languages are coming. They will appear as new cards here and on the first screen.'],
+        list: ['ARAW speaks English, Filipino, Cebuano, Ilokano and Hiligaynon.', 'The translations are new. If a word looks wrong, use Report to tell us.'],
+      },
+      {
+        title: 'About the project',
+        text: 'ARAW is part of AIKasalig, a project on responsible AI in Philippine health care, under the DOST-NICER R&D Center on Natural Language Processing for Health Applications at National University. Open About the project from Me (or from the left side on a computer) to read more.',
+        shot: 'about',
+        alt: 'The About the project page: the partner logos, the story of the AIKasalig project, an At a glance card with the dates, and the credits.',
+        callouts: [
+          { target: 'wall', text: 'The project partners.' },
+          { target: 'story', text: 'What AIKasalig is, and where ARAW fits.' },
+          { target: 'glance', text: 'At a glance: who runs it and for how long (February 2026 to January 2029).' },
+          { target: 'credits', text: 'The people behind the project and the app.' },
+        ],
       },
       {
         title: 'Your certificate',
@@ -484,6 +536,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
           'Install ARAW on the home screen (see Getting started) so people can find it again.',
           'Charge every device. Bring a power strip and a few earphones.',
           'Print the quick-start sheet at the end of this guide, one per pair.',
+          "Start with the one-minute tour on a big screen (Home > Watch the 1-minute tour). Pick the group's language with the buttons under the video.",
         ],
       },
       {
@@ -528,11 +581,11 @@ export const GUIDE_QUICKSTART = {
   title: 'ARAW quick start',
   subtitle: 'Learn when to trust AI and health info.',
   steps: [
-    { title: 'Open ARAW', text: 'Open the ARAW link or icon. Pick English, press SELECT, then press START.' },
+    { title: 'Open ARAW', text: 'Open the ARAW link or icon. Pick your language, press SELECT, then press START.' },
     { title: 'Learn', text: 'Tap Learn, then the module where Ara stands. Read each card and tap an answer.' },
     { title: 'Try again', text: '"So close!" means read the tip and try another answer. No one loses for trying.' },
     { title: 'Fact or Fake', text: 'Read the post. Press FACT or FAKE. Read why. Every fake gets a FAKE stamp.' },
-    { title: 'Play', text: 'Tap Arcade for short games. Tap, click, or use the arrow keys.' },
+    { title: 'Play', text: "Tap Arcade for short games. Not sure how? Watch the game's video. Tap, click, or use the arrow keys." },
     { title: 'Make it easier', text: 'Tap Me. Turn on Larger text or Extra-large buttons. Turn the music off if you like.' },
     { title: 'Ask', text: 'When should I trust it? For health worries, always ask your health worker.' },
   ],

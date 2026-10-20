@@ -48,5 +48,7 @@ describe('service worker build step', () => {
     expect(sw?.source).not.toContain('.woff"');
     expect(sw?.source).toMatch(/const CACHE = 'araw-9\.9\.9-[0-9a-f]{8}'/);
     expect(sw?.source).not.toContain('__PRECACHE__');
+    // how-to videos stream from the network: never cached for offline (range requests, a few MB each)
+    expect(sw?.source).toContain("url.pathname.includes('/videos/')");
   });
 });

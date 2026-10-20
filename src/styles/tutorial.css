@@ -1,0 +1,174 @@
+/* How-to video player (src/ui/tutorial/TutorialPlayer.tsx): loaded with the player chunk, never up front. */
+
+.tutorial {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+  margin: 0 0 var(--sp-4);
+}
+
+/* letterboxed 16:9 picture in an ink frame; never taller than the screen allows */
+.tutorial__screen {
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  border: var(--px) solid var(--ink);
+}
+
+.tutorial__video {
+  display: block;
+  width: 100%;
+  max-height: min(52dvh, 540px);
+  aspect-ratio: 16 / 9;
+  background: var(--ink);
+}
+
+/* the captions: big body text on a cream bar under the picture, room for two lines so the layout does not jump */
+.tutorial__caption {
+  min-height: calc(2 * 1.45em + 2 * var(--sp-3));
+  margin: calc(var(--sp-3) * -1) 0 0;
+  padding: var(--sp-3) var(--sp-4);
+  font: 700 var(--fs-20) / 1.45 var(--font-body);
+  text-align: center;
+  color: var(--ink);
+  background: var(--cream);
+  border: var(--px) solid var(--ink);
+  border-top: 0;
+  text-wrap: balance;
+}
+
+.tutorial__error {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--ink);
+  background: var(--fake-tint);
+  border: var(--px) solid var(--fake);
+}
+
+.tutorial__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.tutorial__cc {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: var(--tap);
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tutorial__langs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.tutorial__langs-label {
+  font: var(--fs-12) / 1.5 var(--font-pixel);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tutorial__langs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.tutorial__lang {
+  min-width: var(--tap);
+  min-height: var(--tap);
+  padding: 0 var(--sp-3);
+  font: var(--fs-12) / 1 var(--font-pixel);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--px-chip) solid var(--ink);
+  box-shadow: 2px 2px 0 0 var(--ink);
+  cursor: pointer;
+}
+
+.tutorial__lang:hover {
+  background: var(--soft);
+}
+
+.tutorial__lang[aria-pressed='true'] {
+  color: var(--on-color);
+  background: var(--navy);
+  border-color: var(--navy);
+}
+
+.tutorial__lang:focus-visible {
+  outline: var(--focus-w) solid var(--focus);
+  outline-offset: 3px;
+}
+
+.tutorial__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-4);
+  margin: 0;
+  font-size: var(--fs-16);
+  color: var(--muted);
+}
+
+.tutorial__transcript summary {
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.tutorial__transcript ol {
+  display: grid;
+  gap: var(--sp-2);
+  margin: var(--sp-2) 0 0;
+  padding-left: var(--sp-6);
+}
+
+/* full-screen captions (the browser draws them) stay readable */
+.tutorial__video::cue {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: #fff;
+  background: rgb(31 37 80 / 85%);
+}
+
+@media (width < 600px) {
+  /* all five language chips on one row */
+  .tutorial__langs-row {
+    gap: 6px;
+  }
+
+  .tutorial__lang {
+    padding: 0 6px;
+  }
+
+  .tutorial__caption {
+    font-size: var(--fs-18);
+    padding-inline: var(--sp-3);
+  }
+
+  .tutorial__controls {
+    justify-content: flex-start;
+  }
+}
+
+/* phones on their side: the picture gets the height, the controls scroll below */
+@media (max-height: 560px) and (orientation: landscape) {
+  .tutorial__video {
+    max-height: 70dvh;
+  }
+}
+
+:root.a11y-high-contrast .tutorial__caption {
+  background: var(--surface);
+}

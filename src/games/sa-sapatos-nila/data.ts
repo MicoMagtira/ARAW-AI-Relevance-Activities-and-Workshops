@@ -168,7 +168,7 @@ const lang = (id: string, name: string, l: LangId, who: string, look: Look): Per
   task: 'Book a check-up and get a queue number.',
   barriers: [`lang-${l}`],
   look,
-  thanks: 'Thank you! Now I understand every word.',
+  thanks: 'Thank you! Now I have my queue number.', // true whether the kiosk spoke their language or the counter helped
   left: `${name} shakes their head and walks out, still without an appointment.`,
 });
 

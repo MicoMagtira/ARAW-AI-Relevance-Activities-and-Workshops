@@ -6,6 +6,7 @@ import { t } from '../app/i18n';
 import { Icon } from '../ui/Icon';
 import { Ara, useReducedMotion } from '../ui/Ara';
 import { Button } from '../ui/kit';
+import { PartnerLogos } from '../ui/PartnerLogos';
 import { SoundSwitches } from '../ui/SoundControls';
 
 const SEGMENTS = 10;
@@ -31,9 +32,9 @@ const SUN_BODY = rectPath(BODY_ROWS);
 const SUN_CORE = rectPath(halfDisc(8.5, 18, SUN_H));
 const SUN_RAYS = 'M18 0h1v3h-1zM6 5h2v2H6zM29 5h2v2h-2zM2 11h3v1H2zM32 11h3v1h-3zM1 17h4v1H1zM32 17h4v1h-4z';
 
-export function Sun() {
+export function Sun({ class: className = 'splash__sun' }: { class?: string }) {
   return (
-    <svg class="splash__sun" viewBox={`0 0 ${SUN_W} ${SUN_H}`} shape-rendering="crispEdges" aria-hidden="true" focusable="false">
+    <svg class={className} viewBox={`0 0 ${SUN_W} ${SUN_H}`} shape-rendering="crispEdges" aria-hidden="true" focusable="false">
       <path fill="var(--gold-deep)" d={SUN_RAYS} />
       <path fill="var(--ink)" d={SUN_OUTLINE} />
       <path fill="var(--gold-deep)" d={SUN_BODY} />
@@ -90,6 +91,7 @@ export function Splash() {
           </h1>
           <p class="splash__tagline">{t('app.tagline')}</p>
           <p class="splash__blurb">{t('splash.blurb')}</p>
+          <SplashPartners />
         </div>
         <div class="splash__scene" aria-hidden="true">
           <Sun />
@@ -115,13 +117,19 @@ export function Splash() {
           </Button>
           <SoundSwitches />
         </div>
-        <p class="splash__credit">
-          {t('app.credit')}
-          <br />
-          {t('app.createdBy')}
-        </p>
+        <p class="splash__credit">{t('app.createdBy')}</p>
       </div>
     </main>
+  );
+}
+
+/** "An AIKasalig project" and the partner logos, at the foot of the white title panel (splash and language landing). */
+export function SplashPartners() {
+  return (
+    <div class="splash__partners">
+      <p class="splash__partners-label">{t('brand.project')}</p>
+      <PartnerLogos variant="strip" />
+    </div>
   );
 }
 

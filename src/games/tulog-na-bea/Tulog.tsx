@@ -9,6 +9,7 @@ import { useLater } from '../../app/sound/useLater';
 import { AraSays } from '../../ui/AraBubble';
 import { Icon } from '../../ui/Icon';
 import { Button, Chip, Meter, ProgressBar } from '../../ui/kit';
+import { WatchButton } from '../../ui/tutorial/Tutorial';
 import '../../styles/tulog.css';
 import { BeaScene } from './Bea';
 import { BOUNDARIES, METERS, METER_NAME, PULLS, SLOTS, SLOT_NAME, SLOT_TIME, boundaryById, type Fx, type MeterId, type Moment, type MomentOption } from './moments';
@@ -168,11 +169,12 @@ export function Tulog({ mode, seed, daily, endActions }: TulogProps) {
           </h3>
           {daily && <Chip kind="streak">{t('game.daily')}</Chip>}
           <p>{t(arcade ? 'tulog.introArcade' : 'tulog.introModule')}</p>
-          <div>
+          <div class="intro-actions">
             <Button variant="gold" large onClick={() => setPhase('plan')}>
               {t('tulog.start')}
               <Icon name="arrow-right" />
             </Button>
+            <WatchButton id="tulog-na-bea" />
           </div>
           <details>
             <summary>{t('tulog.how.title')}</summary>

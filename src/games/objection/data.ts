@@ -389,7 +389,7 @@ const CHATBOT: Template = {
   id: 'chatbot',
   title: 'The clinic chatbot',
   brief: '{org} put a chatbot on its website. {who} asked {bot} about a very sick child and was told there was no need to see a health worker. The child got worse.',
-  witness: '{org} clinic manager',
+  witness: '{org} manager',
   harm: 'Harmful advice from a chatbot delayed care for a sick child.',
   orgs: ['Sampaguita Family Clinic', 'Mabini Care Clinic', 'Dalisay Wellness Clinic'],
   things: ['chat'],

@@ -28,11 +28,11 @@ async function box(loc: Locator) {
 }
 
 test.describe('Library: tabs', () => {
-  test('three deep-linkable tabs under the banner, Myths first', async ({ page }) => {
+  test('four deep-linkable tabs under the banner, Myths first', async ({ page }) => {
     await page.goto('/#/library');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Library');
     const tabs = page.getByRole('tablist', { name: 'Library sections' });
-    await expect(tabs.getByRole('tab')).toHaveText(['Myths', 'Dictionary', 'Comics']);
+    await expect(tabs.getByRole('tab')).toHaveText(['Myths', 'Dictionary', 'Comics', 'Videos']);
     await expect(tabs.getByRole('tab', { name: 'Myths' })).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByRole('heading', { level: 2, name: 'Health Stories' })).toBeVisible();
     await noHorizontalOverflow(page);
@@ -43,6 +43,10 @@ test.describe('Library: tabs', () => {
     await tabs.getByRole('tab', { name: 'Comics' }).click();
     await expect(page).toHaveURL(/#\/library\/komiks$/);
     await expect(page.getByRole('heading', { level: 2, name: 'Season 1: The Miracle Tea' })).toBeVisible();
+    await tabs.getByRole('tab', { name: 'Videos' }).click();
+    await expect(page).toHaveURL(/#\/library\/videos$/);
+    await expect(page.getByRole('heading', { level: 2, name: 'How-to videos' })).toBeVisible();
+    await noHorizontalOverflow(page);
 
     // the tab strip moves with the arrow keys and keeps focus
     await tabs.getByRole('tab', { name: 'Comics' }).focus();
