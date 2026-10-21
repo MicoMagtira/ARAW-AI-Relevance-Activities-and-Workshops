@@ -39,11 +39,15 @@ import printer from 'pixelarticons/svg/printer.svg?raw';
 import download from 'pixelarticons/svg/download.svg?raw';
 import video from 'pixelarticons/svg/video.svg?raw';
 import captions from 'pixelarticons/svg/badge-captions.svg?raw';
+import robot from 'pixelarticons/svg/robot-face.svg?raw';
+import send from 'pixelarticons/svg/send.svg?raw';
+import trash from 'pixelarticons/svg/delete.svg?raw';
+import reload from 'pixelarticons/svg/reload.svg?raw';
 
 /** Extract the path data from a pixelarticons SVG file. */
 const paths = (svg: string): string[] => [...svg.matchAll(/\sd="([^"]+)"/g)].map((m) => m[1] as string);
 
-const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, clock, search, forward, reply: messageReply, 'thumbs-up': thumbsUp, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight, shield, article, cake, 'phone-call': phoneCall, 'ai-scan': aiScan, bus, briefcase, brush, moon, eye, scale, print: printer, download, video, captions };
+const fromPack = { home, learn: bookOpen, arcade: gamepad, me: user, flag, close, check, lock, heart, trophy, calendar, mail, info, chat, warning, clock, search, forward, reply: messageReply, 'thumbs-up': thumbsUp, 'arrow-left': arrowLeft, 'arrow-right': arrowRight, 'chevron-left': chevronLeft, 'chevron-right': chevronRight, shield, article, cake, 'phone-call': phoneCall, 'ai-scan': aiScan, bus, briefcase, brush, moon, eye, scale, print: printer, download, video, captions, robot, send, delete: trash, reload };
 
 /** Hand-made 24-cell icons (single colour, crisp edges). */
 const handMade = {

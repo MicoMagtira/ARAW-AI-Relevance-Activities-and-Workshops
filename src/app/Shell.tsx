@@ -20,6 +20,7 @@ import { LazyGame } from '../games/LazyGame';
 import { Arcade } from '../screens/Arcade';
 import { Library } from '../screens/Library';
 import { Daily } from '../screens/Daily';
+import { Sandbox } from '../screens/Sandbox';
 import { Certificate } from '../screens/Certificate';
 import { Me } from '../screens/Me';
 import { Report } from '../screens/Report';
@@ -35,6 +36,7 @@ const SCREENS: Record<Exclude<RouteName, 'lesson' | 'fof' | 'assess' | 'game' | 
   arcade: Arcade,
   library: Library,
   daily: Daily,
+  sandbox: Sandbox,
   me: Me,
   report: Report,
   about: About,

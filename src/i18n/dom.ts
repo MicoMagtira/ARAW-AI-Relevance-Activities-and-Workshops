@@ -20,7 +20,8 @@ export function installTranslation(): void {
   options.vnode = (vnode: VNode) => {
     if (activeLanguage() !== 'en' && vnode.props && typeof vnode.props === 'object') {
       const p = vnode.props as Record<string, unknown>;
-      if ('children' in p) p.children = fix(p.children);
+      // data-no-tx: text the player typed or an AI wrote (Chatbot Sandbox) is shown exactly as it is
+      if ('children' in p && !p['data-no-tx']) p.children = fix(p.children);
       if (typeof vnode.type === 'string') for (const a of ATTRS) if (typeof p[a] === 'string') p[a] = tx(p[a] as string);
     }
     prev?.(vnode);

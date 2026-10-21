@@ -27,6 +27,8 @@ After content changes, repeat 1, 3, 4 and 5: only the new or changed strings bec
 
 2026-10-20: project identity (About, partners, Home banner), the how-to video captions and player, and the guide updates
 were added (batches b043, b044; Claude Opus, native review needed like the rest).
+2026-10-21: the Chatbot Sandbox screen (batch b046; Claude Opus, native review needed, especially the red-flag, hotline
+and dose lines).
 
 Machine translation of health content must be checked by a native speaker and the health reviewer before a public launch
 (see docs/CONTENT_REVIEW.md), especially numbers, ages, time spans and warnings.

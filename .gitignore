@@ -18,6 +18,8 @@ tests/e2e/out/
 dist-dom/
 errors/
 dist-canvas*/
+logos/
 
-# raw partner logos and private project paperwork (scripts/logos/build_logos.py builds the shipped WebPs)
-/logos/
+# Chatbot Sandbox: model files for offline app builds (scripts/sandbox/fetch-model.mjs) and the bake-off browser profile
+public/models/
+.sandbox-profile/

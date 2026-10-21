@@ -65,12 +65,12 @@ async function playAll(page: Page, wrong: readonly number[] = []) {
 }
 
 test.describe('Tanong kay Chatbot', () => {
-  test('shows the intro with a disabled Chatbot Sandbox card, fits the screen and is accessible', async ({ page }) => {
+  test('shows the intro with a link to the Chatbot Sandbox, fits the screen and is accessible', async ({ page }) => {
     await openGame(page);
-    const sandbox = page.getByRole('button', { name: 'Chatbot Sandbox (coming soon)' });
+    const sandbox = page.getByRole('link', { name: 'Open the Chatbot Sandbox' });
     await expect(sandbox).toBeVisible();
-    await expect(sandbox).toBeDisabled();
-    await expect(page.getByText(/runs on your own device/)).toBeVisible();
+    await expect(sandbox).toHaveAttribute('href', '#/sandbox');
+    await expect(page.getByText(/on your own device/)).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);
@@ -165,7 +165,7 @@ test.describe('Tanong kay Chatbot', () => {
     await playAll(page);
     await expect(page.getByRole('img', { name: '3 of 3 stars' })).toBeVisible();
     await expect(page.getByText('You ruled 8 of 8 rounds right. 80 points.')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Chatbot Sandbox (coming soon)' })).toBeDisabled();
+    await expect(page.getByRole('link', { name: 'Open the Chatbot Sandbox' })).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

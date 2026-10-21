@@ -15,7 +15,15 @@ export function pwaPlugin(version: string): Plugin {
         const chunk = bundle[name];
         return !!chunk && chunk.type === 'chunk' && !!chunk.facadeModuleId && /[\/]i18n[\/]packs[\/]/.test(chunk.facadeModuleId);
       };
-      const files = Object.keys(bundle).filter((name) => !name.endsWith('.woff') && !isPack(name));
+      // the Chatbot Sandbox AI engine (wllama scripts and its ~25 MB of .wasm) is left out too: it is cached on first use,
+      // so players who never open the sandbox never download it
+      const isAiEngine = (name: string): boolean => {
+        const item = bundle[name];
+        if (!item) return false;
+        if (item.type === 'asset') return name.endsWith('.wasm');
+        return (item.moduleIds ?? []).some((id) => /[\/]@wllama[\/]|[\/]src[\/]sandbox[\/](wllama|fake)/.test(id));
+      };
+      const files = Object.keys(bundle).filter((name) => !name.endsWith('.woff') && !isPack(name) && !isAiEngine(name));
       // index.html is added by hand: Vite emits it after this hook runs, so it is not in the bundle yet
       const precache = ['./', 'index.html', ...files, 'favicon.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/icon.svg', 'icons/apple-touch-icon.png'];
       const list = JSON.stringify([...new Set(precache)]);

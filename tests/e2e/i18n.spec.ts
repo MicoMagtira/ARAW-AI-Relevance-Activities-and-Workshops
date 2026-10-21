@@ -11,7 +11,7 @@ const CODES = (() => {
   }
 })();
 
-const SCREENS = ['/', '/learn', '/learn/m01', '/play/fact-or-fake', '/arcade', '/daily', '/library', '/library/glossary', '/me', '/report', '/guide'];
+const SCREENS = ['/', '/learn', '/learn/m01', '/play/fact-or-fake', '/arcade', '/daily', '/sandbox', '/library', '/library/glossary', '/me', '/report', '/guide'];
 
 test.describe('language packs', () => {
   test.skip(CODES.length === 0, 'no language packs in this build');

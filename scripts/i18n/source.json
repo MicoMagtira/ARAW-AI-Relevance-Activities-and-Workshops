@@ -28368,6 +28368,18 @@
   ]
  },
  {
+  "text": "Open the sandbox",
+  "src": [
+   "ui:arcade.sandboxGo"
+  ]
+ },
+ {
+  "text": "Chat with a real, small AI that runs on your device, and catch its mistakes.",
+  "src": [
+   "ui:arcade.sandboxText"
+  ]
+ },
+ {
   "text": "This game is still being built. Check back soon, friend!",
   "src": [
    "ui:arcade.soonText",
@@ -28481,7 +28493,8 @@
  {
   "text": "An AIKasalig project",
   "src": [
-   "ui:brand.project"
+   "ui:brand.project",
+   "content\\guide.ts#GUIDE_COVER"
   ]
  },
  {
@@ -28718,13 +28731,19 @@
   ]
  },
  {
-  "text": "Chatbot Sandbox (coming soon)",
+  "text": "Open the Chatbot Sandbox",
   "src": [
    "ui:cb.sandbox.button"
   ]
  },
  {
-  "text": "Later, ARAW plans a small AI model that runs on your own device, so you can try asking real questions safely and see where it goes wrong. It is not ready yet.",
+  "text": "Real AI",
+  "src": [
+   "ui:cb.sandbox.chip"
+  ]
+ },
+ {
+  "text": "Want to try a real AI? The Chatbot Sandbox runs a small AI model on your own device, so you can ask your own questions safely and see where it goes wrong.",
   "src": [
    "ui:cb.sandbox.text"
   ]
@@ -28732,7 +28751,9 @@
  {
   "text": "Chatbot Sandbox",
   "src": [
-   "ui:cb.sandbox.title"
+   "ui:cb.sandbox.title",
+   "ui:title.sandbox",
+   "ui:arcade.sandbox"
   ]
  },
  {
@@ -29170,8 +29191,8 @@
   "text": "Done",
   "src": [
    "ui:fof.done",
-   "ui:gawa.pass",
-   "ui:tulog.fb.done"
+   "ui:sb.m.done",
+   "ui:gawa.pass"
   ]
  },
  {
@@ -33565,13 +33586,6 @@
   ]
  },
  {
-  "text": "You",
-  "src": [
-   "ui:gc.you",
-   "content\\gc.ts#CAST"
-  ]
- },
- {
   "text": "{n} words",
   "src": [
    "ui:glossary.count"
@@ -34786,8 +34800,8 @@
   "text": "When should I trust it?",
   "src": [
    "ui:lesson.takeawayTitle",
-   "games\\demo\\demo.ts#default",
-   "games\\feed-mo-to\\feed.ts#default"
+   "ui:sb.trustTitle",
+   "games\\demo\\demo.ts#default"
   ]
  },
  {
@@ -34879,7 +34893,7 @@
   "src": [
    "ui:library.retry",
    "ui:lesson.retry",
-   "ui:screen.retry"
+   "ui:sb.retry"
   ]
  },
  {
@@ -36570,6 +36584,585 @@
   "text": "The line at the counter was too long.",
   "src": [
    "ui:sapatos.whyQueue"
+  ]
+ },
+ {
+  "text": "About this AI",
+  "src": [
+   "ui:sb.about"
+  ]
+ },
+ {
+  "text": "{model} · {size} MB · {license}. It runs on this device with wllama (llama.cpp).",
+  "src": [
+   "ui:sb.aboutText"
+  ]
+ },
+ {
+  "text": "Practice AI answered: {text}",
+  "src": [
+   "ui:sb.announce"
+  ]
+ },
+ {
+  "text": "This AI is small, so it gets things wrong more often than big chatbots. That makes it great practice! Ask it anything, then decide: would you trust it?",
+  "src": [
+   "ui:sb.ara"
+  ]
+ },
+ {
+  "text": "Chat with the practice AI",
+  "src": [
+   "ui:sb.chatLabel"
+  ]
+ },
+ {
+  "text": "Clear chat",
+  "src": [
+   "ui:sb.clear"
+  ]
+ },
+ {
+  "text": "{n} of {max} letters",
+  "src": [
+   "ui:sb.count"
+  ]
+ },
+ {
+  "text": "[ARAW hid a medicine dose here. Ask a health worker or pharmacist about doses.]",
+  "src": [
+   "ui:sb.doseHidden"
+  ]
+ },
+ {
+  "text": "ARAW hid part of this answer because it gave a medicine dose. Doses must come from a health worker.",
+  "src": [
+   "ui:sb.doseNote"
+  ]
+ },
+ {
+  "text": "No messages yet. Pick a question below or write your own.",
+  "src": [
+   "ui:sb.empty"
+  ]
+ },
+ {
+  "text": "The practice AI stopped working. Try loading it again.",
+  "src": [
+   "ui:sb.error.chat"
+  ]
+ },
+ {
+  "text": "The practice AI could not load. Check your internet connection and try again.",
+  "src": [
+   "ui:sb.error.load"
+  ]
+ },
+ {
+  "text": "Your message",
+  "src": [
+   "ui:sb.input"
+  ]
+ },
+ {
+  "text": "Chat with a real, small AI that runs on this device. It writes a new answer every time, and it makes mistakes. Your job: catch them.",
+  "src": [
+   "ui:sb.intro"
+  ]
+ },
+ {
+  "text": "Practice AI",
+  "src": [
+   "ui:sb.kicker",
+   "ui:sb.bot"
+  ]
+ },
+ {
+  "text": "ARAW practice AI · can be wrong",
+  "src": [
+   "ui:sb.label"
+  ]
+ },
+ {
+  "text": "Small AIs learn mostly from English text, so answers in Cebuano, Ilokano and Hiligaynon can be weaker or mixed with other languages. That is a real limit of AI, worth noticing!",
+  "src": [
+   "ui:sb.langNote"
+  ]
+ },
+ {
+  "text": "Checking this device…",
+  "src": [
+   "ui:sb.load.checking"
+  ]
+ },
+ {
+  "text": "Downloading the practice AI",
+  "src": [
+   "ui:sb.load.downloading"
+  ]
+ },
+ {
+  "text": "Getting the practice AI ready…",
+  "src": [
+   "ui:sb.load.loading"
+  ]
+ },
+ {
+  "text": "This happens only once ({size} MB). After that the practice AI opens in seconds, even without internet. Look at the missions while you wait!",
+  "src": [
+   "ui:sb.load.once"
+  ]
+ },
+ {
+  "text": "{done} of {total} MB",
+  "src": [
+   "ui:sb.load.progress"
+  ]
+ },
+ {
+  "text": "Tip: use Wi-Fi if you can, to save mobile data.",
+  "src": [
+   "ui:sb.load.wifi"
+  ]
+ },
+ {
+  "text": "Ask your first question",
+  "src": [
+   "ui:sb.m.ask"
+  ]
+ },
+ {
+  "text": "Any question works. Read the whole answer.",
+  "src": [
+   "ui:sb.m.ask.hint"
+  ]
+ },
+ {
+  "text": "Ask what the date is today",
+  "src": [
+   "ui:sb.m.date"
+  ]
+ },
+ {
+  "text": "Does it know? Chatbots often do not know the date or the news.",
+  "src": [
+   "ui:sb.m.date.hint"
+  ]
+ },
+ {
+  "text": "Ask the same question in another language",
+  "src": [
+   "ui:sb.m.language"
+  ]
+ },
+ {
+  "text": "Is the answer as good? Small AIs are often weaker in Filipino and regional languages.",
+  "src": [
+   "ui:sb.m.language.hint"
+  ]
+ },
+ {
+  "text": "Rate 3 answers",
+  "src": [
+   "ui:sb.m.rate"
+  ]
+ },
+ {
+  "text": "Use Usable, Wrong or Get checked under each answer.",
+  "src": [
+   "ui:sb.m.rate.hint"
+  ]
+ },
+ {
+  "text": "Ask it for a source or a link",
+  "src": [
+   "ui:sb.m.source"
+  ]
+ },
+ {
+  "text": "Is the link real? Chatbots sometimes make up sources that do not exist.",
+  "src": [
+   "ui:sb.m.source.hint"
+  ]
+ },
+ {
+  "text": "I did it",
+  "src": [
+   "ui:sb.m.tick"
+  ]
+ },
+ {
+  "text": "I did it: {mission}",
+  "src": [
+   "ui:sb.m.tickLabel"
+  ]
+ },
+ {
+  "text": "Catch the AI",
+  "src": [
+   "ui:sb.missions"
+  ]
+ },
+ {
+  "text": "{done} of {total} missions done",
+  "src": [
+   "ui:sb.missionsDone"
+  ]
+ },
+ {
+  "text": "an address",
+  "src": [
+   "ui:sb.pii.address"
+  ]
+ },
+ {
+  "text": "a diagnosis",
+  "src": [
+   "ui:sb.pii.diagnosis"
+  ]
+ },
+ {
+  "text": "Edit my message",
+  "src": [
+   "ui:sb.pii.edit"
+  ]
+ },
+ {
+  "text": "an email address",
+  "src": [
+   "ui:sb.pii.email"
+  ]
+ },
+ {
+  "text": "an ID number",
+  "src": [
+   "ui:sb.pii.id"
+  ]
+ },
+ {
+  "text": "This practice AI keeps everything on your device, so it is safe here. Make it a habit anyway!",
+  "src": [
+   "ui:sb.pii.local"
+  ]
+ },
+ {
+  "text": "a name",
+  "src": [
+   "ui:sb.pii.name"
+  ]
+ },
+ {
+  "text": "a phone number",
+  "src": [
+   "ui:sb.pii.phone"
+  ]
+ },
+ {
+  "text": "Send anyway",
+  "src": [
+   "ui:sb.pii.send"
+  ]
+ },
+ {
+  "text": "Your message seems to include {kinds}. Real chatbots may store what you type and use it to train their AI. Share as little as you can.",
+  "src": [
+   "ui:sb.pii.text"
+  ]
+ },
+ {
+  "text": "Wait: personal details?",
+  "src": [
+   "ui:sb.pii.title"
+  ]
+ },
+ {
+  "text": "Ask the practice AI something…",
+  "src": [
+   "ui:sb.placeholder"
+  ]
+ },
+ {
+  "text": "Your chat stays on this device. Nothing is sent anywhere, and the chat is cleared when you leave this page.",
+  "src": [
+   "ui:sb.private"
+  ]
+ },
+ {
+  "text": "Ask the practice AI anyway",
+  "src": [
+   "ui:sb.rf.ask"
+  ]
+ },
+ {
+  "text": "Only asking in general, not about an emergency?",
+  "src": [
+   "ui:sb.rf.general"
+  ]
+ },
+ {
+  "text": "What you wrote sounds like a danger sign. If this is happening to you or someone with you, go to the nearest health facility or call 911 now. A chatbot cannot examine anyone.",
+  "src": [
+   "ui:sb.rf.text"
+  ]
+ },
+ {
+  "text": "Magpatingin agad: get help now",
+  "src": [
+   "ui:sb.rf.title"
+  ]
+ },
+ {
+  "text": "How can I keep mosquitoes away at home?",
+  "src": [
+   "ui:sb.s1"
+  ]
+ },
+ {
+  "text": "What is the date today?",
+  "src": [
+   "ui:sb.s2"
+  ]
+ },
+ {
+  "text": "Can you give me a link to a study about vitamin C?",
+  "src": [
+   "ui:sb.s3"
+  ]
+ },
+ {
+  "text": "Is it true that garlic cures high blood pressure?",
+  "src": [
+   "ui:sb.s4"
+  ]
+ },
+ {
+  "text": "What does a vaccine do? Explain in simple words.",
+  "src": [
+   "ui:sb.s5"
+  ]
+ },
+ {
+  "text": "What should I never type into a chatbot?",
+  "src": [
+   "ui:sb.s6"
+  ]
+ },
+ {
+  "text": "Send",
+  "src": [
+   "ui:sb.send"
+  ]
+ },
+ {
+  "text": "If you are thinking of hurting yourself, please talk to someone you trust, or call the DOH-NCMH crisis hotline 1553 (free, any time). In an emergency, call 911. The practice AI will not answer this, because a person can help you better.",
+  "src": [
+   "ui:sb.sh.text"
+  ]
+ },
+ {
+  "text": "You matter. Talk to someone now.",
+  "src": [
+   "ui:sb.sh.title"
+  ]
+ },
+ {
+  "text": "Try asking",
+  "src": [
+   "ui:sb.starters"
+  ]
+ },
+ {
+  "text": "Stop",
+  "src": [
+   "ui:sb.stop"
+  ]
+ },
+ {
+  "text": "You stopped this answer.",
+  "src": [
+   "ui:sb.stopped"
+  ]
+ },
+ {
+  "text": "Asking my tiny brain nicely…",
+  "src": [
+   "ui:sb.think.1"
+  ]
+ },
+ {
+  "text": "Waiting for the rice to cook… I mean, the answer…",
+  "src": [
+   "ui:sb.think.10"
+  ]
+ },
+ {
+  "text": "Untangling my wires…",
+  "src": [
+   "ui:sb.think.11"
+  ]
+ },
+ {
+  "text": "Loading wisdom: 1%… maybe 2%…",
+  "src": [
+   "ui:sb.think.12"
+  ]
+ },
+ {
+  "text": "Swatting a mosquito… one moment…",
+  "src": [
+   "ui:sb.think.13"
+  ]
+ },
+ {
+  "text": "Thinking hard, but you still check me, okay?",
+  "src": [
+   "ui:sb.think.14"
+  ]
+ },
+ {
+  "text": "Brewing kapeng barako for my circuits…",
+  "src": [
+   "ui:sb.think.2"
+  ]
+ },
+ {
+  "text": "Not copying from Tita’s group chat, promise…",
+  "src": [
+   "ui:sb.think.3"
+  ]
+ },
+ {
+  "text": "Sorting facts from chismis…",
+  "src": [
+   "ui:sb.think.4"
+  ]
+ },
+ {
+  "text": "Pretending I know what day it is…",
+  "src": [
+   "ui:sb.think.5"
+  ]
+ },
+ {
+  "text": "Looking for a source that actually exists…",
+  "src": [
+   "ui:sb.think.6"
+  ]
+ },
+ {
+  "text": "Warming up like the morning sun…",
+  "src": [
+   "ui:sb.think.7"
+  ]
+ },
+ {
+  "text": "Climbing this thought like a jeepney uphill…",
+  "src": [
+   "ui:sb.think.8"
+  ]
+ },
+ {
+  "text": "Putting on my reading glasses…",
+  "src": [
+   "ui:sb.think.9"
+  ]
+ },
+ {
+  "text": "The practice AI is writing…",
+  "src": [
+   "ui:sb.thinking"
+  ]
+ },
+ {
+  "text": "Yes. When it is about your body or someone you care for, a health worker decides, not a chatbot.",
+  "src": [
+   "ui:sb.tip.magpatingin"
+  ]
+ },
+ {
+  "text": "Good catch! Small AIs often make things up and still sound sure. That is why we check.",
+  "src": [
+   "ui:sb.tip.mali"
+  ]
+ },
+ {
+  "text": "Okay! Even when an answer sounds right, check health facts with a health worker or an official page like DOH or WHO.",
+  "src": [
+   "ui:sb.tip.tama"
+  ]
+ },
+ {
+  "text": "Check first: health facts, numbers, names, dates and links.",
+  "src": [
+   "ui:sb.trust.check"
+  ]
+ },
+ {
+  "text": "Never from a chatbot: doses, diagnosis and emergencies. Those go to a health worker.",
+  "src": [
+   "ui:sb.trust.never"
+  ]
+ },
+ {
+  "text": "Good for: explaining words, practising questions, ideas and drafts.",
+  "src": [
+   "ui:sb.trust.ok"
+  ]
+ },
+ {
+  "text": "Would you trust this answer?",
+  "src": [
+   "ui:sb.trust.q"
+  ]
+ },
+ {
+  "text": "You said: {r}",
+  "src": [
+   "ui:sb.trust.yours"
+  ]
+ },
+ {
+  "text": "This browser is missing features the practice AI needs. Try the newest Chrome, Edge or Firefox, or another device.",
+  "src": [
+   "ui:sb.unsupported.browser"
+  ]
+ },
+ {
+  "text": "You can still practise judging chatbot answers in Tanong kay Chatbot (Module 3).",
+  "src": [
+   "ui:sb.unsupported.game"
+  ]
+ },
+ {
+  "text": "Open Module 3",
+  "src": [
+   "ui:sb.unsupported.link"
+  ]
+ },
+ {
+  "text": "This device does not have enough memory for the practice AI. Try a computer or a newer phone.",
+  "src": [
+   "ui:sb.unsupported.memory"
+  ]
+ },
+ {
+  "text": "There is not enough free space on this device for the practice AI ({size} MB). Free up some space and try again.",
+  "src": [
+   "ui:sb.unsupported.storage"
+  ]
+ },
+ {
+  "text": "This device cannot run the practice AI",
+  "src": [
+   "ui:sb.unsupported.title"
+  ]
+ },
+ {
+  "text": "You",
+  "src": [
+   "ui:sb.you",
+   "ui:gc.you",
+   "content\\gc.ts#CAST"
   ]
  },
  {

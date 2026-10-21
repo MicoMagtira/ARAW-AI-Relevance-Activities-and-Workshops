@@ -74,10 +74,9 @@
   gap: var(--sp-2);
 }
 
-/* Disabled "coming soon" card */
+/* Link card to the Chatbot Sandbox */
 .cb-sandbox {
   background: var(--soft);
-  border-style: dashed;
 }
 
 .cb-sandbox__head {

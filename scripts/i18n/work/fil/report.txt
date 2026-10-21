@@ -1,3 +1,3 @@
-fil: 6289 of 6288 strings translated (45 batches done, 0 pending)
+fil: 6387 of 6386 strings translated (48 batches done, 0 pending)
 (info) applied 46 review corrections
-(info) harmonized 167 lines that kept an English title or phrase
+(info) harmonized 171 lines that kept an English title or phrase

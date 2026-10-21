@@ -20,6 +20,8 @@
     "@fontsource/nunito": "^5.3.0",
     "@fontsource/press-start-2p": "^5.3.0",
     "@preact/signals": "^2.11.3",
+    "@wllama/wllama": "3.8.1",
+    "@wllama/wllama-compat": "3.8.1",
     "pixelarticons": "^2.4.2",
     "preact": "^11.0.1"
   },

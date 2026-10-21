@@ -35,17 +35,28 @@ describe('web app manifest', () => {
 });
 
 describe('service worker build step', () => {
-  it('emits sw.js with the precache list, skipping the .woff fallbacks', () => {
+  it('emits sw.js with the precache list, skipping the .woff fallbacks and the sandbox AI engine', () => {
     const emitted: { fileName: string; source: string }[] = [];
     const plugin = pwaPlugin('9.9.9');
     const generate = plugin.generateBundle as unknown as (this: { emitFile: (f: { fileName: string; source: string }) => void }, o: object, b: Record<string, object>) => void;
-    generate.call({ emitFile: (f) => emitted.push(f) }, {}, { 'assets/index-a.js': {}, 'assets/nunito-latin-400-normal-x.woff2': {}, 'assets/nunito-latin-400-normal-y.woff': {} });
+    generate.call({ emitFile: (f) => emitted.push(f) }, {}, {
+      'assets/index-a.js': {},
+      'assets/nunito-latin-400-normal-x.woff2': {},
+      'assets/nunito-latin-400-normal-y.woff': {},
+      'assets/wllama-z.wasm': { type: 'asset' },
+      'assets/wllamaBackend-z.js': { type: 'chunk', moduleIds: ['/app/node_modules/@wllama/wllama/esm/index.js', '/app/src/sandbox/wllamaBackend.ts'] },
+      'assets/SandboxScreen-z.js': { type: 'chunk', moduleIds: ['/app/src/screens/sandbox/SandboxScreen.tsx', '/app/src/sandbox/engine.ts'] },
+    });
     const sw = emitted[0];
     expect(sw?.fileName).toBe('sw.js');
     expect(sw?.source).toContain('assets/index-a.js');
     expect(sw?.source).toContain('"index.html"');
     expect(sw?.source).toContain('assets/nunito-latin-400-normal-x.woff2');
     expect(sw?.source).not.toContain('.woff"');
+    // the Chatbot Sandbox AI engine is cached on first use, not for every player
+    expect(sw?.source).not.toContain('wllama-z.wasm');
+    expect(sw?.source).not.toContain('wllamaBackend-z.js');
+    expect(sw?.source).toContain('SandboxScreen-z.js');
     expect(sw?.source).toMatch(/const CACHE = 'araw-9\.9\.9-[0-9a-f]{8}'/);
     expect(sw?.source).not.toContain('__PRECACHE__');
     // how-to videos stream from the network: never cached for offline (range requests, a few MB each)

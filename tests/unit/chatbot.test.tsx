@@ -162,13 +162,13 @@ describe('Tanong kay Chatbot game', () => {
     fireEvent.click(button(last ? 'See my result' : 'Next round'));
   }
 
-  it('starts with an intro and the disabled Chatbot Sandbox card', () => {
+  it('starts with an intro and a link to the Chatbot Sandbox', () => {
     render(<TanongKayChatbot moduleId="m03" onComplete={vi.fn()} />);
     expect(screen.getByRole('heading', { name: 'Tanong kay Chatbot' })).toBeTruthy();
-    const sandbox = button('Chatbot Sandbox (coming soon)') as HTMLButtonElement;
-    expect(sandbox.disabled).toBe(true);
-    expect(screen.getByText(/runs on your own device/)).toBeTruthy();
-    expect(screen.getByText('Coming soon')).toBeTruthy();
+    const sandbox = screen.getByRole('link', { name: 'Open the Chatbot Sandbox' });
+    expect(sandbox.getAttribute('href')).toBe('#/sandbox');
+    expect(screen.getByText(/on your own device/)).toBeTruthy();
+    expect(screen.getByText('Real AI')).toBeTruthy();
   });
 
   it('plays eight rounds with the right rulings, gives feedback, and finishes with three stars', () => {
@@ -196,7 +196,7 @@ describe('Tanong kay Chatbot game', () => {
     });
     expect(screen.getByRole('img', { name: '3 of 3 stars' })).toBeTruthy();
     expect(screen.getByText('You ruled 8 of 8 rounds right. 80 points.')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Chatbot Sandbox (coming soon)' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Open the Chatbot Sandbox' })).toBeTruthy();
     expect(onComplete).not.toHaveBeenCalled();
     fireEvent.click(button('Finish game'));
     expect(onComplete).toHaveBeenCalledWith(3);

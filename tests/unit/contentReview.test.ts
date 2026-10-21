@@ -13,6 +13,7 @@ import { KOMIKS } from '../../src/content/library/komiks';
 import { MYTH_PROGRAM_LABELS, MYTHS, type Myth } from '../../src/content/library/myths';
 import { TACTIC_POSTS, VILLAINS } from '../../src/content/tactics';
 import { LOCAL_POSTS, TEST_POSTS, TRAIN_POSTS } from '../../src/content/turuan';
+import { SANDBOX_REVIEW, type SandboxReviewEntry } from '../../src/sandbox/review';
 
 interface Entry { id: string; review_status: string }
 interface Group { title: string; file: string; items: readonly Entry[]; extra?: { header: string; cell: (i: Entry) => string } }
@@ -38,6 +39,7 @@ const groups: Group[] = [
   { title: 'Comics episodes', file: 'src/content/library/komiks.ts', items: KOMIKS },
   { title: 'AI or Not? cards', file: 'src/content/aiOrNot.ts', items: AON_POOL },
   { title: 'Chatbot answer rounds', file: 'src/content/chatbot.ts', items: [...CHAT_ROUNDS, PRIVACY_SCENARIO] },
+  { title: 'Chatbot Sandbox safety and prompts', file: 'src/sandbox/', items: SANDBOX_REVIEW, extra: { header: 'Where', cell: (i) => `\`${(i as SandboxReviewEntry).where}\`` } },
   { title: 'Family GC scenarios', file: 'src/content/gc.ts', items: GC_SCENARIOS },
   { title: 'Villains (tricks)', file: 'src/content/tactics.ts', items: VILLAINS },
   { title: 'Trick-spotting posts', file: 'src/content/tactics.ts', items: TACTIC_POSTS },

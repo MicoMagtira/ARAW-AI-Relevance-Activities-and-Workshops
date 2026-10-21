@@ -3,7 +3,7 @@
 // It always completes after eight rounds: there is no fail state, and there is no live AI here.
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { t, type StringKey } from '../../app/i18n';
-import { location$ } from '../../app/router';
+import { hrefFor, location$ } from '../../app/router';
 import { sfx } from '../../app/sound';
 import type { ChatRound, PrivacyScenario, Ruling } from '../../content/chatbot';
 import { randomSeed } from '../../games/engine/rng';
@@ -31,7 +31,7 @@ function StarRow({ n }: { n: number }) {
   );
 }
 
-/** The coming-soon card: a local AI model is planned, but nothing here can be opened yet. */
+/** Link to the Chatbot Sandbox (#/sandbox), where a real small AI model runs on the player's device. */
 function SandboxCard() {
   return (
     <section class="cb-sandbox px-box" aria-labelledby="cb-sandbox-title">
@@ -42,8 +42,8 @@ function SandboxCard() {
         <Chip>{t('cb.sandbox.chip')}</Chip>
       </div>
       <p>{t('cb.sandbox.text')}</p>
-      <Button variant="secondary" disabled aria-label={t('cb.sandbox.button')}>
-        <Icon name="lock" />
+      <Button variant="secondary" href={hrefFor('/sandbox')}>
+        <Icon name="robot" />
         {t('cb.sandbox.button')}
       </Button>
     </section>

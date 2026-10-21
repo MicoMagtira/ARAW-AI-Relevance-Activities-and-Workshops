@@ -42,6 +42,7 @@ describe('music per area', () => {
       lesson: 'aral',
       fof: 'aral',
       assess: 'aral',
+      sandbox: 'aral',
       arcade: 'laro',
       game: 'laro',
       certificate: 'panalo',

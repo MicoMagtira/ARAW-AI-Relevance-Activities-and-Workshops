@@ -6,6 +6,9 @@ colorTo: blue
 sdk: static
 app_build_command: npm run build
 app_file: dist/index.html
+custom_headers:
+  cross-origin-opener-policy: same-origin
+  cross-origin-embedder-policy: credentialless
 pinned: false
 license: mit
 short_description: AI literacy and health-misinformation games for Filipinos
@@ -27,6 +30,8 @@ conversations) and the **Mosquito Density and Disease Outbreak Prediction** proj
 - **Learn:** 10 short modules (lesson cards, a module game, a takeaway) with a certificate at the end.
 - **Arcade:** 11 pixel-art Canvas games (Takbo, Data!, Feed Mo 'To, Luto ni Ara, Sino 'To?, Lamok Lamay, Tawid, Lola!,
   Hati Tayo!, Gawa Ko 'To!, Tulog na, Bea!, Sa Sapatos Nila, OBJECTION!) plus Fact or Fake, with touch, mouse and keyboard.
+- **Chatbot Sandbox:** chat with a real, small AI that runs on the player's own device (no server, no API), rate each
+  answer, and "Catch the AI" missions; red flags, self-harm, personal details and medicine doses are handled safely.
 - **Daily challenge, streaks, badges and a report card** to keep practice going.
 - **Library:** myth cards, glossary, the Comics series and the how-to videos.
 - **How-to videos:** a one-minute tour and a how-to-play clip for every arcade game and Fact or Fake, short, silent and
@@ -138,6 +143,31 @@ and players use the fallbacks (Open in Gmail, their email app, or Copy report). 
 
 4. Push to `main`. The site appears at `https://<user>.github.io/<repo>/`. No extra config is needed for the sub-path
    (relative base, hash routes).
+
+GitHub Pages cannot send custom headers, so there the Chatbot Sandbox AI runs on one CPU thread (slower, still works).
+
+## Deploy to Cloudflare Pages
+
+Connect the GitHub repository in Cloudflare Pages: build command `npm run build`, output directory `dist`. Every push to
+`main` deploys. `public/_headers` sets caching plus the `Cross-Origin-Opener-Policy` / `Cross-Origin-Embedder-Policy`
+headers that let the Chatbot Sandbox AI use several threads. Every file stays under Pages' 25 MiB limit (the largest is
+wllama's 16 MB compat `.wasm`).
+
+## Chatbot Sandbox model
+
+The sandbox (`#/sandbox`) runs a small open model in the visitor's browser with [wllama](https://github.com/ngxson/wllama)
+(llama.cpp in WebAssembly). There is no server and no API key, so any number of people can use it at once for free.
+
+- **No download step for learners:** on Wi-Fi (or when the browser does not say, as on iPhones and desktops) the app saves
+  the model on the device in the background a few seconds after it opens (`src/sandbox/preload.ts`), so the sandbox is
+  usually ready when a learner gets there. On mobile data it downloads when the sandbox is opened.
+- **Which model:** `DEFAULT_MODEL_ID` in `src/sandbox/model.ts`. Each entry pins a Hugging Face repo, commit and GGUF file,
+  so the download can never change under you. To host the file yourself, copy it to your own Hugging Face repo and change
+  `repo` and `revision`. Try another candidate without rebuilding: `#/sandbox?model=gemma3-1b`.
+- **Offline app builds:** `node scripts/sandbox/fetch-model.mjs` downloads the pinned file into `public/models/`
+  (git-ignored, SHA-256 checked); `VITE_MODEL_SOURCE=local npm run build` then loads it from `./models/` instead of Hugging Face.
+- **Bake-off and real-model smoke test** (downloads models, not part of verify):
+  `npx playwright test -c scripts/sandbox/smoke.config.ts`. Answers in all five languages go to `shots-out/sandbox-bakeoff/`.
 
 ## Project structure
 

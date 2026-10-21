@@ -1,3 +1,3 @@
-ceb: 6289 of 6288 strings translated (45 batches done, 0 pending)
+ceb: 6387 of 6386 strings translated (48 batches done, 0 pending)
 (info) applied 48 review corrections
-(info) harmonized 170 lines that kept an English title or phrase
+(info) harmonized 174 lines that kept an English title or phrase

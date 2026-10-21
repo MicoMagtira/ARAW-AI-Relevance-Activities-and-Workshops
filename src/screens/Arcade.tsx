@@ -151,6 +151,18 @@ function Practice() {
             <WatchButton id="fact-or-fake" />
           </div>
         </div>
+        <div class="arcade-fof arcade-sandbox">
+          <div class="stack">
+            <h3>{t('arcade.sandbox')}</h3>
+            <p>{t('arcade.sandboxText')}</p>
+          </div>
+          <div class="arcade-fof__go">
+            <Button href={hrefFor('/sandbox')} variant="gold">
+              <Icon name="robot" />
+              {t('arcade.sandboxGo')}
+            </Button>
+          </div>
+        </div>
         <ul class="arcade-replays" aria-label={t('arcade.replays')}>
           {MODULES.filter((m) => m.group === 'core').map((m) => {
             const open = done.includes(m.id) && hasContent(m.id);

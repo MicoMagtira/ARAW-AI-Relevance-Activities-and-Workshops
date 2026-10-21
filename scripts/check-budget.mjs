@@ -26,7 +26,7 @@ if (jsSize > LIMITS.initialJs) failures.push(`initial JS ${(jsSize / KB).toFixed
 if (cssSize > LIMITS.initialCss) failures.push(`initial CSS ${(cssSize / KB).toFixed(1)} KB gzip > ${LIMITS.initialCss / KB} KB`);
 
 const assets = readdirSync(join(DIST, 'assets'));
-const lazyNames = /^(m\d\d|takbo|hati|tawid|lamok|sino|feed|luto|tulog|Sapatos|Objection|TitasGc|Studio|Tulog|TuruanSiAi|TanongKayChatbot|AiOrNot|SpotTheTactic|LibraryScreen|DailyScreen|CertificateScreen|GameShell)-/;
+const lazyNames = /^(m\d\d|takbo|hati|tawid|lamok|sino|feed|luto|tulog|Sapatos|Objection|TitasGc|Studio|Tulog|TuruanSiAi|TanongKayChatbot|AiOrNot|SpotTheTactic|LibraryScreen|DailyScreen|CertificateScreen|GameShell|SandboxScreen|wllamaBackend|wllamaCompat|fakeBackend)-/;
 const eager = initialJs.map((f) => f.replace(/^assets\//, '')).filter((f) => lazyNames.test(f));
 if (eager.length > 0) failures.push(`lazy chunks loaded up front: ${eager.join(', ')}`);
 if (!assets.some((f) => /^m10-/.test(f)) || !assets.some((f) => /^takbo-/.test(f))) failures.push('module and game chunks are missing: code splitting broke');

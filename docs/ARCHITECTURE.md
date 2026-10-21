@@ -17,6 +17,13 @@
   and languages exist, written by the recorder), `src/app/tutorials.ts` (manifest helpers, the shared dialog signal, VTT
   transcript parser) and `src/ui/tutorial/` (Watch button, dialog host, lazy player chunk). Files: `public/videos/<id>/<lang>.webm|vtt`,
   recorded by `scripts/tutorials/record.mjs` from `scripts/tutorials/boards/` (canvas games on a paused fake clock, so runs repeat).
+- **Chatbot Sandbox (`src/sandbox`, `#/sandbox`):** `model.ts` (pinned Hugging Face GGUF candidates, `VITE_MODEL_SOURCE`
+  hf/local), `engine.ts` (state machine and device checks over a `Backend`), `wllamaBackend.ts` (wllama: llama.cpp in
+  WebAssembly, runs in its own worker, OPFS model cache) and `wllamaCompat.ts` (Safari build, own chunk), `fakeBackend.ts`
+  (tests set `window.__ARAW_FAKE_LLM__`), `guard.ts` (red flags, personal data, streamed dose filter), `prompt.ts`,
+  `missions.ts`, `preload.ts` (tiny, in the first load: background download on Wi-Fi, file only, never in automated
+  browsers); screen in `src/screens/sandbox/`. Model files are never precached; `public/_headers` sets COOP/COEP so the
+  engine can use threads. `scripts/sandbox/` holds the real-model bake-off (`smoke.config.ts`) and `fetch-model.mjs`.
 - **PWA:** `scripts/pwa-plugin.ts` and `sw-template.js` generate the service worker and precache list at build time.
 - **Quality gates:** `npm run verify` = type-check + build, `scripts/check-budget.mjs` (initial JS <= 200 KB gzip), Vitest, and
   Playwright on phone/tablet/desktop with axe and no-horizontal-overflow checks.

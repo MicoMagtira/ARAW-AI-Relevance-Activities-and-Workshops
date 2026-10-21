@@ -341,6 +341,22 @@ File: `src/content/chatbot.ts`
 | [ ] | `cb-r07` | [ ] | [ ] |
 | [ ] | `cb-p01` | [ ] | [ ] |
 
+## Chatbot Sandbox safety and prompts (9)
+
+File: `src/sandbox/`
+
+| Done | Id | Where | Medical | Cultural |
+| --- | --- | --- | --- | --- |
+| [ ] | `sb-system-prompt` | `src/sandbox/prompt.ts systemPrompt` | [ ] | [ ] |
+| [ ] | `sb-starters` | `src/app/i18n.ts 'sb.s1'..'sb.s6'` | [ ] | [ ] |
+| [ ] | `sb-red-flags` | `src/sandbox/guard.ts RULES (all five languages)` | [ ] | [ ] |
+| [ ] | `sb-self-harm` | `src/sandbox/guard.ts selfHarm + 'sb.sh.*' (hotline 1553)` | [ ] | [ ] |
+| [ ] | `sb-red-flag-card` | `src/app/i18n.ts 'sb.rf.*' (911)` | [ ] | [ ] |
+| [ ] | `sb-personal-data` | `src/sandbox/guard.ts detectPersonalData + 'sb.pii.*'` | [ ] | [ ] |
+| [ ] | `sb-dose-filter` | `src/sandbox/guard.ts DOSE_PATTERNS + 'sb.doseHidden'` | [ ] | [ ] |
+| [ ] | `sb-trust-tips` | `src/app/i18n.ts 'sb.tip.*', 'sb.trust.*', 'sb.langNote'` | [ ] | [ ] |
+| [ ] | `sb-missions` | `src/sandbox/missions.ts + 'sb.m.*'` | [ ] | [ ] |
+
 ## Family GC scenarios (5)
 
 File: `src/content/gc.ts`

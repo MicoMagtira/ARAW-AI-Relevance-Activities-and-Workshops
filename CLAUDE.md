@@ -16,6 +16,7 @@ The early phone-first mockups live in the private planning folder, not in this r
 - Vite + TypeScript (strict) + Preact (`preact`, `preact/hooks`, `@preact/signals` allowed). Hash router (static hosting).
 - Games: HTML Canvas 2D on a small shared engine in `src/games/engine/` (no Phaser). Icons: pixel-art only (`pixelarticons`, MIT, or hand-made pixel SVGs); no smooth icon sets.
 - Fonts self-hosted via `@fontsource/baloo-2`, `@fontsource/nunito`, `@fontsource/press-start-2p` (OFL). No CDNs at runtime.
+  One approved exception: the Chatbot Sandbox model file loads from a pinned Hugging Face commit (`src/sandbox/model.ts`), only when the player asks.
 - Tests: Vitest (+ @testing-library/preact) for logic/components; Playwright for e2e with three projects:
   `phone` 360x740 (touch), `tablet` 820x1180, `desktop` 1440x900. `@axe-core/playwright` for accessibility checks.
 - Persistence: `localStorage` only (no backend). Always wrap in try/catch; app must work if storage is blocked.
