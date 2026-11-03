@@ -161,7 +161,7 @@ const cloud = (cls) =>
   `<svg class="cloud ${cls}" viewBox="0 0 14 4" shape-rendering="crispEdges" aria-hidden="true"><path fill="#FFFFFF" d="M4 0h4v1H4zM2 1h8v1H2zM0 2h14v1H0zM0 3h14v1H0z"/></svg>`;
 
 /* ---------- pages ---------- */
-const footer = (n) => `<footer class="foot"><span>ARAW User Guide</span><span class="pg">${n} / ${totalPages}</span></footer>`;
+const footer = (n) => `<footer class="foot"><span>ARAW User Guide · ${esc(GUIDE_COVER.version)}</span><span class="pg">${n} / ${totalPages}</span></footer>`;
 
 const cover = `<section class="page cover">
   <div class="sky">${cloud('c1')}${cloud('c2')}
@@ -169,6 +169,7 @@ const cover = `<section class="page cover">
       <p class="wordmark">${esc(GUIDE_COVER.wordmark)}</p>
       <p class="cover-name">${esc(GUIDE_COVER.name)}</p>
       <p class="cover-sub">${esc(GUIDE_COVER.subtitle)}</p>
+      <p class="cover-version">${esc(GUIDE_COVER.version)}</p>
       <p class="cover-tag">${esc(GUIDE_COVER.tagline)}</p>
       <div class="cover-partners">
         <p class="cover-partners-label">${esc(GUIDE_COVER.partnersLabel)}</p>
@@ -248,6 +249,7 @@ p { margin: 0; }
 .cover-logos img { display: block; width: auto; }
 .ground { background: var(--navy); color: #fff; padding: 12mm 16mm 16mm; text-align: center; display: grid; gap: 4mm; border-top: 1.6mm solid var(--ink); box-shadow: inset 0 3mm 0 #5560A8; }
 .cover-project { font: 9pt/1.6 var(--pixel); text-transform: uppercase; color: var(--gold); padding-top: 3mm; }
+.cover-version { justify-self: center; font: 700 11pt/1.4 var(--body); color: var(--ink); margin-top: 2mm; }
 .cover-credit { font: 700 12pt/1.5 var(--body); }
 
 /* contents */

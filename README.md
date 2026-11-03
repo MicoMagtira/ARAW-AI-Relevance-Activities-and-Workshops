@@ -192,8 +192,12 @@ src/games      shared Canvas engine (engine/) and one folder per arcade game (la
 src/content    typed, validated item banks, myths, glossary, komiks, badges
 src/styles     design tokens and base styles
 tests/unit     Vitest        tests/e2e    Playwright
-docs           SPEC, CONTENT_GUIDE, DESIGN, ARCHITECTURE, CONTENT_REVIEW, RELEASE-CHECKLIST, DECISIONS-LOG
+docs           SPEC, CONTENT_GUIDE, DESIGN, ARCHITECTURE, TECHNICAL, CONTENT_REVIEW, RELEASE-CHECKLIST, DECISIONS-LOG
 ```
+
+## Technical documentation
+
+The full technical documentation (architecture, stack and licences, content model, games, languages, offline use, the Chatbot Sandbox, media pipelines, privacy and security, testing, deployment and maintenance runbooks) is in [`docs/TECHNICAL.md`](docs/TECHNICAL.md). `npm run techdoc` renders it to `ARAW V1.0-Technical-Documentation.pdf` at the repository root (`scripts/techdoc/build-pdf.mjs`, Playwright Chromium from `file://`, no server). [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) is the short version.
 
 ## Content status and review
 

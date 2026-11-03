@@ -20,6 +20,14 @@ test.describe('How to use ARAW guide', () => {
     await noHorizontalOverflow(page);
   });
 
+  test('has the Chatbot Sandbox section and the Printables step, and the contents list reaches them', async ({ page }) => {
+    await page.goto('/#/guide');
+    await expect(page.getByRole('heading', { level: 2, name: /Chatbot Sandbox/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Printables/ }).first()).toBeAttached();
+    await expect(page.getByRole('heading', { name: /The printed facilitator kit/ })).toBeAttached();
+    await noHorizontalOverflow(page);
+  });
+
   test('is linked from About', async ({ page }) => {
     await page.goto('/#/about');
     await page.getByRole('link', { name: /picture guide/ }).click();

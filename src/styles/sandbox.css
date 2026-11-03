@@ -424,12 +424,17 @@
 
 .sb-mission {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: var(--sp-2);
   align-items: start;
   padding: var(--sp-3);
   background: var(--soft);
   border: 3px solid var(--line);
+}
+
+.sb-mission > .px-chip {
+  grid-column: 2;
+  justify-self: start;
 }
 
 .sb-mission--done {

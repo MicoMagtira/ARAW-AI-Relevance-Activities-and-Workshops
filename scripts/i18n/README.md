@@ -30,5 +30,7 @@ were added (batches b043, b044; Claude Opus, native review needed like the rest)
 2026-10-21: the Chatbot Sandbox screen (batch b046; Claude Opus, native review needed, especially the red-flag, hotline
 and dose lines).
 
+2026-11-03: user guide 1.1 (Chatbot Sandbox, Printables, facilitator kit; batches b052, b053; Claude, native review needed).
+
 Machine translation of health content must be checked by a native speaker and the health reviewer before a public launch
 (see docs/CONTENT_REVIEW.md), especially numbers, ages, time spans and warnings.

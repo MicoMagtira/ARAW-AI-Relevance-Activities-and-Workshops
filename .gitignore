@@ -31,3 +31,6 @@ print-out/
 # Module lecture videos (scripts/lectures): build output and raw renders
 dist-lecture/
 lecture-out/
+
+# Technical documentation PDF builder (scripts/techdoc): HTML and page previews
+scripts/techdoc/out/

@@ -8313,6 +8313,12 @@
   ]
  },
  {
+  "text": "Version 1.1 (2026-11)",
+  "src": [
+   "content\\guide.ts#GUIDE_COVER"
+  ]
+ },
+ {
   "text": "ARAW teaches you when to trust AI and health information, one short game at a time. This guide shows each screen with numbered pictures. Read it from the top, or jump to the part you need.",
   "src": [
    "content\\guide.ts#GUIDE_META"
@@ -9285,6 +9291,240 @@
   ]
  },
  {
+  "text": "Sandbox",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Chatbot Sandbox: practise with a real AI",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Chatbot Sandbox is a small practice AI that runs privately on your own device. It can be wrong, and that is the point: you practise catching its mistakes.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Open Arcade and look at the Practice part. Press Open the sandbox on the Chatbot Sandbox card.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Practice part of the Arcade: the Fact or Fake card, and under it the Chatbot Sandbox card with an Open the sandbox button.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Chatbot Sandbox card. It is a practice place, not a game with a score.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Press this to open the sandbox.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The one-time download",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The practice AI is a file that is saved on your device. ARAW downloads it by itself, only once. After that it works without internet.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The sandbox while it downloads: a progress bar with the megabytes done, a note that this happens only once, and a tip to use Wi-Fi.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The progress bar. Wait until it is full.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "This happens only once.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Use Wi-Fi if you can, to save your mobile data.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "If your device is too old or too small to run the practice AI, ARAW tells you kindly and shows Module 3 instead.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Ask a question",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Type a question and press Send, or tap one of the Try asking ideas. The answer appears word by word. Every answer says \"ARAW practice AI · can be wrong\".",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The sandbox chat: a question about vaccines, the practice AI answer labelled can be wrong, and the question Would you trust this answer with three buttons.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Try asking: tap an idea to ask it for you.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The answer. Read all of it, slowly.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "A reminder on every answer: this AI can be wrong.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Type your own question here.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Your chat stays on this device. Nothing is sent anywhere, and the chat is cleared when you leave the page. Do not write names, ID numbers or addresses.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Rate the answer",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Under each answer, say what you would do. Usable: I can use it. Wrong: it is wrong. Get checked: this needs a health worker. Ara then gives you a tip.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "A rated answer: You said Get checked, and a tip from Ara that a health worker decides, not a chatbot.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The rating you picked.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Ara's tip about when to trust the answer.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Catch the AI missions",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Catch the AI list has five small missions, like asking for a source or asking in another language. Each one gives 10 XP, once. Some are ticked for you, and you can tick the others when you have done them.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Catch the AI list: five missions with hints and XP, one marked done, and the count of missions done.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "How many missions you have done.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "A mission with a hint about what to look for.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Press I did it when you have done the mission.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The safety card",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "If you write a danger sign, like fainting or chest pain, ARAW shows a red card before any answer. It says to go to the nearest health facility or call 911. A chatbot cannot examine anyone.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The red safety card Magpatingin agad: get help now, with the advice to go to a health facility or call 911, and a button to ask the practice AI anyway.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Go to a health facility or call 911 now.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Only asking in general? You can still ask the practice AI.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "If you ever think of hurting yourself, ARAW shows the free crisis hotline 1553 and does not ask the AI. Talk to someone you trust.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
   "text": "Daily",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
@@ -9375,13 +9615,13 @@
   ]
  },
  {
-  "text": "Library: myths, words, comics and videos",
+  "text": "Library: myths, words, comics, videos and printables",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "The Library is for reading and watching at your own pace. It has four parts: Myths, Dictionary, Comics and Videos.",
+  "text": "The Library is for reading and watching at your own pace. It has five parts: Myths, Dictionary, Comics, Videos and Printables.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9393,13 +9633,13 @@
   ]
  },
  {
-  "text": "The Myths tab: the three Library tabs, a search box, topic filters, and myth cards.",
+  "text": "The Myths tab: the Library tabs, a search box, topic filters, and myth cards.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "Switch between Myths, Dictionary, Comics and Videos.",
+  "text": "Switch between Myths, Dictionary, Comics, Videos and Printables.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9568,6 +9808,72 @@
  },
  {
   "text": "A video, its length and its languages. Tap it to watch.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Printables tab has sheets to print: posters, cards, guides and a certificate. Pick a language, press Download, then print the PDF on A4 paper.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Printables tab: a row of language buttons, and cards for each sheet with its page count, size and a Download button.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The Printables tab.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Pick the language of the sheets.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "A sheet, with its number of pages.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Download the PDF, then print it.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Trust guide, Module posters, The five tricks and Check before you share: pin them on a wall.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Red-flag cards and Myth cards: cut them out and hand them round.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Ara's Dictionary and Ara's Comics: read them on paper.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Session guide and Certificate: for the facilitator.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "You need the internet to download a sheet. Download it first, then print it later.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9891,7 +10197,61 @@
   ]
  },
  {
+  "text": "Download and print the kit from Library > Printables (see The printed facilitator kit below).",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
   "text": "Start with the one-minute tour on a big screen (Home > Watch the 1-minute tour). Pick the group's language with the buttons under the video.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "The printed facilitator kit",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Open Library > Printables, pick the language of your group and download the sheets. Print them on A4 before the session.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Session guide: how to run a 45-minute session, with one page for each module.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Module posters, The five tricks, Trust guide and Check before you share: pin them on the wall.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Red-flag cards and Myth cards: cut them out. Give one set to each table.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Ara's Dictionary and Ara's Comics: for people who like paper.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Certificate: a blank one to fill in by hand for people who finish.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "You get the paper pre-test, post-test and answer key from the ARAW team, not from the app. Keep them private, so nobody sees the items before the test.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9927,7 +10287,7 @@
   ]
  },
  {
-  "text": "Talk: \"When should I trust it?\" Share stories from the group: 15 minutes.",
+  "text": "Talk: \"When should I trust it?\" Share stories from the group: 15 minutes. Use the red-flag cards and the Check before you share sheet.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9939,7 +10299,7 @@
   ]
  },
  {
-  "text": "Turn the music off in a shared room. Turn on Larger text and Extra-large buttons for seniors.",
+  "text": "The Session guide has a page for each module, with questions to ask the group. Turn the music off in a shared room, and turn on Larger text and Extra-large buttons for seniors.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9951,7 +10311,7 @@
   ]
  },
  {
-  "text": "ARAW has two matched Fact or Fake tests, Form A and Form B, with 20 items each. They never appear in practice or games, so the result is fair.",
+  "text": "ARAW has two matched Fact or Fake tests, Form A and Form B, with 20 items each. They never appear in practice or games, so the result is fair. You can use the paper copies from the facilitator pack, or the addresses below.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9976,6 +10336,12 @@
  },
  {
   "text": "Nothing is sent anywhere. The scores stay on the device.",
+  "src": [
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Keep the paper copies and the answer key with you. Do not post them or show them on a screen.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -29039,7 +29405,8 @@
  {
   "text": "Open the sandbox",
   "src": [
-   "ui:arcade.sandboxGo"
+   "ui:arcade.sandboxGo",
+   "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
@@ -35629,7 +35996,8 @@
  {
   "text": "Printables",
   "src": [
-   "ui:library.tab.printables"
+   "ui:library.tab.printables",
+   "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {

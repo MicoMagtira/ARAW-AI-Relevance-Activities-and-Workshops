@@ -1,5 +1,7 @@
 # Architecture (short)
 
+> The full technical documentation, with diagrams, tables and runbooks, is in [`TECHNICAL.md`](TECHNICAL.md) (system architecture: section 2). This page stays as the one-screen summary.
+
 - **Stack:** Vite + strict TypeScript + Preact (`@preact/signals`). Hash router, so any static host works; `base: './'`.
 - **Shell (`src/app`):** `App`/`Shell` give the sidebar (desktop), top tabs (tablet) and bottom tab bar (phone). `routes.ts` and
   `router.ts` map hash routes to lazy screens (`LazyScreen`). `settings.ts` applies accessibility options as root classes.

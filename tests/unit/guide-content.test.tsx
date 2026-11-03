@@ -10,7 +10,15 @@ const steps = GUIDE_SECTIONS.flatMap((s) => s.steps.map((step) => ({ section: s.
 
 describe('guide content', () => {
   it('has the sections the guide promises, with unique ids', () => {
-    expect(GUIDE_SECTIONS.map((s) => s.id)).toEqual(['start', 'home', 'learn', 'fof', 'arcade', 'daily', 'library', 'me', 'report', 'facilitators']);
+    expect(GUIDE_SECTIONS.map((s) => s.id)).toEqual(['start', 'home', 'learn', 'fof', 'arcade', 'sandbox', 'daily', 'library', 'me', 'report', 'facilitators']);
+  });
+
+  it('covers the Chatbot Sandbox, the Printables tab and the facilitator kit, and shows version 1.1', () => {
+    const ids = steps.map(({ step }) => step.shot);
+    for (const id of ['arcade-sandbox', 'sandbox-download', 'sandbox-chat', 'sandbox-rated', 'sandbox-missions', 'sandbox-safety', 'library-printables']) expect(ids, id).toContain(id);
+    expect(GUIDE_SECTIONS.find((s) => s.id === 'library')?.intro).toContain('five parts');
+    expect(GUIDE_SECTIONS.find((s) => s.id === 'facilitators')?.steps.map((st) => st.title)).toContain('The printed facilitator kit');
+    expect(GUIDE_COVER.version).toBe('Version 1.1 (2026-11)');
   });
 
   it('gives every screenshot alt text and every step some words', () => {

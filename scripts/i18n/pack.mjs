@@ -81,13 +81,15 @@ if (existsSync(extraPath)) Object.assign(pack, JSON.parse(readFileSync(extraPath
 
 // Harmonize: a translation that still contains an English phrase which has its own translation (a module or game title
 // left in English inside a longer line) gets that phrase swapped in, so titles read the same everywhere.
+// Whole words only: "a health worker" must not match inside "sa health worker" (that glued "sa" into "sisang").
 const phrases = Object.keys(pack)
   .filter((s) => s.length >= 10 && s.includes(' ') && pack[s] !== s)
-  .sort((a, b) => b.length - a.length);
+  .sort((a, b) => b.length - a.length)
+  .map((p) => ({ p, re: new RegExp(`(?<![\\p{L}\\p{N}])${p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}\\p{N}])`, 'gu') }));
 let harmonized = 0;
 for (const [text, tr] of Object.entries(pack)) {
   let next = tr;
-  for (const p of phrases) if (p !== text && next.includes(p)) next = next.split(p).join(pack[p]);
+  for (const { p, re } of phrases) if (p !== text && next.includes(p)) next = next.replace(re, () => pack[p]);
   if (next !== tr) {
     pack[text] = next;
     harmonized++;

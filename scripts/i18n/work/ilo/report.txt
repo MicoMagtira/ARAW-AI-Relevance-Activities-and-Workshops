@@ -1,2 +1,2 @@
-ilo: 6511 of 6509 strings translated (51 batches done, 0 pending)
-(info) harmonized 66 lines that kept an English title or phrase
+ilo: 6572 of 6570 strings translated (53 batches done, 0 pending)
+(info) harmonized 62 lines that kept an English title or phrase

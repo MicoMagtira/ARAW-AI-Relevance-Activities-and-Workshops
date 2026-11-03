@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-20T08:40:45.145Z",
+ "generatedAt": "2026-11-03T05:03:38.128Z",
  "shots": {
   "arcade": {
    "desktop": {
@@ -168,19 +168,19 @@
     "boxes": {
      "stage": {
       "x": 36,
-      "y": 288,
+      "y": 376,
       "w": 284,
       "h": 561
      },
      "steps": {
       "x": 36,
-      "y": 864,
+      "y": 952,
       "w": 284,
       "h": 138
      },
      "next": {
       "x": 192,
-      "y": 878,
+      "y": 966,
       "w": 116,
       "h": 48
      }
@@ -700,7 +700,7 @@
      },
      "progress": {
       "x": 56,
-      "y": 431,
+      "y": 432,
       "w": 240,
       "h": 24
      },
@@ -760,15 +760,15 @@
      },
      "myth": {
       "x": 16,
-      "y": 798,
+      "y": 799,
       "w": 320,
       "h": 207
      },
      "arcade": {
       "x": 16,
-      "y": 1073,
+      "y": 1074,
       "w": 324,
-      "h": 27
+      "h": 26
      }
     }
    }
@@ -1048,7 +1048,7 @@
     "boxes": {
      "episode": {
       "x": 36,
-      "y": 379,
+      "y": 423,
       "w": 280,
       "h": 226
      }
@@ -1090,19 +1090,19 @@
     "boxes": {
      "search": {
       "x": 36,
-      "y": 336,
+      "y": 380,
       "w": 284,
       "h": 49
      },
      "letters": {
       "x": 36,
-      "y": 401,
+      "y": 445,
       "w": 284,
       "h": 52
      },
      "word": {
       "x": 36,
-      "y": 604,
+      "y": 648,
       "w": 280,
       "h": 26
      }
@@ -1152,23 +1152,23 @@
       "x": 20,
       "y": 76,
       "w": 308,
-      "h": 88
+      "h": 132
      },
      "search": {
       "x": 36,
-      "y": 360,
+      "y": 404,
       "w": 284,
       "h": 49
      },
      "chips": {
       "x": 40,
-      "y": 429,
+      "y": 473,
       "w": 268,
       "h": 48
      },
      "card": {
       "x": 16,
-      "y": 565,
+      "y": 609,
       "w": 320,
       "h": 154
      }
@@ -1735,9 +1735,9 @@
     "scale": 1,
     "boxes": {
      "tab": {
-      "x": 1071,
+      "x": 893,
       "y": 108,
-      "w": 247,
+      "w": 188,
       "h": 44
      },
      "card": {
@@ -1762,7 +1762,7 @@
      },
      "card": {
       "x": 16,
-      "y": 413,
+      "y": 457,
       "w": 320,
       "h": 262
      }
@@ -1843,6 +1843,372 @@
       "y": 719,
       "w": 288,
       "h": 44
+     }
+    }
+   }
+  },
+  "arcade-sandbox": {
+   "desktop": {
+    "file": "guide/arcade-sandbox-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "card": {
+      "x": 316,
+      "y": 184,
+      "w": 631,
+      "h": 212
+     },
+     "open": {
+      "x": 340,
+      "y": 316,
+      "w": 304,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/arcade-sandbox-phone.webp",
+    "w": 360,
+    "h": 740,
+    "scale": 2,
+    "boxes": {
+     "card": {
+      "x": 36,
+      "y": 68,
+      "w": 284,
+      "h": 291
+     },
+     "open": {
+      "x": 60,
+      "y": 228,
+      "w": 228,
+      "h": 98
+     }
+    }
+   }
+  },
+  "library-printables": {
+   "desktop": {
+    "file": "guide/library-printables-desktop.webp",
+    "w": 1366,
+    "h": 900,
+    "scale": 1,
+    "boxes": {
+     "tab": {
+      "x": 1082,
+      "y": 108,
+      "w": 236,
+      "h": 44
+     },
+     "langs": {
+      "x": 288,
+      "y": 367,
+      "w": 1042,
+      "h": 44
+     },
+     "card": {
+      "x": 288,
+      "y": 427,
+      "w": 330,
+      "h": 297
+     },
+     "download": {
+      "x": 312,
+      "y": 644,
+      "w": 274,
+      "h": 48
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/library-printables-phone.webp",
+    "w": 360,
+    "h": 1200,
+    "scale": 2,
+    "boxes": {
+     "tab": {
+      "x": 20,
+      "y": 164,
+      "w": 154,
+      "h": 44
+     },
+     "langs": {
+      "x": 16,
+      "y": 457,
+      "w": 324,
+      "h": 156
+     },
+     "card": {
+      "x": 16,
+      "y": 629,
+      "w": 320,
+      "h": 268
+     },
+     "download": {
+      "x": 40,
+      "y": 817,
+      "w": 264,
+      "h": 48
+     }
+    }
+   }
+  },
+  "sandbox-chat": {
+   "desktop": {
+    "file": "guide/sandbox-chat-desktop.webp",
+    "w": 1366,
+    "h": 1460,
+    "scale": 1,
+    "boxes": {
+     "ideas": {
+      "x": 580,
+      "y": 931,
+      "w": 458,
+      "h": 304
+     },
+     "answer": {
+      "x": 600,
+      "y": 487,
+      "w": 384,
+      "h": 165
+     },
+     "label": {
+      "x": 600,
+      "y": 656,
+      "w": 384,
+      "h": 16
+     },
+     "message": {
+      "x": 580,
+      "y": 1278,
+      "w": 458,
+      "h": 84
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/sandbox-chat-phone.webp",
+    "w": 360,
+    "h": 1750,
+    "scale": 2,
+    "boxes": {
+     "ideas": {
+      "x": 36,
+      "y": 1206,
+      "w": 284,
+      "h": 402
+     },
+     "answer": {
+      "x": 56,
+      "y": 528,
+      "w": 224,
+      "h": 273
+     },
+     "label": {
+      "x": 56,
+      "y": 805,
+      "w": 224,
+      "h": 32
+     },
+     "message": {
+      "x": 36,
+      "y": 1652,
+      "w": 284,
+      "h": 84
+     }
+    }
+   }
+  },
+  "sandbox-download": {
+   "desktop": {
+    "file": "guide/sandbox-download-desktop.webp",
+    "w": 1366,
+    "h": 768,
+    "scale": 1,
+    "boxes": {
+     "bar": {
+      "x": 600,
+      "y": 390,
+      "w": 414,
+      "h": 24
+     },
+     "once": {
+      "x": 600,
+      "y": 460,
+      "w": 418,
+      "h": 86
+     },
+     "wifi": {
+      "x": 600,
+      "y": 562,
+      "w": 418,
+      "h": 24
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/sandbox-download-phone.webp",
+    "w": 360,
+    "h": 1000,
+    "scale": 2,
+    "boxes": {
+     "bar": {
+      "x": 56,
+      "y": 434,
+      "w": 240,
+      "h": 24
+     },
+     "once": {
+      "x": 56,
+      "y": 504,
+      "w": 244,
+      "h": 144
+     },
+     "wifi": {
+      "x": 56,
+      "y": 664,
+      "w": 244,
+      "h": 48
+     }
+    }
+   }
+  },
+  "sandbox-missions": {
+   "desktop": {
+    "file": "guide/sandbox-missions-desktop.webp",
+    "w": 1366,
+    "h": 1000,
+    "scale": 1,
+    "boxes": {
+     "count": {
+      "x": 318,
+      "y": 140,
+      "w": 176,
+      "h": 62
+     },
+     "mission": {
+      "x": 316,
+      "y": 224,
+      "w": 184,
+      "h": 136
+     },
+     "tick": {
+      "x": 371,
+      "y": 522,
+      "w": 102,
+      "h": 119
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/sandbox-missions-phone.webp",
+    "w": 360,
+    "h": 1000,
+    "scale": 2,
+    "boxes": {
+     "count": {
+      "x": 38,
+      "y": 116,
+      "w": 264,
+      "h": 32
+     },
+     "mission": {
+      "x": 36,
+      "y": 170,
+      "w": 284,
+      "h": 95
+     },
+     "tick": {
+      "x": 91,
+      "y": 366,
+      "w": 180,
+      "h": 48
+     }
+    }
+   }
+  },
+  "sandbox-rated": {
+   "desktop": {
+    "file": "guide/sandbox-rated-desktop.webp",
+    "w": 1366,
+    "h": 900,
+    "scale": 1,
+    "boxes": {
+     "yours": {
+      "x": 615,
+      "y": 671,
+      "w": 354,
+      "h": 21
+     },
+     "tip": {
+      "x": 615,
+      "y": 700,
+      "w": 354,
+      "h": 70
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/sandbox-rated-phone.webp",
+    "w": 360,
+    "h": 1300,
+    "scale": 2,
+    "boxes": {
+     "yours": {
+      "x": 71,
+      "y": 583,
+      "w": 194,
+      "h": 21
+     },
+     "tip": {
+      "x": 71,
+      "y": 612,
+      "w": 194,
+      "h": 116
+     }
+    }
+   }
+  },
+  "sandbox-safety": {
+   "desktop": {
+    "file": "guide/sandbox-safety-desktop.webp",
+    "w": 1366,
+    "h": 900,
+    "scale": 1,
+    "boxes": {
+     "card": {
+      "x": 600,
+      "y": 420,
+      "w": 418,
+      "h": 298
+     },
+     "anyway": {
+      "x": 623,
+      "y": 626,
+      "w": 364,
+      "h": 66
+     }
+    }
+   },
+   "phone": {
+    "file": "guide/sandbox-safety-phone.webp",
+    "w": 360,
+    "h": 1100,
+    "scale": 2,
+    "boxes": {
+     "card": {
+      "x": 56,
+      "y": 181,
+      "w": 244,
+      "h": 472
+     },
+     "anyway": {
+      "x": 79,
+      "y": 539,
+      "w": 190,
+      "h": 87
      }
     }
    }

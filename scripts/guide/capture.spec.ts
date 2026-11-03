@@ -7,6 +7,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import type { FakeLlmOptions } from '../../src/sandbox/engine';
 import type { Box, ShotVariant } from '../../src/screens/guide/callouts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -41,6 +42,8 @@ interface Shot {
   /** localStorage values (merged over LIVED_IN unless `fresh`). */
   seed?: Record<string, unknown>;
   fresh?: boolean;
+  /** Chatbot Sandbox: use the scripted test backend (window.__ARAW_FAKE_LLM__) so nothing is downloaded. */
+  fakeLlm?: FakeLlmOptions;
   /** Show the first-visit intro (language landing, then the splash) instead of skipping it. */
   splash?: boolean;
   /** Runs right after the page loads, before `ready` (e.g. pass the language landing to reach the splash). */
@@ -72,6 +75,24 @@ async function answerUntilStamp(page: Page): Promise<void> {
     if ((await page.getByText('ARAW GAME · FAKE').count()) > 0) return;
     await page.getByRole('button', { name: 'Next' }).click();
   }
+}
+
+/** A true, plain answer for the scripted sandbox backend (the real model writes its own). */
+const SANDBOX_REPLY = 'A vaccine teaches your body to recognise a germ before you meet it. If you meet the germ later, your body can fight it faster. Vaccines are tested for safety before people use them.';
+
+/** The +10 XP toast of a finished mission is not part of the picture. */
+async function hideToasts(page: Page): Promise<void> {
+  await page.addStyleTag({ content: ".px-toast, .toast-host { display: none !important; }" });
+}
+
+/** Sandbox: tap the vaccine starter and wait for the whole answer and its rating question. */
+async function askVaccine(page: Page): Promise<void> {
+  await page.getByRole('button', { name: 'What does a vaccine do? Explain in simple words.' }).click();
+  await expect(page.getByRole('log', { name: 'Chat with the practice AI' }).getByText(/Vaccines are tested for safety/)).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Would you trust this answer?' })).toBeVisible();
+  await hideToasts(page);
+  await page.getByRole('log', { name: 'Chat with the practice AI' }).evaluate((el) => el.scrollTo(0, 0));
+  await page.waitForTimeout(300);
 }
 
 const SHOTS: Shot[] = [
@@ -325,6 +346,97 @@ const SHOTS: Shot[] = [
     },
   },
   {
+    id: 'arcade-sandbox',
+    url: '/#/arcade',
+    scrollTo: css('.arcade-sandbox'),
+    targets: {
+      card: css('.arcade-sandbox'),
+      open: role('link', 'Open the sandbox'),
+    },
+  },
+  {
+    id: 'sandbox-download',
+    height: { phone: 1000 },
+    url: '/#/sandbox',
+    fakeLlm: { delay: 4000 },
+    ready: role('progressbar', 'Downloading the practice AI'),
+    prepare: async (page) => {
+      await page.waitForFunction(() => Number(document.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow') ?? 0) > 0, undefined, { timeout: 15_000 });
+    },
+    targets: {
+      bar: role('progressbar', 'Downloading the practice AI'),
+      once: text(/This happens only once/),
+      wifi: text(/Wi-Fi/),
+    },
+  },
+  {
+    id: 'sandbox-chat',
+    height: { phone: 1750, desktop: 1460 },
+    url: '/#/sandbox',
+    fakeLlm: { cached: true, delay: 8, reply: SANDBOX_REPLY },
+    ready: (p) => p.getByLabel('Your message'),
+    prepare: askVaccine,
+    scrollTo: byVariant(css('.sb-main'), css('.banner')),
+    targets: {
+      ideas: role('list', 'Try asking'),
+      answer: css('.sb-bubble'),
+      label: text('ARAW practice AI · can be wrong'),
+      message: (p) => p.getByLabel('Your message'),
+    },
+  },
+  {
+    id: 'sandbox-rated',
+    height: { phone: 1300, desktop: 900 },
+    url: '/#/sandbox',
+    fakeLlm: { cached: true, delay: 8, reply: SANDBOX_REPLY },
+    ready: (p) => p.getByLabel('Your message'),
+    prepare: async (page) => {
+      await askVaccine(page);
+      await page.getByRole('button', { name: 'Get checked: see a health worker' }).click();
+      await expect(page.locator('.sb-tip').first()).toBeVisible();
+      await hideToasts(page);
+      await page.waitForTimeout(300);
+    },
+    scrollTo: byVariant(css('.sb-log'), css('.sb-main')),
+    targets: {
+      yours: css('.sb-trust-row__yours'),
+      tip: css('.sb-tip'),
+    },
+  },
+  {
+    id: 'sandbox-missions',
+    height: { phone: 1000, desktop: 1000 },
+    url: '/#/sandbox',
+    fakeLlm: { cached: true, delay: 8, reply: SANDBOX_REPLY },
+    ready: (p) => p.getByLabel('Your message'),
+    prepare: askVaccine,
+    scrollTo: css('.sb-missions'),
+    targets: {
+      count: css('.sb-missions .px-chip'),
+      mission: css('.sb-mission'),
+      tick: css('.sb-mission__tick'),
+    },
+  },
+  {
+    id: 'sandbox-safety',
+    height: { phone: 1100, desktop: 900 },
+    url: '/#/sandbox',
+    fakeLlm: { cached: true, delay: 8, reply: SANDBOX_REPLY },
+    ready: (p) => p.getByLabel('Your message'),
+    prepare: async (page) => {
+      await page.getByLabel('Your message').fill('Nahimatay ang lola ko');
+      await page.getByRole('button', { name: 'Send' }).click();
+      await expect(page.getByRole('log', { name: 'Chat with the practice AI' }).getByRole('alert')).toBeVisible();
+      await hideToasts(page);
+      await page.waitForTimeout(300);
+    },
+    scrollTo: byVariant(css('.sb-log'), css('.sb-main')),
+    targets: {
+      card: css('.sb-card--flag'),
+      anyway: role('button', 'Ask the practice AI anyway'),
+    },
+  },
+  {
     id: 'daily',
     height: { phone: 1200, desktop: 860 },
     url: '/#/daily',
@@ -420,6 +532,18 @@ const SHOTS: Shot[] = [
     },
   },
   {
+    id: 'library-printables',
+    height: { phone: 1200, desktop: 900 },
+    url: '/#/library/printables',
+    ready: role('tablist', 'Library sections'),
+    targets: {
+      tab: (p) => p.getByRole('tab').nth(4),
+      langs: css('.printables__langs'),
+      card: css('.printables__card'),
+      download: (p) => p.locator('.printables__card').getByRole('link', { name: /^Download/ }).filter({ visible: true }).first(),
+    },
+  },
+  {
     id: 'about',
     height: { phone: 1400, desktop: 1600 },
     url: '/#/about',
@@ -509,7 +633,14 @@ const SHOTS: Shot[] = [
   },
 ];
 
-async function seed(page: Page, data: Record<string, unknown>, splash: boolean): Promise<void> {
+async function seed(page: Page, data: Record<string, unknown>, splash: boolean, fakeLlm?: FakeLlmOptions): Promise<void> {
+  if (fakeLlm) {
+    // the real model must never download in an automated browser
+    await page.route('**/huggingface.co/**', (route) => route.abort());
+    await page.addInitScript((opts) => {
+      window.__ARAW_FAKE_LLM__ = opts;
+    }, fakeLlm);
+  }
   await page.addInitScript(
     ([d, showSplash]) => {
       try {
@@ -543,7 +674,7 @@ for (const shot of SHOTS) {
     const h = shot.height?.[variant];
     if (h) await page.setViewportSize({ width: page.viewportSize()!.width, height: h });
     await page.clock.setFixedTime(NOW);
-    await seed(page, { ...(shot.fresh ? {} : LIVED_IN), ...shot.seed }, !!shot.splash);
+    await seed(page, { ...(shot.fresh ? {} : LIVED_IN), ...shot.seed }, !!shot.splash, shot.fakeLlm);
     await page.goto(shot.url);
     if (shot.enter) await shot.enter(page);
     await (shot.ready ?? css('h1'))(page, variant).waitFor({ state: 'visible', timeout: 20_000 });

@@ -70,13 +70,13 @@
       "id": "five-tricks",
       "lang": "fil",
       "pages": 2,
-      "bytes": 49095
+      "bytes": 49089
     },
     {
       "id": "five-tricks",
       "lang": "ceb",
       "pages": 2,
-      "bytes": 49442
+      "bytes": 49437
     },
     {
       "id": "five-tricks",
@@ -160,13 +160,13 @@
       "id": "module-posters",
       "lang": "fil",
       "pages": 10,
-      "bytes": 164680
+      "bytes": 164687
     },
     {
       "id": "module-posters",
       "lang": "ceb",
       "pages": 10,
-      "bytes": 164933
+      "bytes": 164905
     },
     {
       "id": "module-posters",
@@ -178,7 +178,7 @@
       "id": "module-posters",
       "lang": "hil",
       "pages": 10,
-      "bytes": 165231
+      "bytes": 165239
     },
     {
       "id": "myth-cards",
@@ -190,13 +190,13 @@
       "id": "myth-cards",
       "lang": "fil",
       "pages": 22,
-      "bytes": 539605
+      "bytes": 539349
     },
     {
       "id": "myth-cards",
       "lang": "ceb",
       "pages": 22,
-      "bytes": 538416
+      "bytes": 538260
     },
     {
       "id": "myth-cards",
@@ -208,7 +208,7 @@
       "id": "myth-cards",
       "lang": "hil",
       "pages": 22,
-      "bytes": 543984
+      "bytes": 544002
     },
     {
       "id": "red-flags",
@@ -250,25 +250,25 @@
       "id": "session-guides",
       "lang": "fil",
       "pages": 12,
-      "bytes": 531709
+      "bytes": 531711
     },
     {
       "id": "session-guides",
       "lang": "ceb",
       "pages": 12,
-      "bytes": 533213
+      "bytes": 533178
     },
     {
       "id": "session-guides",
       "lang": "ilo",
       "pages": 12,
-      "bytes": 534003
+      "bytes": 533979
     },
     {
       "id": "session-guides",
       "lang": "hil",
       "pages": 12,
-      "bytes": 534051
+      "bytes": 534090
     },
     {
       "id": "trust-guide",

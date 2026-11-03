@@ -110,9 +110,10 @@ changing how the existing tutorial clips record.
 6. "When should I trust it?": the takeaway bullets.
 7. Closing card: "Practise in ARAW" with the app URL.
 
-**Pacing (slow, for narration):** hold = max(8 s, words-on-screen ÷ 100 wpm + 3 s breathing room), computed per
-language from the translated text; "think about it" pauses 5 s; transitions unhurried. A lecture lands around 4 to 8
-minutes. Captions: one WebVTT cue per beat (not burned in), so the voiceover is free to differ.
+**Pacing (for narration):** target **6 to 7 minutes per module** (user decision 2026-11-03, after the 12:46 Module 1
+pilot at 100 wpm + 3 s). Use about 130 wpm with a shorter minimum on "tap to reveal" tiles, computed per language from
+the translated text; "think about it" pauses 5 s. The narration script drops app chatter ("Nice! 2 more to go",
+"Tap each part...") so it reads like a lecture. Deferred: record when the user asks. Captions: one WebVTT cue per beat (not burned in), so the voiceover is free to differ.
 
 **Narration script** per module and language, `mNN-script.md` beside the video: a table of beats with start and end
 time, what is on screen, and the suggested narration (the on-screen text read naturally, Ara's lines, the feedback
