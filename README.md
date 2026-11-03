@@ -75,6 +75,18 @@ npm run preview    # serves dist/ at http://localhost:4173
 
 The build uses a relative base path (`base: './'`) and a hash router, so `dist/` works from any static host or sub-path.
 
+## Print kit
+Printable sheets (posters, cards, guides, certificate) are compiled from the app's own content into A4 PDFs, in all five languages.
+```
+npm run print                          # node scripts/print/build.mjs: every sheet x language
+node scripts/print/build.mjs --pages   # also one PNG per page in scripts/print/out/png/<lang>/ for review
+node scripts/print/build.mjs --only=red-flags --langs=fil,ilo   # a subset
+```
+- Public sheets go to `public/print/<lang>/<id>.pdf` and are listed in `src/content/printManifest.json` (Library > Printables, which links to them; they are downloaded on demand and never precached).
+- **Facilitator-only** sheets (`pretest-form-a`, `posttest-form-b`, `answer-key`: Fact or Fake Forms A and B are test sets) are written only to `print-out/facilitator/<lang>/` (gitignored). They are never in `public/`, the manifest, the app or the service worker.
+- QR codes point to the live app: `PRINT_APP_URL` (env or `--app-url=`), default `https://dost-nicer-araw.mjmagtira.workers.dev/`. Without it the QR boxes say "QR: set PRINT_APP_URL".
+- New framing text goes through `tx()`/`t()`; `scripts/i18n/extract.mjs` also reads `scripts/print/page/**`, so run the i18n steps (README in `scripts/i18n`) after changing any sheet text. Build warnings about overflow mean a translation is too long for its box.
+
 ## Tutorial videos
 
 The how-to videos in `public/videos/<id>/<lang>.webm` (+ `.vtt` captions) are recorded from the app itself, one storyboard

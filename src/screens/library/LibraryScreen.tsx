@@ -1,4 +1,4 @@
-// Library: segmented tabs for Myths, Diksyunaryo, Komiks and the how-to Videos, each one a route (`#/library/<tab>`).
+// Library: segmented tabs for Myths, Diksyunaryo, Komiks, the how-to Videos and the Printables, each one a route (`#/library/<tab>`).
 import { useEffect, useRef } from 'preact/hooks';
 import { t, type StringKey } from '../../app/i18n';
 import { LIBRARY_TABS, parseTab, type LibraryTab } from '../../app/library';
@@ -7,6 +7,7 @@ import { Tabs } from '../../ui/kit';
 import { Glossary } from './Glossary';
 import { Komiks } from './Komiks';
 import { Myths } from './Myths';
+import { Printables } from './Printables';
 import { Videos } from './Videos';
 
 const TAB_LABEL: Record<LibraryTab, StringKey> = {
@@ -14,6 +15,7 @@ const TAB_LABEL: Record<LibraryTab, StringKey> = {
   glossary: 'library.tab.glossary',
   komiks: 'library.tab.komiks',
   videos: 'library.tab.videos',
+  printables: 'library.tab.printables',
 };
 
 export function LibraryScreen() {
@@ -35,7 +37,7 @@ export function LibraryScreen() {
         onChange={(id) => navigate(`/library/${id}`)}
       />
       <div class="library__body" role="tabpanel" aria-label={t(TAB_LABEL[tab])}>
-        {tab === 'myths' ? <Myths /> : tab === 'glossary' ? <Glossary /> : tab === 'komiks' ? <Komiks /> : <Videos />}
+        {tab === 'myths' ? <Myths /> : tab === 'glossary' ? <Glossary /> : tab === 'komiks' ? <Komiks /> : tab === 'videos' ? <Videos /> : <Printables />}
       </div>
     </div>
   );

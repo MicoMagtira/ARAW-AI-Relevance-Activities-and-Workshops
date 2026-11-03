@@ -2,9 +2,9 @@
 //   node scripts/i18n/extract.mjs
 // Sources: the UI catalog (src/app/i18n.ts) and every exported value of the content, module and game files, loaded through
 // Vite (so TypeScript and imports just work) and walked deeply. Ids, file names and other code-like strings are skipped.
-import { readdirSync, statSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
-import { createServer } from 'vite';
+import { createServer, parseAst } from 'vite';
 
 const ROOTS = ['src/content', 'src/modules', 'src/games', 'src/screens', 'src/ui'];
 const SKIP_FILE = /(\.test\.|\.d\.ts$|\.css$)/;
@@ -36,6 +36,7 @@ const isText = (s) => {
 const found = new Map(); // text -> Set(sources)
 const add = (text, src) => {
   if (!isText(text)) return;
+  if (/PRINT_APP_URL|^@page |AI Relevance Activities/.test(text)) return; // dev-only box, print css, the programme name (a proper name)
   if (!found.has(text)) found.set(text, new Set());
   found.get(text).add(src);
 };
@@ -52,6 +53,45 @@ const deep = (v, src, depth = 0) => {
   if (Object.getPrototypeOf(v) !== Object.prototype && Object.getPrototypeOf(v) !== null) return; // class instances, DOM
   for (const x of Object.values(v)) deep(x, src, depth + 1);
 };
+
+// Print kit sheets (scripts/print/page) put their English framing text inline in tx('...') calls and small const arrays, not
+// in exports, so their string literals are read from the syntax tree. Imports, class names, ids and other code-like
+// strings are skipped (isText, plus the attribute and key filters below).
+const printFiles = [];
+const walkPrint = (dir) => {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) walkPrint(p);
+    else if (/\.tsx$/.test(name)) printFiles.push(p.split(sep).join('/'));
+  }
+};
+walkPrint('scripts/print/page');
+const NOT_TEXT_KEYS = new Set(['class', 'className', 'style', 'key', 'id', 'd', 'viewBox', 'fill', 'stroke', 'role', 'type', 'href', 'src', 'lang', 'xmlns', 'transform', 'mood', 'variant', 'width', 'height', 'points', 'shape-rendering', 'data-fit-group']);
+for (const f of printFiles) {
+  const src = `print/page/${relative('scripts/print/page', f).split(sep).join('/')}#literal`;
+  const ast = parseAst(readFileSync(f, 'utf8'), { lang: 'tsx' });
+  const visit = (n, parent) => {
+    if (!n || typeof n !== 'object') return;
+    if (Array.isArray(n)) return n.forEach((x) => visit(x, parent));
+    if (typeof n.type !== 'string') return;
+    if (n.type === 'ImportDeclaration' || n.type === 'ExportAllDeclaration' || (n.type.startsWith('TS') && !/^TS(As|Satisfies|NonNull|Parenthesized)/.test(n.type))) return;
+    if (n.type === 'NewExpression' || (n.type === 'VariableDeclarator' && n.id?.name === 'LANG_NAMES')) return; // error messages, language names (proper names)
+    if (n.type === 'JSXAttribute' && NOT_TEXT_KEYS.has(n.name?.name)) return;
+    if (n.type === 'Property' && !n.computed && NOT_TEXT_KEYS.has(n.key?.name ?? n.key?.value)) return;
+    if (n.type === 'Property' && !n.computed) visit(n.value, n); // an object key is never text
+    else if (n.type === 'Literal' && typeof n.value === 'string') {
+      const isCmp = parent && (parent.type === 'BinaryExpression' || parent.type === 'SwitchCase' || (parent.type === 'MemberExpression' && parent.computed));
+      if (!isCmp && (/^[A-Z"“'0-9]/.test(n.value) || /\s/.test(n.value))) add(n.value, src);
+    } else if (n.type === 'JSXText') {
+      const text = n.value.replace(/\s+/g, ' ').trim();
+      if (text) add(text, src);
+    } else if (n.type === 'TemplateLiteral' && n.expressions.length === 0) {
+      const v = n.quasis[0]?.value.cooked ?? '';
+      if (/^[A-Z"“'0-9]/.test(v) && !/[{};]/.test(v)) add(v, src);
+    } else for (const k of Object.keys(n)) if (k !== 'type' && k !== 'start' && k !== 'end') visit(n[k], n);
+  };
+  visit(ast, null);
+}
 
 const server = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error', optimizeDeps: { noDiscovery: true } });
 let failed = 0;

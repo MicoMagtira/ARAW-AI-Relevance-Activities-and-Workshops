@@ -29,11 +29,11 @@ afterEach(() => {
 });
 
 describe('Library tabs', () => {
-  it('shows four tabs and marks the open one', () => {
+  it('shows five tabs and marks the open one', () => {
     open('#/library/glossary');
     render(<LibraryScreen />);
     const tabs = screen.getAllByRole('tab');
-    expect(tabs.map((tab) => tab.textContent)).toEqual(['Myths', 'Dictionary', 'Comics', 'Videos']);
+    expect(tabs.map((tab) => tab.textContent)).toEqual(['Myths', 'Dictionary', 'Comics', 'Videos', 'Printables']);
     expect(screen.getByRole('tab', { name: 'Dictionary' }).getAttribute('aria-selected')).toBe('true');
     expect(screen.getByRole('tabpanel', { name: 'Dictionary' })).toBeTruthy();
   });

@@ -20,3 +20,6 @@ Not part of `npm run verify` on purpose (slow, visual, for a human to look at).
 - [ ] User guide refreshed after screen changes: `npx playwright test -c scripts/guide/capture.config.ts`, then
   `node scripts/guide/compress.mjs` (if used) and `node scripts/guide/build-pdf.mjs`.
 - [ ] The creator credit ("Created by Mico C. Magtira ...") shows on the splash, the About screen and the app footer.
+- [ ] Print kit rebuilt after any content or translation change: `node scripts/print/build.mjs --pages` (no overflow warnings), then check a few PNGs in
+  `scripts/print/out/png/` (trust guide, red-flag cards, myth cards) in a regional language. Library > Printables lists all ten public sheets in all
+  five languages and every Download link opens a PDF. `public/print/` has no test forms (they live only in `print-out/facilitator/`).

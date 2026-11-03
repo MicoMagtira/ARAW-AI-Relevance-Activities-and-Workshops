@@ -11,6 +11,7 @@
     "preview": "vite preview --port 4173 --strictPort",
     "test": "vitest run --reporter=dot",
     "e2e": "playwright test --reporter=line",
+    "print": "node scripts/print/build.mjs",
     "budget": "node scripts/check-budget.mjs",
     "icons": "node scripts/make-icons.mjs",
     "verify": "npm run build && npm run budget && npm run test && npm run e2e"
@@ -32,7 +33,10 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/preact": "^3.2.4",
     "@types/node": "^26.6.5",
+    "@types/qrcode": "^1.5.6",
+    "ffmpeg-static": "^5.3.0",
     "jsdom": "^30.1.3",
+    "qrcode": "^1.5.4",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.4"

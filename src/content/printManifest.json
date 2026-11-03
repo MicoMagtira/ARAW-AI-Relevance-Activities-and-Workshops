@@ -1,0 +1,304 @@
+{
+  "entries": [
+    {
+      "id": "certificate",
+      "lang": "en",
+      "pages": 1,
+      "bytes": 44824
+    },
+    {
+      "id": "certificate",
+      "lang": "fil",
+      "pages": 1,
+      "bytes": 44685
+    },
+    {
+      "id": "certificate",
+      "lang": "ceb",
+      "pages": 1,
+      "bytes": 45044
+    },
+    {
+      "id": "certificate",
+      "lang": "ilo",
+      "pages": 1,
+      "bytes": 45004
+    },
+    {
+      "id": "certificate",
+      "lang": "hil",
+      "pages": 1,
+      "bytes": 45424
+    },
+    {
+      "id": "check-before-share",
+      "lang": "en",
+      "pages": 1,
+      "bytes": 35291
+    },
+    {
+      "id": "check-before-share",
+      "lang": "fil",
+      "pages": 1,
+      "bytes": 35322
+    },
+    {
+      "id": "check-before-share",
+      "lang": "ceb",
+      "pages": 1,
+      "bytes": 35079
+    },
+    {
+      "id": "check-before-share",
+      "lang": "ilo",
+      "pages": 1,
+      "bytes": 35050
+    },
+    {
+      "id": "check-before-share",
+      "lang": "hil",
+      "pages": 1,
+      "bytes": 35160
+    },
+    {
+      "id": "five-tricks",
+      "lang": "en",
+      "pages": 2,
+      "bytes": 49114
+    },
+    {
+      "id": "five-tricks",
+      "lang": "fil",
+      "pages": 2,
+      "bytes": 49095
+    },
+    {
+      "id": "five-tricks",
+      "lang": "ceb",
+      "pages": 2,
+      "bytes": 49442
+    },
+    {
+      "id": "five-tricks",
+      "lang": "ilo",
+      "pages": 2,
+      "bytes": 49116
+    },
+    {
+      "id": "five-tricks",
+      "lang": "hil",
+      "pages": 2,
+      "bytes": 48976
+    },
+    {
+      "id": "glossary",
+      "lang": "en",
+      "pages": 3,
+      "bytes": 84040
+    },
+    {
+      "id": "glossary",
+      "lang": "fil",
+      "pages": 3,
+      "bytes": 85104
+    },
+    {
+      "id": "glossary",
+      "lang": "ceb",
+      "pages": 3,
+      "bytes": 85464
+    },
+    {
+      "id": "glossary",
+      "lang": "ilo",
+      "pages": 3,
+      "bytes": 85583
+    },
+    {
+      "id": "glossary",
+      "lang": "hil",
+      "pages": 3,
+      "bytes": 85234
+    },
+    {
+      "id": "komiks",
+      "lang": "en",
+      "pages": 10,
+      "bytes": 455852
+    },
+    {
+      "id": "komiks",
+      "lang": "fil",
+      "pages": 10,
+      "bytes": 453843
+    },
+    {
+      "id": "komiks",
+      "lang": "ceb",
+      "pages": 10,
+      "bytes": 454203
+    },
+    {
+      "id": "komiks",
+      "lang": "ilo",
+      "pages": 10,
+      "bytes": 455207
+    },
+    {
+      "id": "komiks",
+      "lang": "hil",
+      "pages": 10,
+      "bytes": 454671
+    },
+    {
+      "id": "module-posters",
+      "lang": "en",
+      "pages": 10,
+      "bytes": 163615
+    },
+    {
+      "id": "module-posters",
+      "lang": "fil",
+      "pages": 10,
+      "bytes": 164680
+    },
+    {
+      "id": "module-posters",
+      "lang": "ceb",
+      "pages": 10,
+      "bytes": 164933
+    },
+    {
+      "id": "module-posters",
+      "lang": "ilo",
+      "pages": 10,
+      "bytes": 165272
+    },
+    {
+      "id": "module-posters",
+      "lang": "hil",
+      "pages": 10,
+      "bytes": 165231
+    },
+    {
+      "id": "myth-cards",
+      "lang": "en",
+      "pages": 22,
+      "bytes": 518880
+    },
+    {
+      "id": "myth-cards",
+      "lang": "fil",
+      "pages": 22,
+      "bytes": 539605
+    },
+    {
+      "id": "myth-cards",
+      "lang": "ceb",
+      "pages": 22,
+      "bytes": 538416
+    },
+    {
+      "id": "myth-cards",
+      "lang": "ilo",
+      "pages": 22,
+      "bytes": 543872
+    },
+    {
+      "id": "myth-cards",
+      "lang": "hil",
+      "pages": 22,
+      "bytes": 543984
+    },
+    {
+      "id": "red-flags",
+      "lang": "en",
+      "pages": 1,
+      "bytes": 36005
+    },
+    {
+      "id": "red-flags",
+      "lang": "fil",
+      "pages": 1,
+      "bytes": 36040
+    },
+    {
+      "id": "red-flags",
+      "lang": "ceb",
+      "pages": 1,
+      "bytes": 36246
+    },
+    {
+      "id": "red-flags",
+      "lang": "ilo",
+      "pages": 1,
+      "bytes": 35903
+    },
+    {
+      "id": "red-flags",
+      "lang": "hil",
+      "pages": 1,
+      "bytes": 36279
+    },
+    {
+      "id": "session-guides",
+      "lang": "en",
+      "pages": 12,
+      "bytes": 532559
+    },
+    {
+      "id": "session-guides",
+      "lang": "fil",
+      "pages": 12,
+      "bytes": 531709
+    },
+    {
+      "id": "session-guides",
+      "lang": "ceb",
+      "pages": 12,
+      "bytes": 533213
+    },
+    {
+      "id": "session-guides",
+      "lang": "ilo",
+      "pages": 12,
+      "bytes": 534003
+    },
+    {
+      "id": "session-guides",
+      "lang": "hil",
+      "pages": 12,
+      "bytes": 534051
+    },
+    {
+      "id": "trust-guide",
+      "lang": "en",
+      "pages": 1,
+      "bytes": 216195
+    },
+    {
+      "id": "trust-guide",
+      "lang": "fil",
+      "pages": 1,
+      "bytes": 215649
+    },
+    {
+      "id": "trust-guide",
+      "lang": "ceb",
+      "pages": 1,
+      "bytes": 215786
+    },
+    {
+      "id": "trust-guide",
+      "lang": "ilo",
+      "pages": 1,
+      "bytes": 214890
+    },
+    {
+      "id": "trust-guide",
+      "lang": "hil",
+      "pages": 1,
+      "bytes": 215808
+    }
+  ]
+}

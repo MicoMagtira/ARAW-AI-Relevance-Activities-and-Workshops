@@ -28,11 +28,11 @@ async function box(loc: Locator) {
 }
 
 test.describe('Library: tabs', () => {
-  test('four deep-linkable tabs under the banner, Myths first', async ({ page }) => {
+  test('five deep-linkable tabs under the banner, Myths first', async ({ page }) => {
     await page.goto('/#/library');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Library');
     const tabs = page.getByRole('tablist', { name: 'Library sections' });
-    await expect(tabs.getByRole('tab')).toHaveText(['Myths', 'Dictionary', 'Comics', 'Videos']);
+    await expect(tabs.getByRole('tab')).toHaveText(['Myths', 'Dictionary', 'Comics', 'Videos', 'Printables']);
     await expect(tabs.getByRole('tab', { name: 'Myths' })).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByRole('heading', { level: 2, name: 'Health Stories' })).toBeVisible();
     await noHorizontalOverflow(page);

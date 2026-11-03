@@ -6069,12 +6069,6 @@
   ]
  },
  {
-  "text": "Date",
-  "src": [
-   "content\\gc.ts#GC_SCENARIOS"
-  ]
- },
- {
   "text": "No date. The same text went around last year with a different city name.",
   "src": [
    "content\\gc.ts#GC_SCENARIOS"
@@ -7245,12 +7239,6 @@
   ]
  },
  {
-  "text": "Name",
-  "src": [
-   "content\\gc.ts#GC_SCENARIOS"
-  ]
- },
- {
   "text": "\"A neighbour of a friend of Tita's friend\"",
   "src": [
    "content\\gc.ts#GC_SCENARIOS"
@@ -8319,12 +8307,6 @@
   ]
  },
  {
-  "text": "ARAW: AI Relevance Activities and Workshops",
-  "src": [
-   "content\\guide.ts#GUIDE_COVER"
-  ]
- },
- {
   "text": "User Guide",
   "src": [
    "content\\guide.ts#GUIDE_COVER"
@@ -8638,12 +8620,6 @@
  },
  {
   "text": "The top of Home: a pixel sunrise banner with the big ARAW name and a gold Watch the 1-minute tour button, and a white band of partner logos with an About the project link.",
-  "src": [
-   "content\\guide.ts#GUIDE_SECTIONS"
-  ]
- },
- {
-  "text": "ARAW: AI Relevance Activities and Workshops, an AIKasalig project.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9879,12 +9855,6 @@
   ]
  },
  {
-  "text": "Before the session",
-  "src": [
-   "content\\guide.ts#GUIDE_SECTIONS"
-  ]
- },
- {
   "text": "Prepare the devices on good internet the day before. After the first visit, ARAW works offline.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
@@ -10050,6 +10020,42 @@
   "text": "If you see wrong information in the app, use Report.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Let us think about this one.",
+  "src": [
+   "content\\lectures.ts#LECTURE_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Practise in ARAW",
+  "src": [
+   "content\\lectures.ts#LECTURE_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Open the app and try it yourself.",
+  "src": [
+   "content\\lectures.ts#LECTURE_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Now a quick look at the game for this module.",
+  "src": [
+   "content\\lectures.ts#LECTURE_CAPTIONS"
+  ]
+ },
+ {
+  "text": "The rest of the round plays quickly. You can play it yourself in ARAW.",
+  "src": [
+   "content\\lectures.ts#LECTURE_CAPTIONS"
+  ]
+ },
+ {
+  "text": "Let us finish with the part to remember.",
+  "src": [
+   "content\\lectures.ts#LECTURE_CAPTIONS"
   ]
  },
  {
@@ -26371,12 +26377,6 @@
   ]
  },
  {
-  "text": "What to do",
-  "src": [
-   "modules\\m07\\index.ts#default"
-  ]
- },
- {
   "text": "Be wary of \"doctor\" ads that promise a cure. Check the real clinic or the official health page, and report the ad. If it is not from a trusted source, do not buy.",
   "src": [
    "modules\\m07\\index.ts#default"
@@ -27792,6 +27792,688 @@
   ]
  },
  {
+  "text": "ARAW",
+  "src": [
+   "print/page/kit.tsx#literal",
+   "ui:app.name",
+   "content\\guide.ts#GUIDE_COVER"
+  ]
+ },
+ {
+  "text": "ARAW GAME · FAKE",
+  "src": [
+   "print/page/kit.tsx#literal",
+   "ui:tt.stamp",
+   "ui:gc.stamp"
+  ]
+ },
+ {
+  "text": "Read each post. Is it a Fact or a Fake?",
+  "src": [
+   "print/page/p2c.tsx#literal"
+  ]
+ },
+ {
+  "text": "Name",
+  "src": [
+   "print/page/p2c.tsx#literal",
+   "print/page/sheets/certificate.tsx#literal",
+   "content\\gc.ts#GC_SCENARIOS"
+  ]
+ },
+ {
+  "text": "Date",
+  "src": [
+   "print/page/p2c.tsx#literal",
+   "print/page/sheets/certificate.tsx#literal",
+   "content\\gc.ts#GC_SCENARIOS"
+  ]
+ },
+ {
+  "text": "Site",
+  "src": [
+   "print/page/p2c.tsx#literal"
+  ]
+ },
+ {
+  "text": "Tick one box for each post: Fact or Fake.",
+  "src": [
+   "print/page/p2c.tsx#literal"
+  ]
+ },
+ {
+  "text": "Work on your own, and do not look anything up.",
+  "src": [
+   "print/page/p2c.tsx#literal"
+  ]
+ },
+ {
+  "text": "All people, pages and products here are made up.",
+  "src": [
+   "print/page/p2c.tsx#literal"
+  ]
+ },
+ {
+  "text": "Answer key (Forms A and B)",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Form A",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Form B",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Answer key",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "For facilitators only. Forms A and B.",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Scoring",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "One point for each correct answer. The best score is 20 on each form.",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Give Form A before the lessons and Form B after the last lesson, then compare the two scores.",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Keep this key and both forms for facilitators only. Do not show them to learners before the test.",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "After the test, go through the answers kindly. Mock the trick, never the person.",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Quick key",
+  "src": [
+   "print/page/sheets/answer-key.tsx#literal"
+  ]
+ },
+ {
+  "text": "Certificate",
+  "src": [
+   "print/page/sheets/certificate.tsx#literal",
+   "ui:title.certificate",
+   "ui:print.title.certificate"
+  ]
+ },
+ {
+  "text": "Place",
+  "src": [
+   "print/page/sheets/certificate.tsx#literal"
+  ]
+ },
+ {
+  "text": "Facilitator signature",
+  "src": [
+   "print/page/sheets/certificate.tsx#literal"
+  ]
+ },
+ {
+  "text": "Check before you share",
+  "src": [
+   "print/page/sheets/check-before-share.tsx#literal",
+   "ui:print.title.check-before-share"
+  ]
+ },
+ {
+  "text": "Scan to learn this module",
+  "src": [
+   "print/page/sheets/check-before-share.tsx#literal",
+   "print/page/sheets/five-tricks.tsx#literal",
+   "print/page/sheets/module-posters.tsx#literal"
+  ]
+ },
+ {
+  "text": "Find another source",
+  "src": [
+   "print/page/sheets/check-before-share.tsx#literal"
+  ]
+ },
+ {
+  "text": "Reply kindly",
+  "src": [
+   "print/page/sheets/check-before-share.tsx#literal"
+  ]
+ },
+ {
+  "text": "The five tricks",
+  "src": [
+   "print/page/sheets/five-tricks.tsx#literal",
+   "ui:print.title.five-tricks"
+  ]
+ },
+ {
+  "text": "Watch for",
+  "src": [
+   "print/page/sheets/five-tricks.tsx#literal"
+  ]
+ },
+ {
+  "text": "What to do",
+  "src": [
+   "print/page/sheets/five-tricks.tsx#literal",
+   "modules\\m07\\index.ts#default"
+  ]
+ },
+ {
+  "text": "Play the game",
+  "src": [
+   "print/page/sheets/five-tricks.tsx#literal",
+   "print/page/sheets/module-posters.tsx#literal"
+  ]
+ },
+ {
+  "text": "Ara's Dictionary",
+  "src": [
+   "print/page/sheets/glossary.tsx#literal",
+   "ui:glossary.title",
+   "ui:print.title.glossary"
+  ]
+ },
+ {
+  "text": "Ara's Comics",
+  "src": [
+   "print/page/sheets/komiks.tsx#literal",
+   "ui:print.title.komiks"
+  ]
+ },
+ {
+  "text": "Module posters",
+  "src": [
+   "print/page/sheets/module-posters.tsx#literal",
+   "ui:print.title.module-posters"
+  ]
+ },
+ {
+  "text": "Key ideas",
+  "src": [
+   "print/page/sheets/module-posters.tsx#literal",
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Myth cards",
+  "src": [
+   "print/page/sheets/myth-cards.tsx#literal",
+   "ui:print.title.myth-cards"
+  ]
+ },
+ {
+  "text": "Who can help",
+  "src": [
+   "print/page/sheets/myth-cards.tsx#literal"
+  ]
+ },
+ {
+  "text": "Cut along the dashed lines. Print double-sided and flip on the long edge.",
+  "src": [
+   "print/page/sheets/myth-cards.tsx#literal"
+  ]
+ },
+ {
+  "text": "Fact or Fake post-test (Form B)",
+  "src": [
+   "print/page/sheets/posttest-form-b.tsx#literal"
+  ]
+ },
+ {
+  "text": "Fact or Fake pre-test (Form A)",
+  "src": [
+   "print/page/sheets/pretest-form-a.tsx#literal"
+  ]
+ },
+ {
+  "text": "Red-flag cards",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal",
+   "ui:print.title.red-flags"
+  ]
+ },
+ {
+  "text": "Chest pain or pressure",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Trouble breathing",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Face drooping, arm weakness or slurred speech",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Dengue warning signs: bad belly pain, vomiting, bleeding",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Fainting or seizures",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Severe bleeding",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "A child with very little urine, no tears or very sleepy",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "High fever in a young baby",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "An animal bite or scratch",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Go to the nearest health facility or call 911 now.",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "DOH-NCMH crisis hotline (free, any time)",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Thinking of hurting yourself? Talk to someone you trust now.",
+  "src": [
+   "print/page/sheets/red-flags.tsx#literal"
+  ]
+ },
+ {
+  "text": "Session guide",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal",
+   "ui:print.title.session-guides"
+  ]
+ },
+ {
+  "text": "Hook",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Read the story line aloud. Ask: what would you do?",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Go through the lesson cards together, one idea at a time.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Activity",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Play the module game, or use the paper activity.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Discuss and takeaway",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Talk through the prompts, then read the takeaway aloud.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Each person names one thing they use every day. The group votes: AI or not?",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Give the group a few examples and ask what a learner would guess. Then show lopsided examples and ask what goes wrong.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Read the red-flag card aloud. For each flag, the group says: go to a health facility now.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Use the five-tricks poster. Read a post aloud and the group names the trick.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Use the check-before-share card. Practise the three steps, then a kind reply.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "List tasks at work. The group sorts them: AI can help, or a person must decide.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Describe a picture or video. The group says: made by AI? What label should it have?",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Each person shares one habit that keeps them scrolling and one simple boundary.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Name who could be left out of a health app. The group suggests one fix for each.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Read the data rights aloud. Practise who to complain to, step by step.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "How to run an ARAW session",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "A short guide for facilitators: teachers, health workers and community leaders.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Scan the code to open ARAW on your phone.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal",
+   "print/page/sheets/trust-guide.tsx#literal"
+  ]
+ },
+ {
+  "text": "Before the session",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal",
+   "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Read the module page for the day. Play the lesson once yourself.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Pick a quiet, well-lit place and charge the phones.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Print the pages you need from this kit.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Know your nearest health center, so you can point people to it.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "What you need",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "This print kit: this guide, the module posters and the cards.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Phones with ARAW open, or one projector for the whole group.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Pens and paper for the paper activities.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "The 45-minute flow",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "The core idea: calibrated trust",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "ARAW does not say \"trust nothing\". It helps people trust the right things, by the right amount.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "End every session with the same question:",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Keep everyone safe",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Kindness and health safety come first.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Kindness rules",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Nobody is shamed or blamed. People share myths because they care.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Mock the trick, never the person.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Talk with people, not down to them. Use plain words and go slowly.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Show what good sources look like, not only what to avoid.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Every answer is welcome. Some prompts have no single right answer.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Health safety rule",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Never give doses, diagnoses or treatment advice.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Always point to people: a health worker, the barangay health center or a doctor.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "If anyone describes chest pain, trouble breathing, stroke signs, a seizure or heavy bleeding, tell them to go to a health facility now. Do not wait for the session to end.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "The red-flag card in this kit lists the signs. Keep it on the table.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Each module page",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Learning goals, the story hook and the key ideas for the lesson.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Discussion prompts taken from the lesson, and the activity: the game in the app, or a paper activity.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "The takeaway to read aloud, and a timing strip for 45 minutes.",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Story hook",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "Discussion prompts",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "In the app",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "On paper",
+  "src": [
+   "print/page/sheets/session-guides.tsx#literal"
+  ]
+ },
+ {
+  "text": "When should I trust it?",
+  "src": [
+   "print/page/sheets/trust-guide.tsx#literal",
+   "ui:print.title.trust-guide",
+   "ui:lesson.takeawayTitle"
+  ]
+ },
+ {
   "text": "ARAW comes from AIKasalig, the project \"Advancing Responsible AI in Philippine Healthcare: A Multi-Year NLP-Driven Roadmap for Trust, Transparency, and Ethical AI\".",
   "src": [
    "ui:about.aikasalig.p1"
@@ -28220,22 +28902,9 @@
   ]
  },
  {
-  "text": "ARAW",
-  "src": [
-   "ui:app.name",
-   "content\\guide.ts#GUIDE_COVER"
-  ]
- },
- {
   "text": "Skip to content",
   "src": [
    "ui:app.skip"
-  ]
- },
- {
-  "text": "AI Relevance Activities and Workshops",
-  "src": [
-   "ui:app.tagline"
   ]
  },
  {
@@ -33640,12 +34309,6 @@
   ]
  },
  {
-  "text": "Ara's Dictionary",
-  "src": [
-   "ui:glossary.title"
-  ]
- },
- {
   "text": "AI helper",
   "src": [
    "ui:hati.ai",
@@ -34797,14 +35460,6 @@
   ]
  },
  {
-  "text": "When should I trust it?",
-  "src": [
-   "ui:lesson.takeawayTitle",
-   "ui:sb.trustTitle",
-   "games\\demo\\demo.ts#default"
-  ]
- },
- {
   "text": "Module complete",
   "src": [
    "ui:lesson.tallyModule"
@@ -34889,6 +35544,60 @@
   ]
  },
  {
+  "text": "Download",
+  "src": [
+   "ui:library.printables.download"
+  ]
+ },
+ {
+  "text": "Only in English",
+  "src": [
+   "ui:library.printables.fallback"
+  ]
+ },
+ {
+  "text": "Download {title} as a PDF",
+  "src": [
+   "ui:library.printables.get"
+  ]
+ },
+ {
+  "text": "Language of the sheets",
+  "src": [
+   "ui:library.printables.lang"
+  ]
+ },
+ {
+  "text": "The printables are not ready yet.",
+  "src": [
+   "ui:library.printables.none"
+  ]
+ },
+ {
+  "text": "1 page",
+  "src": [
+   "ui:library.printables.page1"
+  ]
+ },
+ {
+  "text": "{n} pages",
+  "src": [
+   "ui:library.printables.pages"
+  ]
+ },
+ {
+  "text": "Sheets to print and share, in five languages. Tap Download to save a PDF, then print it on A4 paper. You need the internet to download.",
+  "src": [
+   "ui:library.printables.text"
+  ]
+ },
+ {
+  "text": "Printable kit",
+  "src": [
+   "ui:library.printables.title"
+  ]
+ },
+ {
   "text": "Try again",
   "src": [
    "ui:library.retry",
@@ -34915,6 +35624,12 @@
   "src": [
    "ui:library.tab.myths",
    "content\\guide.ts#GUIDE_SECTIONS"
+  ]
+ },
+ {
+  "text": "Printables",
+  "src": [
+   "ui:library.tab.printables"
   ]
  },
  {
@@ -35736,6 +36451,66 @@
   "text": "Is this post fact or fake?",
   "src": [
    "ui:practice.question"
+  ]
+ },
+ {
+  "text": "A blank certificate to fill in by hand.",
+  "src": [
+   "ui:print.desc.certificate"
+  ]
+ },
+ {
+  "text": "Three steps to check a post, and a kind reply.",
+  "src": [
+   "ui:print.desc.check-before-share"
+  ]
+ },
+ {
+  "text": "The five misinformation tricks and how to spot them.",
+  "src": [
+   "ui:print.desc.five-tricks"
+  ]
+ },
+ {
+  "text": "Plain words for AI and health ideas.",
+  "src": [
+   "ui:print.desc.glossary"
+  ]
+ },
+ {
+  "text": "Season 1 of Ara's Comics, one episode a page.",
+  "src": [
+   "ui:print.desc.komiks"
+  ]
+ },
+ {
+  "text": "One poster for each of the ten modules.",
+  "src": [
+   "ui:print.desc.module-posters"
+  ]
+ },
+ {
+  "text": "Cut-out cards with a myth on the front and the facts on the back.",
+  "src": [
+   "ui:print.desc.myth-cards"
+  ]
+ },
+ {
+  "text": "Cut-out cards: signs that mean go to a health facility now.",
+  "src": [
+   "ui:print.desc.red-flags"
+  ]
+ },
+ {
+  "text": "A guide to run a 45-minute session, with a page for each module.",
+  "src": [
+   "ui:print.desc.session-guides"
+  ]
+ },
+ {
+  "text": "All ten takeaways on one page.",
+  "src": [
+   "ui:print.desc.trust-guide"
   ]
  },
  {
@@ -37448,13 +38223,6 @@
   ]
  },
  {
-  "text": "Certificate",
-  "src": [
-   "ui:title.certificate",
-   "ui:me.certTitle"
-  ]
- },
- {
   "text": "Daily Challenge",
   "src": [
    "ui:title.daily"
@@ -37776,14 +38544,6 @@
   "text": "Signs are highlighted in the post.",
   "src": [
    "ui:tt.signs"
-  ]
- },
- {
-  "text": "ARAW GAME · FAKE",
-  "src": [
-   "ui:tt.stamp",
-   "ui:gc.stamp",
-   "ui:g.sino.stampFake"
   ]
  },
  {

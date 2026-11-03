@@ -28,6 +28,8 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
   // how-to videos stream straight from the network (range requests, a few MB each): never cached for offline
   if (url.pathname.includes('/videos/')) return;
+  // the printable PDFs (public/print) are downloaded on demand too, never precached
+  if (url.pathname.includes('/print/')) return;
 
   if (request.mode === 'navigate') {
     // network first so a new version shows up; the cached shell answers when offline

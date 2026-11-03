@@ -1,0 +1,22 @@
+[
+{"i":1,"text":"Download","where":"ui:library.printables.download"},
+{"i":2,"text":"Only in English","where":"ui:library.printables.fallback"},
+{"i":3,"text":"Download {title} as a PDF","where":"ui:library.printables.get"},
+{"i":4,"text":"Language of the sheets","where":"ui:library.printables.lang"},
+{"i":5,"text":"The printables are not ready yet.","where":"ui:library.printables.none"},
+{"i":6,"text":"1 page","where":"ui:library.printables.page1"},
+{"i":7,"text":"{n} pages","where":"ui:library.printables.pages"},
+{"i":8,"text":"Sheets to print and share, in five languages. Tap Download to save a PDF, then print it on A4 paper. You need the internet to download.","where":"ui:library.printables.text"},
+{"i":9,"text":"Printable kit","where":"ui:library.printables.title"},
+{"i":10,"text":"Printables","where":"ui:library.tab.printables"},
+{"i":11,"text":"A blank certificate to fill in by hand.","where":"ui:print.desc.certificate"},
+{"i":12,"text":"Three steps to check a post, and a kind reply.","where":"ui:print.desc.check-before-share"},
+{"i":13,"text":"The five misinformation tricks and how to spot them.","where":"ui:print.desc.five-tricks"},
+{"i":14,"text":"Plain words for AI and health ideas.","where":"ui:print.desc.glossary"},
+{"i":15,"text":"Season 1 of Ara's Comics, one episode a page.","where":"ui:print.desc.komiks"},
+{"i":16,"text":"One poster for each of the ten modules.","where":"ui:print.desc.module-posters"},
+{"i":17,"text":"Cut-out cards with a myth on the front and the facts on the back.","where":"ui:print.desc.myth-cards"},
+{"i":18,"text":"Cut-out cards: signs that mean go to a health facility now.","where":"ui:print.desc.red-flags"},
+{"i":19,"text":"A guide to run a 45-minute session, with a page for each module.","where":"ui:print.desc.session-guides"},
+{"i":20,"text":"All ten takeaways on one page.","where":"ui:print.desc.trust-guide"}
+]

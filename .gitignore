@@ -23,3 +23,11 @@ logos/
 # Chatbot Sandbox: model files for offline app builds (scripts/sandbox/fetch-model.mjs) and the bake-off browser profile
 public/models/
 .sandbox-profile/
+
+# Print kit (scripts/print): build output and facilitator-only tests
+scripts/print/out/
+print-out/
+
+# Module lecture videos (scripts/lectures): build output and raw renders
+dist-lecture/
+lecture-out/

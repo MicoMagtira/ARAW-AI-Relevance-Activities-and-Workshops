@@ -1,0 +1,166 @@
+/* ARAW print kit: A4 page boxes, one per sheet page (scripts/print/build.mjs prints them with Playwright).
+   Every sheet follows docs/PRINT-KIT-PLAN.md section 2: 12 mm margins, photocopy-safe, 8-bit and senior-readable. */
+:root {
+  --page-w: 210mm;
+  --page-h: 297mm;
+  --margin: 12mm;
+  --banner-tint: var(--sky-1); /* the gold banner as a light tint: it must photocopy as plain light grey */
+  --bw: 0.9mm; /* pixel border */
+  --sh: 1.4mm; /* hard offset shadow */
+}
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--soft); } /* screen only: the grey around the page boxes */
+body { font: 400 12pt/1.4 var(--font-body); color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+p, h1, h2, h3, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, svg { image-rendering: pixelated; }
+
+/* ---------- page frame ---------- */
+.pp {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4mm;
+  width: var(--page-w);
+  height: var(--page-h);
+  padding: var(--margin) var(--margin) calc(var(--margin) + 9mm);
+  margin: 0 auto 6mm;
+  overflow: hidden;
+  background: var(--surface); /* white paper: no toner spent on the page tint */
+  break-after: page;
+}
+.pp--landscape { --page-w: 297mm; --page-h: 210mm; }
+.pp:last-of-type { break-after: auto; }
+@media print {
+  html, body { background: none; }
+  .pp { margin: 0; }
+}
+.pp__foot {
+  position: absolute;
+  left: var(--margin);
+  right: var(--margin);
+  bottom: var(--margin);
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+  padding-top: 1.6mm;
+  border-top: 0.6mm solid var(--ink);
+  font: 700 8.5pt/1.25 var(--font-body);
+  color: var(--muted);
+}
+.pp__foot b { color: var(--ink); }
+.pp__foot-pg { flex: none; font-weight: 800; color: var(--ink); }
+
+/* ---------- headings, panels, chips ---------- */
+.k-title { font: 15pt/1.5 var(--font-pixel); color: var(--navy); text-transform: uppercase; }
+.k-h1 { font: 800 24pt/1.12 var(--font-head); color: var(--ink); }
+.k-h2 { font: 800 15pt/1.15 var(--font-head); color: var(--navy); }
+.k-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 9mm;
+  height: 9mm;
+  padding: 0 1.6mm;
+  font: 12pt/1 var(--font-pixel);
+  color: var(--ink);
+  background: var(--gold);
+  border: 0.7mm solid var(--ink);
+  box-shadow: 0.8mm 0.8mm 0 var(--ink);
+}
+.k-panel {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  padding: 3mm 4mm;
+  overflow: hidden;
+  background: var(--surface);
+  border: var(--bw) solid var(--ink);
+  box-shadow: var(--sh) var(--sh) 0 var(--ink);
+}
+.k-banner {
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+  padding: 3.5mm 5mm;
+  background: var(--banner-tint);
+  border: var(--bw) solid var(--ink);
+  box-shadow: var(--sh) var(--sh) 0 var(--ink);
+}
+.k-banner__text { flex: 1; min-width: 0; display: grid; gap: 1.6mm; }
+.k-banner__sub { font: 700 13pt/1.3 var(--font-body); color: var(--ink); }
+
+/* a pixel bullet: a small square, never a colour-only signal */
+.k-bullets { display: grid; gap: 1.6mm; }
+.k-bullets li { position: relative; padding-left: 5mm; }
+.k-bullets li::before { content: ''; position: absolute; left: 0.4mm; top: 0.62em; width: 2mm; height: 2mm; background: var(--ink); box-shadow: 0.5mm 0.5mm 0 var(--gold-deep); }
+
+/* ---------- QR ---------- */
+.k-qr { display: grid; justify-items: center; gap: 1mm; flex: none; }
+.k-qr__box { display: block; width: var(--qr, 24mm); height: var(--qr, 24mm); background: var(--surface); border: 0.6mm solid var(--ink); }
+.k-qr__box svg { display: block; width: 100%; height: 100%; image-rendering: auto; }
+.k-qr__box--empty { display: grid; place-items: center; padding: 1.6mm; font: 700 8pt/1.2 var(--font-body); text-align: center; border-style: dashed; }
+.k-qr__cap { max-width: var(--qr, 24mm); font: 700 8.5pt/1.2 var(--font-body); text-align: center; }
+
+/* ---------- fake stamp ---------- */
+.k-stamp {
+  display: inline-block;
+  padding: 1mm 2.4mm;
+  font: 12pt/1.2 var(--font-pixel);
+  color: var(--fake);
+  background: var(--fake-tint);
+  border: 0.7mm solid var(--fake);
+  transform: rotate(-4deg);
+}
+
+/* ---------- partner logos on paper ---------- */
+.k-logos { display: flex; align-items: center; justify-content: center; padding: 1.4mm 3mm; background: var(--surface); border: 0.5mm solid var(--line); }
+.k-logos .partners { --logo-h: 8mm; gap: 1.6mm 5mm; flex-wrap: nowrap; }
+
+/* ---------- sunrise motif ---------- */
+.k-sun { flex: none; display: block; width: var(--sun, 26mm); image-rendering: pixelated; }
+.k-sun__ray, .k-sun__body { fill: var(--gold-deep); }
+.k-sun__line { fill: var(--ink); }
+.k-sun__core { fill: var(--gold); }
+
+/* ---------- auto-fit box ---------- */
+.k-fit { flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.k-fit__in { width: 100%; }
+
+/* ---------- trust-guide ---------- */
+.tg__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr); gap: 4mm; }
+.tg__col { padding: 0 2mm 2mm 0; } /* room for the hard shadows */
+.tg__stack { display: grid; gap: 3mm; }
+.tg__card { display: flex; flex-direction: column; gap: 1.6mm; padding: 2mm 3mm 2.2mm; overflow: visible; }
+.tg__head { display: flex; align-items: center; gap: 2.4mm; flex: none; }
+.tg__head .k-chip { min-width: 7mm; height: 7mm; font-size: 12pt; }
+.tg__head .k-h2 { font-size: 12.5pt; line-height: 1.1; }
+.tg__bullets { gap: 0.8mm; font-size: 14.5pt; line-height: 1.2; }
+.tg__bullets li { padding-left: 4.6mm; }
+.tg__bullets li::before { width: 1.6mm; height: 1.6mm; }
+.tg__foot { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 4mm; }
+.tg__foot .k-logos { flex: 1; }
+.tg__foot .k-logos .partners { --logo-h: 6.4mm; }
+
+/* ---------- module posters ---------- */
+.mp__topic { font: 700 14pt/1.35 var(--font-body); text-align: center; padding: 0 4mm; }
+.mp__label { font-size: 12pt; }
+.mp__ideas { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 2.4mm; }
+.mp__list { flex: 1; min-height: 0; display: grid; grid-auto-flow: row; grid-auto-rows: minmax(min-content, 1fr); gap: 3mm; }
+.mp__idea { display: flex; align-items: center; gap: 4mm; padding: 1mm 4mm; }
+.mp__idea .k-chip { flex: none; min-width: 11mm; height: 11mm; background: var(--banner-tint); }
+.mp__idea .k-fit { display: flex; align-items: center; }
+.mp__idea-text { font: 800 16pt/1.2 var(--font-head); color: var(--ink); }
+.mp__idea-note { margin-top: 1mm; font: 400 14pt/1.3 var(--font-body); color: var(--ink); }
+.mp__trust { flex: none; display: flex; flex-direction: column; gap: 2mm; background: var(--banner-tint); }
+.mp__bullets { gap: 1.1mm; font-size: 14pt; line-height: 1.25; }
+.mp__bullets li { padding-left: 5.4mm; }
+.mp__foot { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 6mm; }
+.mp__game { flex: 1; display: flex; align-items: center; gap: 4mm; padding: 3mm 5mm; }
+.mp__game-label { font: 700 10.5pt/1.2 var(--font-body); color: var(--muted); }
+.mp__game-name { font: 12pt/1.4 var(--font-pixel); color: var(--navy); margin-top: 1.2mm; }
+
+.tg__foot .k-logos { padding: 1mm 3mm; }
+.tg-banner { padding: 2.5mm 5mm; }
+.mp__idea-text { font-size: 15pt; }
+.mp__foot .k-qr__cap { font-size: 8pt; }
