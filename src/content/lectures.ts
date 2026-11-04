@@ -11,7 +11,7 @@ export const LECTURE_CAPTIONS = {
   tryIt: 'Open the app and try it yourself.',
   /** Before the short look at the module game. */
   gameLook: 'Now a quick look at the game for this module.',
-  /** Over the fast-forwarded part of a game round. */
+  /** No longer used by the recorder (the game part is briefing only); kept so the language packs and the i18n source list stay unchanged. */
   gameFast: 'The rest of the round plays quickly. You can play it yourself in ARAW.',
   /** Before the takeaway bullets. */
   takeawayIntro: 'Let us finish with the part to remember.',

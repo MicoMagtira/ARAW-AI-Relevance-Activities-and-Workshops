@@ -110,10 +110,19 @@ changing how the existing tutorial clips record.
 6. "When should I trust it?": the takeaway bullets.
 7. Closing card: "Practise in ARAW" with the app URL.
 
-**Pacing (for narration):** target **6 to 7 minutes per module** (user decision 2026-11-03, after the 12:46 Module 1
-pilot at 100 wpm + 3 s). Use about 130 wpm with a shorter minimum on "tap to reveal" tiles, computed per language from
-the translated text; "think about it" pauses 5 s. The narration script drops app chatter ("Nice! 2 more to go",
-"Tap each part...") so it reads like a lecture. Deferred: record when the user asks. Captions: one WebVTT cue per beat (not burned in), so the voiceover is free to differ.
+**Pacing (for narration):** each video lands between **6 and 10 minutes** (user decisions 2026-11-03: 6 to 7 minutes
+as the norm, up to 10 for modules with more topics to discuss). Base pace about 120 wpm plus breathing room, a shorter
+minimum on "tap to reveal" tiles, computed per language from the translated text; "think about it" pauses 5 s. If a
+video's natural length falls outside 6 to 10 minutes, all holds scale evenly to land inside it. The narration script
+drops app chatter ("Nice! 2 more to go", "Tap each part...") so it reads like a lecture.
+
+**Game part: briefing only** (user decision): the game's title and How to play screen, then a bridge line to play it in
+ARAW. No scripted gameplay (the how-to-play clips already show it). **No subtitle files**: MP4 plus `mNN-script.md` only.
+
+**Overnight run** (user decision: one video at a time, unattended, nothing committed): `record.mjs all` with preflight
+checks, per-video retries, a watchdog timeout, fresh browser per video, output validation, resume from a done marker,
+a keep-awake lock held only while running, and `lecture-out/SUMMARY.md` plus contact sheets for the morning review. A video passes when its length is within 3% (at least 3 s) of the plan.
+Done 2026-11-04: 50/50 OK on the first attempt, 8.08 h of video; finished files gathered in `../Deliverables/2 Lecture Videos/`.
 
 **Narration script** per module and language, `mNN-script.md` beside the video: a table of beats with start and end
 time, what is on screen, and the suggested narration (the on-screen text read naturally, Ara's lines, the feedback
@@ -125,7 +134,7 @@ Messenger). H.264 High profile, `yuv420p`, 30 fps, `-movflags +faststart`, 1920x
 for crisp pixel text (`-tune animation`, CRF about 20). The encoder is `ffmpeg-static` (devDependency, build-time
 only, never shipped), because Playwright's bundled ffmpeg has no H.264. Capture losslessly or near-losslessly (CDP
 screencast frames with their timestamps, encoded once) rather than re-encoding Playwright's low-bitrate VP8 recording,
-so text stays sharp. Files: `lecture-out/<lang>/mNN.mp4`, `mNN.vtt` (also `mNN.srt` for editors) and `mNN-script.md`
+so text stays sharp. Files: `lecture-out/<lang>/mNN.mp4` and `mNN-script.md`
 (gitignored; raw renders for the voiceover edit, not app assets). Builds into its own `dist-lecture/` and serves it with
 `vite preview` on port **4182** (never 4173 or 4180), stopped when done.
 

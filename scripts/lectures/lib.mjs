@@ -2,15 +2,17 @@
 // own port, a slow pixel-cursor glide, full-screen cards, pacing, the screencast frame encoder and the caption/script
 // writers. The tutorial clips keep using scripts/tutorials/lib.mjs untouched; only its overlay and translator are reused.
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, statSync, statfsSync, writeFileSync } from 'node:fs';
+import { createServer as createNetServer } from 'node:net';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { createServer } from 'vite';
 import { ALL_LANGS, ROOT } from '../tutorials/lib.mjs';
 
 export { ALL_LANGS, ROOT };
-export const PORT = 4182;
-export const BASE = `http://localhost:${PORT}/`;
+/** The preview server's port: 4182, else the first free one of 4183-4189 (see pickPort); BASE follows it. */
+export const net = { port: 4182 };
+export const baseUrl = () => `http://localhost:${net.port}/`;
 export const OUT_DIR = 'dist-lecture';
 /**
  * The CDP screencast ignores deviceScaleFactor (it always delivers CSS pixels), so the page is 1920x1080 at scale 1 and the
@@ -36,18 +38,32 @@ export async function loadLectureSources(moduleId) {
     const packs = Object.fromEntries(
       ALL_LANGS.filter((l) => l !== 'en').map((l) => [l, JSON.parse(readFileSync(join(ROOT, `src/i18n/packs/${l}.json`), 'utf8'))]),
     );
-    // the override may import app modules (deck builders), so it loads through the same vite instance, then the instance closes
-    const overridePath = join(ROOT, `scripts/lectures/overrides/${moduleId}.mjs`);
-    const override = existsSync(overridePath) ? (await vite.ssrLoadModule(`/scripts/lectures/overrides/${moduleId}.mjs`)).default : null;
-    return { EN_STRINGS, packs, info, content, LECTURE_CAPTIONS, LECTURE_URL, override };
+    return { EN_STRINGS, packs, info, content, LECTURE_CAPTIONS, LECTURE_URL };
   } finally {
     await vite.close();
   }
 }
 
+// ---------- child processes (killed together on a watchdog timeout or a crash) ----------
+const children = new Set();
+export function killTree(p) {
+  if (!p?.pid) return;
+  if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(p.pid), '/t', '/f'], { stdio: 'ignore' });
+  else p.kill('SIGKILL');
+}
+export const killChildren = () => {
+  for (const p of children) killTree(p);
+  children.clear();
+};
+const track = (p) => {
+  children.add(p);
+  p.on('close', () => children.delete(p));
+  return p;
+};
+
 // ---------- build and preview server ----------
 const sh = (cmd) => new Promise((ok, fail) => {
-  const p = spawn(cmd, { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], shell: true });
+  const p = track(spawn(cmd, { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], shell: true }));
   let err = '';
   p.stderr.on('data', (d) => (err += d));
   p.on('close', (code) => (code === 0 ? ok() : fail(new Error(`${cmd} exited ${code}\n${err.slice(-1500)}`))));
@@ -55,24 +71,44 @@ const sh = (cmd) => new Promise((ok, fail) => {
 
 export const buildApp = () => sh(`npx vite build --outDir ${OUT_DIR} --emptyOutDir`);
 
+/** 4182, else 4183-4189: the first port nothing listens on. */
+export async function pickPort() {
+  for (let port = 4182; port <= 4189; port++) {
+    const free = await new Promise((ok) => {
+      const s = createNetServer();
+      s.once('error', () => ok(false));
+      s.listen(port, () => s.close(() => ok(true)));
+    });
+    if (free) return port;
+  }
+  throw new Error('no free port in 4182-4189');
+}
+
+export async function serverAlive() {
+  try {
+    return (await fetch(baseUrl(), { signal: AbortSignal.timeout(5000) })).ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function startServer() {
-  const server = spawn(`npx vite preview --outDir ${OUT_DIR} --port ${PORT} --strictPort`, { cwd: ROOT, stdio: 'ignore', shell: true });
+  net.port = await pickPort();
+  const server = spawn(`npx vite preview --outDir ${OUT_DIR} --port ${net.port} --strictPort`, { cwd: ROOT, stdio: 'ignore', shell: true });
   for (let i = 0; i < 60; i++) {
     try {
-      if ((await fetch(BASE)).ok) return server;
+      if ((await fetch(baseUrl())).ok) return server;
     } catch {
       /* not up yet */
     }
     await new Promise((r) => setTimeout(r, 500));
   }
   stopServer(server);
-  throw new Error(`no preview server on ${BASE}`);
+  throw new Error(`no preview server on ${baseUrl()}`);
 }
 
 export function stopServer(server) {
-  if (!server) return;
-  if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(server.pid), '/t', '/f'], { stdio: 'ignore' });
-  else server.kill();
+  killTree(server);
 }
 
 // ---------- the page: slow cursor, cards ----------
@@ -143,8 +179,8 @@ export const hideCard = (page) =>
 
 // ---------- pacing ----------
 export const wordCount = (s) => s.split(/\s+/).filter(Boolean).length;
-/** Reading hold in ms: max(8 s, words / 100 wpm + 3 s). */
-export const holdFor = (words, min = 8000) => Math.max(min, Math.round((words / 100) * 60000 + 3000));
+/** Reading hold in ms: max(min, words at ~120 wpm + 2 s of breathing room). Reveal tiles pass a shorter min. */
+export const holdFor = (words, min = 6000) => Math.max(min, Math.round((words / 120) * 60000 + 2000));
 
 // ---------- screencast capture ----------
 /** CDP screencast: every frame saved with its timestamp and acknowledged; `finish` returns the frame list. */
@@ -183,7 +219,7 @@ export async function startCapture(context, page, dir) {
 
 const run = (cmd, args, cwd) =>
   new Promise((ok, fail) => {
-    const p = spawn(cmd, args, { cwd, stdio: ['ignore', 'ignore', 'pipe'] });
+    const p = track(spawn(cmd, args, { cwd, stdio: ['ignore', 'ignore', 'pipe'] }));
     let err = '';
     p.stderr.on('data', (d) => (err += d));
     p.on('close', (code) => (code === 0 ? ok() : fail(new Error(`ffmpeg exited ${code}\n${err.slice(-1500)}`))));
@@ -211,20 +247,9 @@ export async function encodeFrames(frames, dir, dest, totalSec) {
   ], dir);
 }
 
-// ---------- captions and script ----------
-const p2 = (n, w = 2) => String(n).padStart(w, '0');
-const stamp = (s, sep) => {
-  const ms = Math.max(0, Math.round(s * 1000));
-  return `${p2(Math.floor(ms / 3600000))}:${p2(Math.floor(ms / 60000) % 60)}:${p2(Math.floor(ms / 1000) % 60)}${sep}${p2(ms % 1000, 3)}`;
-};
+// ---------- narration script ----------
+const p2 = (n) => String(n).padStart(2, '0');
 export const mmss = (s) => `${p2(Math.floor(s / 60))}:${p2(Math.floor(s) % 60)}`;
-
-export function writeCaptions(dir, name, cues) {
-  const vtt = cues.map((c, i) => `${i + 1}\n${stamp(c.start, '.')} --> ${stamp(c.end, '.')}\n${c.narr}`).join('\n\n');
-  writeFileSync(join(dir, `${name}.vtt`), `WEBVTT\n\n${vtt}\n`, 'utf8');
-  const srt = cues.map((c, i) => `${i + 1}\n${stamp(c.start, ',')} --> ${stamp(c.end, ',')}\n${c.narr}`).join('\n\n');
-  writeFileSync(join(dir, `${name}.srt`), `${srt}\n`, 'utf8');
-}
 
 export function writeScript(dir, name, { title, lang, total, cues }) {
   const cell = (s) => s.replace(/\|/g, '/').replace(/\s+/g, ' ').trim();
@@ -241,3 +266,53 @@ export function writeScript(dir, name, { title, lang, total, cues }) {
   ].join('\n');
   writeFileSync(join(dir, `${name}-script.md`), md, 'utf8');
 }
+
+// ---------- ffmpeg: probe, encoders, contact sheet; disk ----------
+/** Run ffmpeg and return its stderr (ffmpeg-static has no ffprobe; `ffmpeg -i` prints the stream info and exits 1). */
+const ffText = (args) => new Promise((ok) => {
+  const p = track(spawn(FFMPEG, args, { stdio: ['ignore', 'ignore', 'pipe'] }));
+  let err = '';
+  p.stderr.on('data', (d) => (err += d));
+  p.on('close', (code) => ok({ code, err }));
+  p.on('error', (e) => ok({ code: -1, err: String(e) }));
+});
+
+export async function hasLibx264() {
+  const { err } = await new Promise((ok) => {
+    const p = spawn(FFMPEG, ['-hide_banner', '-encoders'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    let out = '';
+    p.stdout.on('data', (d) => (out += d));
+    p.on('close', () => ok({ err: out }));
+    p.on('error', () => ok({ err: '' }));
+  });
+  return /libx264/.test(err);
+}
+
+/** { codec, pix, width, height, duration (s), size (bytes) } of an MP4, or throws. */
+export async function probeVideo(file) {
+  const { err } = await ffText(['-hide_banner', '-i', file]);
+  const dur = /Duration: (\d+):(\d+):(\d+(?:\.\d+)?)/.exec(err);
+  const vid = /Video: (\w+)[^\n]*?, (yuv\w+)[^\n]*?, (\d+)x(\d+)/.exec(err);
+  if (!dur || !vid) throw new Error(`cannot read ${file}: ${err.slice(-300)}`);
+  return {
+    codec: vid[1], pix: vid[2], width: Number(vid[3]), height: Number(vid[4]),
+    duration: Number(dur[1]) * 3600 + Number(dur[2]) * 60 + Number(dur[3]),
+    size: statSync(file).size,
+  };
+}
+
+/** A 3x2 grid of frames at evenly spaced times, about 1200 px wide, as a JPEG. */
+export async function contactSheet(mp4, dest, duration) {
+  mkdirSync(join(dest, '..'), { recursive: true });
+  const step = duration / 6;
+  const { code, err } = await ffText([
+    '-y', '-ss', (step / 2).toFixed(2), '-i', mp4, '-vf', `fps=1/${step.toFixed(3)},scale=400:225,tile=3x2`, '-frames:v', '1', '-q:v', '4', dest,
+  ]);
+  if (code !== 0) throw new Error(`contact sheet failed: ${err.slice(-300)}`);
+}
+
+/** Free disk space in GB on the drive holding `path`. */
+export const freeGb = (path) => {
+  const s = statfsSync(path);
+  return (s.bavail * s.bsize) / 1024 ** 3;
+};
