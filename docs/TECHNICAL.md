@@ -136,8 +136,8 @@ ARAW is a **static single-page application** with one small server function. The
 | Router | Hand-written hash router | static hosting, no server rewrites |
 | Games | HTML Canvas 2D on a small shared engine (`src/games/engine/`), plus DOM games | no game framework |
 | Sound | Web Audio synthesis (`src/app/sound/synth.ts`) | chiptune music and effects are generated live: no audio files |
-| Unit tests | Vitest 5.0.4, jsdom 30, `@testing-library/preact` | 1,120 tests in 69 files |
-| End-to-end tests | Playwright 1.64.1 (Chromium), `@axe-core/playwright` 4.13.0 | 915 tests (305 per project) in 37 spec files |
+| Unit tests | Vitest 5.0.4, jsdom 30, `@testing-library/preact` | 1,133 tests in 70 files |
+| End-to-end tests | Playwright 1.64.1 (Chromium), `@axe-core/playwright` 4.13.0 | 918 tests (306 per project) in 37 spec files |
 | Persistence | `localStorage` (and `sessionStorage`, OPFS for the optional on-device model) | always in try/catch |
 | Size | about 38,400 lines of TypeScript and TSX, 11,200 lines of CSS in `src/` | measured |
 
@@ -679,6 +679,7 @@ The sandbox (`#/sandbox`) lets a learner chat with a **real AI built for Southea
 | `model.ts` | `CLOUD_MODEL`, the pinned on-device model table, `DEFAULT_MODEL_ID`, `N_CTX = 2048`, `MAX_TOKENS = 320`, model URL builder |
 | `prompt.ts` | system prompt and history budget |
 | `guard.ts` | safety checks (section 12.6) |
+| `catches.ts` | "Ara caught this" tips for known AI limits (section 12.10) |
 | `missions.ts` | "Catch the AI" missions |
 | `review.ts` | list of sandbox lines for the reviewers |
 
@@ -765,7 +766,7 @@ All checks are pure functions with unit tests (`sandboxGuard.test.ts`). Word lis
 | **System prompt** | English instructions (models follow them best) naming the answer language: at most 5 sentences, goes straight to the answer with no greeting and no bracketed translations, admits it can be wrong and does not know the date or news, never gives doses, diagnoses or treatment changes, points to a health worker, never asks for personal details. On the server, the Worker adds it, so a caller cannot replace it |
 | **Framing** | every answer is labelled "ARAW practice AI · can be wrong" and gets a Usable / Wrong / Get checked rating with a calibrated-trust tip from Ara; generated text is never presented as a fact source; chats are kept in memory only; input is capped at 500 characters |
 
-`src/sandbox/review.ts` lists ten sandbox elements (system prompt, starters, red flags, self-harm, red-flag card, personal data, dose filter, trust tips, terms, missions) for the medical and cultural reviewers. The model's own answers are generated and cannot be reviewed. The dose filter is deliberately broad: a sentence that only says the AI does not know the dose can also be hidden.
+`src/sandbox/review.ts` lists eleven sandbox elements (system prompt, starters, red flags, self-harm, red-flag card, personal data, dose filter, trust tips, catches, terms, missions) for the medical and cultural reviewers. The model's own answers are generated and cannot be reviewed. The dose filter is deliberately broad: a sentence that only says the AI does not know the dose can also be hidden.
 
 ### 12.7 Missions
 
@@ -797,6 +798,21 @@ Agreement is kept in `localStorage` (`araw:v1:sandbox-terms`) per version. Raisi
 | Busy or out of reach | Workers AI error 3040, the rate limit, no internet, a stalled answer, or a host without the Worker | "The practice AI cannot answer right now", and they may send again |
 
 Both cards offer **Save the AI on this device** (378 MB, one time) and **Open Module 3**. Choosing the on-device AI changes the wording to match: the screen then says the chat stays on the device (SANDBOX-WORDING). Free-plan limits end in an error, never a bill.
+
+### 12.10 "Ara caught this" tips
+
+The model's answers cannot be reviewed, so the app points at known AI limits itself (decision log, SANDBOX-CATCHES). `catchFor()` in `src/sandbox/catches.ts` gives an answer at most one tip, shown under it once it is complete. It also serves the pitch: an honest "I do not know the date" could look like a fault, and the tip turns it into the lesson.
+
+| Kind | Trigger, in priority order | The tip says |
+|---|---|---|
+| `link` | the answer contains a web address | the link may not be real; check it first |
+| `promise` | the answer reassures or promises ("gagaling ka rin") | a chatbot cannot examine you, so it cannot promise |
+| `date` | the player asks the date, day or time | AI has no clock; it only knows what it learned before |
+| `recent` | the player asks about news, weather, who won or who holds office | AI can miss new events or give old facts |
+| `source` | the player asks for a link, source or study | AI can make up sources that sound real |
+| `number` | the answer has a percentage or a figure such as "3 out of 4" | AI can make up numbers that sound exact |
+
+Word lists cover all five languages. The two matching starter questions name their kind directly, so they work whatever their translated wording. A `date`, `source` or `link` catch also finishes the matching mission, so the player does not have to tick it. A missed catch costs nothing, because the answer still carries its "can be wrong" label. On the 40 saved SEA-LION bake-off answers it caught all 5 date questions and all 5 source questions, caught 1 false reassurance, and stayed quiet on the other 29.
 
 ## 13. Media and document pipelines
 
@@ -985,7 +1001,7 @@ Ports are fixed (dev 5173, preview 4173, both `--strictPort`), and long-running 
 
 ### 15.3 Unit and component tests
 
-Vitest 5 with jsdom and `@testing-library/preact`: **1,120 tests in 69 files** (measured). Areas: engine (loop, RNG, scale, input), scoring and Truth Radar, rounds and daily seeds, streaks and XP, store and storage-blocked behaviour, router, settings, language and packs, every game's logic and many components, content banks (validation, counts, safety, review file), sandbox (guard, engine, model, preload, missions, prompt, screen), report, PWA output, printables, guide content and callouts.
+Vitest 5 with jsdom and `@testing-library/preact`: **1,133 tests in 70 files** (measured). Areas: engine (loop, RNG, scale, input), scoring and Truth Radar, rounds and daily seeds, streaks and XP, store and storage-blocked behaviour, router, settings, language and packs, every game's logic and many components, content banks (validation, counts, safety, review file), sandbox (guard, engine, model, preload, missions, prompt, screen), report, PWA output, printables, guide content and callouts.
 
 ### 15.4 End-to-end tests
 
@@ -997,7 +1013,7 @@ Playwright 1.64 with Chromium, three projects defined in `playwright.config.ts`:
 | `tablet` | 820 x 1180 | |
 | `desktop` | 1440 x 900 | |
 
-**915 tests (305 per project) in 37 spec files** (measured with `playwright test --list`). Every spec runs on all three projects, scans for accessibility with axe (WCAG 2.0, 2.1 and 2.2 A and AA tags; 31 files) and asserts "no horizontal overflow" (`noHorizontalOverflow` in `tests/e2e/fixtures.ts`; 34 spec files). Shared fixtures skip the splash through `sessionStorage`, install the scripted test AI and abort Hugging Face requests. Specs cover each screen and each game, the shell and responsiveness, i18n fit for every pack, PWA behaviour, the sandbox, the tutorials (including "videos are never cached by the service worker"), printables, the guide, sound, and the certificate.
+**918 tests (306 per project) in 37 spec files** (measured with `playwright test --list`). Every spec runs on all three projects, scans for accessibility with axe (WCAG 2.0, 2.1 and 2.2 A and AA tags; 31 files) and asserts "no horizontal overflow" (`noHorizontalOverflow` in `tests/e2e/fixtures.ts`; 34 spec files). Shared fixtures skip the splash through `sessionStorage`, install the scripted test AI and abort Hugging Face requests. Specs cover each screen and each game, the shell and responsiveness, i18n fit for every pack, PWA behaviour, the sandbox, the tutorials (including "videos are never cached by the service worker"), printables, the guide, sound, and the certificate.
 
 ### 15.5 Tests outside `verify` (run by hand)
 
@@ -1014,8 +1030,8 @@ Playwright 1.64 with Chromium, three projects defined in `playwright.config.ts`:
 
 | Suite | Files | Tests |
 |---|---|---|
-| Vitest unit and component | 69 | 1,120 |
-| Playwright e2e (3 projects) | 37 | 915 (305 x 3) |
+| Vitest unit and component | 70 | 1,133 |
+| Playwright e2e (3 projects) | 37 | 918 (306 x 3) |
 
 ---
 
@@ -1303,4 +1319,5 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 | SANDBOX-FALLBACK | 2026-11-06 | Allowance out or busy: say so, then offer the on-device AI or Module 3; nothing downloads by itself |
 | SANDBOX-WORDING | 2026-11-06 | Privacy wording follows where the AI actually runs |
 | SANDBOX-CLOUD-MODEL | 2026-11-06 | Gemma-SEA-LION v4 27B after a 4-model bake-off |
+| SANDBOX-CATCHES | 2026-11-06 | "Ara caught this" tips explain known AI limits on the spot |
 | SANDBOX-PITCH | 2026-11-06 | "A real AI built for Southeast Asia", not "small"; no claims beyond Tagalog |

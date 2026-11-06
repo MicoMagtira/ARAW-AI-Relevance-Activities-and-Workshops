@@ -29,6 +29,9 @@ function termRe(term: string): RegExp {
   return term.length <= 4 ? new RegExp(`(?:^|[^a-z0-9])${t}(?![a-z0-9])`) : new RegExp(`(?:^|[^a-z0-9])${t}`);
 }
 
+/** Whether already normalized text holds any of these terms, by the word rules above. */
+export const hasTerm = (normalized: string, terms: readonly string[]): boolean => terms.some((term) => termRe(term).test(normalized));
+
 interface Rule {
   id: RedFlagId;
   /** Any one of these phrases is enough. */

@@ -9381,7 +9381,7 @@
   ]
  },
  {
-  "text": "Type a question and press Send, or tap one of the Try asking ideas. The answer appears word by word. Every answer says \"ARAW practice AI · can be wrong\".",
+  "text": "Type a question and press Send, or tap one of the Try asking ideas. The answer appears word by word. Every answer says \"ARAW practice AI · can be wrong\". When a chat touches something AI often gets wrong, Ara adds a tip under the answer.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -37766,6 +37766,48 @@
   ]
  },
  {
+  "text": "AI has no clock. It only knows what it learned before, so it cannot tell the date unless an app gives it. That is why you check anything recent.",
+  "src": [
+   "ui:sb.catch.date"
+  ]
+ },
+ {
+  "text": "Ara caught this:",
+  "src": [
+   "ui:sb.catch.label"
+  ]
+ },
+ {
+  "text": "This link may not be real. AI can make up links that look right. Check it yourself before you trust it, and never type personal details there.",
+  "src": [
+   "ui:sb.catch.link"
+  ]
+ },
+ {
+  "text": "AI can make up numbers that sound exact. Check numbers on an official page like DOH or WHO.",
+  "src": [
+   "ui:sb.catch.number"
+  ]
+ },
+ {
+  "text": "A chatbot cannot examine you, so it cannot promise you will be okay. Sounding kind is not the same as being right. Ask a health worker.",
+  "src": [
+   "ui:sb.catch.promise"
+  ]
+ },
+ {
+  "text": "AI only knows what it learned before, so it can miss new events or give old facts. Check anything recent on an official page or trusted news.",
+  "src": [
+   "ui:sb.catch.recent"
+  ]
+ },
+ {
+  "text": "AI can make up studies and sources that sound real. When an answer matters, find the source yourself, like DOH or WHO.",
+  "src": [
+   "ui:sb.catch.source"
+  ]
+ },
+ {
   "text": "Chat with the practice AI",
   "src": [
    "ui:sb.chatLabel"
@@ -37947,7 +37989,7 @@
   ]
  },
  {
-  "text": "Does it know? Chatbots often do not know the date or the news.",
+  "text": "Does it know? An AI has no clock of its own.",
   "src": [
    "ui:sb.m.date.hint"
   ]

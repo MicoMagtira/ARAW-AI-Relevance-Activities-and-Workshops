@@ -360,7 +360,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
       },
       {
         title: 'Ask a question',
-        text: 'Type a question and press Send, or tap one of the Try asking ideas. The answer appears word by word. Every answer says "ARAW practice AI · can be wrong".',
+        text: 'Type a question and press Send, or tap one of the Try asking ideas. The answer appears word by word. Every answer says "ARAW practice AI · can be wrong". When a chat touches something AI often gets wrong, Ara adds a tip under the answer.',
         shot: 'sandbox-chat',
         alt: 'The sandbox chat: a question about vaccines, the practice AI answer labelled can be wrong, and the question Would you trust this answer with three buttons.',
         callouts: [

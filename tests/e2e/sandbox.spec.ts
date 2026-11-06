@@ -106,6 +106,15 @@ test.describe('Chatbot Sandbox', () => {
     await noHorizontalOverflow(page);
   });
 
+  test('Ara explains why the AI does not know the date; the tip fits and is accessible', async ({ page }) => {
+    await open(page, { reply: 'I do not know the date.' });
+    await loadModel(page);
+    await page.getByRole('button', { name: 'What is the date today?' }).click();
+    await expect(log(page).getByText(/AI has no clock/)).toBeVisible();
+    await expect(log(page).getByText('Ara caught this:')).toBeVisible();
+    await check(page);
+  });
+
   test('the on-device AI downloads with a progress bar, then shows the chat; both states fit and are accessible', async ({ page }) => {
     await open(page, { device: true, delay: 1500 });
     await expect(page.getByRole('heading', { name: 'Downloading the practice AI' })).toBeVisible();

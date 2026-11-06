@@ -1,5 +1,6 @@
-// "Catch the AI" missions in the Chatbot Sandbox: small tasks that show where a chatbot goes wrong. Two finish on their
-// own (the first answer, three ratings); the rest are ticked by the player. Each pays XP once (claimXp keys "sandbox:<id>").
+// "Catch the AI" missions in the Chatbot Sandbox: small tasks that show where a chatbot goes wrong. Two always finish on their
+// own (the first answer, three ratings). The rest are ticked by the player, and the date and source missions also finish
+// when Ara catches that kind of question (src/sandbox/catches.ts). Each pays XP once (claimXp keys "sandbox:<id>").
 import { claimXp, xpClaims } from '../app/progress';
 import type { StringKey } from '../app/i18n';
 

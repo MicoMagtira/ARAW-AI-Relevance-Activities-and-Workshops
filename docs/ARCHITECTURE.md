@@ -22,7 +22,7 @@
 - **Chatbot Sandbox (`src/sandbox`, `#/sandbox`, `worker/index.ts`):** the player agrees to the terms (`access.ts`), then the AI runs on
   the server: `cloudBackend.ts` posts to `/api/chat`, and `worker/index.ts` adds the system prompt and calls Cloudflare Workers AI,
   storing and logging nothing. `model.ts` holds `CLOUD_MODEL` and the on-device candidates; `engine.ts` is the state machine over a
-  `Backend`; `guard.ts` (red flags, personal data, streamed dose filter), `prompt.ts` and `missions.ts` serve both modes. When the
+  `Backend`; `guard.ts` (red flags, personal data, streamed dose filter), `catches.ts` ("Ara caught this" tips), `prompt.ts` and `missions.ts` serve both modes. When the
   server cannot answer, the player may choose the on-device AI: `wllamaBackend.ts` (wllama: llama.cpp in WebAssembly, own worker,
   OPFS model cache) and `wllamaCompat.ts` (Safari build, own chunk). It never downloads by itself. `fakeBackend.ts` is for tests
   (`window.__ARAW_FAKE_LLM__`). Screen in `src/screens/sandbox/`. Model files are never precached; `public/_headers` sets COOP/COEP so

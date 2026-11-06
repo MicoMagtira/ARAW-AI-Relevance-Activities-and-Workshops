@@ -1,0 +1,11 @@
+[
+{"i":1,"text":"Type a question and press Send, or tap one of the Try asking ideas. The answer appears word by word. Every answer says \"ARAW practice AI · can be wrong\". When a chat touches something AI often gets wrong, Ara adds a tip under the answer.","where":"content/guide.ts#GUIDE_SECTIONS"},
+{"i":2,"text":"AI has no clock. It only knows what it learned before, so it cannot tell the date unless an app gives it. That is why you check anything recent.","where":"ui:sb.catch.date"},
+{"i":3,"text":"Ara caught this:","where":"ui:sb.catch.label"},
+{"i":4,"text":"This link may not be real. AI can make up links that look right. Check it yourself before you trust it, and never type personal details there.","where":"ui:sb.catch.link"},
+{"i":5,"text":"AI can make up numbers that sound exact. Check numbers on an official page like DOH or WHO.","where":"ui:sb.catch.number"},
+{"i":6,"text":"A chatbot cannot examine you, so it cannot promise you will be okay. Sounding kind is not the same as being right. Ask a health worker.","where":"ui:sb.catch.promise"},
+{"i":7,"text":"AI only knows what it learned before, so it can miss new events or give old facts. Check anything recent on an official page or trusted news.","where":"ui:sb.catch.recent"},
+{"i":8,"text":"AI can make up studies and sources that sound real. When an answer matters, find the source yourself, like DOH or WHO.","where":"ui:sb.catch.source"},
+{"i":9,"text":"Does it know? An AI has no clock of its own.","where":"ui:sb.m.date.hint"}
+]

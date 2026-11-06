@@ -310,6 +310,22 @@
   margin-top: 2px;
 }
 
+/* "Ara caught this": a tip under an answer that touches a known AI limit */
+.sb-catch {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--soft);
+  border: 2px solid var(--navy);
+  font: 600 var(--fs-16) / 1.45 var(--font-body);
+}
+
+.sb-catch svg {
+  flex: none;
+  margin-top: 2px;
+}
+
 /* red-flag and self-harm cards */
 .sb-card {
   display: grid;

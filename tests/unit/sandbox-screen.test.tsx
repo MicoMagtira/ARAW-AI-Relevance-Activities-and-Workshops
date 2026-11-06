@@ -68,6 +68,40 @@ describe('Chatbot Sandbox terms', () => {
   });
 });
 
+describe('Ara caught this', () => {
+  const tip = () => document.querySelector('.sb-catch');
+
+  it('explains why the AI does not know the date, and finishes the date mission', async () => {
+    const { xpClaims } = await renderScreen({ reply: 'I do not know the date.' });
+    await ready();
+    fireEvent.click(screen.getByRole('button', { name: 'What is the date today?' }));
+    await waitFor(() => expect(tip()?.textContent).toContain('AI has no clock'));
+    expect(tip()?.textContent).toContain('Ara caught this:');
+    await waitFor(() => expect(xpClaims.value).toContain('sandbox:date'));
+  });
+
+  it('warns about a link in an answer and finishes the source mission', async () => {
+    const { xpClaims } = await renderScreen({ reply: 'Read www.example.org for the study.' });
+    type(await ready(), 'Tell me more');
+    await waitFor(() => expect(tip()?.textContent).toContain('This link may not be real'));
+    await waitFor(() => expect(xpClaims.value).toContain('sandbox:source'));
+  });
+
+  it('catches a promise the AI cannot make', async () => {
+    await renderScreen({ reply: 'Huwag mag-alala, gagaling ka rin!' });
+    type(await ready(), 'Tatlong linggo na akong inuubo');
+    await waitFor(() => expect(tip()?.textContent).toContain('it cannot promise you will be okay'));
+  });
+
+  it('stays quiet on an ordinary answer, and does not appear until the answer is done', async () => {
+    await renderScreen({ reply: 'Keep water covered and clean.', delay: 30 });
+    type(await ready(), 'How do I stop mosquitoes?');
+    expect(tip()).toBeNull();
+    await waitFor(() => expect(within(log()).getByRole('group', { name: 'Would you trust this answer?' })).toBeTruthy());
+    expect(tip()).toBeNull();
+  });
+});
+
 describe('when the server cannot answer', () => {
   it('says the AI is resting until 8 AM, and the on-device AI is the player\'s own choice', async () => {
     await renderScreen({ cloudError: 'quota', reply: 'Device answer.', delay: 60 });

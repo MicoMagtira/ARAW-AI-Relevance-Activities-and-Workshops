@@ -679,8 +679,10 @@ wrong, and practise calibrated trust on fresh answers.
   - Thoughts of self-harm show the crisis hotline 1553 and never reach the model.
   - Names, phone and ID numbers, emails, addresses and diagnoses open a privacy nudge (Edit, or Send anyway). Its wording follows where the AI runs.
   - Any answer sentence with a medicine amount or schedule is replaced by "ARAW hid a medicine dose here" while it streams.
+- **"Ara caught this" tips:** when a chat touches a known AI limit (the date, recent events, sources, a link in the answer, an exact-sounding
+  number, or a promise it cannot make), Ara adds one short tip under the answer. Word lists cover all five languages.
 - **Judging:** every answer carries "ARAW practice AI · can be wrong" and a "Would you trust this?" row (Usable / Wrong /
   Get checked) with a calibrated-trust tip from Ara. Generated text is never presented as a fact source.
 - **Missions ("Catch the AI", +10 XP each, once):** ask a first question, ask the date, ask for a source or link, ask in another
-  language, rate 3 answers. No new badge (the set stays at 20).
+  language, rate 3 answers. Ara's date and source catches also finish those two missions. No new badge (the set stays at 20).
 - **Layout:** desktop missions | chat | trust tips; 1024–1279px chat beside the side panels; below 1024px one column, chat first.

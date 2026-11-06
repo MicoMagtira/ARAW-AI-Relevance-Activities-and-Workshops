@@ -10,6 +10,7 @@ import { xpClaims } from '../../app/progress';
 import { hrefFor, location$ } from '../../app/router';
 import { sfx } from '../../app/sound';
 import { agreedTerms, sandboxMode, TERMS_VERSION, type SandboxMode } from '../../sandbox/access';
+import { catchFor, type CatchKind } from '../../sandbox/catches';
 import { CloudError, getEngine, type CloudProblem, type Engine, type EngineStatus } from '../../sandbox/engine';
 import { createDoseFilter, detectPersonalData, detectRedFlags, MAX_INPUT, type PersonalKind } from '../../sandbox/guard';
 import { completeMission, isMissionDone, MISSION_XP, MISSIONS, missionsDone, RATINGS_NEEDED, type Mission } from '../../sandbox/missions';
@@ -32,9 +33,15 @@ const RULINGS: ReadonlyArray<{ id: Ruling; name: StringKey; label: StringKey; ti
 
 const STARTERS: readonly StringKey[] = ['sb.s1', 'sb.s2', 'sb.s3', 'sb.s4', 'sb.s5', 'sb.s6'];
 
+/** Starters that always bring a tip: their wording differs in every language, so they name their kind here. */
+const STARTER_CATCH: Partial<Record<StringKey, CatchKind>> = { 'sb.s2': 'date', 'sb.s3': 'source' };
+
+/** Asking the very thing a mission is about finishes that mission. */
+const CATCH_MISSION: Partial<Record<CatchKind, Mission['id']>> = { date: 'date', source: 'source', link: 'source' };
+
 type Msg =
   | { id: number; kind: 'user'; text: string }
-  | { id: number; kind: 'bot'; text: string; done: boolean; stopped?: boolean; failed?: boolean; dosed?: boolean; rating?: Ruling }
+  | { id: number; kind: 'bot'; text: string; done: boolean; stopped?: boolean; failed?: boolean; dosed?: boolean; rating?: Ruling; caught?: CatchKind | null }
   | { id: number; kind: 'redflag'; pending: string; asked: boolean }
   | { id: number; kind: 'selfharm' };
 
@@ -254,6 +261,14 @@ function BotBubble({ msg, onRate }: { msg: Extract<Msg, { kind: 'bot' }>; onRate
         {msg.dosed && msg.done && <p class="sb-note">{t('sb.doseNote')}</p>}
       </div>
       <span class="sb-label">{t('sb.label')}</span>
+      {msg.done && !msg.failed && text && msg.caught && (
+        <p class="sb-catch">
+          <Icon name="search" size={20} />
+          <span>
+            <strong>{t('sb.catch.label')}</strong> {t(`sb.catch.${msg.caught}` as StringKey)}
+          </span>
+        </p>
+      )}
       {msg.done && !msg.failed && text && <TrustRow msg={msg} onRate={onRate} />}
     </div>
   );
@@ -313,7 +328,7 @@ function Chat({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
   // leaving the page stops an answer that is still being written
   useEffect(() => () => engine.stop(), [engine]);
 
-  const ask = async () => {
+  const ask = async (hint?: CatchKind) => {
     const history: ChatTurn[] = [];
     for (const m of msgsRef.current) {
       if (m.kind === 'user') history.push({ role: 'user', content: m.text });
@@ -325,10 +340,14 @@ function Chat({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
     try {
       const { stopped } = await engine.chat(buildMessages(history, lang), (piece) => patch(id, { text: filter.push(piece) }));
       const text = filter.end();
-      patch(id, { text, done: true, stopped, dosed: filter.hidDose });
+      const question = history[history.length - 1]?.content ?? '';
+      const caught = text && !stopped ? catchFor(question, text, hint) : null;
+      patch(id, { text, done: true, stopped, dosed: filter.hidDose, caught });
       setDown(null);
-      if (text) setAnnounce(t('sb.announce', { text: tidyAnswer(text) }));
+      if (text) setAnnounce(`${t('sb.announce', { text: tidyAnswer(text) })}${caught ? ` ${t('sb.catch.label')} ${t(`sb.catch.${caught}` as StringKey)}` : ''}`);
       if (text && !stopped) award(MISSIONS[0] as Mission);
+      const mission = caught ? MISSIONS.find((m) => m.id === CATCH_MISSION[caught]) : undefined;
+      if (mission) award(mission);
     } catch (e) {
       patch(id, { text: filter.end(), done: true, failed: true });
       if (e instanceof CloudError) setDown(e.reason);
@@ -340,7 +359,7 @@ function Chat({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
     if (xp > 0) pushToast({ kind: 'xp', title: t('sb.m.xp', { n: xp }), text: t(mission.title) });
   };
 
-  const send = (raw: string, opts: { checked?: boolean } = {}) => {
+  const send = (raw: string, opts: { checked?: boolean; hint?: CatchKind } = {}) => {
     const text = raw.trim().slice(0, MAX_INPUT);
     if (!text || generating) return;
     if (!opts.checked) {
@@ -363,7 +382,7 @@ function Chat({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
       return;
     }
     update([...msgsRef.current, user]);
-    void ask();
+    void ask(opts.hint);
   };
 
   const askAnyway = (id: number) => {
@@ -419,7 +438,7 @@ function Chat({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
         <ul class="sb-starters__list" aria-labelledby="sb-starters-h">
           {STARTERS.map((key) => (
             <li key={key}>
-              <button type="button" class="sb-starter" disabled={generating} onClick={() => send(t(key))}>
+              <button type="button" class="sb-starter" disabled={generating} onClick={() => send(t(key), { hint: STARTER_CATCH[key] })}>
                 {t(key)}
               </button>
             </li>
