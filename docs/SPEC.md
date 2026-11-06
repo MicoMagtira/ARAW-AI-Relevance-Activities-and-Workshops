@@ -148,7 +148,7 @@ Modules M1 to M5 are the **Core modules**; M6 to M10 are **More modules**. Both 
   - *Scoring:* +10 per correct ruling; red-flag rounds ruled anything but Magpatingin show an extra gentle warning.
     Stars: 3 at ≥7/8, 2 at ≥5, else 1.
   - *Win/lose:* completes after 8 rounds; no fail state.
-  - The start and end screens link to the **Chatbot Sandbox** (section 15), where a real small AI answers the player's own questions.
+  - The start and end screens link to the **Chatbot Sandbox** (section 15), where a real AI built for Southeast Asia answers the player's own questions.
 - **Badge:** *Matalinong Pasyente* (Smart Patient).
 
 ### M4 · Tricks of Health Misinformation
@@ -635,36 +635,41 @@ Fact or Fake feedback card (with item id), and the game pause menu.
 | 15 | Certificate | Name entry, preview, print, PNG. |
 | 16 | About and licences | What ARAW is, licences, credits, beta and not-medical-advice note. |
 | 17 | Not Found | Friendly fallback. |
-| 18 | Chatbot Sandbox | Chat with a real small AI on the device, rate each answer, "Catch the AI" missions, trust tips (section 15). |
+| 18 | Chatbot Sandbox | Agree to the terms, chat with a real AI built for Southeast Asia, rate each answer, "Catch the AI" missions, trust tips (section 15). |
 
 ## 14. Non-functional requirements
 
 - Desktop-first, fully responsive 320px to 2560px with no horizontal page scroll; see `DESIGN.md`.
 - WCAG 2.2 AA baseline always on. All images, icon buttons and game states have text alternatives.
 - Initial JS ≤ 200 KB gzip; every game and module lazy-loaded; smooth on low-end Android.
-- Works offline after first visit (PWA), no backend, no tracking, no data leaves the device except what the player chooses to email or share.
-  The Chatbot Sandbox model is the one runtime download from outside ARAW (a pinned Hugging Face file, only on request); chats never leave the device.
+- Works offline after first visit (PWA), no database, no tracking. No data leaves the device except what the player chooses to email or share, and the messages the player sends to the Chatbot Sandbox AI.
+  The optional on-device sandbox model is the one runtime download from outside ARAW (a pinned Hugging Face file, only when the player chooses it; those chats stay on the device).
 - No beta or "not medical advice" banner in the app (dropped 2026-10-16; the proposal frames ARAW as educational). The creator credit shows on the splash, About and the app footer.
 
 ## 15. Chatbot Sandbox
 
-A real, small AI chatbot that runs **inside the player's browser** (route `#/sandbox`; Arcade Practice row and the Tanong kay
-Chatbot start and end screens link to it). It is the live counterpart of the scripted M3 game: players ask their own questions,
-see where an AI goes wrong, and practise calibrated trust on fresh answers.
+A real AI chatbot built for Southeast Asia (route `#/sandbox`; Arcade Practice row and the Tanong kay Chatbot start and end
+screens link to it). It is the live counterpart of the scripted M3 game: players ask their own questions, see where an AI goes
+wrong, and practise calibrated trust on fresh answers.
 
-- **Engine:** wllama (llama.cpp in WebAssembly, MIT) in its own worker; WebGPU or several CPU threads when the browser allows
-  (Cross-Origin-Opener/Embedder-Policy headers), one thread otherwise. Safari and older browsers get wllama's compat build.
-  All engine files are served by ARAW (no CDN) and precached only after first use.
-- **Model:** one small open GGUF model (Q4), chosen by bake-off (DECISIONS-LOG), fetched from a **pinned Hugging Face commit**
-  on the website and kept in the browser's private storage (OPFS); afterwards it works offline. `VITE_MODEL_SOURCE=local`
-  builds load `./models/<file>` instead (for the planned offline desktop and Android apps; `scripts/sandbox/fetch-model.mjs`).
-  No API keys, no server, no usage limits: every device runs its own copy.
-- **Getting the model, no button:** about 8 seconds after the app loads, the model file downloads quietly in the
-  background (saved on the device, not loaded into memory) when the connection is Wi-Fi or unknown (iPhone, desktop);
-  mobile data, Data Saver and 2G wait. Opening the sandbox then loads it in a few seconds. If it is not there yet, opening
-  the sandbox starts or continues the download by itself, with a progress bar ("This happens only once") while the
-  player reads the missions. Later visits load from the device, even offline.
-  A device that cannot run it (no WebAssembly SIMD, under 2 GB memory, not enough storage) gets a kind explanation and a link to Module 3.
+- **Where it runs:** on the server, so visitors download nothing and any phone with internet can chat. `worker/index.ts`, the only
+  server code, passes chats to Cloudflare Workers AI on the free allowance. It stores and logs nothing, adds the system prompt
+  itself, takes only chat turns, checks the origin and limits requests per address.
+- **Model:** Gemma-SEA-LION v4 27B by AI Singapore, chosen by bake-off (DECISIONS-LOG, SANDBOX-CLOUD-MODEL). Only Tagalog is on
+  its language list, so the app never claims Cebuano, Ilokano or Hiligaynon support.
+- **Terms first:** a "Before you chat" pop-up must be agreed before the AI runs: no personal details, messages go to an AI service
+  and ARAW does not save them, the AI can be wrong, no doses, diagnosis or emergencies, use it kindly, minors with an adult. Kept
+  per version on the device. "Not now" keeps the chat closed and links to Module 3.
+- **When the server cannot answer:** when the shared daily allowance is used up, the sandbox says the AI is resting until 8:00 AM
+  Philippine time; when it is busy or out of reach, it says so. Either way the player may save the on-device AI or open Module 3.
+- **On-device AI (only by the player's choice, never automatic):** wllama (llama.cpp in WebAssembly, MIT) in its own worker; WebGPU
+  or several CPU threads when the browser allows (Cross-Origin-Opener/Embedder-Policy headers), one thread otherwise. Safari and
+  older browsers get wllama's compat build. All engine files are served by ARAW and cached only after first use.
+  One small open GGUF model (Q4), chosen by bake-off, fetched from a **pinned Hugging Face commit** and kept in the browser's private
+  storage (OPFS), with a progress bar ("This happens only once"); afterwards it works offline and chats stay on the device.
+  `VITE_MODEL_SOURCE=local` builds load `./models/<file>` and always use it (for the planned offline desktop and Android apps;
+  `scripts/sandbox/fetch-model.mjs`). A device that cannot run it (no WebAssembly SIMD, under 2 GB memory, not enough storage) gets
+  a kind explanation and a link to Module 3.
 - **Chat:** six starter questions (in the app language), free text up to 500 characters, streamed answers, Stop, Clear chat.
   The system prompt (English instructions) asks for short answers in the app language (or the player's language), admits it
   can be wrong and does not know the date, and forbids doses, diagnosis and treatment changes. Chats live in memory only.
@@ -672,7 +677,7 @@ see where an AI goes wrong, and practise calibrated trust on fresh answers.
   - CONTENT_GUIDE red flags show the "Magpatingin agad" card (go to a health facility or call 911) **before** any answer;
     the player may still ask "in general" with one more tap.
   - Thoughts of self-harm show the crisis hotline 1553 and never reach the model.
-  - Names, phone and ID numbers, emails, addresses and diagnoses open a privacy nudge (Edit, or Send anyway: it stays on the device).
+  - Names, phone and ID numbers, emails, addresses and diagnoses open a privacy nudge (Edit, or Send anyway). Its wording follows where the AI runs.
   - Any answer sentence with a medicine amount or schedule is replaced by "ARAW hid a medicine dose here" while it streams.
 - **Judging:** every answer carries "ARAW practice AI · can be wrong" and a "Would you trust this?" row (Usable / Wrong /
   Get checked) with a calibrated-trust tip from Ara. Generated text is never presented as a fact source.

@@ -167,7 +167,7 @@ describe('Tanong kay Chatbot game', () => {
     expect(screen.getByRole('heading', { name: 'Tanong kay Chatbot' })).toBeTruthy();
     const sandbox = screen.getByRole('link', { name: 'Open the Chatbot Sandbox' });
     expect(sandbox.getAttribute('href')).toBe('#/sandbox');
-    expect(screen.getByText(/on your own device/)).toBeTruthy();
+    expect(screen.getByText(/ask an AI built for Southeast Asia your own questions/)).toBeTruthy();
     expect(screen.getByText('Real AI')).toBeTruthy();
   });
 

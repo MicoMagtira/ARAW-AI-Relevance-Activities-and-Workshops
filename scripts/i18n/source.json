@@ -9303,7 +9303,7 @@
   ]
  },
  {
-  "text": "The Chatbot Sandbox is a small practice AI that runs privately on your own device. It can be wrong, and that is the point: you practise catching its mistakes.",
+  "text": "The Chatbot Sandbox is a real AI built for Southeast Asia that you can chat with. There is nothing to download. It can be wrong, and that is the point: you practise catching its mistakes.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9333,43 +9333,43 @@
   ]
  },
  {
-  "text": "The one-time download",
+  "text": "Agree to the terms",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "The practice AI is a file that is saved on your device. ARAW downloads it by itself, only once. After that it works without internet.",
+  "text": "The first time you open the sandbox, ARAW shows the terms. Read them, then press I agree. You need the internet to chat, but there is nothing to download.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "The sandbox while it downloads: a progress bar with the megabytes done, a note that this happens only once, and a tip to use Wi-Fi.",
+  "text": "The Before you chat pop-up: a list of terms that starts with do not share personal details, and the buttons Not now and I agree.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "The progress bar. Wait until it is full.",
+  "text": "The most important rule: keep personal details out.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "This happens only once.",
+  "text": "Press this when you have read the terms.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "Use Wi-Fi if you can, to save your mobile data.",
+  "text": "Not now keeps the chat closed. You can still practise in Module 3.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
  },
  {
-  "text": "If your device is too old or too small to run the practice AI, ARAW tells you kindly and shows Module 3 instead.",
+  "text": "If the practice AI cannot answer, ARAW tells you why. You can try again later, save the AI on your device, or practise in Module 3.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -9417,7 +9417,7 @@
   ]
  },
  {
-  "text": "Your chat stays on this device. Nothing is sent anywhere, and the chat is cleared when you leave the page. Do not write names, ID numbers or addresses.",
+  "text": "Your messages go over the internet to an AI service to get an answer. ARAW does not save them, and the chat is cleared when you leave the page. Do not write names, ID numbers or addresses.",
   "src": [
    "content\\guide.ts#GUIDE_SECTIONS"
   ]
@@ -29410,7 +29410,7 @@
   ]
  },
  {
-  "text": "Chat with a real, small AI that runs on your device, and catch its mistakes.",
+  "text": "Chat with a real AI built for Southeast Asia and catch its mistakes.",
   "src": [
    "ui:arcade.sandboxText"
   ]
@@ -29779,7 +29779,7 @@
   ]
  },
  {
-  "text": "Want to try a real AI? The Chatbot Sandbox runs a small AI model on your own device, so you can ask your own questions safely and see where it goes wrong.",
+  "text": "Want to try a real AI? In the Chatbot Sandbox you can ask an AI built for Southeast Asia your own questions and see where it goes wrong.",
   "src": [
    "ui:cb.sandbox.text"
   ]
@@ -37736,6 +37736,12 @@
   ]
  },
  {
+  "text": "{model} · {license}. Made by AI Singapore for Southeast Asian languages, including Tagalog. It runs on Cloudflare Workers AI.",
+  "src": [
+   "ui:sb.aboutCloud"
+  ]
+ },
+ {
   "text": "{model} · {size} MB · {license}. It runs on this device with wllama (llama.cpp).",
   "src": [
    "ui:sb.aboutText"
@@ -37751,6 +37757,12 @@
   "text": "This AI is small, so it gets things wrong more often than big chatbots. That makes it great practice! Ask it anything, then decide: would you trust it?",
   "src": [
    "ui:sb.ara"
+  ]
+ },
+ {
+  "text": "This is a real AI built for Southeast Asia. It sounds sure even when it is wrong. That makes it great practice! Ask it anything, then decide: would you trust it?",
+  "src": [
+   "ui:sb.ara.cloud"
   ]
  },
  {
@@ -37784,6 +37796,42 @@
   ]
  },
  {
+  "text": "It may be busy, or your internet may be down. Wait a moment, then send your message again.",
+  "src": [
+   "ui:sb.down.busy"
+  ]
+ },
+ {
+  "text": "The practice AI cannot answer right now",
+  "src": [
+   "ui:sb.down.busy.title"
+  ]
+ },
+ {
+  "text": "You can keep going by saving the practice AI on this device ({size} MB, one time). It needs a computer or a newer phone. You can also practise in Module 3.",
+  "src": [
+   "ui:sb.down.device"
+  ]
+ },
+ {
+  "text": "Everyone has used up today's free chats. It comes back at 8:00 AM, Philippine time.",
+  "src": [
+   "ui:sb.down.quota"
+  ]
+ },
+ {
+  "text": "The practice AI is resting",
+  "src": [
+   "ui:sb.down.quota.title"
+  ]
+ },
+ {
+  "text": "Save the AI on this device",
+  "src": [
+   "ui:sb.down.useDevice"
+  ]
+ },
+ {
   "text": "No messages yet. Pick a question below or write your own.",
   "src": [
    "ui:sb.empty"
@@ -37793,6 +37841,12 @@
   "text": "The practice AI stopped working. Try loading it again.",
   "src": [
    "ui:sb.error.chat"
+  ]
+ },
+ {
+  "text": "The practice AI could not answer this time.",
+  "src": [
+   "ui:sb.error.cloud"
   ]
  },
  {
@@ -37814,6 +37868,12 @@
   ]
  },
  {
+  "text": "Chat with a real AI built for Southeast Asia. Nothing to download: just ask. It writes a new answer every time, and it can be wrong. Your job: catch it.",
+  "src": [
+   "ui:sb.intro.cloud"
+  ]
+ },
+ {
   "text": "Practice AI",
   "src": [
    "ui:sb.kicker",
@@ -37827,7 +37887,7 @@
   ]
  },
  {
-  "text": "Small AIs learn mostly from English text, so answers in Cebuano, Ilokano and Hiligaynon can be weaker or mixed with other languages. That is a real limit of AI, worth noticing!",
+  "text": "AI learns mostly from English text, so answers in Cebuano, Ilokano and Hiligaynon can be weaker or mixed with other languages. That is a real limit of AI, worth noticing!",
   "src": [
    "ui:sb.langNote"
   ]
@@ -37899,7 +37959,7 @@
   ]
  },
  {
-  "text": "Is the answer as good? Small AIs are often weaker in Filipino and regional languages.",
+  "text": "Is the answer as good? AI is often weaker in Filipino and regional languages.",
   "src": [
    "ui:sb.m.language.hint"
   ]
@@ -37956,6 +38016,12 @@
   "text": "an address",
   "src": [
    "ui:sb.pii.address"
+  ]
+ },
+ {
+  "text": "Your message would go over the internet to an AI service, so it is best to take personal details out.",
+  "src": [
+   "ui:sb.pii.cloud"
   ]
  },
  {
@@ -38028,6 +38094,12 @@
   "text": "Your chat stays on this device. Nothing is sent anywhere, and the chat is cleared when you leave this page.",
   "src": [
    "ui:sb.private"
+  ]
+ },
+ {
+  "text": "Your messages go over the internet to an AI service to get an answer. ARAW does not save them, and the chat is cleared when you leave this page. Keep personal details out.",
+  "src": [
+   "ui:sb.private.cloud"
   ]
  },
  {
@@ -38127,6 +38199,78 @@
   ]
  },
  {
+  "text": "Do not share personal details: no real names, phone numbers, addresses, ID numbers or health records, yours or anyone else's.",
+  "src": [
+   "ui:sb.terms.1"
+  ]
+ },
+ {
+  "text": "What you type is sent over the internet to an AI service (Cloudflare Workers AI) to get an answer. ARAW does not save your chats. The service says it does not keep them or use them to train AI.",
+  "src": [
+   "ui:sb.terms.2"
+  ]
+ },
+ {
+  "text": "This AI can be wrong and can make things up. It is for learning only. Check what it says before you believe it.",
+  "src": [
+   "ui:sb.terms.3"
+  ]
+ },
+ {
+  "text": "It is not a doctor. Do not use it for medicine doses, diagnosis or emergencies. Ask a health worker. In an emergency, call 911.",
+  "src": [
+   "ui:sb.terms.4"
+  ]
+ },
+ {
+  "text": "Use it kindly. Do not use it to harm anyone or for anything against the law.",
+  "src": [
+   "ui:sb.terms.5"
+  ]
+ },
+ {
+  "text": "If you are a minor, use it with a parent, guardian or teacher.",
+  "src": [
+   "ui:sb.terms.6"
+  ]
+ },
+ {
+  "text": "I agree",
+  "src": [
+   "ui:sb.terms.agree"
+  ]
+ },
+ {
+  "text": "Not now",
+  "src": [
+   "ui:sb.terms.later"
+  ]
+ },
+ {
+  "text": "This is a place to practise with a real AI. Please read this first.",
+  "src": [
+   "ui:sb.terms.lead"
+  ]
+ },
+ {
+  "text": "To chat with the practice AI, please read and agree to the terms first. You can also practise in Module 3.",
+  "src": [
+   "ui:sb.terms.needed"
+  ]
+ },
+ {
+  "text": "Read the terms",
+  "src": [
+   "ui:sb.terms.read"
+  ]
+ },
+ {
+  "text": "Before you chat",
+  "src": [
+   "ui:sb.terms.title"
+  ]
+ },
+ {
   "text": "Asking my tiny brain nicely…",
   "src": [
    "ui:sb.think.1"
@@ -38223,7 +38367,7 @@
   ]
  },
  {
-  "text": "Good catch! Small AIs often make things up and still sound sure. That is why we check.",
+  "text": "Good catch! AI can make things up and still sound sure. That is why we check.",
   "src": [
    "ui:sb.tip.mali"
   ]

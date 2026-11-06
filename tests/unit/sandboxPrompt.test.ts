@@ -54,3 +54,11 @@ describe('tidyAnswer', () => {
     expect(tidyAnswer('## Tips\n**Rest** well.\n- Drink water\n* Sleep')).toBe('Tips\nRest well.\n• Drink water\n• Sleep');
   });
 });
+
+describe('tidyAnswer emphasis', () => {
+  it('drops single-star emphasis, and leaves a real star alone', () => {
+    expect(tidyAnswer('I am not sure if it *cures* it.')).toBe('I am not sure if it cures it.');
+    expect(tidyAnswer('para sa *iyong* bata, *ligtas*.')).toBe('para sa iyong bata, ligtas.');
+    expect(tidyAnswer('Rated 4 * 5 and 2 * 3 stars.')).toBe('Rated 4 * 5 and 2 * 3 stars.');
+  });
+});

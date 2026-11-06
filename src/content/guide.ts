@@ -334,7 +334,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
     id: 'sandbox',
     label: 'Sandbox',
     title: 'Chatbot Sandbox: practise with a real AI',
-    intro: 'The Chatbot Sandbox is a small practice AI that runs privately on your own device. It can be wrong, and that is the point: you practise catching its mistakes.',
+    intro: 'The Chatbot Sandbox is a real AI built for Southeast Asia that you can chat with. There is nothing to download. It can be wrong, and that is the point: you practise catching its mistakes.',
     steps: [
       {
         title: 'Open the sandbox',
@@ -347,16 +347,16 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
         ],
       },
       {
-        title: 'The one-time download',
-        text: 'The practice AI is a file that is saved on your device. ARAW downloads it by itself, only once. After that it works without internet.',
-        shot: 'sandbox-download',
-        alt: 'The sandbox while it downloads: a progress bar with the megabytes done, a note that this happens only once, and a tip to use Wi-Fi.',
+        title: 'Agree to the terms',
+        text: 'The first time you open the sandbox, ARAW shows the terms. Read them, then press I agree. You need the internet to chat, but there is nothing to download.',
+        shot: 'sandbox-terms',
+        alt: 'The Before you chat pop-up: a list of terms that starts with do not share personal details, and the buttons Not now and I agree.',
         callouts: [
-          { target: 'bar', text: 'The progress bar. Wait until it is full.' },
-          { target: 'once', text: 'This happens only once.' },
-          { target: 'wifi', text: 'Use Wi-Fi if you can, to save your mobile data.' },
+          { target: 'personal', text: 'The most important rule: keep personal details out.' },
+          { target: 'agree', text: 'Press this when you have read the terms.' },
+          { target: 'later', text: 'Not now keeps the chat closed. You can still practise in Module 3.' },
         ],
-        tip: 'If your device is too old or too small to run the practice AI, ARAW tells you kindly and shows Module 3 instead.',
+        tip: 'If the practice AI cannot answer, ARAW tells you why. You can try again later, save the AI on your device, or practise in Module 3.',
       },
       {
         title: 'Ask a question',
@@ -369,7 +369,7 @@ export const GUIDE_SECTIONS: readonly GuideSection[] = [
           { target: 'label', text: 'A reminder on every answer: this AI can be wrong.' },
           { target: 'message', text: 'Type your own question here.' },
         ],
-        tip: 'Your chat stays on this device. Nothing is sent anywhere, and the chat is cleared when you leave the page. Do not write names, ID numbers or addresses.',
+        tip: 'Your messages go over the internet to an AI service to get an answer. ARAW does not save them, and the chat is cleared when you leave the page. Do not write names, ID numbers or addresses.',
       },
       {
         title: 'Rate the answer',

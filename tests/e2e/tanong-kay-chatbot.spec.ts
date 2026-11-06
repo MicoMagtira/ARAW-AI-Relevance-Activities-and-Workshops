@@ -70,7 +70,7 @@ test.describe('Tanong kay Chatbot', () => {
     const sandbox = page.getByRole('link', { name: 'Open the Chatbot Sandbox' });
     await expect(sandbox).toBeVisible();
     await expect(sandbox).toHaveAttribute('href', '#/sandbox');
-    await expect(page.getByText(/on your own device/)).toBeVisible();
+    await expect(page.getByText(/ask an AI built for Southeast Asia your own questions/)).toBeVisible();
     await settled(page);
     await noHorizontalOverflow(page);
     expect(await axeSerious(page)).toEqual([]);

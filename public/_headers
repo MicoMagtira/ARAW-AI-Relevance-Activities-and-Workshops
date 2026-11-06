@@ -11,10 +11,12 @@
 /
   Cache-Control: no-cache
 
-# Cross-origin isolation lets the Chatbot Sandbox AI use several CPU threads (SharedArrayBuffer). "credentialless" still
-# allows the model download from Hugging Face; browsers without it simply run the AI on one thread.
+# Cross-origin isolation lets the on-device Chatbot Sandbox AI use several CPU threads (SharedArrayBuffer). "credentialless"
+# still allows the model download from Hugging Face; browsers without it simply run the AI on one thread.
+# Referrer-Policy must stay no-referrer: Hugging Face answers 404 to any request whose Referer is a *.workers.dev address,
+# which blocks the model download (docs/DECISIONS-LOG.md, SANDBOX-REFERRER).
 /*
   X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
+  Referrer-Policy: no-referrer
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: credentialless

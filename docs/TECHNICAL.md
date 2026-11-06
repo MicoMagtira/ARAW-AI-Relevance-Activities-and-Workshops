@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Document | ARAW V1.0 Technical Documentation, 3 November 2026 |
+| Document | ARAW V1.0 Technical Documentation, updated 6 November 2026 (server Chatbot Sandbox) |
 | Audience | Technical reviewers (DOST-PCHRD, NICER), maintainers and future developers |
 | Application | `araw` package version 0.1.0 (shown in the app and in reports as "0.1.0 beta"); deliverables are labelled V1.0 |
 | Live app | <https://dost-nicer-araw.mjmagtira.workers.dev/> |
@@ -63,13 +63,13 @@ The in-app "beta" and "not medical advice" banners were removed on 2026-10-16 (t
 
 ## 2. System architecture
 
-### 2.1 Client-only design
+### 2.1 Client-first design
 
-ARAW is a **static single-page application**. There is no application server, no database, no user account and no analytics. The built folder `dist/` is served as plain files; every computation (lessons, games, scoring, translation, even the chatbot) runs in the learner's browser. Consequences:
+ARAW is a **static single-page application** with one small server function. There is no database, no user account and no analytics. The built folder `dist/` is served as plain files, and lessons, games, scoring and translation all run in the learner's browser. The one exception is the Chatbot Sandbox AI: `worker/index.ts`, a Cloudflare Worker on `/api/chat`, passes chats to Cloudflare Workers AI and stores nothing (section 12). Consequences:
 
-- It can be hosted for free on any static host (Cloudflare, Hugging Face static Space, GitHub Pages) and scales with the host's CDN, not with ARAW code.
+- It is hosted free on Cloudflare and scales with Cloudflare's network, not with ARAW code. It also runs on any static host (Hugging Face static Space, GitHub Pages), but without the Worker the server AI is absent and the sandbox offers the on-device AI instead.
 - Progress lives only in the browser (`localStorage`); clearing site data clears progress.
-- After the first visit it works offline (service worker), except features that need the network by nature (the first model download, the optional report send, the how-to videos and print PDFs, which stream or download on demand).
+- After the first visit it works offline (service worker), except features that need the network by nature (the server Chatbot Sandbox, the optional on-device model download, the optional report send, the how-to videos and print PDFs, which stream or download on demand).
 
 ### 2.2 Diagram
 
@@ -84,13 +84,17 @@ ARAW is a **static single-page application**. There is no application server, no
 |  settings         Fact or Fake        DOM games         |        | _headers: cache + COOP/COEP        |
 |                                                         |        +------------------------------------+
 |  Content banks (typed, validated)   i18n packs (lazy)   |
-|  Chatbot Sandbox: guard, prompt, engine, wllama worker  |        +------------------------------------+
+|  Chatbot Sandbox: terms, guard, prompt, engine          |        +------------------------------------+
+|                                                         | <----> | Worker /api/chat -> Workers AI     |
+|  Service worker (offline app shell)                     |  chats | SEA-LION model; stores nothing     |
+|                                                         |        +------------------------------------+
+|                                                         |        +------------------------------------+
 |                                                         | <----- | Hugging Face, pinned commit        |
-|  Service worker (offline app shell)                     |  model | one GGUF model file, only on use   |
+|                                                         |  model | GGUF file, only if the player asks |
 |                                                         |        +------------------------------------+
 |  Stored on the device only:                             |
 |   localStorage araw:v1:*   (progress, settings)         |        +------------------------------------+
-|   OPFS (chatbot model)     Cache Storage (app files)    | -----> | Report relay (Google Apps Script)  |
+|   OPFS (on-device model)   Cache Storage (app files)    | -----> | Report relay (Google Apps Script)  |
 +---------------------------------------------------------+ report | e-mail to AIKasalig + log sheet    |
                                                            text    +------------------------------------+
 ```
@@ -102,7 +106,7 @@ ARAW is a **static single-page application**. There is no application server, no
 3. `Shell` maps the current hash to a lazy screen (`src/app/routes.ts`, `router.ts`, `LazyScreen.tsx`). Each module's lesson data, each game and the Library are separate chunks that download on demand.
 4. Screens read and write **signals** (`@preact/signals`). Persisted signals (`persisted()` in `src/app/store.ts`) validate data on read and write through to `localStorage`.
 5. After the first visit the service worker serves the app shell and chunks from Cache Storage.
-6. Only four kinds of requests leave the app: (a) same-origin files from the host; (b) caption files for videos (same origin); (c) the pinned model file from Hugging Face, only for the Chatbot Sandbox; (d) an optional POST of a player-written report to the relay, only when the player presses Send and a relay URL was configured at build time. The code contains no other `fetch` call and no `innerHTML`, `dangerouslySetInnerHTML` or `eval`.
+6. Only four kinds of requests leave the app: (a) same-origin files from the host; (b) caption files for videos (same origin); (c) Chatbot Sandbox messages to the site's own `/api/chat` Worker, which passes them to Cloudflare Workers AI, and the pinned model file from Hugging Face only if the player chooses the on-device AI; (d) an optional POST of a player-written report to the relay, only when the player presses Send and a relay URL was configured at build time. The code contains no other `fetch` call and no `innerHTML`, `dangerouslySetInnerHTML` or `eval`.
 
 ### 2.4 Main building blocks
 
@@ -114,7 +118,7 @@ ARAW is a **static single-page application**. There is no application server, no
 | Modules | `src/modules/` | `m01`..`m10` lesson content and module games, shared card renderers |
 | Games | `src/games/` | Shared engine, 11 arcade games, Fact or Fake |
 | Content | `src/content/` | Typed, validated banks and manifests |
-| Sandbox | `src/sandbox/` | In-browser chatbot (wllama), safety guard, missions, preload |
+| Sandbox | `src/sandbox/`, `worker/index.ts` | Chatbot on the server by default (Worker to Workers AI), optional on-device AI (wllama), terms, safety guard, missions |
 | i18n | `src/i18n/` and `src/app/i18n.ts` | English catalog, runtime packs, DOM and canvas translation hooks |
 | Tooling | `scripts/`, `tools/` | PWA plugin, budget check, i18n pipeline, media pipelines, report relay |
 
@@ -132,9 +136,9 @@ ARAW is a **static single-page application**. There is no application server, no
 | Router | Hand-written hash router | static hosting, no server rewrites |
 | Games | HTML Canvas 2D on a small shared engine (`src/games/engine/`), plus DOM games | no game framework |
 | Sound | Web Audio synthesis (`src/app/sound/synth.ts`) | chiptune music and effects are generated live: no audio files |
-| Unit tests | Vitest 5.0.4, jsdom 30, `@testing-library/preact` | 1,101 tests in 68 files |
-| End-to-end tests | Playwright 1.64.1 (Chromium), `@axe-core/playwright` 4.13.0 | 900 tests (300 per project) in 37 spec files |
-| Persistence | `localStorage` (and `sessionStorage`, OPFS for the model) | always in try/catch |
+| Unit tests | Vitest 5.0.4, jsdom 30, `@testing-library/preact` | 1,120 tests in 69 files |
+| End-to-end tests | Playwright 1.64.1 (Chromium), `@axe-core/playwright` 4.13.0 | 915 tests (305 per project) in 37 spec files |
+| Persistence | `localStorage` (and `sessionStorage`, OPFS for the optional on-device model) | always in try/catch |
 | Size | about 38,400 lines of TypeScript and TSX, 11,200 lines of CSS in `src/` | measured |
 
 ### 3.2 Runtime dependencies (shipped to learners)
@@ -143,7 +147,7 @@ ARAW is a **static single-page application**. There is no application server, no
 |---|---|---|---|
 | `preact` | 11.0.1 | MIT | UI |
 | `@preact/signals` | 2.11.3 | MIT | state |
-| `@wllama/wllama` | 3.8.1 | MIT | llama.cpp compiled to WebAssembly: Chatbot Sandbox engine |
+| `@wllama/wllama` | 3.8.1 | MIT | llama.cpp compiled to WebAssembly: the optional on-device AI |
 | `@wllama/wllama-compat` | 3.8.1 | MIT | compatibility build for browsers without JSPI or 64-bit WebAssembly memory (mostly Safari) |
 | `pixelarticons` | 2.4.2 | MIT | pixel-art icons (plus hand-made pixel SVGs) |
 | `@fontsource/baloo-2` | 5.3.0 | OFL-1.1 | headings |
@@ -169,7 +173,9 @@ Fonts are self-hosted from `node_modules` into the build; there are no CDNs at r
 
 ### 3.4 AI model and its licence
 
-The Chatbot Sandbox loads **one small open model** at runtime from a pinned Hugging Face commit. The default is **Qwen3 0.6B**, Q4_K_M quantisation, 378 MB, licence **Apache-2.0**, with the model's "thinking" mode turned off (`src/sandbox/model.ts`). Five candidates were compared in a bake-off (decision log, 2026-10-21, SANDBOX-MODEL):
+**Server AI (the default).** Gemma-SEA-LION v4 27B by AI Singapore, run by Cloudflare Workers AI as `@cf/aisingapore/gemma-sea-lion-v4-27b-it` (`CLOUD_MODEL` in `src/sandbox/model.ts`). Its model card gives the licence as **MIT**. It is built on Google's Gemma 3, and the card does not say whether the Gemma Terms of Use also apply: **this is still to be confirmed** (section 18.1). Its card lists Tagalog among its languages, but not Cebuano, Ilokano or Hiligaynon, and states it has not been aligned for safety, so ARAW's own safety layer stays in place (section 12.6). The choice and its bake-off are in section 12.2.
+
+**On-device AI (the optional fallback).** One small open model, loaded at runtime from a pinned Hugging Face commit, only when the player chooses it. The default is **Qwen3 0.6B**, Q4_K_M quantisation, 378 MB, licence **Apache-2.0**, with the model's "thinking" mode turned off. Five candidates were compared in a bake-off (decision log, 2026-10-21, SANDBOX-MODEL):
 
 | Id | Label | Size (MB) | Licence |
 |---|---|---|---|
@@ -179,7 +185,7 @@ The Chatbot Sandbox loads **one small open model** at runtime from a pinned Hugg
 | `gemma3-270m` | Gemma 3 270M | 241 | Gemma Terms of Use |
 | `gemma3-1b` | Gemma 3 1B | 688 | Gemma Terms of Use |
 
-Only the default is used by learners. The Gemma candidates are test options (`#/sandbox?model=gemma3-1b`); the Gemma Terms of Use would need review before any of them became the default. Model weights are not stored in the repository.
+Only the default is offered to learners. The Gemma candidates are test options (`#/sandbox?model=gemma3-1b`); the Gemma Terms of Use would need review before any of them became the default. Model weights are not stored in the repository.
 
 ### 3.5 Content and asset licences
 
@@ -200,6 +206,8 @@ app/
   ARAW V1.x-User-Guide.pdf                                printable user guide (root copy; the name carries its version)
   ARAW V1.0-Technical-Documentation.pdf                   this document as PDF
   index.html, vite.config.ts, playwright.config.ts, tsconfig.json, package.json, .node-version
+  wrangler.jsonc                                          Cloudflare deploy config (Worker, AI binding, rate limit)
+  worker/index.ts                                         the only server code: the Chatbot Sandbox AI on /api/chat
   public/                    copied as-is into dist/
     _headers                 caching + security headers (Cloudflare format)
     manifest.webmanifest, favicon.svg, icons/        PWA manifest and icons
@@ -214,7 +222,7 @@ app/
     modules/                 m01..m10, cards/, engine.ts, registry.ts, types.ts
     games/                   engine/, fact-or-fake/, one folder per arcade game, registry.ts
     content/                 typed banks, factOrFake/, library/, manifests (JSON)
-    sandbox/                 chatbot engine, guard, prompt, missions, preload, wllama backends
+    sandbox/                 chatbot engine, guard, prompt, missions, terms (access.ts), cloud and wllama backends
     i18n/                    runtime.ts, dom.ts, packs/{fil,ceb,ilo,hil}.json
     styles/                  tokens.css, base.css and one stylesheet per area
     assets/logos/            partner logos (WebP)
@@ -227,7 +235,7 @@ app/
     lectures/                             module lecture video recorder
     guide/                                user-guide capture and PDF
     print/                                print kit (a small Vite + Preact app, prints with Playwright)
-    sandbox/                              model fetch and real-model smoke tests
+    sandbox/                              server-model bake-off, on-device model fetch and smoke tests
     audit/, shots/                        layout audit and release screenshot sweeps
     techdoc/                              this document's PDF builder
     logos/                                logo builder (Python)
@@ -620,8 +628,8 @@ There is no PWA plugin dependency. `scripts/pwa-plugin.ts` (a Vite plugin, build
 | How-to videos (35 MB in total on disk; 13 clips x 5 languages, about 0.4 to 1.3 MB each) | `public/videos/<id>/<lang>.webm` and `.vtt` | streamed when played |
 | Print PDFs (about 11 MB in total; 50 files) | `public/print/<lang>/<id>.pdf` | when the player taps Download |
 | User-guide pictures | `public/guide/*.webp` | when the Guide screen shows a section |
-| Chatbot engine (wllama scripts and two `.wasm` files, 16.0 MB and 8.8 MB in the current build) | lazy chunks | first use of the sandbox (or the background preload), then runtime-cached |
-| Chatbot model (378 MB for the default) | Hugging Face, stored in OPFS by wllama | background preload or first sandbox visit (section 12.4) |
+| On-device AI engine (wllama scripts and two `.wasm` files, 16.0 MB and 8.8 MB in the current build) | lazy chunks | only when the player chooses the on-device AI, then runtime-cached |
+| On-device model (378 MB for the default) | Hugging Face, stored in OPFS by wllama | only when the player presses Save the AI on this device (section 12.4) |
 
 The sandbox *screen* chunk itself is precached.
 
@@ -631,11 +639,11 @@ The sandbox *screen* chunk itself is precached.
 
 ### 12.1 Purpose and architecture
 
-The sandbox (`#/sandbox`) lets a learner chat with a **real, small AI that runs on their own device**, see where it goes wrong, and practise calibrated trust on fresh answers. It is the live counterpart of the scripted Module 3 game. There is no server and no API key, so any number of people can use it at once at no cost, and conversations never leave the device (decision log, SANDBOX).
+The sandbox (`#/sandbox`) lets a learner chat with a **real AI built for Southeast Asia**, see where it goes wrong, and practise calibrated trust on fresh answers. It is the live counterpart of the scripted Module 3 game. The AI runs on the server, so a visitor **downloads nothing** and phones too weak to run a model can still chat (decision log, SANDBOX-CLOUD). The player agrees to the terms first (section 12.8). If the server cannot answer, the sandbox says why and offers the optional on-device AI or Module 3 (section 12.9).
 
 <!-- figure:sandbox -->
 ```text
- Player types (max 500 chars)
+ Player agrees to the terms, then types (max 500 chars)
         |
         v
  +---------------------+  self-harm words --> hotline card (1553); NEVER sent to the model
@@ -645,11 +653,11 @@ The sandbox (`#/sandbox`) lets a learner chat with a **real, small AI that runs 
             | allowed
             v
  +---------------------+     +-----------------+     +----------------------------+
- | prompt.ts           | --> | engine.ts       | --> | wllamaBackend (own worker) |
- | system prompt + the |     | state machine,  |     | llama.cpp in WebAssembly   |
- | newest turns        |     | device checks   |     | model file read from OPFS  |
+ | prompt.ts           | --> | engine.ts       | --> | cloudBackend -> Worker     |
+ | the newest turns    |     | state machine   |     | -> Workers AI (or, if the  |
+ |                     |     |                 |     | player chose it, wllama)   |
  +---------------------+     +-----------------+     +-------------+--------------+
-                                                                   | streamed tokens
+                                                                   | streamed text
                                                                    v
  +-----------------------------+     +----------------+     +-------------------------+
  | Chat bubble + "ARAW         | <-- | tidyAnswer()   | <-- | dose filter: hides any  |
@@ -661,32 +669,63 @@ The sandbox (`#/sandbox`) lets a learner chat with a **real, small AI that runs 
 
 | Module | Role |
 |---|---|
-| `engine.ts` | state machine (`idle, checking, unsupported, downloading, loading, ready, error`) over a `Backend`; device checks; `init`, `load`, `prefetch`, `chat`, `stop`; one engine per model, kept while the app is open |
-| `wllamaBackend.ts` | the real backend: wllama 3.8.1 (MIT) in its own worker; GPU through WebGPU or several CPU threads when the browser allows; model files in the browser's private file storage (OPFS); all engine files are served by ARAW itself |
+| `worker/index.ts` | the only server code: checks the request, adds the system prompt, calls Workers AI, streams the answer back; stores and logs nothing (section 12.2) |
+| `cloudBackend.ts` | the default backend: posts the chat to `/api/chat`, reads the streamed answer, gives up after 30 s without new words, and reports `quota` or `busy` as a `CloudError` |
+| `access.ts` | the terms agreement (`agreedTerms`, `TERMS_VERSION`) and where the AI runs (`sandboxMode`: `cloud` or `device`) |
+| `engine.ts` | state machine (`idle, checking, unsupported, downloading, loading, ready, error`) over a `Backend`; device checks; `init`, `load`, `chat`, `stop`; one engine per mode and model, kept while the app is open |
+| `wllamaBackend.ts` | the on-device backend: wllama 3.8.1 (MIT) in its own worker; GPU through WebGPU or several CPU threads when the browser allows; model files in the browser's private file storage (OPFS); all engine files are served by ARAW itself |
 | `wllamaCompat.ts` | wllama's compatibility build for browsers without JSPI or 64-bit WebAssembly memory (mostly Safari); its own lazy chunk; used when the browser lacks those features and is not Firefox (Firefox runs the normal build without the GPU) |
-| `fakeBackend.ts` | scripted backend for tests, selected by `window.__ARAW_FAKE_LLM__`; no test downloads a model (the e2e fixtures also abort `huggingface.co`) |
-| `model.ts` | pinned model table, `DEFAULT_MODEL_ID`, `N_CTX = 2048`, `MAX_TOKENS = 320` (small enough for phones with 3 to 4 GB of memory), model URL builder |
+| `fakeBackend.ts` | scripted backend for tests, selected by `window.__ARAW_FAKE_LLM__`; no test reaches the server or downloads a model (the e2e fixtures also abort `huggingface.co`) |
+| `model.ts` | `CLOUD_MODEL`, the pinned on-device model table, `DEFAULT_MODEL_ID`, `N_CTX = 2048`, `MAX_TOKENS = 320`, model URL builder |
 | `prompt.ts` | system prompt and history budget |
 | `guard.ts` | safety checks (section 12.6) |
 | `missions.ts` | "Catch the AI" missions |
-| `preload.ts` | quiet background download (section 12.4); tiny, part of the first load |
 | `review.ts` | list of sandbox lines for the reviewers |
 
-Generation settings: temperature 0.6, top-p 0.9, top-k 40, repeat penalty 1.1, streamed, abortable (Stop button).
+Generation settings: temperature 0.6, top-p 0.9, at most 320 tokens, streamed, abortable (Stop button). The on-device AI also uses top-k 40 and repeat penalty 1.1.
 
-### 12.2 Model hosting and pinning
+### 12.2 Server AI and model hosting
 
-The model is the one approved exception to "no CDNs at runtime". It is fetched from a **pinned Hugging Face commit**, so the file can never change under the project:
+**Path of a message.** The browser sends the language and the chat turns to the site's own `/api/chat`. `wrangler.jsonc` routes only `/api/*` to the Worker (`run_worker_first`); every other request is a static file and never runs it. The Worker calls Workers AI through its `AI` binding and passes the stream straight back.
+
+**What the Worker enforces.** It exists so that the free allowance cannot be used as a general chatbot.
+
+| Check | Rule | Result when it fails |
+|---|---|---|
+| Method and origin | `POST`, and the `Origin` host must match the site | 403 |
+| Rate limit | 60 requests a minute per address and Cloudflare location, deliberately high because a workshop on one Wi-Fi shares one address | 429 `busy` |
+| Size | body up to 32 KB, up to 40 turns, a player message up to 500 characters, the chat up to 6,100 characters | 413 or 400 |
+| Roles | only `user` and `assistant` turns, ending with `user`; a caller cannot send a system prompt | 400 |
+| Language | one of the five app languages | 400 |
+
+The Worker adds the system prompt itself. It stores nothing and logs nothing, and Workers observability is off in `wrangler.jsonc`. A unit test checks that a chat writes nothing to the console. Cloudflare's Workers AI data usage page states that inputs and outputs are not retained after the answer and are not used for training; it keeps operational metadata such as timestamps, token counts and status codes. No AI Gateway is used, because its logs would store prompts.
+
+**Model bake-off.** `scripts/sandbox/cloud-bakeoff.mjs` sends the 8 bake-off questions in 5 languages, with the real system prompt, to each candidate. Results on 2026-11-06 (40 answers each; turns per day are for one-question chats):
+
+| Model | Filipino and regional answers | Dose and diagnosis questions | Neurons per turn | Free turns a day | Result |
+|---|---|---|---|---|---|
+| **Gemma-SEA-LION v4 27B** | good Filipino and Cebuano, fair Hiligaynon, weak Ilokano | declined in the answers read | 9.8 | about 1,020 | chosen |
+| Qwen3 30B A3B | readable but stiff Filipino, weaker regional | mostly declined | 8.6 | about 1,160 | 3 blank answers, 11 cut off |
+| Granite 4.0 H Micro | garbled, even in Filipino | gave real paracetamol doses (the filter hid them) | 0.8 | about 11,800 | unsafe and hard to read |
+| Gemma 4 26B A4B | not usable | not usable | 10.5 | about 950 | 39 of 40 blank at 320 tokens |
+
+Llama 3.2 was not tested: it needs a licence acceptance on the Cloudflare account and is unlikely to beat SEA-LION on Filipino. In a test of the real app with the Worker running locally, the first words appeared in 0.5 to 1 second.
+
+**Allowance.** Workers AI gives 10,000 neurons a day for the whole account, reset at 00:00 UTC (8:00 AM Philippine time). On the free plan it stops with error 3036 when used up; it never charges. Longer chats cost more because the history is sent each turn, so a realistic day is an estimated 400 to 950 messages, or about 40 to 95 people asking 10 questions each.
+
+**On-device model hosting.** The on-device model is the one approved exception to "no CDNs at runtime". It is fetched from a **pinned Hugging Face commit**, so the file can never change under the project:
 
 `https://huggingface.co/<repo>/resolve/<revision>/<file>`
 
-For the default: repo `unsloth/Qwen3-0.6B-GGUF`, revision `50968a4468ef4233ed78cd7c3de230dd1d61a56b`, file `Qwen3-0.6B-Q4_K_M.gguf`. Why this hosting: Cloudflare Pages caps files at 25 MiB and model weights do not belong in Git. wllama's own `.wasm` and worker files are bundled and served by ARAW (the largest, wllama's 16 MB compat `.wasm`, stays under the limit).
+For the default: repo `unsloth/Qwen3-0.6B-GGUF`, revision `50968a4468ef4233ed78cd7c3de230dd1d61a56b`, file `Qwen3-0.6B-Q4_K_M.gguf`. Why this hosting: Cloudflare caps static files at 25 MiB and model weights do not belong in Git. wllama's own `.wasm` and worker files are bundled and served by ARAW (the largest, wllama's 16 MB compat `.wasm`, stays under the limit).
 
-**Switchable source.** `VITE_MODEL_SOURCE=local` at build time makes the app load `./models/<file>` (next to `index.html`) instead of Hugging Face. `node scripts/sandbox/fetch-model.mjs [modelId]` downloads the pinned file into git-ignored `public/models/` and checks its SHA-256 against Hugging Face's LFS etag. This is the hook for the planned offline desktop and Android apps (section 18.2).
+**Referrer policy.** Hugging Face's CDN answers 404 to any request whose `Referer` is a `*.workers.dev` address. The error page has no CORS headers, so the browser reports a CORS error. `public/_headers` therefore sends `Referrer-Policy: no-referrer`, and a unit test guards it (decision log, SANDBOX-REFERRER).
 
-### 12.3 Device checks
+**Switchable source.** `VITE_MODEL_SOURCE=local` at build time makes the app use the on-device AI and load `./models/<file>` (next to `index.html`) instead of Hugging Face. `node scripts/sandbox/fetch-model.mjs [modelId]` downloads the pinned file into git-ignored `public/models/` and checks its SHA-256 against Hugging Face's LFS etag. This is the hook for the planned offline desktop and Android apps (section 18.2).
 
-`supportProblem()` blocks a device only for a known reason; fields a browser does not report never block:
+### 12.3 Device checks (on-device AI only)
+
+The server AI works on any device with internet. For the on-device AI, `supportProblem()` blocks a device only for a known reason; fields a browser does not report never block:
 
 | Check | Fails when | Reason shown |
 |---|---|---|
@@ -696,12 +735,11 @@ For the default: repo `unsloth/Qwen3-0.6B-GGUF`, revision `50968a4468ef4233ed78c
 
 A blocked device gets a kind explanation and a link to Module 3 (the scripted version); there is no scripted fallback inside the sandbox (user decision, SANDBOX-LOAD).
 
-### 12.4 OPFS cache and background preload
+### 12.4 OPFS cache (on-device AI only)
 
-- The model file is cached by wllama's model manager in OPFS. Later visits load it from the device, **even offline**. `isCached()` compares the stored model URL with the pinned URL.
-- **Preload rules** (`preload.ts`, `okToPrefetch()`): about **8 seconds** after the app loads, when the browser is idle (`requestIdleCallback`, 10 s timeout), the engine downloads the file **only to storage, never into memory**, so lessons and games stay smooth. It runs only when the connection is unmetered or unknown: it is skipped on `saveData`, on connection types `cellular`, `bluetooth`, `wimax` and `none`, and on 2G effective types; iPhones and desktops, which do not report a type, do download. **Automated browsers** (`navigator.webdriver`) and the test fake never download.
-- It also does nothing when the device cannot run the model, when the file is already stored, or once the sandbox has started; failures stay silent. Opening the sandbox continues a running download and shows its progress ("This happens only once"); on mobile data the download starts when the sandbox opens.
-- Loading into memory happens only when the sandbox opens.
+- The model never downloads by itself. It downloads only when the player presses **Save the AI on this device**, or opens a test link such as `#/sandbox?model=gemma3-1b`, and only after the terms are agreed. The earlier background preload was removed (SANDBOX-FALLBACK).
+- The file is cached by wllama's model manager in OPFS. Later on-device use loads it from the device, **even offline**. `isCached()` compares the stored model URL with the pinned URL.
+- Each visit starts with the server AI again; the player's choice lasts for the open session.
 
 ### 12.5 Cross-origin isolation headers
 
@@ -712,7 +750,7 @@ Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Embedder-Policy: credentialless
 ```
 
-This makes the page cross-origin isolated, so wllama can use `SharedArrayBuffer` and several CPU threads. `credentialless` (rather than `require-corp`) still allows the model download from Hugging Face. GitHub Pages cannot send custom headers, so there the AI runs on one thread (slower, still works).
+This makes the page cross-origin isolated, so wllama can use `SharedArrayBuffer` and several CPU threads for the on-device AI. `credentialless` (rather than `require-corp`) still allows the model download from Hugging Face. GitHub Pages cannot send custom headers, so there the on-device AI runs on one thread (slower, still works).
 
 ### 12.6 Safety layer (`guard.ts`, five languages)
 
@@ -722,12 +760,12 @@ All checks are pure functions with unit tests (`sandboxGuard.test.ts`). Word lis
 |---|---|
 | **Red flags** | ten rule groups (chest pain or heart attack, breathing trouble, stroke signs, seizure or fainting, heavy bleeding, dengue warning signs, dehydration in a child, fever in a baby, animal bite, self-harm) matched in English, Filipino, Cebuano, Ilokano and Hiligaynon. A hit shows the "Magpatingin agad" card (go to the nearest health facility or call 911) **before any answer**; the player may still ask "in general" with one more tap |
 | **Self-harm** | shows the crisis hotline (DOH-NCMH **1553**) and the message **never reaches the model** |
-| **Privacy nudge** | detects names, Philippine mobile numbers, long ID-like numbers, emails, addresses and diagnoses; a nudge explains that real chatbots may store this and offers Edit or Send anyway (it stays on the device) |
+| **Privacy nudge** | detects names, Philippine mobile numbers, long ID-like numbers, emails, addresses and diagnoses; a nudge explains that real chatbots may store this and offers Edit or Send anyway. With the server AI it says the message goes over the internet to an AI service; with the on-device AI it says the message stays on the device |
 | **Dose filter** | `createDoseFilter()` checks the **streamed answer sentence by sentence**: any sentence with a number plus a medicine unit, a number word plus a unit, "x times a day", "every N hours" or their translations, or "dosage" is replaced by "ARAW hid a medicine dose here"; the unfinished last sentence is shown only up to its first digit, so "500 mg" never flashes on screen |
-| **System prompt** | English instructions (small models follow them best) naming the answer language: at most 5 sentences, admits it can be wrong and does not know the date or news, never gives doses, diagnoses or treatment changes, points to a health worker, never asks for personal details |
+| **System prompt** | English instructions (models follow them best) naming the answer language: at most 5 sentences, goes straight to the answer with no greeting and no bracketed translations, admits it can be wrong and does not know the date or news, never gives doses, diagnoses or treatment changes, points to a health worker, never asks for personal details. On the server, the Worker adds it, so a caller cannot replace it |
 | **Framing** | every answer is labelled "ARAW practice AI · can be wrong" and gets a Usable / Wrong / Get checked rating with a calibrated-trust tip from Ara; generated text is never presented as a fact source; chats are kept in memory only; input is capped at 500 characters |
 
-`src/sandbox/review.ts` lists nine sandbox elements (system prompt, starters, red flags, self-harm, red-flag card, personal data, dose filter, trust tips, missions) for the medical and cultural reviewers. The model's own answers are generated and cannot be reviewed.
+`src/sandbox/review.ts` lists ten sandbox elements (system prompt, starters, red flags, self-harm, red-flag card, personal data, dose filter, trust tips, terms, missions) for the medical and cultural reviewers. The model's own answers are generated and cannot be reviewed. The dose filter is deliberately broad: a sentence that only says the AI does not know the dose can also be hidden.
 
 ### 12.7 Missions
 
@@ -744,6 +782,21 @@ Five "Catch the AI" missions, **+10 XP each, paid once** (`xpClaims` key `sandbo
 The route is `#/sandbox` (Arcade tab, study music), linked from the Arcade Practice row and from the Tanong kay Chatbot start and end screens. It is **not** in `ARCADE_GAMES`, which drives the Daily Challenge, the Home counts and the tutorial list.
 
 ---
+
+### 12.8 Terms pop-up
+
+A "Before you chat" pop-up comes before the first chat, and the AI cannot start until the player agrees (decision log, SANDBOX-TERMS). It says: do not share personal details; messages go over the internet to an AI service (Cloudflare Workers AI), ARAW does not save them, and the service says it does not keep them or use them to train AI; the AI can be wrong and is for learning only; it is not a doctor, so no doses, diagnosis or emergencies; use it kindly and lawfully; minors use it with a parent, guardian or teacher.
+
+Agreement is kept in `localStorage` (`araw:v1:sandbox-terms`) per version. Raising `TERMS_VERSION` in `src/sandbox/access.ts` asks everyone again. **Not now** keeps the chat closed, with buttons to read the terms again or open Module 3. On small phones only the terms text scrolls, so the two buttons stay on screen. The terms still need a privacy review and a native-speaker review (section 18.1).
+
+### 12.9 When the server cannot answer
+
+| Situation | Cause | What the player sees |
+|---|---|---|
+| Free allowance used up | Workers AI error 3036 | "The practice AI is resting", back at 8:00 AM Philippine time |
+| Busy or out of reach | Workers AI error 3040, the rate limit, no internet, a stalled answer, or a host without the Worker | "The practice AI cannot answer right now", and they may send again |
+
+Both cards offer **Save the AI on this device** (378 MB, one time) and **Open Module 3**. Choosing the on-device AI changes the wording to match: the screen then says the chat stays on the device (SANDBOX-WORDING). Free-plan limits end in an error, never a bill.
 
 ## 13. Media and document pipelines
 
@@ -848,14 +901,14 @@ node scripts/techdoc/build-pdf.mjs --pages        # also PNG previews in scripts
 | Topic | Fact |
 |---|---|
 | Accounts | none; no sign-in |
-| Server-side personal data | none stored: there is no backend. The only server-side receiver is the optional report relay (14.2) |
+| Server-side personal data | none stored. Sandbox chats pass through the Worker to Workers AI and are not saved or logged (12.2). The only other server-side receiver is the optional report relay (14.2) |
 | Analytics and trackers | none in the code |
 | Progress | `localStorage` on the device, under `araw:v1:`; "Reset my progress" clears it |
 | Certificate name | typed per use, drawn on a canvas or printed, **not stored** |
-| Chatbot | conversations in memory only; the model and the text it sees run on the device; privacy nudge for personal details |
+| Chatbot | conversations are held in browser memory only and cleared on leaving the page. With the server AI, messages go to Cloudflare Workers AI to get an answer; with the on-device AI they stay on the device. The terms pop-up and a privacy nudge warn against personal details |
 | Daily share text | copied or shared by the player through the OS share sheet; nothing is sent by ARAW |
 | Health data | the app never asks for health information; the Report screen reminds people not to include any |
-| Third-party requests | only the pinned model file from Hugging Face (sandbox, after the player's use or the Wi-Fi preload), and the optional relay POST |
+| Third-party requests | Cloudflare Workers AI for sandbox chats (through the site's own Worker), the pinned model file from Hugging Face (only if the player chooses the on-device AI), and the optional relay POST |
 
 ### 14.2 Report relay (`tools/report-relay/`)
 
@@ -878,7 +931,7 @@ No name, email address or IP address is added by the app. **Relay protections:**
 
 ### 14.3 Headers and hosting security
 
-`public/_headers` sets, for all paths: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and the COOP and COEP pair of section 12.5. Hashed files under `/assets/*` are `immutable` for a year; `index.html`, `/` and `/sw.js` are `no-cache` so new versions are picked up.
+`public/_headers` sets, for all paths: `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` (section 12.2), and the COOP and COEP pair of section 12.5. Hashed files under `/assets/*` are `immutable` for a year; `index.html`, `/` and `/sw.js` are `no-cache` so new versions are picked up.
 
 ### 14.4 Threat notes
 
@@ -888,8 +941,9 @@ No name, email address or IP address is added by the app. **Relay protections:**
 | Tampered or corrupt `localStorage` | every persisted value passes a validator on read and falls back to defaults |
 | Supply chain | few dependencies, pinned by `package-lock.json`; the model is pinned by commit hash and (for local builds) checked by SHA-256; wllama files are served from the same origin |
 | Spam to the relay | honeypot, size and field limits, 5 per minute and 90 per day |
+| Misuse of the sandbox endpoint | same-site origin check, per-address rate limit, size limits, no caller system prompt (12.2). These are deterrents, not a login: a determined caller could still use up the shared daily allowance, which would only pause the sandbox until 8:00 AM |
 | Misuse of fake content | every fake carries the "ARAW GAME · FAKE" stamp when revealed and an "ARAW GAME" watermark before; all content is fictional |
-| Harmful chatbot output | red-flag and self-harm routing, dose filter, short answers, "can be wrong" label; the model is small and will make mistakes by design |
+| Harmful chatbot output | red-flag and self-harm routing, dose filter, short answers, "can be wrong" label, terms pop-up. The server model's card says it is not aligned for safety, and generated answers cannot be reviewed, so these wrapper checks are required |
 | Content security policy | **not set** in `_headers`. A recommended hardening step: add a policy allowing `huggingface.co` for the model, `script.google.com` for the relay and `'wasm-unsafe-eval'` for WebAssembly, after testing |
 | Dependency licence | `ffmpeg-static` is GPL but used only on a developer machine; it is not shipped |
 
@@ -931,7 +985,7 @@ Ports are fixed (dev 5173, preview 4173, both `--strictPort`), and long-running 
 
 ### 15.3 Unit and component tests
 
-Vitest 5 with jsdom and `@testing-library/preact`: **1,101 tests in 68 files** (measured). Areas: engine (loop, RNG, scale, input), scoring and Truth Radar, rounds and daily seeds, streaks and XP, store and storage-blocked behaviour, router, settings, language and packs, every game's logic and many components, content banks (validation, counts, safety, review file), sandbox (guard, engine, model, preload, missions, prompt, screen), report, PWA output, printables, guide content and callouts.
+Vitest 5 with jsdom and `@testing-library/preact`: **1,120 tests in 69 files** (measured). Areas: engine (loop, RNG, scale, input), scoring and Truth Radar, rounds and daily seeds, streaks and XP, store and storage-blocked behaviour, router, settings, language and packs, every game's logic and many components, content banks (validation, counts, safety, review file), sandbox (guard, engine, model, preload, missions, prompt, screen), report, PWA output, printables, guide content and callouts.
 
 ### 15.4 End-to-end tests
 
@@ -943,7 +997,7 @@ Playwright 1.64 with Chromium, three projects defined in `playwright.config.ts`:
 | `tablet` | 820 x 1180 | |
 | `desktop` | 1440 x 900 | |
 
-**900 tests (300 per project) in 37 spec files** (measured with `playwright test --list`). Every spec runs on all three projects, scans for accessibility with axe (WCAG 2.0, 2.1 and 2.2 A and AA tags; 31 files) and asserts "no horizontal overflow" (`noHorizontalOverflow` in `tests/e2e/fixtures.ts`; 34 spec files). Shared fixtures skip the splash through `sessionStorage`, install the scripted test AI and abort Hugging Face requests. Specs cover each screen and each game, the shell and responsiveness, i18n fit for every pack, PWA behaviour, the sandbox, the tutorials (including "videos are never cached by the service worker"), printables, the guide, sound, and the certificate.
+**915 tests (305 per project) in 37 spec files** (measured with `playwright test --list`). Every spec runs on all three projects, scans for accessibility with axe (WCAG 2.0, 2.1 and 2.2 A and AA tags; 31 files) and asserts "no horizontal overflow" (`noHorizontalOverflow` in `tests/e2e/fixtures.ts`; 34 spec files). Shared fixtures skip the splash through `sessionStorage`, install the scripted test AI and abort Hugging Face requests. Specs cover each screen and each game, the shell and responsiveness, i18n fit for every pack, PWA behaviour, the sandbox, the tutorials (including "videos are never cached by the service worker"), printables, the guide, sound, and the certificate.
 
 ### 15.5 Tests outside `verify` (run by hand)
 
@@ -952,15 +1006,16 @@ Playwright 1.64 with Chromium, three projects defined in `playwright.config.ts`:
 | Release screenshot sweep (every route, module hook and game step at three viewports, every accessibility setting) | `npx playwright test -c scripts/shots/shots.config.ts` (output `shots-out/`) |
 | Layout audit (5 languages x 5 viewports) | `npx playwright test -c scripts/audit/audit.config.ts` |
 | Canvas and DOM game text-fit tours | `npx vite build --outDir dist-canvas && npx playwright test -c tests/e2e/game-text-fit.config.ts` (and `game-text-fit-dom.config.ts`) |
-| Real-model sandbox smoke test and model bake-off (downloads models) | `npx playwright test -c scripts/sandbox/smoke.config.ts` |
+| On-device real-model smoke test and bake-off (downloads models) | `npx playwright test -c scripts/sandbox/smoke.config.ts` |
+| Server-model bake-off (uses the Workers AI allowance; needs `npx wrangler login`) | `node scripts/sandbox/cloud-bakeoff.mjs` |
 | User-guide capture | `npx playwright test -c scripts/guide/capture.config.ts` |
 
 ### 15.6 Test counts at a glance
 
 | Suite | Files | Tests |
 |---|---|---|
-| Vitest unit and component | 68 | 1,101 |
-| Playwright e2e (3 projects) | 37 | 900 (300 x 3) |
+| Vitest unit and component | 69 | 1,120 |
+| Playwright e2e (3 projects) | 37 | 915 (305 x 3) |
 
 ---
 
@@ -972,11 +1027,11 @@ The app is plain static files (`dist/`), built with a relative base so it works 
 
 | Host | How | Headers |
 |---|---|---|
-| **Cloudflare** (live site) | connect the GitHub repository; build command `npm run build`, output directory `dist`; every push to `main` deploys (the README describes Cloudflare Pages) | `public/_headers` is honoured: caching plus COOP and COEP |
-| Hugging Face static Space | README front matter sets `sdk: static`, `app_build_command: npm run build`, `app_file: dist/index.html` and `custom_headers` (COOP and COEP) | through `custom_headers` |
-| GitHub Pages | a GitHub Actions workflow (given in the README) builds and publishes `dist/` | no custom headers: the sandbox AI runs on one thread |
+| **Cloudflare** (live site) | `wrangler.jsonc` in the repository; the GitHub repository is connected to the Worker `dost-nicer-araw`; a push to `main` runs `npm run build`, then `npx wrangler deploy` | `public/_headers` is honoured: caching, `no-referrer`, COOP and COEP |
+| Hugging Face static Space | README front matter sets `sdk: static`, `app_build_command: npm run build`, `app_file: dist/index.html` and `custom_headers` (COOP and COEP) | through `custom_headers`; no Worker, so the sandbox offers the on-device AI |
+| GitHub Pages | a GitHub Actions workflow (given in the README) builds and publishes `dist/` | no custom headers and no Worker: the sandbox offers the on-device AI, on one thread |
 
-**How the live site is deployed: what the repository settles and what it does not.** The live address is a `*.workers.dev` host, which is Cloudflare's address style for Workers (static assets), whereas the README and `_headers` describe Cloudflare Pages. The repository contains no `wrangler` configuration and no CI workflow file, so the exact Cloudflare setup (Pages or Workers static assets, build settings, and the value of `VITE_REPORT_ENDPOINT` in that build) **cannot be confirmed from the code**. The maintainer should record the deployed configuration here.
+**How the live site is deployed.** The live address is a `*.workers.dev` host: a Cloudflare Worker with static assets on the free plan. `wrangler.jsonc` records the Worker name, the `dist/` assets, the `AI` binding and the `CHAT_LIMIT` rate limit, and routes only `/api/*` to `worker/index.ts`. Static asset requests are free and unlimited. The value of `VITE_REPORT_ENDPOINT` in the production build is not recorded in the repository.
 
 Every file must stay under Cloudflare's 25 MiB per-file limit (the largest is wllama's 16 MB compat `.wasm`).
 
@@ -985,12 +1040,13 @@ Every file must stay under Cloudflare's 25 MiB per-file limit (the largest is wl
 | Variable | Read by | Meaning | Default |
 |---|---|---|---|
 | `VITE_REPORT_ENDPOINT` | the app at build time (`src/app/report.ts`) | Google Apps Script `/exec` URL of the report relay; empty hides the Send button. Not a secret (it ships in the built JS); may be committed in `.env.production` (see `.env.example`) | empty; no `.env.production` is committed in the repository |
-| `VITE_MODEL_SOURCE` | the app at build time (`src/sandbox/model.ts`) | `local` loads the model from `./models/` instead of Hugging Face | `hf` |
+| `VITE_MODEL_SOURCE` | the app at build time (`src/sandbox/model.ts`) | `local` uses the on-device AI and loads the model from `./models/` instead of Hugging Face | `hf` |
 | `PRINT_APP_URL` | `scripts/print/build.mjs` | URL encoded in the QR codes | `https://dost-nicer-araw.mjmagtira.workers.dev/` |
 | `REVIEW_WRITE=1` | `tests/unit/contentReview.test.ts` | regenerate `docs/CONTENT_REVIEW.md` | off |
 | `SHOTS_DIR` | `scripts/shots/` | screenshot output folder | `shots-out/screens-1` |
 | `AUDIT_LANGS` | `scripts/audit/` | languages to audit | all five |
-| `SANDBOX_MODELS`, `SANDBOX_LANGS`, `SANDBOX_PROMPTS` | `scripts/sandbox/smoke.config.ts` | bake-off selection | see the config |
+| `SANDBOX_MODELS`, `SANDBOX_LANGS`, `SANDBOX_PROMPTS` | `scripts/sandbox/smoke.config.ts` | on-device bake-off selection | see the config |
+| `MODELS`, `LANGS` | `scripts/sandbox/cloud-bakeoff.mjs` | server bake-off selection | all candidates, five languages |
 | `FIT_PORT`, `FIT_DIST`, `FIT_GAMES`, `FIT_PLAY_MS` | game text-fit tours | port, build folder, games, play time | 4182, `dist-canvas` |
 
 No secrets exist in the repository; `.env`, `.env.local` and `.env.*.local` are git-ignored.
@@ -1006,6 +1062,7 @@ A manual list, deliberately outside `verify` (slow and visual):
 - Partner logos crisp on splash, landing, Home banner and About, at phone and desktop size; creator credit shows on splash, About and footer.
 - How-to videos play in all five languages with matching captions; re-record after screen or translation changes.
 - User guide refreshed after screen changes (capture, compress, build PDF).
+- Sandbox checked on the live site in a fresh browser and on real phones: terms first, an answer streams, no model downloads, and the wording matches where the AI runs.
 - Print kit rebuilt after content or translation changes (no overflow warnings); Library > Printables lists ten sheets in five languages and `public/print/` contains no test forms.
 
 ---
@@ -1061,12 +1118,23 @@ Implement a `GameDef` (canvas) or a page component (DOM), add its loader to `src
 
 ### 17.7 Update the Chatbot Sandbox model
 
+**Server AI**
+
+1. Add the candidate and its neuron rates to `CANDIDATES` in `scripts/sandbox/cloud-bakeoff.mjs`, then run it with `MODELS=<id>`. Read the answers in `shots-out/sandbox-bakeoff-cloud/`, especially doses, diagnosis and the regional languages. Check the licence and that the model does not need the paid plan.
+2. Change `CLOUD_MODEL` in `src/sandbox/model.ts`. The Worker and the About text both read it.
+3. If the model is no longer "built for Southeast Asia", change that wording too.
+
+**On-device AI**
+
 1. Pick the candidate (repo, commit hash, file, size, licence) and add or edit its entry in `MODELS` in `src/sandbox/model.ts`; the `revision` must be a full commit hash so the file is pinned. Check its licence.
 2. Optionally run the bake-off: `SANDBOX_MODELS=<id> npx playwright test -c scripts/sandbox/smoke.config.ts` (downloads the model).
 3. Change `DEFAULT_MODEL_ID`; update `sizeMB` (shown before download and used for the storage check) and any `templateKwargs`.
 4. For offline builds: `node scripts/sandbox/fetch-model.mjs <id>` and `VITE_MODEL_SOURCE=local npm run build`.
 5. To host the file yourself, copy it to your own Hugging Face repository and change `repo` and `revision`.
-6. Re-check the safety lists against sample answers; update `docs/DECISIONS-LOG.md` and the model licence table in section 3.4.
+
+**Both**
+
+Re-check the safety lists against sample answers; update `docs/DECISIONS-LOG.md` and the model licence table in section 3.4.
 
 ### 17.8 Change the report relay
 
@@ -1078,7 +1146,7 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 2. Bump the version in `package.json` if wanted (it feeds the cache name and the in-app version string).
 3. Get `npm run verify` green and walk the manual checklist (16.3), including the screenshot sweep.
 4. Rebuild the user guide, print kit, videos and this PDF if affected.
-5. Commit and push to `main`; the host builds and deploys. Open the live app, reload once so the new service worker activates, and spot-check offline mode and the sandbox.
+5. Commit and push to `main`; Cloudflare builds and deploys. Open the live app, reload once so the new service worker activates, and spot-check offline mode and the sandbox in a fresh browser (a browser with the on-device model saved can hide download faults).
 
 ---
 
@@ -1090,16 +1158,18 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 |---|---|
 | Content review | all content ships `unreviewed`; medical and cultural review of `docs/CONTENT_REVIEW.md` is pending |
 | Translations | four packs, machine-produced, 100% of the committed source; native-speaker and health-line review is pending |
-| Live deployment details | Cloudflare account type, build settings and the relay URL in the production build are not recorded in the repository (16.1) |
+| Relay URL | the report relay URL in the production build is not recorded in the repository (16.1) |
+| Sandbox review | the terms need a privacy review and native-speaker review; it is still to be confirmed whether the Gemma Terms of Use apply to the server model on top of its MIT licence |
+| Sandbox daily cap | the free allowance is shared by all visitors: an estimated 40 to 95 people asking 10 questions a day. Beyond it the sandbox rests until 8:00 AM Philippine time |
 | Version labelling | package 0.1.0 and the in-app string "0.1.0 beta" versus "V1.0" on the deliverables |
-| Chatbot quality | a 0.6 billion parameter model gives short and sometimes wrong answers by design (that is what the missions teach); it is not a health source. In the bake-off it answered in 1 to 5 s with good English but mostly echoed questions in Filipino and the regional languages; the app says small AIs are weaker in regional languages |
-| Chatbot hardware | needs WebAssembly SIMD and exception handling, at least 2 GB of memory (when reported) and about 450 MB of free storage; very old phones are routed to Module 3; threads need the COOP and COEP headers (not available on GitHub Pages) |
-| Safari | uses the slower compat build |
-| Model download | 378 MB once; depends on Hugging Face availability (mitigation: self-host a copy, 17.7) |
+| Chatbot quality | the server AI gives short, sometimes wrong answers; it is not a health source. In the bake-off its Filipino and Cebuano were good, its Hiligaynon fair and its Ilokano weak, and the app says AI is weaker in regional languages. The on-device 0.6 billion parameter model mostly echoes questions in Filipino and the regional languages |
+| On-device AI hardware | applies only to the optional on-device AI: needs WebAssembly SIMD and exception handling, at least 2 GB of memory (when reported) and about 450 MB of free storage; very old phones are routed to Module 3; threads need the COOP and COEP headers (not available on GitHub Pages) |
+| Safari | the on-device AI uses the slower compat build |
+| On-device model download | 378 MB once, only if the player chooses it; depends on Hugging Face availability (mitigation: self-host a copy, 17.7) |
 | Lecture videos | the generator supports all modules, but only Module 1 in English and Filipino was rendered; they are silent (voiceovers planned) and not in the app |
 | Content Security Policy | not set (14.4) |
 | Browser support | modern evergreen browsers (build target `es2022`); installable PWA |
-| Offline | the app works offline after the first visit; videos, print PDFs and the first model download need a connection |
+| Offline | the app works offline after the first visit; the server Chatbot Sandbox, videos, print PDFs and the on-device model download need a connection |
 | Progress portability | progress is per browser and device; there is no sync or export |
 | Test forms in the app | the hidden `#/assess/form_A` and `#/assess/form_B` routes exist for workshops; they are not linked, but a person who knows the URL can open them |
 
@@ -1110,7 +1180,7 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 - **Voiceovers** for the silent module lecture videos, lecture videos for the remaining modules and languages, and the decision whether they join Library > Videos.
 - **Further multimedia** from the workplan (module explainer videos), building on the print kit (`docs/PRINT-KIT-PLAN.md`).
 - **Facilitator workflow:** workshop pre-test and post-test use of the matched Forms A and B (the paper kit exists; in-app result collection is deliberately not built because there is no backend).
-- **Hardening:** a Content Security Policy, a recorded deployment configuration, and a self-hosted copy of the model file.
+- **Hardening:** a Content Security Policy, a Turnstile check on `/api/chat` if the endpoint is abused, and a self-hosted copy of the on-device model file.
 
 ---
 
@@ -1138,7 +1208,8 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 | `node scripts/print/build.mjs [--pages] [--only=] [--langs=]` | print kit |
 | `node scripts/guide/compress.mjs` | guide images to WebP |
 | `node scripts/guide/build-pdf.mjs [--pages]` | user guide PDF |
-| `node scripts/sandbox/fetch-model.mjs [id]` | download the model for offline builds |
+| `node scripts/sandbox/fetch-model.mjs [id]` | download the on-device model for offline builds |
+| `node scripts/sandbox/cloud-bakeoff.mjs` | compare server models on Workers AI |
 | `python scripts/logos/build_logos.py` | build partner logos (needs Pillow and numpy) |
 | `REVIEW_WRITE=1 npx vitest run tests/unit/contentReview.test.ts` | regenerate the content review list |
 
@@ -1163,7 +1234,11 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 | DOH, FDA, DOST, PCHRD, NICER | Department of Health; Food and Drug Administration; Department of Science and Technology; Philippine Council for Health Research and Development; Niche Centers in the Regions for R&D |
 | NCMH | National Center for Mental Health (hotline 1553 in the app) |
 | PWA | progressive web app: an installable, offline-capable web app |
-| OPFS | Origin Private File System: browser storage used for the model file |
+| OPFS | Origin Private File System: browser storage used for the on-device model file |
+| Worker | a small program on Cloudflare's network; ARAW has one, for the sandbox |
+| Workers AI | Cloudflare's service that runs AI models on its own GPUs |
+| Neuron | Cloudflare's unit for measuring Workers AI use; 10,000 a day are free |
+| SEA-LION | Southeast Asian Languages In One Network, a model family by AI Singapore |
 | COOP, COEP | Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers that enable cross-origin isolation |
 | wllama | WebAssembly build of llama.cpp for the browser (MIT) |
 | GGUF, Q4_K_M | model file format and a 4-bit quantisation scheme |
@@ -1200,7 +1275,7 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 | VIDEO-FINDINGS, GAWA-CONSENT | 2026-10-20 | Small fixes found while storyboarding videos; the consent footer appears only after a yes |
 | PROJECT-IDENTITY, PARTNER-LOGOS, ABOUT | 2026-10-20 | ARAW presented as an AIKasalig project: Home banner, six logos in fixed order, About the project |
 | TUTORIAL-VIDEOS, TUTORIAL-PIPELINE | 2026-10-20 | Silent captioned how-to videos in five languages, recorded from the app with Playwright |
-| SANDBOX | 2026-10-21 | A real small model runs in the browser through wllama; no server, no API |
+| SANDBOX | 2026-10-21 | A real small model runs in the browser through wllama; no server, no API (superseded by SANDBOX-CLOUD) |
 | SANDBOX-HOSTING | 2026-10-21 | Model file from a pinned Hugging Face commit (approved CDN exception); wllama files served by ARAW |
 | SANDBOX-LOAD | 2026-10-21 | No scripted fallback; cached in OPFS; unsupported devices get an explanation |
 | SANDBOX-SAFETY | 2026-10-21 | Red-flag card, self-harm hotline outside the model, privacy nudge, dose filter |
@@ -1210,7 +1285,7 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 | SANDBOX-HEADERS | 2026-10-21 | COOP same-origin and COEP credentialless everywhere for threads |
 | SANDBOX-PWA | 2026-10-21 | Engine files left out of the precache, cached on first use |
 | SANDBOX-MODEL | 2026-10-21 | Default model Qwen3 0.6B after a 5-model bake-off |
-| SANDBOX-PRELOAD | 2026-10-21 | No Load button: quiet background download on Wi-Fi or unknown connections |
+| SANDBOX-PRELOAD | 2026-10-21 | No Load button: quiet background download on Wi-Fi or unknown connections (removed by SANDBOX-FALLBACK) |
 | OFFLINE-APPS | 2026-10-21 | Offline Windows and Android apps planned; packaging deferred |
 | PRINT-KIT | 2026-11-03 | Printables compiled from typed content by a Vite and Preact print app, printed with Playwright |
 | LECTURES | 2026-11-03 | Silent slow H.264 MP4 module lectures from the real lesson screen |
@@ -1222,3 +1297,10 @@ Edit `tools/report-relay/Code.gs`, paste it into the Apps Script editor, then ch
 | TEST-FORMS-PRINT | 2026-11-03 | Test forms and answer key printed for facilitators only |
 | PRINT-I18N | 2026-11-03 | Print framing text and lecture captions join the normal translation batches |
 | TECH-DOCS | 2026-11-03 | This technical documentation and its PDF builder |
+| SANDBOX-REFERRER | 2026-11-06 | `Referrer-Policy: no-referrer`, because Hugging Face refuses `*.workers.dev` referers |
+| SANDBOX-CLOUD | 2026-11-06 | The AI runs on the server by default (Workers AI free allowance); visitors download nothing |
+| SANDBOX-TERMS | 2026-11-06 | A "Before you chat" pop-up must be agreed before the AI runs |
+| SANDBOX-FALLBACK | 2026-11-06 | Allowance out or busy: say so, then offer the on-device AI or Module 3; nothing downloads by itself |
+| SANDBOX-WORDING | 2026-11-06 | Privacy wording follows where the AI actually runs |
+| SANDBOX-CLOUD-MODEL | 2026-11-06 | Gemma-SEA-LION v4 27B after a 4-model bake-off |
+| SANDBOX-PITCH | 2026-11-06 | "A real AI built for Southeast Asia", not "small"; no claims beyond Tagalog |

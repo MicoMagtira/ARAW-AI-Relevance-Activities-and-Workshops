@@ -1,6 +1,7 @@
-// Chatbot Sandbox model config. The website fetches the GGUF file from a pinned Hugging Face revision (so the file can never
-// change under us); offline app builds set VITE_MODEL_SOURCE=local and ship the same file at ./models/<file>
-// (scripts/sandbox/fetch-model.mjs downloads it). Swapping the model is a change to DEFAULT_MODEL_ID.
+// Chatbot Sandbox model config. By default the AI runs on the server (CLOUD_MODEL, read by worker/index.ts too). The on-device
+// AI is a choice offered when the server cannot answer: its GGUF file comes from a pinned Hugging Face revision (so the file
+// can never change under us); offline app builds set VITE_MODEL_SOURCE=local and ship the same file at ./models/<file>
+// (scripts/sandbox/fetch-model.mjs downloads it). Swapping a model is a change to CLOUD_MODEL or DEFAULT_MODEL_ID.
 
 export interface ModelInfo {
   id: string;
@@ -16,6 +17,9 @@ export interface ModelInfo {
   /** Extra chat-template switches, e.g. turning off a model's "thinking" mode. */
   templateKwargs?: Record<string, unknown>;
 }
+
+/** The server AI: a Workers AI model, chosen in a bake-off (docs/DECISIONS-LOG.md, SANDBOX-CLOUD-MODEL). */
+export const CLOUD_MODEL = { id: '@cf/aisingapore/gemma-sea-lion-v4-27b-it', label: 'Gemma-SEA-LION v4 27B', license: 'MIT, built on Gemma 3' } as const;
 
 const m = (info: ModelInfo): ModelInfo => info;
 

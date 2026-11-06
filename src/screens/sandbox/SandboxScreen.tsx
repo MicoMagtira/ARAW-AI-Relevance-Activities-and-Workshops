@@ -1,4 +1,5 @@
-// Chatbot Sandbox (#/sandbox): chat with a real, small AI model that runs on the player's own device, then judge each answer.
+// Chatbot Sandbox (#/sandbox): chat with a real AI model, then judge each answer. The player agrees to the terms first.
+// The AI runs on the server, so nothing is downloaded; if the server cannot answer, the on-device AI is offered as a choice.
 // Safety (src/sandbox/guard.ts): red flags get the "Magpatingin agad" card first, self-harm gets the hotline and never
 // reaches the model, personal details get a nudge, and medicine doses are hidden from answers. Chats are not saved.
 // Desktop: missions | chat | trust tips. Tablet and phone: the chat first, then missions and tips.
@@ -8,10 +9,11 @@ import { language } from '../../app/language';
 import { xpClaims } from '../../app/progress';
 import { hrefFor, location$ } from '../../app/router';
 import { sfx } from '../../app/sound';
-import { getEngine, type Engine, type EngineStatus } from '../../sandbox/engine';
+import { agreedTerms, sandboxMode, TERMS_VERSION, type SandboxMode } from '../../sandbox/access';
+import { CloudError, getEngine, type CloudProblem, type Engine, type EngineStatus } from '../../sandbox/engine';
 import { createDoseFilter, detectPersonalData, detectRedFlags, MAX_INPUT, type PersonalKind } from '../../sandbox/guard';
 import { completeMission, isMissionDone, MISSION_XP, MISSIONS, missionsDone, RATINGS_NEEDED, type Mission } from '../../sandbox/missions';
-import { pickModel } from '../../sandbox/model';
+import { CLOUD_MODEL, isModelId, MODELS, DEFAULT_MODEL_ID, pickModel } from '../../sandbox/model';
 import { buildMessages, tidyAnswer, type ChatTurn } from '../../sandbox/prompt';
 import { useReducedMotion } from '../../ui/Ara';
 import { AraSays } from '../../ui/AraBubble';
@@ -38,6 +40,54 @@ type Msg =
 
 const MB = 1024 * 1024;
 const mb = (bytes: number): string => String(Math.round(bytes / MB));
+
+/* ---------- Terms ---------- */
+
+const TERMS: readonly StringKey[] = ['sb.terms.1', 'sb.terms.2', 'sb.terms.3', 'sb.terms.4', 'sb.terms.5', 'sb.terms.6'];
+
+/** The pop-up every player agrees to before the first chat. "Not now" leaves the sandbox closed, with a way back. */
+function TermsGate() {
+  const [open, setOpen] = useState(true);
+  return (
+    <div class="sb-state stack">
+      <p>{t('sb.terms.needed')}</p>
+      <div class="sb-state__btns">
+        <Button variant="gold" onClick={() => setOpen(true)}>
+          {t('sb.terms.read')}
+        </Button>
+        <Button variant="secondary" href={hrefFor('/learn/m03')}>
+          {t('sb.unsupported.link')}
+          <Icon name="arrow-right" />
+        </Button>
+      </div>
+      <Dialog
+        class="sb-terms-dialog"
+        open={open}
+        title={t('sb.terms.title')}
+        onClose={() => setOpen(false)}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              {t('sb.terms.later')}
+            </Button>
+            <Button variant="gold" onClick={() => (agreedTerms.value = TERMS_VERSION)}>
+              {t('sb.terms.agree')}
+            </Button>
+          </>
+        }
+      >
+        <div class="stack sb-terms-text" role="group" aria-label={t('sb.terms.title')} tabIndex={0}>
+          <p>{t('sb.terms.lead')}</p>
+          <ul class="sb-terms">
+            {TERMS.map((key) => (
+              <li key={key}>{t(key)}</li>
+            ))}
+          </ul>
+        </div>
+      </Dialog>
+    </div>
+  );
+}
 
 /* ---------- Loading, unsupported and error states ---------- */
 
@@ -200,7 +250,7 @@ function BotBubble({ msg, onRate }: { msg: Extract<Msg, { kind: 'bot' }>; onRate
           <Thinking />
         ) : null}
         {msg.stopped && <p class="sb-note">{t('sb.stopped')}</p>}
-        {msg.failed && <p class="sb-note sb-note--error">{t('sb.error.chat')}</p>}
+        {msg.failed && <p class="sb-note sb-note--error">{t(sandboxMode.value === 'cloud' ? 'sb.error.cloud' : 'sb.error.chat')}</p>}
         {msg.dosed && msg.done && <p class="sb-note">{t('sb.doseNote')}</p>}
       </div>
       <span class="sb-label">{t('sb.label')}</span>
@@ -209,13 +259,37 @@ function BotBubble({ msg, onRate }: { msg: Extract<Msg, { kind: 'bot' }>; onRate
   );
 }
 
+/** The server cannot answer: say why, then offer the on-device AI (the player's choice) or Module 3. */
+function CloudDown({ reason, size }: { reason: CloudProblem; size: number }) {
+  return (
+    <div class="sb-card sb-card--down" role="alert">
+      <p class="sb-card__title">
+        <Icon name="info" size={24} />
+        {t(reason === 'quota' ? 'sb.down.quota.title' : 'sb.down.busy.title')}
+      </p>
+      <p>{t(reason === 'quota' ? 'sb.down.quota' : 'sb.down.busy')}</p>
+      <p>{t('sb.down.device', { size })}</p>
+      <div class="sb-state__btns">
+        <Button variant="gold" onClick={() => (sandboxMode.value = 'device')}>
+          {t('sb.down.useDevice')}
+        </Button>
+        <Button variant="secondary" href={hrefFor('/learn/m03')}>
+          {t('sb.unsupported.link')}
+          <Icon name="arrow-right" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Chat panel ---------- */
 
-function Chat({ engine }: { engine: Engine }) {
+function Chat({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [draft, setDraft] = useState('');
   const [privacy, setPrivacy] = useState<{ text: string; kinds: PersonalKind[] } | null>(null);
   const [announce, setAnnounce] = useState('');
+  const [down, setDown] = useState<CloudProblem | null>(null);
   const msgsRef = useRef<Msg[]>([]);
   const nextId = useRef(1);
   const logRef = useRef<HTMLDivElement>(null);
@@ -252,10 +326,12 @@ function Chat({ engine }: { engine: Engine }) {
       const { stopped } = await engine.chat(buildMessages(history, lang), (piece) => patch(id, { text: filter.push(piece) }));
       const text = filter.end();
       patch(id, { text, done: true, stopped, dosed: filter.hidDose });
+      setDown(null);
       if (text) setAnnounce(t('sb.announce', { text: tidyAnswer(text) }));
       if (text && !stopped) award(MISSIONS[0] as Mission);
-    } catch {
+    } catch (e) {
       patch(id, { text: filter.end(), done: true, failed: true });
+      if (e instanceof CloudError) setDown(e.reason);
     }
   };
 
@@ -334,6 +410,7 @@ function Chat({ engine }: { engine: Engine }) {
       <p class="sr-only" role="status" data-no-tx>
         {announce}
       </p>
+      {down && <CloudDown reason={down} size={MODELS[DEFAULT_MODEL_ID].sizeMB} />}
 
       <div class="sb-starters">
         <p class="sb-starters__title" id="sb-starters-h">
@@ -433,7 +510,7 @@ function Chat({ engine }: { engine: Engine }) {
       >
         <div class="stack">
           <p>{t('sb.pii.text', { kinds: kindsText })}</p>
-          <p class="px-text-muted">{t('sb.pii.local')}</p>
+          <p class="px-text-muted">{t(mode === 'cloud' ? 'sb.pii.cloud' : 'sb.pii.local')}</p>
         </div>
       </Dialog>
     </div>
@@ -493,7 +570,7 @@ function Missions() {
   );
 }
 
-function TrustTips({ engine }: { engine: Engine }) {
+function TrustTips({ engine, mode }: { engine: Engine; mode: SandboxMode }) {
   const m = engine.model;
   return (
     <Panel class="sb-tips" aria-labelledby="sb-tips-h">
@@ -518,10 +595,10 @@ function TrustTips({ engine }: { engine: Engine }) {
         <p class="sb-lang-note">{t('sb.langNote')}</p>
         <p class="sb-private">
           <Icon name="shield" size={20} />
-          <span>{t('sb.private')}</span>
+          <span>{t(mode === 'cloud' ? 'sb.private.cloud' : 'sb.private')}</span>
         </p>
         <h3 class="sb-about__title">{t('sb.about')}</h3>
-        <p class="px-text-muted">{t('sb.aboutText', { model: m.label, size: m.sizeMB, license: m.license })}</p>
+        <p class="px-text-muted">{mode === 'cloud' ? t('sb.aboutCloud', { model: CLOUD_MODEL.label, license: CLOUD_MODEL.license }) : t('sb.aboutText', { model: m.label, size: m.sizeMB, license: m.license })}</p>
       </div>
     </Panel>
   );
@@ -530,12 +607,15 @@ function TrustTips({ engine }: { engine: Engine }) {
 export default function SandboxScreen() {
   const requested = location$.value.query.model;
   const model = useMemo(() => pickModel(requested), [requested]);
-  const engine = getEngine(model);
+  // ?model=<id> tries an on-device candidate (docs/DECISIONS-LOG.md, SANDBOX-MODEL)
+  const mode: SandboxMode = isModelId(requested) ? 'device' : sandboxMode.value;
+  const engine = getEngine(model, mode);
   const status = engine.status.value;
+  const agreed = agreedTerms.value >= TERMS_VERSION;
 
   useEffect(() => {
-    void engine.init();
-  }, [engine]);
+    if (agreed) void engine.init();
+  }, [engine, agreed]);
 
   return (
     <div class="sb">
@@ -548,8 +628,8 @@ export default function SandboxScreen() {
             </h2>
             <Chip>{t('sb.kicker')}</Chip>
           </div>
-          <p>{t('sb.intro')}</p>
-          {status.kind === 'ready' ? <Chat engine={engine} /> : <LoadState engine={engine} status={status} />}
+          <p>{t(mode === 'cloud' ? 'sb.intro.cloud' : 'sb.intro')}</p>
+          {!agreed ? <TermsGate /> : status.kind === 'ready' ? <Chat key={mode} engine={engine} mode={mode} /> : <LoadState engine={engine} status={status} />}
         </div>
       </Panel>
 
@@ -559,14 +639,14 @@ export default function SandboxScreen() {
             {t('sb.kicker')}
           </h2>
           <AraSays mood="happy" scale={3} side="top">
-            <p>{t('sb.ara')}</p>
+            <p>{t(mode === 'cloud' ? 'sb.ara.cloud' : 'sb.ara')}</p>
           </AraSays>
         </Panel>
         <Missions />
       </div>
 
       <div class="sb-right">
-        <TrustTips engine={engine} />
+        <TrustTips engine={engine} mode={mode} />
       </div>
     </div>
   );

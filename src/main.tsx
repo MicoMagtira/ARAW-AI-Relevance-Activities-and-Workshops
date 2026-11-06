@@ -21,7 +21,6 @@ import { initSettings } from './app/settings';
 import { initSound } from './app/sound';
 import { startAutoFit } from './ui/autoFit';
 import { initMusic } from './app/sound/music';
-import { schedulePrefetch } from './sandbox/preload';
 
 installTranslation();
 initSettings();
@@ -43,4 +42,3 @@ void loadPack(language.value, false).finally(() => {
   if (root) render(<Root />, root);
 });
 registerServiceWorker();
-schedulePrefetch(); // Chatbot Sandbox model, quietly in the background on Wi-Fi (src/sandbox/preload.ts)

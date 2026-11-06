@@ -1,4 +1,4 @@
-// Chatbot Sandbox system prompt and chat history. Small models follow English instructions best, so the instructions are
+// Chatbot Sandbox system prompt and chat history. Models follow English instructions best, so the instructions are
 // in English and only name the language to answer in (the app language, or whatever the player writes in).
 import type { LanguageCode } from '../app/language';
 
@@ -23,9 +23,10 @@ export const LANGUAGE_NAMES: Readonly<Record<LanguageCode, string>> = {
 export function systemPrompt(lang: LanguageCode): string {
   const name = LANGUAGE_NAMES[lang];
   return [
-    'You are a small practice chatbot inside ARAW, a learning game that teaches Filipinos about AI. You run on the user\'s own device.',
+    'You are a practice chatbot inside ARAW, a learning game that teaches Filipinos about AI.',
     `Answer in ${name}. If the user writes in another language, answer in the user's language.`,
     'Use short, simple sentences: at most 5 sentences. Be kind and friendly.',
+    'Go straight to the answer: do not greet the user or introduce yourself. Do not add translations in brackets.',
     'You can make mistakes. You do not know today\'s date, the news, or anything recent. If you are not sure, say so.',
     'Never give medicine doses, amounts or schedules. Never diagnose. Never tell anyone to start, stop or change a treatment.',
     'For any health worry, tell the user to ask a health worker, the barangay health center or a doctor.',
@@ -43,6 +44,7 @@ export function tidyAnswer(text: string): string {
     .replace(/<think>[\s\S]*$/, '')
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/__(.+?)__/g, '$1')
+    .replace(/(^|[\s(])\*([^\s*](?:[^*\n]*[^\s*])?)\*(?=[\s.,!?;:)]|$)/gm, '$1$2')
     .replace(/^#{1,6}\s+/gm, '')
     .replace(/^\s*[-*]\s+/gm, '• ')
     .replace(/\n{3,}/g, '\n\n')

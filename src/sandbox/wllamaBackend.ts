@@ -1,4 +1,4 @@
-// The real Chatbot Sandbox backend: wllama (MIT), llama.cpp compiled to WebAssembly. It runs the model in its own worker,
+// The on-device Chatbot Sandbox backend: wllama (MIT), llama.cpp compiled to WebAssembly. It runs the model in its own worker,
 // keeps downloaded models in the browser's private file storage (OPFS), and uses the GPU (WebGPU) or several CPU threads
 // when the browser allows. All of its files are served by ARAW itself: no CDN.
 import { LoggerWithoutDebug, Wllama } from '@wllama/wllama/esm/index.js';
@@ -33,10 +33,6 @@ export async function wllamaBackend(): Promise<Backend> {
     async isCached(url) {
       const models = await wllama.modelManager.getModels();
       return models.some((m) => m.url === url);
-    },
-    async download(url, onProgress) {
-      // the file only: nothing is loaded into memory, so lessons and games stay smooth while it downloads
-      await wllama.modelManager.downloadModel(url, { progressCallback: ({ loaded, total }) => onProgress(loaded, total) });
     },
     async load(url, _model, onProgress) {
       await wllama.loadModelFromUrl(url, {

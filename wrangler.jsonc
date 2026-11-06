@@ -1,0 +1,24 @@
+// Cloudflare deploy config. A push to main runs `npm run build`, then `npx wrangler deploy` with this file.
+// The site itself stays static files (free, unlimited requests). Only /api/* reaches the Worker: the Chatbot Sandbox.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "dost-nicer-araw",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-11-06",
+  "assets": {
+    "directory": "./dist/",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "ai": { "binding": "AI" },
+  "ratelimits": [
+    {
+      "name": "CHAT_LIMIT",
+      "namespace_id": "1001",
+      // per visitor address, per Cloudflare location. High on purpose: a whole workshop on one Wi-Fi shares one address.
+      "simple": { "limit": 60, "period": 60 }
+    }
+  ],
+  // chats are never stored: no request logging, and the Worker itself logs nothing
+  "observability": { "enabled": false }
+}

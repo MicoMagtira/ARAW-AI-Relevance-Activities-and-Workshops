@@ -24,6 +24,11 @@ async function check(page: Page) {
   expect(await axeSerious(page)).toEqual([]);
 }
 
+/** Undo the fixture's agreement, so the sandbox opens on its terms pop-up. */
+async function notAgreed(page: Page) {
+  await page.addInitScript(() => window.localStorage.removeItem('araw:v1:sandbox-terms'));
+}
+
 async function open(page: Page, fake: FakeLlmOptions = {}) {
   await page.route('**/huggingface.co/**', (route) => {
     throw new Error(`unexpected model download: ${route.request().url()}`);
@@ -34,7 +39,7 @@ async function open(page: Page, fake: FakeLlmOptions = {}) {
   await page.goto('/#/sandbox');
 }
 
-/** The sandbox downloads and loads the model by itself: wait until the chat is ready. */
+/** Wait until the chat is ready. */
 async function loadModel(page: Page) {
   await expect(page.getByLabel('Your message')).toBeVisible({ timeout: 15_000 });
 }
@@ -42,8 +47,67 @@ async function loadModel(page: Page) {
 const log = (page: Page) => page.getByRole('log', { name: 'Chat with the practice AI' });
 
 test.describe('Chatbot Sandbox', () => {
-  test('first visit downloads by itself with a progress bar, then shows the chat; both states fit and are accessible', async ({ page }) => {
-    await open(page, { delay: 1500 });
+  test('opens straight into the chat with nothing to download, and tells the truth about where messages go', async ({ page }) => {
+    await open(page);
+    await loadModel(page);
+    await expect(page.getByRole('progressbar')).toHaveCount(0);
+    await expect(page.getByText(/This happens only once/)).toHaveCount(0);
+    await expect(page.getByText(/Your messages go over the internet to an AI service/)).toBeVisible();
+    await expect(page.getByText(/Your chat stays on this device/)).toHaveCount(0);
+    await check(page);
+  });
+
+  test('the terms come first: Not now keeps the chat closed, I agree opens it and is remembered', async ({ page }) => {
+    await notAgreed(page);
+    await open(page);
+    const terms = page.getByRole('dialog', { name: 'Before you chat' });
+    await expect(terms).toBeVisible();
+    await expect(terms.getByText(/Do not share personal details/)).toBeVisible();
+    await expect(terms.getByRole('button', { name: 'I agree' })).toBeInViewport({ ratio: 1 }); // never hidden below the fold
+    await expect(terms.getByRole('button', { name: 'Not now' })).toBeInViewport({ ratio: 1 });
+    await expect(page.getByLabel('Your message')).toHaveCount(0);
+    await check(page);
+    await terms.getByRole('button', { name: 'Not now' }).click();
+    await expect(terms).toBeHidden();
+    await expect(page.getByLabel('Your message')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Open Module 3' })).toHaveAttribute('href', '#/learn/m03');
+    await check(page);
+    await page.getByRole('button', { name: 'Read the terms' }).click();
+    await terms.getByRole('button', { name: 'I agree' }).click();
+    await loadModel(page);
+    expect(await page.evaluate(() => window.localStorage.getItem('araw:v1:sandbox-terms'))).toBe('1');
+  });
+
+  test('when the free chats run out it says so, and saving the AI on the device is the player\'s choice', async ({ page }) => {
+    await open(page, { cloudError: 'quota', reply: 'A device answer.', delay: 400 });
+    await loadModel(page);
+    await page.getByRole('button', { name: 'What is the date today?' }).click();
+    const card = page.getByRole('alert').filter({ hasText: 'The practice AI is resting' });
+    await expect(card).toBeVisible();
+    await expect(card.getByText(/8:00 AM, Philippine time/)).toBeVisible();
+    await expect(card.getByRole('link', { name: 'Open Module 3' })).toHaveAttribute('href', '#/learn/m03');
+    await expect(page.getByRole('progressbar')).toHaveCount(0);
+    await check(page);
+    await card.getByRole('button', { name: 'Save the AI on this device' }).click();
+    await expect(page.getByRole('progressbar', { name: 'Downloading the practice AI' })).toBeVisible();
+    await loadModel(page);
+    await expect(page.getByText(/Your chat stays on this device/)).toBeVisible();
+  });
+
+  test('the terms buttons stay on screen on the smallest phone, in the longest language', async ({ page }, info) => {
+    test.skip(info.project.name !== 'desktop', 'sets its own viewport');
+    await notAgreed(page);
+    await page.addInitScript(() => window.localStorage.setItem('araw:v1:language', JSON.stringify('hil')));
+    await page.setViewportSize({ width: 320, height: 568 });
+    await open(page);
+    const agree = page.getByRole('button', { name: 'Nagasugot ako' });
+    await expect(agree).toBeInViewport({ ratio: 1 });
+    await expect(page.getByRole('button', { name: 'Indi anay' })).toBeInViewport({ ratio: 1 });
+    await noHorizontalOverflow(page);
+  });
+
+  test('the on-device AI downloads with a progress bar, then shows the chat; both states fit and are accessible', async ({ page }) => {
+    await open(page, { device: true, delay: 1500 });
     await expect(page.getByRole('heading', { name: 'Downloading the practice AI' })).toBeVisible();
     await expect(page.getByRole('progressbar', { name: 'Downloading the practice AI' })).toBeVisible();
     await expect(page.getByText(/This happens only once/)).toBeVisible();
@@ -104,7 +168,7 @@ test.describe('Chatbot Sandbox', () => {
   });
 
   test('a device that cannot run the model gets a kind explanation and a way to Module 3', async ({ page }) => {
-    await open(page, { unsupported: 'browser' });
+    await open(page, { device: true, unsupported: 'browser' });
     await expect(page.getByRole('heading', { name: 'This device cannot run the practice AI' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Open Module 3' })).toHaveAttribute('href', '#/learn/m03');
     await check(page);

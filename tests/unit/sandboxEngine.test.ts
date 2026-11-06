@@ -9,10 +9,6 @@ const OK: DeviceInfo = { wasm: true, workers: true, deviceMemoryGB: 8, storageFr
 function backend(over: Partial<Backend> = {}): Backend {
   return {
     isCached: async () => false,
-    download: async (_url, onProgress) => {
-      onProgress(50, 100);
-      onProgress(100, 100);
-    },
     load: async (_url, _m, onProgress) => {
       onProgress(50, 100);
       onProgress(100, 100);
@@ -135,70 +131,5 @@ describe('createEngine', () => {
     const e = engineWith(backend(), { ...OK, wasm: false });
     await e.init();
     await expect(e.chat([{ role: 'user', content: 'Hi' }], () => {})).rejects.toThrow('not ready');
-  });
-});
-
-describe('background download (prefetch)', () => {
-  it('saves the file without loading it into memory, then the sandbox loads it without a second download', async () => {
-    let cached = false;
-    const download = vi.fn(async (_url: string, onProgress: (l: number, t: number) => void) => {
-      onProgress(100, 100);
-      cached = true;
-    });
-    const load = vi.fn(async (_url: string, _m: unknown, onProgress: (l: number, t: number) => void) => onProgress(1, 1));
-    const e = engineWith(backend({ isCached: async () => cached, download, load }));
-    await e.prefetch();
-    expect(download).toHaveBeenCalledTimes(1);
-    expect(load).not.toHaveBeenCalled();
-    expect(e.status.value.kind).toBe('idle');
-    const seen: string[] = [];
-    e.status.subscribe((s) => seen.push(s.kind));
-    await e.init();
-    expect(e.status.value.kind).toBe('ready');
-    expect(seen).not.toContain('downloading');
-  });
-
-  it('opening the sandbox mid-download shows its progress, then loads when it finishes', async () => {
-    let finish: () => void = () => {};
-    let cached = false;
-    const e = engineWith(
-      backend({
-        isCached: async () => cached,
-        download: (_url, onProgress) =>
-          new Promise<void>((resolve) => {
-            onProgress(30, 100);
-            finish = () => {
-              cached = true;
-              resolve();
-            };
-          }),
-      }),
-    );
-    const bg = e.prefetch();
-    await new Promise((r) => setTimeout(r, 0));
-    expect(e.status.value).toEqual({ kind: 'downloading', loaded: 30, total: 100 });
-    const opening = e.init();
-    expect(e.status.value.kind).toBe('downloading');
-    finish();
-    await Promise.all([bg, opening]);
-    expect(e.status.value.kind).toBe('ready');
-  });
-
-  it('does nothing when the file is already there or the device cannot run it, and a failure stays quiet', async () => {
-    const download = vi.fn(async () => {});
-    await engineWith(backend({ isCached: async () => true, download })).prefetch();
-    await engineWith(backend({ download }), { ...OK, deviceMemoryGB: 1 }).prefetch();
-    expect(download).not.toHaveBeenCalled();
-    const failing = engineWith(
-      backend({
-        download: async () => {
-          throw new Error('offline');
-        },
-      }),
-    );
-    await failing.prefetch();
-    expect(failing.status.value.kind).toBe('idle');
-    await failing.init(); // the sandbox simply downloads it when opened
-    expect(failing.status.value.kind).toBe('ready');
   });
 });

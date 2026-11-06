@@ -1,12 +1,23 @@
-// Chatbot Sandbox engine: one small state machine over a backend that runs the model. The real backend (wllama, llama.cpp
-// compiled to WebAssembly; it runs the model in its own worker) loads into memory only when the sandbox opens; the file
-// itself may already be on the device from a quiet background download (prefetch, src/sandbox/preload.ts). Tests set
-// window.__ARAW_FAKE_LLM__ to swap in a scripted backend, so no test ever downloads a model.
+// Chatbot Sandbox engine: one small state machine over a backend that runs the model. The default backend asks the server
+// (cloudBackend.ts), so there is nothing to download. The on-device backend (wllama, llama.cpp compiled to WebAssembly; it
+// runs the model in its own worker) is only used when the player chooses it. Tests set window.__ARAW_FAKE_LLM__ to swap in
+// a scripted backend, so no test ever reaches the server or downloads a model.
 import { signal, type Signal } from '@preact/signals';
 import type { PromptMessage } from './prompt';
+import type { SandboxMode } from './access';
 import { modelSource, modelUrl, type ModelInfo } from './model';
 
 export type UnsupportedReason = 'browser' | 'memory' | 'storage';
+
+/** Why the server could not answer: the shared daily allowance is used up, or it is busy or out of reach. */
+export type CloudProblem = 'quota' | 'busy';
+
+export class CloudError extends Error {
+  constructor(readonly reason: CloudProblem) {
+    super(reason);
+    this.name = 'CloudError';
+  }
+}
 
 export type EngineStatus =
   | { kind: 'idle' }
@@ -19,8 +30,6 @@ export type EngineStatus =
 
 export interface Backend {
   isCached(url: string): Promise<boolean>;
-  /** Save the model file on the device without loading it into memory (the background download). */
-  download(url: string, onProgress: (loaded: number, total: number) => void): Promise<void>;
   /** Load the model into memory, downloading it first when it is not on the device yet. */
   load(url: string, model: ModelInfo, onProgress: (loaded: number, total: number) => void): Promise<void>;
   /** Streams the answer: `onDelta` gets each new piece of text. Resolves when done; rejects with AbortError when stopped. */
@@ -74,11 +83,6 @@ export interface Engine {
   init(): Promise<void>;
   /** Download (if needed) and load the model; also the Retry after an error. */
   load(): Promise<void>;
-  /**
-   * Quietly save the model on the device ahead of time, without loading it into memory. Does nothing on a device that
-   * cannot run it, when the file is already there, or once the sandbox has started; failures stay silent.
-   */
-  prefetch(): Promise<void>;
   /** Ask the model. Resolves with stopped=true when the player pressed Stop; rejects when the model fails. */
   chat(messages: PromptMessage[], onDelta: (text: string) => void): Promise<{ stopped: boolean }>;
   stop(): void;
@@ -98,7 +102,6 @@ export function createEngine(model: ModelInfo, deps: EngineDeps): Engine {
   let backend: Backend | null = null;
   let controller: AbortController | null = null;
   let loading: Promise<void> | null = null;
-  let prefetching: Promise<void> | null = null;
   const fullSize = model.sizeMB * 1024 * 1024;
 
   const getBackend = async (): Promise<Backend> => (backend ??= await deps.backend());
@@ -108,29 +111,6 @@ export function createEngine(model: ModelInfo, deps: EngineDeps): Engine {
     } catch {
       return false;
     }
-  };
-
-  const prefetch = (): Promise<void> => {
-    if (prefetching) return prefetching;
-    if (status.value.kind !== 'idle' || loading) return Promise.resolve();
-    prefetching = (async () => {
-      try {
-        if (supportProblem(await deps.device(), model)) return; // the sandbox explains it if the player opens it
-        if (await isCached()) return;
-        if (status.value.kind !== 'idle') return; // the sandbox opened in the meantime and took over
-        const b = await getBackend();
-        status.value = { kind: 'downloading', loaded: 0, total: fullSize };
-        await b.download(deps.url, (loaded, total) => {
-          if (status.value.kind === 'downloading') status.value = { kind: 'downloading', loaded, total };
-        });
-      } catch {
-        /* quiet: opening the sandbox tries again */
-      } finally {
-        if (status.value.kind === 'downloading') status.value = { kind: 'idle' };
-        prefetching = null;
-      }
-    })();
-    return prefetching;
   };
 
   const load = (cached = false): Promise<void> => {
@@ -162,9 +142,6 @@ export function createEngine(model: ModelInfo, deps: EngineDeps): Engine {
       if (loading) return loading;
       const kind = status.value.kind;
       if (kind === 'ready' || kind === 'checking' || kind === 'loading') return;
-      // a background download already running keeps showing its progress; the model loads as soon as it finishes
-      if (prefetching) await prefetching;
-      if (loading) return loading;
       status.value = { kind: 'checking' };
       const problem = supportProblem(await deps.device(), model);
       if (problem) {
@@ -174,7 +151,6 @@ export function createEngine(model: ModelInfo, deps: EngineDeps): Engine {
       await load(await isCached());
     },
     load: () => load(),
-    prefetch,
     async chat(messages, onDelta) {
       if (status.value.kind !== 'ready' || generating.value) throw new Error('engine not ready');
       // set before any await, so a second Send in the same moment is refused
@@ -209,6 +185,10 @@ export interface FakeLlmOptions {
   reply?: string;
   /** Milliseconds between streamed words. */
   delay?: number;
+  /** Start with the on-device AI (its download and loading states) instead of the server. */
+  device?: boolean;
+  /** The server refuses every question for this reason. */
+  cloudError?: CloudProblem;
 }
 
 declare global {
@@ -219,23 +199,32 @@ declare global {
 
 const engines = new Map<string, Engine>();
 
+const cloudDeps = (fake: FakeLlmOptions | undefined): EngineDeps => ({
+  url: '',
+  device: async () => ({ wasm: true, workers: true }), // the server does the work: any device can chat
+  backend: async () => (fake ? (await import('./fakeBackend')).fakeBackend({ ...fake, cached: true }, true) : (await import('./cloudBackend')).cloudBackend()),
+});
+
+const deviceDeps = (model: ModelInfo, fake: FakeLlmOptions | undefined): EngineDeps =>
+  fake
+    ? {
+        url: `fake://${model.file}`,
+        device: async () => (fake.unsupported ? { wasm: fake.unsupported !== 'browser', workers: true, deviceMemoryGB: fake.unsupported === 'memory' ? 1 : 8, storageFreeMB: fake.unsupported === 'storage' ? 1 : 1e6 } : { wasm: true, workers: true }),
+        backend: async () => (await import('./fakeBackend')).fakeBackend(fake, false),
+      }
+    : {
+        url: modelUrl(model, modelSource(), document.baseURI),
+        device: readDevice,
+        backend: async () => (await import('./wllamaBackend')).wllamaBackend(),
+      };
+
 /** The app's engine for a model (kept while the app is open, so leaving and coming back does not reload the model). */
-export function getEngine(model: ModelInfo): Engine {
+export function getEngine(model: ModelInfo, mode: SandboxMode): Engine {
   const fake = typeof window !== 'undefined' ? window.__ARAW_FAKE_LLM__ : undefined;
-  const key = `${model.id}${fake ? ':fake' : ''}`;
+  const key = `${mode}:${model.id}${fake ? ':fake' : ''}`;
   let engine = engines.get(key);
   if (!engine) {
-    engine = fake
-      ? createEngine(model, {
-          url: `fake://${model.file}`,
-          device: async () => (fake.unsupported ? { wasm: fake.unsupported !== 'browser', workers: true, deviceMemoryGB: fake.unsupported === 'memory' ? 1 : 8, storageFreeMB: fake.unsupported === 'storage' ? 1 : 1e6 } : { wasm: true, workers: true }),
-          backend: async () => (await import('./fakeBackend')).fakeBackend(fake),
-        })
-      : createEngine(model, {
-          url: modelUrl(model, modelSource(), document.baseURI),
-          device: readDevice,
-          backend: async () => (await import('./wllamaBackend')).wllamaBackend(),
-        });
+    engine = createEngine(model, mode === 'cloud' ? cloudDeps(fake) : deviceDeps(model, fake));
     engines.set(key, engine);
   }
   return engine;

@@ -31,6 +31,8 @@ were added (batches b043, b044; Claude Opus, native review needed like the rest)
 and dose lines).
 
 2026-11-03: user guide 1.1 (Chatbot Sandbox, Printables, facilitator kit; batches b052, b053; Claude, native review needed).
+2026-11-06: server Chatbot Sandbox, terms pop-up and guide updates (batch b054; Claude Opus, native review needed, especially the terms).
+2026-11-06: "built for Southeast Asia" wording (batch b055; Claude Opus, native review needed).
 
 Machine translation of health content must be checked by a native speaker and the health reviewer before a public launch
 (see docs/CONTENT_REVIEW.md), especially numbers, ages, time spans and warnings.

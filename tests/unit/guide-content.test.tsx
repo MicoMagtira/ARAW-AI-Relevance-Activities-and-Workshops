@@ -15,7 +15,7 @@ describe('guide content', () => {
 
   it('covers the Chatbot Sandbox, the Printables tab and the facilitator kit, and shows version 1.1', () => {
     const ids = steps.map(({ step }) => step.shot);
-    for (const id of ['arcade-sandbox', 'sandbox-download', 'sandbox-chat', 'sandbox-rated', 'sandbox-missions', 'sandbox-safety', 'library-printables']) expect(ids, id).toContain(id);
+    for (const id of ['arcade-sandbox', 'sandbox-terms', 'sandbox-chat', 'sandbox-rated', 'sandbox-missions', 'sandbox-safety', 'library-printables']) expect(ids, id).toContain(id);
     expect(GUIDE_SECTIONS.find((s) => s.id === 'library')?.intro).toContain('five parts');
     expect(GUIDE_SECTIONS.find((s) => s.id === 'facilitators')?.steps.map((st) => st.title)).toContain('The printed facilitator kit');
     expect(GUIDE_COVER.version).toBe('Version 1.1 (2026-11)');

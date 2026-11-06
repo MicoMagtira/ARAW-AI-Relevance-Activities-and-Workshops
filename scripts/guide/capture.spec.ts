@@ -21,6 +21,7 @@ const GAMES = ['takbo-data', 'feed-mo-to', 'luto-ni-ara', 'sino-to', 'lamok-lama
 
 /** A lived-in player: four modules done, a streak, some XP, badges and best scores. */
 const LIVED_IN: Record<string, unknown> = {
+  'sandbox-terms': 1,
   profile: { nickname: 'Lorna', avatar: 2 },
   xp: 640,
   streak: { current: 4, best: 6, lastDay: '2026-10-14', freezeWeek: null },
@@ -355,18 +356,16 @@ const SHOTS: Shot[] = [
     },
   },
   {
-    id: 'sandbox-download',
+    id: 'sandbox-terms',
     height: { phone: 1000 },
     url: '/#/sandbox',
-    fakeLlm: { delay: 4000 },
-    ready: role('progressbar', 'Downloading the practice AI'),
-    prepare: async (page) => {
-      await page.waitForFunction(() => Number(document.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow') ?? 0) > 0, undefined, { timeout: 15_000 });
-    },
+    seed: { 'sandbox-terms': 0 },
+    fakeLlm: { cached: true, delay: 8, reply: SANDBOX_REPLY },
+    ready: role('button', 'I agree'),
     targets: {
-      bar: role('progressbar', 'Downloading the practice AI'),
-      once: text(/This happens only once/),
-      wifi: text(/Wi-Fi/),
+      personal: text(/Do not share personal details/),
+      agree: role('button', 'I agree'),
+      later: role('button', 'Not now'),
     },
   },
   {

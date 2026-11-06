@@ -32,6 +32,10 @@ print-out/
 dist-lecture/
 lecture-out/
 lecture-out-dry/
+lecture-out-*/
 
 # Technical documentation PDF builder (scripts/techdoc): HTML and page previews
 scripts/techdoc/out/
+
+# Cloudflare Wrangler local state
+.wrangler/

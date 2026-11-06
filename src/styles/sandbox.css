@@ -82,6 +82,50 @@
   font: 800 var(--fs-22) / 1.2 var(--font-head);
 }
 
+.sb-state__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* the terms pop-up: only the text scrolls, so I agree and Not now are always on screen, even on a small phone */
+.sb-terms-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sb-terms-dialog .px-dialog__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+}
+
+.sb-terms-text {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--sp-5);
+}
+
+.sb-terms-dialog .px-dialog__bar {
+  flex: none;
+}
+
+.sb-terms-dialog .px-dialog__actions {
+  flex: none;
+  padding-top: var(--sp-3);
+  border-top: var(--px) solid var(--line);
+}
+
+.sb-terms {
+  display: grid;
+  gap: var(--sp-3);
+  margin: 0;
+  padding-left: var(--sp-5);
+}
+
 .sb-wait {
   font: 700 var(--fs-18) / 1.4 var(--font-body);
 }
@@ -280,6 +324,11 @@
 .sb-card--care {
   border-color: var(--navy);
   background: var(--navy-tint);
+}
+
+.sb-card--down {
+  border-color: var(--navy);
+  background: var(--soft);
 }
 
 .sb-card__title {

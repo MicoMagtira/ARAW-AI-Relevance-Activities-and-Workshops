@@ -19,6 +19,10 @@ Not part of `npm run verify` on purpose (slow, visual, for a human to look at).
   (`node scripts/tutorials/record.mjs <id>`), then rebuild. Watch one clip on a phone in full screen (browser captions show).
 - [ ] User guide refreshed after screen changes: `npx playwright test -c scripts/guide/capture.config.ts`, then
   `node scripts/guide/compress.mjs` (if used) and `node scripts/guide/build-pdf.mjs`.
+- [ ] Chatbot Sandbox on the live site, in a fresh browser and on a real low-end Android and an iPhone: the terms come first, an answer
+  streams in English and Filipino, no model downloads by itself, and the wording matches where the AI runs. A browser that already
+  saved the on-device model can hide download faults. Keep `Referrer-Policy: no-referrer` in `public/_headers`.
+- [ ] If the terms changed, raise `TERMS_VERSION` in `src/sandbox/access.ts` and get a privacy review.
 - [ ] The creator credit ("Created by Mico C. Magtira ...") shows on the splash, the About screen and the app footer.
 - [ ] Print kit rebuilt after any content or translation change: `node scripts/print/build.mjs --pages` (no overflow warnings), then check a few PNGs in
   `scripts/print/out/png/` (trust guide, red-flag cards, myth cards) in a regional language. Library > Printables lists all ten public sheets in all

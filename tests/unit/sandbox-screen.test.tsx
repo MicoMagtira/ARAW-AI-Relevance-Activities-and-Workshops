@@ -3,8 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/preact';
 import type { FakeLlmOptions } from '../../src/sandbox/engine';
 
-async function renderScreen(fake: FakeLlmOptions) {
+async function renderScreen(fake: FakeLlmOptions, agreed = true) {
   window.__ARAW_FAKE_LLM__ = { delay: 1, ...fake };
+  if (agreed) window.localStorage.setItem('araw:v1:sandbox-terms', '1');
   vi.resetModules(); // a fresh engine per test (the app keeps one per model)
   const { xpClaims } = await import('../../src/app/progress');
   xpClaims.value = [];
@@ -30,12 +31,87 @@ afterEach(() => {
   delete window.__ARAW_FAKE_LLM__;
 });
 
-describe('Chatbot Sandbox screen', () => {
-  it('asks before downloading, then chats: the answer is labelled and can be rated', async () => {
-    const { xpClaims } = await renderScreen({ reply: 'Keep water covered. {q}', delay: 60 });
-    expect(await screen.findByText(/This happens only once/)).toBeTruthy(); // the download starts by itself
-    expect(screen.queryByRole('button', { name: /Load/ })).toBeNull();
+describe('Chatbot Sandbox terms', () => {
+  it('shows the terms first and starts nothing until the player agrees', async () => {
+    await renderScreen({ reply: 'Okay.' }, false);
+    expect(screen.getByRole('heading', { name: 'Before you chat' })).toBeTruthy();
+    expect(screen.getByText(/Do not share personal details/)).toBeTruthy();
+    expect(screen.getByText(/sent over the internet to an AI service/)).toBeTruthy();
+    expect(screen.queryByLabelText('Your message')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'I agree' }));
+    await ready();
+    expect(window.localStorage.getItem('araw:v1:sandbox-terms')).toBe('1');
+  });
+
+  it('Not now keeps the chat closed, with a way back to the terms and to Module 3', async () => {
+    await renderScreen({ reply: 'Okay.' }, false);
+    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+    expect(screen.getByText(/please read and agree to the terms first/)).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Open Module 3/ })).toBeTruthy();
+    expect(screen.queryByLabelText('Your message')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Read the terms' }));
+    fireEvent.click(screen.getByRole('button', { name: 'I agree' }));
+    await ready();
+  });
+
+  it('asks again when the terms change', async () => {
+    window.localStorage.setItem('araw:v1:sandbox-terms', '0');
+    await renderScreen({}, false);
+    expect(screen.getByRole('button', { name: 'I agree' })).toBeTruthy();
+  });
+
+  it('on-device mode downloads nothing before the player agrees', async () => {
+    await renderScreen({ device: true, delay: 60 }, false);
+    expect(screen.queryByText(/This happens only once/)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'I agree' }));
+    expect(await screen.findByText(/This happens only once/)).toBeTruthy();
+  });
+});
+
+describe('when the server cannot answer', () => {
+  it('says the AI is resting until 8 AM, and the on-device AI is the player\'s own choice', async () => {
+    await renderScreen({ cloudError: 'quota', reply: 'Device answer.', delay: 60 });
+    type(await ready(), 'Hello');
+    const alert = await screen.findByRole('alert');
+    expect(within(alert).getByText('The practice AI is resting')).toBeTruthy();
+    expect(within(alert).getByText(/8:00 AM, Philippine time/)).toBeTruthy();
+    expect(within(alert).getByText(/378 MB, one time/)).toBeTruthy();
+    expect(within(alert).getByRole('link', { name: /Open Module 3/ })).toBeTruthy();
+    expect(screen.queryByText(/This happens only once/)).toBeNull(); // nothing downloads by itself
+    fireEvent.click(within(alert).getByRole('button', { name: 'Save the AI on this device' }));
+    expect(await screen.findByText(/This happens only once/)).toBeTruthy();
     const input = await ready();
+    expect(screen.getByText(/Your chat stays on this device/)).toBeTruthy(); // the wording follows where the AI runs
+    type(input, 'Hello again');
+    await waitFor(() => expect(within(log()).getByText('Device answer.')).toBeTruthy());
+  });
+
+  it('says it is busy, and the chat can simply be tried again', async () => {
+    await renderScreen({ cloudError: 'busy' });
+    type(await ready(), 'Hello');
+    const alert = await screen.findByRole('alert');
+    expect(within(alert).getByText('The practice AI cannot answer right now')).toBeTruthy();
+    expect(within(log()).getByText('The practice AI could not answer this time.')).toBeTruthy();
+    expect(screen.getByLabelText('Your message')).toBeTruthy();
+  });
+
+  it('tells the truth about where messages go while the AI is on the server', async () => {
+    await renderScreen({ reply: 'Okay.' });
+    await ready();
+    expect(screen.getByText(/Your messages go over the internet to an AI service/)).toBeTruthy();
+    expect(screen.queryByText(/Your chat stays on this device/)).toBeNull();
+    expect(screen.getByText(/It runs on Cloudflare Workers AI/)).toBeTruthy();
+    expect(screen.getByText(/built for Southeast Asia\. It sounds sure/)).toBeTruthy();
+    expect(screen.queryByText(/This AI is small/)).toBeNull();
+  });
+});
+
+describe('Chatbot Sandbox screen', () => {
+  it('chats with nothing to download: the answer is labelled and can be rated', async () => {
+    const { xpClaims } = await renderScreen({ reply: 'Keep water covered. {q}', delay: 60 });
+    const input = await ready();
+    expect(screen.queryByText(/This happens only once/)).toBeNull();
+    expect(screen.queryByRole('progressbar')).toBeNull();
     type(input, 'How do I stop mosquitoes?');
     await waitFor(() => expect(within(log()).getByText('Keep water covered. How do I stop mosquitoes?')).toBeTruthy());
     expect(within(log()).getByText('ARAW practice AI · can be wrong')).toBeTruthy();
@@ -100,17 +176,17 @@ describe('Chatbot Sandbox screen', () => {
   });
 
   it('explains when the device cannot run the model and points to Module 3', async () => {
-    await renderScreen({ unsupported: 'memory' });
+    await renderScreen({ device: true, unsupported: 'memory' });
     expect(await screen.findByText(/not have enough memory/)).toBeTruthy();
     expect(screen.getByRole('link', { name: /Open Module 3/ }).getAttribute('href')).toBe('#/learn/m03');
   });
 
   it('a model already on the device opens straight away, and a failed load can be retried', async () => {
-    await renderScreen({ cached: true });
+    await renderScreen({ device: true, cached: true });
     expect(await screen.findByLabelText('Your message', {}, { timeout: 3000 })).toBeTruthy();
     expect(screen.queryByText(/Downloading the practice AI/)).toBeNull();
     cleanup();
-    await renderScreen({ failLoad: true });
+    await renderScreen({ device: true, failLoad: true });
     expect(await screen.findByText(/could not load/)).toBeTruthy();
     expect(screen.getByRole('button', { name: /Try again/ })).toBeTruthy();
   });

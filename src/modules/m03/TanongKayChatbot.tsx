@@ -31,7 +31,7 @@ function StarRow({ n }: { n: number }) {
   );
 }
 
-/** Link to the Chatbot Sandbox (#/sandbox), where a real small AI model runs on the player's device. */
+/** Link to the Chatbot Sandbox (#/sandbox), where the player chats with a real AI model. */
 function SandboxCard() {
   return (
     <section class="cb-sandbox px-box" aria-labelledby="cb-sandbox-title">

@@ -18,5 +18,6 @@ export const SANDBOX_REVIEW: readonly SandboxReviewEntry[] = [
   e('sb-personal-data', "src/sandbox/guard.ts detectPersonalData + 'sb.pii.*'"),
   e('sb-dose-filter', "src/sandbox/guard.ts DOSE_PATTERNS + 'sb.doseHidden'"),
   e('sb-trust-tips', "src/app/i18n.ts 'sb.tip.*', 'sb.trust.*', 'sb.langNote'"),
+  e('sb-terms', "src/app/i18n.ts 'sb.terms.*', 'sb.private.cloud', 'sb.pii.cloud' (privacy and legal review)"),
   e('sb-missions', "src/sandbox/missions.ts + 'sb.m.*'"),
 ];

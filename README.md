@@ -30,7 +30,7 @@ conversations) and the **Mosquito Density and Disease Outbreak Prediction** proj
 - **Learn:** 10 short modules (lesson cards, a module game, a takeaway) with a certificate at the end.
 - **Arcade:** 11 pixel-art Canvas games (Takbo, Data!, Feed Mo 'To, Luto ni Ara, Sino 'To?, Lamok Lamay, Tawid, Lola!,
   Hati Tayo!, Gawa Ko 'To!, Tulog na, Bea!, Sa Sapatos Nila, OBJECTION!) plus Fact or Fake, with touch, mouse and keyboard.
-- **Chatbot Sandbox:** chat with a real, small AI that runs on the player's own device (no server, no API), rate each
+- **Chatbot Sandbox:** chat with a real AI built for Southeast Asia, with nothing to download (Cloudflare Workers AI free allowance; an on-device AI is the optional fallback), rate each
   answer, and "Catch the AI" missions; red flags, self-harm, personal details and medicine doses are handled safely.
 - **Daily challenge, streaks, badges and a report card** to keep practice going.
 - **Library:** myth cards, glossary, the Comics series and the how-to videos.
@@ -43,7 +43,7 @@ conversations) and the **Mosquito Density and Disease Outbreak Prediction** proj
 - **8-bit sound:** chiptune music per area and sound effects generated live (no audio files), with TALA-style Music and Sound
   effects switches and volume sliders (on at 25 and 65); everything heard is also shown on screen.
 - **Responsive:** desktop sidebar layout first, tablet tabs, phone bottom tab bar. Installable PWA, works offline.
-- **Private:** progress is kept in `localStorage` only. No backend, no accounts, no trackers.
+- **Private:** progress is kept in `localStorage` only. No database, no accounts, no trackers. Sandbox chats pass through and are not saved.
 
 ## Run locally
 
@@ -73,7 +73,7 @@ npm run build      # type-check + production build into dist/
 npm run preview    # serves dist/ at http://localhost:4173
 ```
 
-The build uses a relative base path (`base: './'`) and a hash router, so `dist/` works from any static host or sub-path.
+The build uses a relative base path (`base: './'`) and a hash router, so `dist/` works from any static host or sub-path. The server Chatbot Sandbox AI needs the Cloudflare Worker; `npm run preview` and other static hosts offer the on-device AI instead. To try the real AI locally: `npx wrangler login`, `npm run build`, then `npx wrangler dev`.
 
 ## Print kit
 Printable sheets (posters, cards, guides, certificate) are compiled from the app's own content into A4 PDFs, in all five languages.
@@ -156,29 +156,37 @@ and players use the fallbacks (Open in Gmail, their email app, or Copy report). 
 4. Push to `main`. The site appears at `https://<user>.github.io/<repo>/`. No extra config is needed for the sub-path
    (relative base, hash routes).
 
-GitHub Pages cannot send custom headers, so there the Chatbot Sandbox AI runs on one CPU thread (slower, still works).
+GitHub Pages cannot send custom headers, so there the on-device Chatbot Sandbox AI runs on one CPU thread (slower, still works).
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare (the live site)
 
-Connect the GitHub repository in Cloudflare Pages: build command `npm run build`, output directory `dist`. Every push to
-`main` deploys. `public/_headers` sets caching plus the `Cross-Origin-Opener-Policy` / `Cross-Origin-Embedder-Policy`
-headers that let the Chatbot Sandbox AI use several threads. Every file stays under Pages' 25 MiB limit (the largest is
-wllama's 16 MB compat `.wasm`).
+The GitHub repository is connected to the Worker `dost-nicer-araw`. A push to `main` runs `npm run build`, then
+`npx wrangler deploy`, using `wrangler.jsonc`. The site itself is static files, which are free with unlimited requests. The only
+server code is `worker/index.ts`, the Chatbot Sandbox AI on `/api/chat`, which stores and logs nothing.
 
-## Chatbot Sandbox model
+`public/_headers` sets caching, `Referrer-Policy: no-referrer` (Hugging Face refuses `*.workers.dev` referers, which would block
+the on-device model) and the `Cross-Origin-Opener-Policy` / `Cross-Origin-Embedder-Policy` headers that let the on-device AI use
+several threads. Every file stays under Cloudflare's 25 MiB limit (the largest is wllama's 16 MB compat `.wasm`).
 
-The sandbox (`#/sandbox`) runs a small open model in the visitor's browser with [wllama](https://github.com/ngxson/wllama)
-(llama.cpp in WebAssembly). There is no server and no API key, so any number of people can use it at once for free.
+On the Hugging Face and GitHub Pages hosts above there is no Worker, so the sandbox offers the on-device AI instead.
 
-- **No download step for learners:** on Wi-Fi (or when the browser does not say, as on iPhones and desktops) the app saves
-  the model on the device in the background a few seconds after it opens (`src/sandbox/preload.ts`), so the sandbox is
-  usually ready when a learner gets there. On mobile data it downloads when the sandbox is opened.
-- **Which model:** `DEFAULT_MODEL_ID` in `src/sandbox/model.ts`. Each entry pins a Hugging Face repo, commit and GGUF file,
+## Chatbot Sandbox AI
+
+The sandbox (`#/sandbox`) asks the player to agree to the terms, then chats through the server, so **visitors download nothing**.
+
+- **Server AI (default):** `worker/index.ts` passes chats to Cloudflare Workers AI, which runs Gemma-SEA-LION v4 27B
+  (`CLOUD_MODEL` in `src/sandbox/model.ts`). It uses the free allowance of 10,000 neurons a day, reset at 8:00 AM Philippine time.
+  When it runs out the free plan stops with an error and never charges; the sandbox says the AI is resting.
+- **Compare server models:** `npx wrangler login`, then `node scripts/sandbox/cloud-bakeoff.mjs`. Answers, timings and neurons go to
+  `shots-out/sandbox-bakeoff-cloud/` (uses the allowance; not part of verify).
+- **On-device AI (optional):** offered only when the server cannot answer, and never downloaded by itself. It runs a small open
+  model in the browser with [wllama](https://github.com/ngxson/wllama) (llama.cpp in WebAssembly).
+- **Which on-device model:** `DEFAULT_MODEL_ID` in `src/sandbox/model.ts`. Each entry pins a Hugging Face repo, commit and GGUF file,
   so the download can never change under you. To host the file yourself, copy it to your own Hugging Face repo and change
   `repo` and `revision`. Try another candidate without rebuilding: `#/sandbox?model=gemma3-1b`.
 - **Offline app builds:** `node scripts/sandbox/fetch-model.mjs` downloads the pinned file into `public/models/`
-  (git-ignored, SHA-256 checked); `VITE_MODEL_SOURCE=local npm run build` then loads it from `./models/` instead of Hugging Face.
-- **Bake-off and real-model smoke test** (downloads models, not part of verify):
+  (git-ignored, SHA-256 checked); `VITE_MODEL_SOURCE=local npm run build` then loads it from `./models/` and uses the on-device AI.
+- **On-device bake-off and smoke test** (downloads models, not part of verify):
   `npx playwright test -c scripts/sandbox/smoke.config.ts`. Answers in all five languages go to `shots-out/sandbox-bakeoff/`.
 
 ## Project structure

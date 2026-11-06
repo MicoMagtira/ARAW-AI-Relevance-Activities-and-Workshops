@@ -2,7 +2,7 @@
 
 > The full technical documentation, with diagrams, tables and runbooks, is in [`TECHNICAL.md`](TECHNICAL.md) (system architecture: section 2). This page stays as the one-screen summary.
 
-- **Stack:** Vite + strict TypeScript + Preact (`@preact/signals`). Hash router, so any static host works; `base: './'`.
+- **Stack:** Vite + strict TypeScript + Preact (`@preact/signals`). Hash router, so any static host works; `base: './'`. One small Cloudflare Worker (`worker/index.ts`) serves the Chatbot Sandbox AI.
 - **Shell (`src/app`):** `App`/`Shell` give the sidebar (desktop), top tabs (tablet) and bottom tab bar (phone). `routes.ts` and
   `router.ts` map hash routes to lazy screens (`LazyScreen`). `settings.ts` applies accessibility options as root classes.
 - **State:** `store.ts` holds signals; `state.ts`, `progress.ts`, `streak.ts`, `scores.ts`, `daily*.ts` hold logic.
@@ -19,13 +19,15 @@
   and languages exist, written by the recorder), `src/app/tutorials.ts` (manifest helpers, the shared dialog signal, VTT
   transcript parser) and `src/ui/tutorial/` (Watch button, dialog host, lazy player chunk). Files: `public/videos/<id>/<lang>.webm|vtt`,
   recorded by `scripts/tutorials/record.mjs` from `scripts/tutorials/boards/` (canvas games on a paused fake clock, so runs repeat).
-- **Chatbot Sandbox (`src/sandbox`, `#/sandbox`):** `model.ts` (pinned Hugging Face GGUF candidates, `VITE_MODEL_SOURCE`
-  hf/local), `engine.ts` (state machine and device checks over a `Backend`), `wllamaBackend.ts` (wllama: llama.cpp in
-  WebAssembly, runs in its own worker, OPFS model cache) and `wllamaCompat.ts` (Safari build, own chunk), `fakeBackend.ts`
-  (tests set `window.__ARAW_FAKE_LLM__`), `guard.ts` (red flags, personal data, streamed dose filter), `prompt.ts`,
-  `missions.ts`, `preload.ts` (tiny, in the first load: background download on Wi-Fi, file only, never in automated
-  browsers); screen in `src/screens/sandbox/`. Model files are never precached; `public/_headers` sets COOP/COEP so the
-  engine can use threads. `scripts/sandbox/` holds the real-model bake-off (`smoke.config.ts`) and `fetch-model.mjs`.
+- **Chatbot Sandbox (`src/sandbox`, `#/sandbox`, `worker/index.ts`):** the player agrees to the terms (`access.ts`), then the AI runs on
+  the server: `cloudBackend.ts` posts to `/api/chat`, and `worker/index.ts` adds the system prompt and calls Cloudflare Workers AI,
+  storing and logging nothing. `model.ts` holds `CLOUD_MODEL` and the on-device candidates; `engine.ts` is the state machine over a
+  `Backend`; `guard.ts` (red flags, personal data, streamed dose filter), `prompt.ts` and `missions.ts` serve both modes. When the
+  server cannot answer, the player may choose the on-device AI: `wllamaBackend.ts` (wllama: llama.cpp in WebAssembly, own worker,
+  OPFS model cache) and `wllamaCompat.ts` (Safari build, own chunk). It never downloads by itself. `fakeBackend.ts` is for tests
+  (`window.__ARAW_FAKE_LLM__`). Screen in `src/screens/sandbox/`. Model files are never precached; `public/_headers` sets COOP/COEP so
+  the on-device engine can use threads, and `no-referrer` so Hugging Face serves the model. `scripts/sandbox/` holds the server
+  bake-off (`cloud-bakeoff.mjs`), the on-device bake-off (`smoke.config.ts`) and `fetch-model.mjs`.
 - **PWA:** `scripts/pwa-plugin.ts` and `sw-template.js` generate the service worker and precache list at build time.
 - **Quality gates:** `npm run verify` = type-check + build, `scripts/check-budget.mjs` (initial JS <= 200 KB gzip), Vitest, and
   Playwright on phone/tablet/desktop with axe and no-horizontal-overflow checks.

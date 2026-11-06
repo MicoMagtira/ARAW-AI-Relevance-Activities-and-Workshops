@@ -69,42 +69,45 @@ const svg = (id, w, h, body) => `<svg class="fig-svg" viewBox="0 0 ${w} ${h}" ro
 
 const FIGURES = {
   architecture: {
-    caption: 'Figure 1. System architecture. ARAW is a client-only static app: everything runs on the learner\'s device; the network is used only for files, the optional model download and the optional report.',
-    alt: 'Architecture diagram: the learner\'s browser holds the ARAW web app (shell, modules, games, chatbot sandbox, content, language packs, service worker) and local storage; a static host sends the app files, Hugging Face sends the model file, and an optional Google Apps Script relay receives report text.',
+    caption: 'Figure 1. System architecture. ARAW is a static app that runs on the learner\'s device, plus one small Worker for the Chatbot Sandbox AI. Chats pass through it and are not stored.',
+    alt: 'Architecture diagram: the learner\'s browser holds the ARAW web app (shell, modules, games, chatbot sandbox, content, language packs, service worker) and local storage; Cloudflare sends the app files; the Sandbox Worker passes chats to Workers AI and stores nothing; Hugging Face sends the on-device model only if the player asks; an optional Google Apps Script relay receives report text.',
     draw() {
       const f = 'architecture';
       const a = 'a1';
       let s = frame({ x: 10, y: 24, w: 470, h: 478, label: 'Learner\'s device (browser)' });
       s += `<rect x="24" y="62" width="442" height="246" fill="${C.white}" stroke="${C.ink}" stroke-width="2"/>`;
       s += `<text x="38" y="84" font-family="Baloo 2" font-weight="800" font-size="12.5" fill="${C.ink}">ARAW web app: Vite build, Preact, hash router</text>`;
-      const blocks = [['App shell', 'router, store', 'settings, language', C.gold], ['Learn', '10 modules', 'lesson engine', C.tint], ['Arcade', '11 games', 'Canvas 2D engine', C.tint], ['Sandbox', 'chatbot, wllama', 'safety guard', C.tint]];
+      const blocks = [['App shell', 'router, store', 'settings, language', C.gold], ['Learn', '10 modules', 'lesson engine', C.tint], ['Arcade', '11 games', 'Canvas 2D engine', C.tint], ['Sandbox', 'terms, chatbot', 'safety guard', C.tint]];
       blocks.forEach(([t, l1, l2, fill], i) => (s += box(f, { x: 34 + i * 108, y: 96, w: 100, h: 78, title: t, lines: [l1, l2], fill, tsize: 12, lsize: 10 })));
       s += box(f, { x: 36, y: 188, w: 206, h: 46, title: 'Content banks', lines: ['typed and validated'], fill: C.soft, shadow: false, tsize: 12, lsize: 10 });
       s += box(f, { x: 250, y: 188, w: 206, h: 46, title: 'Language packs (lazy)', lines: ['fil, ceb, ilo, hil'], fill: C.soft, shadow: false, tsize: 12, lsize: 10 });
       s += box(f, { x: 34, y: 248, w: 422, h: 44, title: 'Service worker', lines: ['offline app shell after the first visit'], fill: C.soft, shadow: false, tsize: 12, lsize: 10 });
       s += `<rect x="24" y="322" width="442" height="166" fill="${C.white}" stroke="${C.ink}" stroke-width="2"/>`;
       s += `<text x="38" y="344" font-family="Baloo 2" font-weight="800" font-size="12.5" fill="${C.ink}">Stored on the device only</text>`;
-      const store = [['localStorage', 'araw:v1:* keys', 'progress, settings'], ['OPFS', 'chatbot model file', '(wllama model cache)'], ['Cache Storage', 'app files', '(service worker)']];
+      const store = [['localStorage', 'araw:v1:* keys', 'progress, settings'], ['OPFS', 'on-device model', '(only if chosen)'], ['Cache Storage', 'app files', '(service worker)']];
       store.forEach(([t, l1, l2], i) => (s += box(f, { x: 34 + i * 144, y: 360, w: 134, h: 112, title: t, lines: [l1, l2], fill: C.gold, tsize: 12, lsize: 10 })));
       // right column
-      s += box(f, { x: 548, y: 40, w: 202, h: 124, title: 'Static host', lines: ['Cloudflare (live site)', 'index.html, hashed JS and CSS,', 'fonts, sw.js, media in public/', '_headers: cache, COOP, COEP'], fill: C.white, tsize: 13, lsize: 10 });
-      s += box(f, { x: 548, y: 214, w: 202, h: 96, title: 'Hugging Face', lines: ['pinned commit, one GGUF file', 'only for the Chatbot Sandbox'], fill: C.white, tsize: 13, lsize: 10 });
+      s += box(f, { x: 548, y: 30, w: 202, h: 104, title: 'Static files', lines: ['Cloudflare (live site)', 'index.html, hashed JS and CSS,', 'fonts, sw.js, media in public/', '_headers: cache, COOP, COEP'], fill: C.white, tsize: 13, lsize: 10 });
+      s += box(f, { x: 548, y: 146, w: 202, h: 104, title: 'Sandbox Worker', lines: ['/api/chat on Cloudflare', 'adds the system prompt, then', 'Workers AI (SEA-LION model)', 'stores and logs nothing'], fill: C.gold, tsize: 13, lsize: 10 });
+      s += box(f, { x: 548, y: 262, w: 202, h: 84, title: 'Hugging Face (optional)', lines: ['pinned commit, one GGUF file', 'only if the player asks'], fill: C.white, tsize: 13, lsize: 10 });
       s += box(f, { x: 548, y: 366, w: 202, h: 112, title: 'Report relay (optional)', lines: ['Google Apps Script web app', 'e-mail to AIKasalig + log sheet', 'text the player chose to send'], fill: C.white, tsize: 13, lsize: 10 });
-      s += arrow(a, 546, 102, 484, 102, { label: 'app files', lx: 515, ly: 94 });
-      s += arrow(a, 546, 262, 484, 262, { label: 'model', lx: 515, ly: 254 });
+      s += arrow(a, 546, 82, 484, 82, { label: 'app files', lx: 515, ly: 74 });
+      s += arrow(a, 484, 188, 546, 188, { label: 'chat', lx: 515, ly: 180 });
+      s += arrow(a, 546, 208, 484, 208, { label: 'answer', lx: 515, ly: 222 });
+      s += arrow(a, 546, 304, 484, 304, { label: 'model', lx: 515, ly: 296 });
       s += arrow(a, 484, 422, 546, 422, { label: 'report', lx: 515, ly: 414 });
       return svg(a, 760, 512, s);
     },
     size: [760, 512],
   },
   sandbox: {
-    caption: 'Figure 2. Chatbot Sandbox: the path of one message. Safety checks run before the model; the dose filter runs on the streamed answer.',
-    alt: 'Flow diagram: player input goes to guard.ts, then prompt.ts, then engine.ts and the wllama worker; the answer streams through the dose filter and tidyAnswer into the chat bubble. The guard branches to a hotline card for self-harm, a Magpatingin agad card for red flags and a privacy nudge for personal data.',
+    caption: 'Figure 2. Chatbot Sandbox: the path of one message, after the player agrees to the terms. Safety checks run before the model; the dose filter runs on the streamed answer.',
+    alt: 'Flow diagram: player input goes to guard.ts, then prompt.ts, then engine.ts and the Worker, which asks Workers AI; the answer streams through the dose filter and tidyAnswer into the chat bubble. The guard branches to a hotline card for self-harm, a Magpatingin agad card for red flags and a privacy nudge for personal data.',
     draw() {
       const f = 'sandbox';
       const a = 'a2';
       let s = '';
-      const row1 = [['Player input', ['up to 500 characters'], C.white], ['guard.ts', ['safety checks first'], C.gold], ['prompt.ts', ['system prompt and', 'the newest chat turns'], C.white], ['engine.ts', ['state machine,', 'device checks'], C.white]];
+      const row1 = [['Player input', ['up to 500 characters'], C.white], ['guard.ts', ['safety checks first'], C.gold], ['prompt.ts', ['the newest', 'chat turns'], C.white], ['engine.ts', ['state machine,', 'cloudBackend'], C.white]];
       row1.forEach(([t, l, fill], i) => (s += box(f, { x: 20 + i * 183, y: 14, w: 150, h: 78, title: t, lines: l, fill })));
       for (let i = 0; i < 3; i++) s += arrow(a, 172 + i * 183, 53, 201 + i * 183, 53);
       // guard branches
@@ -114,11 +117,11 @@ const FIGURES = {
         s += box(f, { x: 20 + i * 177, y: 134, w: 162, h: 78, title: t, lines: l, fill, tsize: 12, lsize: 10 });
         s += arrow(a, 101 + i * 177, 114, 101 + i * 177, 132);
       });
-      s += arrow(a, 644, 94, 644, 238, { label: 'model call', lx: 650, ly: 170, anchor: 'start' });
-      const row2 = [['Chat bubble', ['"can be wrong" label,', 'rating and Ara\'s tip'], C.white], ['tidyAnswer()', ['plain text for', 'the bubble'], C.white], ['Dose filter', ['hides any sentence with', 'a dose, as it streams'], C.gold], ['wllama worker', ['llama.cpp in WebAssembly,', 'model read from OPFS'], C.white]];
+      s += arrow(a, 644, 94, 644, 238, { label: '/api/chat', lx: 650, ly: 170, anchor: 'start' });
+      const row2 = [['Chat bubble', ['"can be wrong" label,', 'rating and Ara\'s tip'], C.white], ['tidyAnswer()', ['plain text for', 'the bubble'], C.white], ['Dose filter', ['hides any sentence with', 'a dose, as it streams'], C.gold], ['Worker + Workers AI', ['adds the system prompt,', 'stores nothing'], C.white]];
       row2.forEach(([t, l, fill], i) => (s += box(f, { x: 20 + i * 183, y: 240, w: 150, h: 78, title: t, lines: l, fill })));
-      for (let i = 0; i < 3; i++) s += arrow(a, 569 - i * 183, 279, 538 - i * 183, 279, i === 0 ? { label: 'streamed tokens', lx: 553, ly: 336 } : {});
-      s += `<text x="20" y="352" font-family="Nunito" font-weight="700" font-size="11" fill="${C.muted}">Chats stay in memory. No server, no API key: the model runs on the learner's device.</text>`;
+      for (let i = 0; i < 3; i++) s += arrow(a, 569 - i * 183, 279, 538 - i * 183, 279, i === 0 ? { label: 'streamed text', lx: 553, ly: 336 } : {});
+      s += `<text x="20" y="352" font-family="Nunito" font-weight="700" font-size="11" fill="${C.muted}">Chats stay in browser memory; ARAW saves none. If the server cannot answer, the player may choose the on-device AI (wllama).</text>`;
       return svg(a, 760, 366, s);
     },
     size: [760, 366],

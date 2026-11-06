@@ -16,11 +16,11 @@ The early phone-first mockups live in the private planning folder, not in this r
 - Vite + TypeScript (strict) + Preact (`preact`, `preact/hooks`, `@preact/signals` allowed). Hash router (static hosting).
 - Games: HTML Canvas 2D on a small shared engine in `src/games/engine/` (no Phaser). Icons: pixel-art only (`pixelarticons`, MIT, or hand-made pixel SVGs); no smooth icon sets.
 - Fonts self-hosted via `@fontsource/baloo-2`, `@fontsource/nunito`, `@fontsource/press-start-2p` (OFL). No CDNs at runtime.
-  One approved exception: the Chatbot Sandbox model file loads from a pinned Hugging Face commit (`src/sandbox/model.ts`), only when the player asks.
+  One approved exception: the on-device Chatbot Sandbox model loads from a pinned Hugging Face commit (`src/sandbox/model.ts`), only when the player chooses it.
 - Tests: Vitest (+ @testing-library/preact) for logic/components; Playwright for e2e with three projects:
   `phone` 360x740 (touch), `tablet` 820x1180, `desktop` 1440x900. `@axe-core/playwright` for accessibility checks.
-- Persistence: `localStorage` only (no backend). Always wrap in try/catch; app must work if storage is blocked.
-- Deploy target: free static Hugging Face Space / GitHub Pages, so use relative base path (`base: './'`).
+- Persistence: `localStorage` only (no database). Always wrap in try/catch; app must work if storage is blocked.
+- Deploy target: Cloudflare (`wrangler.jsonc`; a push to main deploys). The app stays static files with a relative base path (`base: './'`); the only server code is `worker/index.ts`, the Chatbot Sandbox AI on `/api/chat`, which stores and logs nothing. Hugging Face Spaces and GitHub Pages still work, without the server AI.
 - Ports are fixed: dev server 5173, preview 4173 with `--strictPort`. Playwright `webServer` uses `vite preview --port 4173
   --strictPort` with `reuseExistingServer: false` (the runner frees these ports before each verify).
 - Never leave long-running processes (dev servers, watchers) running when you finish; never use watch modes in scripts.

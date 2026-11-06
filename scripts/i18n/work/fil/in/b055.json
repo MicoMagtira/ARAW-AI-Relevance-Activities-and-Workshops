@@ -1,0 +1,11 @@
+[
+{"i":1,"text":"The Chatbot Sandbox is a real AI built for Southeast Asia that you can chat with. There is nothing to download. It can be wrong, and that is the point: you practise catching its mistakes.","where":"content/guide.ts#GUIDE_SECTIONS"},
+{"i":2,"text":"Chat with a real AI built for Southeast Asia and catch its mistakes.","where":"ui:arcade.sandboxText"},
+{"i":3,"text":"Want to try a real AI? In the Chatbot Sandbox you can ask an AI built for Southeast Asia your own questions and see where it goes wrong.","where":"ui:cb.sandbox.text"},
+{"i":4,"text":"{model} · {license}. Made by AI Singapore for Southeast Asian languages, including Tagalog. It runs on Cloudflare Workers AI.","where":"ui:sb.aboutCloud"},
+{"i":5,"text":"This is a real AI built for Southeast Asia. It sounds sure even when it is wrong. That makes it great practice! Ask it anything, then decide: would you trust it?","where":"ui:sb.ara.cloud"},
+{"i":6,"text":"Chat with a real AI built for Southeast Asia. Nothing to download: just ask. It writes a new answer every time, and it can be wrong. Your job: catch it.","where":"ui:sb.intro.cloud"},
+{"i":7,"text":"AI learns mostly from English text, so answers in Cebuano, Ilokano and Hiligaynon can be weaker or mixed with other languages. That is a real limit of AI, worth noticing!","where":"ui:sb.langNote"},
+{"i":8,"text":"Is the answer as good? AI is often weaker in Filipino and regional languages.","where":"ui:sb.m.language.hint"},
+{"i":9,"text":"Good catch! AI can make things up and still sound sure. That is why we check.","where":"ui:sb.tip.mali"}
+]
